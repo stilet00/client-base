@@ -1,4 +1,4 @@
-import logo from './images/logo.png';
+
 import './App.css';
 import Karussell from "./modules/Karussell/Karussell";
 import Footer from "./modules/Footer/Footer";
