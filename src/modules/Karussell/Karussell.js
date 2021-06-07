@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./karusell.css"
 import { CLIENTS } from "../../database/database";
+import arrow from "../../images/arrow.png"
 import KarusellInner from "./karusell-inner/karusell-inner";
 // import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -26,11 +27,11 @@ function Karussell (props) {
             />
                 <button className={"control previous"} onClick={goPrevious}>
                     {/*<ArrowBackIcon />*/}
-                    prev
+                    <img src={arrow} width={"20px"} height={"20px"} alt={"previous"}/>
                 </button>
                 <button className={"control next"} onClick={goNext}>
                     {/*<ArrowForwardIcon />*/}
-                    next
+                    <img src={arrow} width={"20px"} height={"20px"} className={"rotated-icon"} alt={"next"}/>
                 </button>
         </div>
     );

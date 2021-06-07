@@ -8,7 +8,7 @@ h2
 .karussell-container
   width: 90%
   max-width: 500px
-  min-height: 550px
+  min-height: 728px
   margin: 0 auto
   position: relative
   display: flex
@@ -16,8 +16,8 @@ h2
   align-items: center
 .control
   position: absolute
-  top: 50%
-  border: 1px solid #50C878
+  top: 40%
+  border: 1px solid lightblue
   background-color: #50C878
   border-radius: 5px
   outline: none
@@ -30,12 +30,21 @@ h2
 .previous
   left: 0
   &:hover
-    box-shadow: 2px 2px 2px white
+    box-shadow: 2px 2px 2px lightblue
 .next
   right: 0
   &:hover
-    box-shadow: -2px 2px 2px white
+    box-shadow: -2px 2px 2px lightblue
 .control-buttons
   width: 50%
   display: flex
   justify-content: space-between
+.rotated-icon
+  transform: rotate(180deg)
+@media (min-width: 500px)
+  .control
+    top: 55%
+  .next
+    right: 7px
+  .previous
+    left: 7px
