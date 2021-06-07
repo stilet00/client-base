@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import "./karusell.css"
 import { CLIENTS } from "../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+// import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import logo from "../../images/logo.png";
 function Karussell (props) {
 
@@ -24,8 +24,14 @@ function Karussell (props) {
                 data={CLIENTS[currentStep]}
                 animation={animationClass}
             />
-                <button className={"control previous"} onClick={goPrevious}><ArrowBackIcon /></button>
-                <button className={"control next"} onClick={goNext}><ArrowForwardIcon /></button>
+                <button className={"control previous"} onClick={goPrevious}>
+                    {/*<ArrowBackIcon />*/}
+                    prev
+                </button>
+                <button className={"control next"} onClick={goNext}>
+                    {/*<ArrowForwardIcon />*/}
+                    next
+                </button>
         </div>
     );
 }
