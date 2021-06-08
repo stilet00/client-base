@@ -1124,7 +1124,7 @@
     "core-js-pure" "^3.0.0"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   "integrity" "sha512-BogPQ7ciE6SYAUPtlm9tWbgI9+2AgqSam6QivMgXgAT+fKbgppaj4ZX15MHeLC1PVF5sNk70huBu20XxWOs8Cg=="
   "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.12.18.tgz"
   "version" "7.12.18"
@@ -6043,6 +6043,13 @@
     "has" "^1.0.3"
     "side-channel" "^1.0.4"
 
+"invariant@^2.2.2":
+  "integrity" "sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA=="
+  "resolved" "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
+  "version" "2.2.4"
+  dependencies:
+    "loose-envify" "^1.0.0"
+
 "ip-regex@^2.1.0":
   "integrity" "sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk="
   "resolved" "https://registry.npmjs.org/ip-regex/-/ip-regex-2.1.0.tgz"
@@ -6994,6 +7001,13 @@
   "resolved" "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
   "version" "5.0.1"
 
+"json2mq@^0.2.0":
+  "integrity" "sha1-tje9O6nqvhIsg+lyBIOusQ0skEo="
+  "resolved" "https://registry.npmjs.org/json2mq/-/json2mq-0.2.0.tgz"
+  "version" "0.2.0"
+  dependencies:
+    "string-convert" "^0.2.0"
+
 "json3@^3.3.3":
   "integrity" "sha512-c7/8mbUsKigAbLkD5B010BK4D9LZm7A1pNItkEwiUZRpIN66exu/e7YQWysGun+TRKaJp8MhemM+VkfWv42aCA=="
   "resolved" "https://registry.npmjs.org/json3/-/json3-3.3.3.tgz"
@@ -7336,7 +7350,7 @@
   "resolved" "https://registry.npmjs.org/loglevel/-/loglevel-1.7.1.tgz"
   "version" "1.7.1"
 
-"loose-envify@^1.1.0", "loose-envify@^1.4.0":
+"loose-envify@^1.0.0", "loose-envify@^1.1.0", "loose-envify@^1.4.0":
   "integrity" "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="
   "resolved" "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
   "version" "1.4.0"
@@ -9212,7 +9226,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@^15.6.2", "prop-types@^15.7.2":
+"prop-types@^15.5.10", "prop-types@^15.6.2", "prop-types@^15.7.2":
   "integrity" "sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   "version" "15.7.2"
@@ -9442,6 +9456,16 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.1.tgz"
   "version" "17.0.1"
 
+"react-media@^1.10.0":
+  "integrity" "sha512-FjgYmFoaPTImST06jqotuu0Mk8LOXiGYS/fIyiXuLnf20l3DPniBwtrxi604/HxxjqvmHS3oz5rAwnqdvosV4A=="
+  "resolved" "https://registry.npmjs.org/react-media/-/react-media-1.10.0.tgz"
+  "version" "1.10.0"
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    "invariant" "^2.2.2"
+    "json2mq" "^0.2.0"
+    "prop-types" "^15.5.10"
+
 "react-refresh@^0.8.3", "react-refresh@>=0.8.3 <0.10.0":
   "integrity" "sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg=="
   "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.8.3.tgz"
@@ -9523,7 +9547,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@*", "react@^16.8.0 || ^17.0.0", "react@^17.0.2", "react@>= 16", "react@>=16.6.0", "react@17.0.2":
+"react@*", "react@^16.8.0 || ^17.0.0", "react@^17.0.2", "react@>= 16", "react@>=15 || ^0.14.7", "react@>=16.6.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -10639,6 +10663,11 @@
   "version" "1.1.1"
   dependencies:
     "safe-buffer" "~5.1.0"
+
+"string-convert@^0.2.0":
+  "integrity" "sha1-aYLMMEn7tM2F+LJFaLnZvznu/5c="
+  "resolved" "https://registry.npmjs.org/string-convert/-/string-convert-0.2.1.tgz"
+  "version" "0.2.1"
 
 "string-length@^4.0.1":
   "integrity" "sha512-PKyXUd0LK0ePjSOnWn34V2uD6acUWev9uy0Ft05k0E8xRW+SKcA0F7eMr7h5xlzfn+4O3N+55rduYyet3Jk+jw=="
