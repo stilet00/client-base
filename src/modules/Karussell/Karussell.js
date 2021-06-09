@@ -2,11 +2,30 @@ import React, { useState } from "react";
 import "./karusell.css";
 import { CLIENTS } from "../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
-import logo from "../../images/logo.png";
 import arrow from "../../images/arrow.png";
+import { useParams } from "react-router-dom";
 function Karussell(props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationClass, setAnimationClass] = useState("");
+  const { status } = useParams();
+  const page =
+    status === "true" ? (
+      <div className={"karussell-container"}>
+        <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} />
+        <button className={"control previous"} onClick={goPrevious}>
+          <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />
+        </button>
+        <button className={"control next"} onClick={goNext}>
+          <img
+            src={arrow}
+            width={"20px"}
+            height={"20px"}
+            className={"rotated-icon"}
+            alt={"next"}
+          />
+        </button>
+      </div>
+    ) : null;
   function goNext() {
     setAnimationClass("forward");
     CLIENTS.length - 1 !== currentStep
@@ -19,23 +38,7 @@ function Karussell(props) {
       ? setCurrentStep(CLIENTS.length - 1)
       : setCurrentStep(currentStep - 1);
   }
-  return (
-    <div className={"karussell-container"}>
-      <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} />
-      <button className={"control previous"} onClick={goPrevious}>
-        <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />
-      </button>
-      <button className={"control next"} onClick={goNext}>
-        <img
-          src={arrow}
-          width={"20px"}
-          height={"20px"}
-          className={"rotated-icon"}
-          alt={"next"}
-        />
-      </button>
-    </div>
-  );
+  return <>{page}</>;
 }
 
 export default Karussell;

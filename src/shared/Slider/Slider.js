@@ -62,22 +62,11 @@ export default function DiscreteSlider({ valuetext }) {
         defaultValue={18}
         getAriaValueText={valuetext}
         aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
         step={1}
         // marks
         min={18}
         max={50}
       />
-      {/*<Slider*/}
-      {/*    defaultValue={18}*/}
-      {/*    getAriaValueText={valuetext}*/}
-      {/*    aria-labelledby="discrete-slider"*/}
-      {/*    valueLabelDisplay="auto"*/}
-      {/*    step={1}*/}
-      {/*    marks*/}
-      {/*    min={18}*/}
-      {/*    max={50}*/}
-      {/*/>*/}
     </div>
   );
 }

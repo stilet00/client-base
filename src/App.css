@@ -21,6 +21,8 @@
 
 .App-header {
   display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;

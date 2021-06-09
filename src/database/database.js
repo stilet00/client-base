@@ -94,3 +94,4 @@ export const CLIENTS = [
     age: 29,
   },
 ];
+export const PASSWORD = "7210stilet";
