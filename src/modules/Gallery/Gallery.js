@@ -5,6 +5,7 @@ import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../shared/Slider/Slider";
 import { useParams } from "react-router-dom";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import moment from "moment"
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const { status } = useParams();
@@ -16,9 +17,9 @@ function Gallery(props) {
           <DiscreteSlider valuetext={valuetext} />
         </div>
         <div className={"inner-gallery-container"}>
-          {CLIENTS.filter((item) => item.age >= ageFilter).length > 0 ? (
-            CLIENTS.filter((item) => item.age >= ageFilter).map((lady) => (
-              <GalleryItem lady={lady} />
+          {CLIENTS.filter((item) => moment().diff(item.age, 'years') >= ageFilter).length > 0 ? (
+            CLIENTS.filter((item) => moment().diff(item.age, 'years') >= ageFilter).map((lady) => (
+              <GalleryItem lady={lady} key={lady.id}/>
             ))
           ) : (
             <div className="empty">

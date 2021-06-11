@@ -11,87 +11,99 @@ import image10 from "../images/sycheva-min.png";
 import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
+import moment from "moment"
 export const CLIENTS = [
   {
+    id: 1,
     name: "Viktoria",
     instagram: "https://www.instagram.com/vikymingaleva/",
     onlyFans: "https://onlyfans.com/viktoria_si",
     image: image1,
-    age: 22,
+    age: moment("1998 09 06", "YYYY MM DO")
   },
   {
+    id: 2,
     name: "Yulia",
     instagram: "https://www.instagram.com/yulija__chikina/",
     image: image2,
-    age: 41,
+    age: moment("1979 11 25", "YYYY MM DO"),
   },
   {
+    id: 3,
     name: "Viktoria",
     instagram: "https://www.instagram.com/realbeautyinside_/",
     image: image3,
-    age: 22,
+    age: moment("1998 12 25", "YYYY MM DO"),
   },
   {
+    id: 4,
     name: "Ekaterina",
     instagram: "https://www.instagram.com/ekateryna93/",
     onlyFans: "https://onlyfans.com/angels_wing/",
     image: image4,
-    age: 28,
+    age: moment("1993 03 10", "YYYY MM DO"),
   },
   {
+    id: 5,
     name: "Angelica",
     instagram: "https://instagram.com/angelina_rai_0808/",
     image: image5,
-    age: 28,
+    age: moment("1993 01 05", "YYYY MM DO"),
   },
   {
+    id: 6,
     name: "Enja",
     instagram: "https://www.instagram.com/enjaahenriksen/",
     image: image6,
-    age: 26,
+    age: moment("1994 08 14", "YYYY MM DO"),
   },
   {
     name: "Daria",
     instagram: "https://www.instagram.com/dasha_boha/",
     image: image7,
-    age: 27,
+    age: moment("1993 12 27", "YYYY MM DO"),
   },
   {
+    id: 7,
     name: "Simona",
     instagram: "https://www.instagram.com/simona.claudia7/",
     image: image8,
-    age: 31,
+    age: moment("1990 05 18", "YYYY MM DO"),
   },
   {
+    id: 8,
     name: "Sapir",
     instagram: "https://www.instagram.com/la_barbie_sapir/",
     image: image9,
-    age: 29,
+    age: moment("1992 02 09", "YYYY MM DO"),
   },
   {
     name: "Ksenia",
     instagram: "https://www.instagram.com/ksyu272/",
     image: image10,
-    age: 29,
+    age: moment("1992 02 27", "YYYY MM DO"),
   },
   {
+    id: 9,
     name: "Eugenia",
     instagram: "https://www.instagram.com/erudaya/",
     image: image11,
-    age: 39,
+    age: moment("1982 10 11", "YYYY MM DO"),
   },
   {
+    id: 10,
     name: "Lubov",
     instagram: "https://www.instagram.com/voronina_model/",
     onlyFans: "https://onlyfans.com/voronina_model/",
     image: image12,
-    age: 29,
+    age: moment("1990 10 03", "YYYY MM DO"),
   },
   {
+    id: 11,
     name: "Anna",
     instagram: "https://instagram.com/anya.sugar/",
     image: image13,
-    age: 29,
+    age: moment("1991 12 23", "YYYY MM DO"),
   },
 ];
 export const PASSWORD = "7210stilet";
