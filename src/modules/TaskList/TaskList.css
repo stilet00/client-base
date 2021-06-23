@@ -1,0 +1,40 @@
+.taskList-container {
+  border: 1px solid #50C878;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  min-height: 528px;
+  margin: 0 auto;
+  overflow-y: scroll; }
+
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  padding: 5px;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%; }
+
+.button-add-container {
+  height: 60px;
+  max-width: 200px; }
+
+.item-enter {
+  opacity: 0; }
+
+.item-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in; }
+
+.item-exit {
+  opacity: 1; }
+
+.item-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in; }
+
+/*# sourceMappingURL=TaskList.css.map */

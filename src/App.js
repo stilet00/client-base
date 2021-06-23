@@ -8,6 +8,7 @@ import Media from "react-media";
 import Gallery from "./modules/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import Unauthorized from "./shared/Unauthorized/Unauthorized";
+import TaskList from "./modules/TaskList/TaskList";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
             </Route>
             <Route path="/clients/">
               <Unauthorized />
+            </Route>
+            <Route path="/tasks/">
+              <TaskList />
             </Route>
             <Route path="/" exact>
               <AuthorizationPage />

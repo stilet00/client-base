@@ -4,6 +4,7 @@ import { CLIENTS } from "../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../images/arrow.png";
 import { useParams } from "react-router-dom";
+import Header from "../Header/Header";
 function Karussell(props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationClass, setAnimationClass] = useState("");
@@ -11,6 +12,7 @@ function Karussell(props) {
   const page =
     status === "true" ? (
       <div className={"karussell-container"}>
+          <Header />
         <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} />
         <button className={"control previous"} onClick={goPrevious}>
           <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />
