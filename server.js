@@ -39,7 +39,7 @@ app.use(function(req, res, next) {
 // app.get(rootURL + 'bundle.js', function(req, res) {
 //     res.sendFile(__dirname + "/bundle.js");
 // });
-app.get(tasksURL, (req, res) => {
+app.get(tasksURL + "get", (req, res) => {
     collection.find().toArray((err, docs) => {
         if (err) {
             console.log(err);

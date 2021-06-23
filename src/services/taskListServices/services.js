@@ -1,8 +1,8 @@
 import axios from "axios"
 // const tasksURL = "http://localhost:80/tasks/"
-const tasksURL = "https://sunrise-agency.herokuapp.com/tasks"
+const tasksURL = "https://sunrise-agency.herokuapp.com/tasks/"
 export function getTasks() {
-    return axios.get(tasksURL)
+    return axios.get(tasksURL + "get")
 }
 export function addTask(task) {
     return axios.post(tasksURL + "add", task)
