@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,aAAa;EACX,MAAM,EAAE,KAAK",
+"sources": ["SmallChart.sass"],
+"names": [],
+"file": "SmallChart.css"
+}

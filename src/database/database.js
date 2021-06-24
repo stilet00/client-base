@@ -11,7 +11,7 @@ import image10 from "../images/sycheva-min.png";
 import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
-import moment from "moment"
+import moment from "moment";
 export const CLIENTS = [
   {
     id: 1,
@@ -19,7 +19,7 @@ export const CLIENTS = [
     instagram: "https://www.instagram.com/vikymingaleva/",
     onlyFans: "https://onlyfans.com/viktoria_si",
     image: image1,
-    age: moment("1998 09 06", "YYYY MM DO")
+    age: moment("1998 09 06", "YYYY MM DO"),
   },
   {
     id: 2,

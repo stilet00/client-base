@@ -12,7 +12,7 @@ function Karussell(props) {
   const page =
     status === "true" ? (
       <div className={"karussell-container"}>
-          <Header />
+        <Header />
         <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} />
         <button className={"control previous"} onClick={goPrevious}>
           <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />

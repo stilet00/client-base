@@ -5,7 +5,7 @@ import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../shared/Slider/Slider";
 import { useParams } from "react-router-dom";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
-import moment from "moment"
+import moment from "moment";
 import Header from "../Header/Header";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
@@ -14,16 +14,17 @@ function Gallery(props) {
   const page =
     status === "true" ? (
       <div className={"main-gallery-container"}>
-
         <div className="control-gallery">
-            <Header />
+          <Header pretty={{ borderBottom: "1px solid #50C878" }} />
           <DiscreteSlider valuetext={valuetext} />
         </div>
         <div className={"inner-gallery-container"}>
-          {CLIENTS.filter((item) => moment().diff(item.age, 'years') >= ageFilter).length > 0 ? (
-            CLIENTS.filter((item) => moment().diff(item.age, 'years') >= ageFilter).map((lady) => (
-              <GalleryItem lady={lady} key={lady.id}/>
-            ))
+          {CLIENTS.filter(
+            (item) => moment().diff(item.age, "years") >= ageFilter
+          ).length > 0 ? (
+            CLIENTS.filter(
+              (item) => moment().diff(item.age, "years") >= ageFilter
+            ).map((lady) => <GalleryItem lady={lady} key={lady.id} />)
           ) : (
             <div className="empty">
               <h1 className>No matches</h1>
