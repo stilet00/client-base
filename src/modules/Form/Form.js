@@ -45,8 +45,8 @@ export default function Form({addTask}) {
         setTaskName(e.target.value.trim())
     }
     return (
-        <div>
-            <Button type="button" onClick={handleOpen}>
+        <div className={"modal-wrapper"}>
+            <Button type="button" onClick={handleOpen} fullWidth>
                 <AddIcon />
             </Button>
             <Modal

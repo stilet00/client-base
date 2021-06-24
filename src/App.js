@@ -9,6 +9,7 @@ import Gallery from "./modules/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import Unauthorized from "./shared/Unauthorized/Unauthorized";
 import TaskList from "./modules/TaskList/TaskList";
+import Chart from "./modules/Chart/Chart";
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
             </Route>
             <Route path="/tasks/">
               <TaskList />
+            </Route>
+            <Route path="/chart/">
+              <Chart />
             </Route>
             <Route path="/" exact>
               <AuthorizationPage />

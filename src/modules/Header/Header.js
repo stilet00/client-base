@@ -8,8 +8,8 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import BarChartIcon from '@material-ui/icons/BarChart';
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -48,12 +48,14 @@ export default function Header() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
-                {['TaskList'].map((text, index) => (
-                    <ListItem button key={text} onClick={() => history.push('/tasks')}>
-                        <ListItemIcon>{text === "TaskList"  ? <FormatListNumberedIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
+                    <ListItem button onClick={() => history.push('/tasks')}>
+                        <ListItemIcon><FormatListNumberedIcon /></ListItemIcon>
+                        <ListItemText primary={"Task List"} />
                     </ListItem>
-                ))}
+                    <ListItem button onClick={() => history.push('/chart')}>
+                        <ListItemIcon><BarChartIcon /></ListItemIcon>
+                        <ListItemText primary={"Balance chart"} />
+                    </ListItem>
             </List>
             <Divider />
             {/*<List>*/}
@@ -69,7 +71,7 @@ export default function Header() {
 
     return (
                 <>
-                    <Button onClick={toggleDrawer("top", true)} variant={"outlined"}>Menu</Button>
+                    <Button onClick={toggleDrawer("top", true)} variant={"outlined"} style={{marginBottom: "10px"}}>Menu</Button>
                     <Drawer anchor={"top"} open={state["top"]} onClose={toggleDrawer("top", false)}>
                         {list("top")}
                     </Drawer>

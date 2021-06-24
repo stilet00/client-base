@@ -56,7 +56,7 @@ function TaskList (props) {
                     timeout={500}
                     classNames="item"
                 >
-                    <SingleTask key={item.id} {...item} onDelete={deleteTask} onToggle={toggleTodo}/>
+                    <SingleTask {...item} onDelete={deleteTask} onToggle={toggleTodo}/>
                 </CSSTransition>)}
                 </TransitionGroup>
         </div>
