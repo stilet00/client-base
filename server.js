@@ -106,9 +106,9 @@ app.get(balanceURL + "get", (req, res) => {
 });
 app.post(balanceURL + "add", (req, res) => {
   if (req.body) {
-    let year = { ...req.body };
+    let month = { ...req.body };
 
-    collectionBalance.insertOne(year, (err, result) => {
+    collectionBalance.insertOne(month, (err, result) => {
       if (err) {
         return res.sendStatus(500);
       } else {

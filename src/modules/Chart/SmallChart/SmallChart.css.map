@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,aAAa;EACX,MAAM,EAAE,KAAK",
+"mappings": "AAAA,aAAa;EACX,KAAK,EAAE,GAAG;;AAEZ,yBAAyB;EACvB,aAAa;IACX,KAAK,EAAE,GAAG",
 "sources": ["SmallChart.sass"],
 "names": [],
 "file": "SmallChart.css"

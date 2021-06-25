@@ -5,55 +5,58 @@ import SmallChart from "./SmallChart/SmallChart";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import {
+  addMonth,
   addYear,
   getBalance,
   removeYear,
 } from "../../services/balanceServices/services";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import ChartForm from "./ChartForm/ChartForm";
 function Chart(props) {
-  const [years, setYears] = useState([]);
+  const [months, setMonths] = useState([]);
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
-        setYears(res.data);
+        setMonths(res.data);
       }
     });
   }, []);
-  function addData() {
-    addYear().then((res) =>
-      getBalance().then((res) => {
-        if (res.status === 200) {
-          setYears(res.data);
-        }
-      })
-    );
-  }
   function deleteGraph(id) {
     removeYear(id).then((res) =>
-      setYears(years.filter((item) => item._id !== id))
+      setMonths(months.filter((item) => item._id !== id))
     );
+  }
+  function onMonthSubmit(date) {
+    addMonth(date).then(res => {
+      if (res.status === 200) {
+
+      }
+    })
   }
   return (
     <>
       <Header />
       <div className={"inner-gallery-container chart-container"}>
-        <TransitionGroup className="todo-list" component={"ul"}>
-          {years.map((year, index) => (
-            <CSSTransition key={year._id} timeout={500} classNames="item">
+        <ul>
+        {/*<TransitionGroup className="todo-list" component={"ul"}>*/}
+          {months.map((month, index) => (
+            // <CSSTransition key={year._id} timeout={500} classNames="item">
               <SmallChart
-                graph={year}
+                graph={month}
                 index={index}
-                key={year._id}
+                key={month._id}
                 deleteGraph={deleteGraph}
               />
-            </CSSTransition>
+            // </CSSTransition>
           ))}
-        </TransitionGroup>
+        {/*</TransitionGroup>*/}
+        </ul>
       </div>
       <div className={"socials button-add-container"}>
-        <Button fullWidth onClick={addData}>
-          <AddIcon />
-        </Button>
+        <ChartForm onMonthSubmit={onMonthSubmit}/>
+        {/*<Button fullWidth onClick={addData}>*/}
+        {/*  <AddIcon />*/}
+        {/*</Button>*/}
       </div>
     </>
   );
