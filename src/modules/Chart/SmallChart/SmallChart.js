@@ -3,6 +3,7 @@ import { Bar, Line } from "react-chartjs-2";
 import "./SmallChart.css";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ChartDateForm from "../ChartDateForm/ChartDateForm";
 
 function SmallChart({ graph, index, deleteGraph }) {
   const [data, setData] = useState({
@@ -61,10 +62,52 @@ function SmallChart({ graph, index, deleteGraph }) {
       },
     ],
   });
+  function numberToMonths(number) {
+    switch (number) {
+      case "0" :
+        return "January";
+        break;
+      case "1" :
+        return "February";
+        break;
+      case "2" :
+        return "Match";
+        break;
+      case "3" :
+        return "April";
+        break;
+      case "4" :
+        return "May";
+        break;
+      case "5" :
+        return "June";
+        break;
+      case "6" :
+        return "July";
+        break;
+      case "7" :
+        return "August";
+        break;
+      case "8" :
+        return "September";
+        break;
+      case "9" :
+        return "October";
+        break;
+      case "10" :
+        return "November";
+        break;
+      case "11" :
+        return "December";
+        break;
+      default:
+        console.log('no months')
+    }
+  }
   useEffect(() => {
     setData({
       ...data,
-      datasets: [{ ...data.datasets[0], label: graph.label, data: graph.data }],
+      datasets: [{ ...data.datasets[0], label: numberToMonths(graph.label.split(" ")[0]) + " " + graph.label.split(" ")[1], data: graph.data }],
     });
   }, []);
 
@@ -89,9 +132,13 @@ function SmallChart({ graph, index, deleteGraph }) {
   return (
     <div className={"single-chart"}>
       {paint}
-      <Button onClick={() => deleteGraph(graph._id)}>
-        <DeleteIcon />
-      </Button>
+      <div className="button-chart-edit">
+        <Button onClick={() => deleteGraph(graph._id)} variant={"outlined"}>
+          <DeleteIcon />
+        </Button>
+        <ChartDateForm monthData={data}/>
+      </div>
+
     </div>
   );
 }
