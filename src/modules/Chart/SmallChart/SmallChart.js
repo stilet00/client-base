@@ -4,42 +4,12 @@ import "./SmallChart.css";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ChartDateForm from "../ChartDateForm/ChartDateForm";
+import moment from "moment";
 
-function SmallChart({ graph, index, deleteGraph }) {
+function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   const [data, setData] = useState({
-    labels: [
-      "01",
-      "02",
-      "03",
-      "04",
-      "05",
-      "06",
-      "07",
-      "08",
-      "09",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-      "17",
-      "18",
-      "19",
-      "20",
-      "21",
-      "22",
-      "23",
-      "24",
-      "25",
-      "26",
-      "27",
-      "28",
-      "29",
-      "30",
-      "31"
-    ],
+    _id: graph._id,
+    labels: graph.days || [],
     datasets: [
       {
         backgroundColor: [
@@ -59,58 +29,19 @@ function SmallChart({ graph, index, deleteGraph }) {
           "rgba(255, 159, 64, 1)",
         ],
         borderWidth: 1,
+        data: graph.values,
+        label: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
       },
     ],
   });
-  function numberToMonths(number) {
-    switch (number) {
-      case "0" :
-        return "January";
-        break;
-      case "1" :
-        return "February";
-        break;
-      case "2" :
-        return "Match";
-        break;
-      case "3" :
-        return "April";
-        break;
-      case "4" :
-        return "May";
-        break;
-      case "5" :
-        return "June";
-        break;
-      case "6" :
-        return "July";
-        break;
-      case "7" :
-        return "August";
-        break;
-      case "8" :
-        return "September";
-        break;
-      case "9" :
-        return "October";
-        break;
-      case "10" :
-        return "November";
-        break;
-      case "11" :
-        return "December";
-        break;
-      default:
-        console.log('no months')
-    }
-  }
-  useEffect(() => {
-    setData({
-      ...data,
-      datasets: [{ ...data.datasets[0], label: numberToMonths(graph.label.split(" ")[0]) + " " + graph.label.split(" ")[1], data: graph.data }],
-    });
-  }, []);
-
+  // useEffect(() => {
+  //   setData({
+  //     ...data,
+  //     _id: graph._id,
+  //     labels: graph.days,
+  //     datasets: [{ ...data.datasets[0], label: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY") }],
+  //   });
+  // }, []);
   const options = {
     scales: {
       yAxes: [
@@ -128,17 +59,21 @@ function SmallChart({ graph, index, deleteGraph }) {
     ) : (
       <Bar data={data} options={options} />
     );
-
+  function onChartChange(data) {
+    let newArray = graph.values;
+    newArray[data.selectedDate - 1] = data.value;
+    let newGraph = { ...graph, values: newArray };
+    onValueSubmit(newGraph);
+  }
   return (
     <div className={"single-chart"}>
       {paint}
       <div className="button-chart-edit">
-        <Button onClick={() => deleteGraph(graph._id)} variant={"outlined"}>
+        <Button onClick={() => deleteGraph(data._id)} variant={"outlined"}>
           <DeleteIcon />
         </Button>
-        <ChartDateForm monthData={data}/>
+        <ChartDateForm monthData={data} onValueSubmit={onChartChange} />
       </div>
-
     </div>
   );
 }

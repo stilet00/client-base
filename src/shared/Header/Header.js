@@ -52,7 +52,7 @@ export default function Header({ pretty }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
+      <List className={"fallDown-menu"}>
         <ListItem button onClick={() => history.push("/tasks")}>
           <ListItemIcon>
             <FormatListNumberedIcon />

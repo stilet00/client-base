@@ -5,7 +5,7 @@ const uri =
 const client = new MongoClient(uri, { useUnifiedTopology: true });
 let ObjectId = require("mongodb").ObjectID;
 let bodyParser = require("body-parser");
-let collection;
+let collectionTasks;
 let collectionBalance;
 let rootURL = "/";
 let tasksURL = rootURL + "tasks/";
@@ -13,8 +13,6 @@ let balanceURL = rootURL + "balance/";
 const PORT = process.env.PORT || 80;
 
 let app = express();
-
-// let fs = require('fs').promises;
 app.use(express.static(__dirname + "/build"));
 
 app.use(bodyParser.json());
@@ -45,7 +43,7 @@ app.use(function (req, res, next) {
 // task list api
 
 app.get(tasksURL + "get", (req, res) => {
-  collection.find().toArray((err, docs) => {
+  collectionTasks.find().toArray((err, docs) => {
     if (err) {
       console.log(err);
       return res.sendStatus(500);
@@ -54,7 +52,7 @@ app.get(tasksURL + "get", (req, res) => {
   });
 });
 app.delete(tasksURL + ":id", (req, res) => {
-  collection.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
+  collectionTasks.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
     if (err) {
       console.log(err);
       return res.sendStatus(500);
@@ -66,7 +64,7 @@ app.post(tasksURL + "add", (req, res) => {
   if (req.body.taskName) {
     let task = { ...req.body };
 
-    collection.insertOne(task, (err, result) => {
+    collectionTasks.insertOne(task, (err, result) => {
       if (err) {
         return res.sendStatus(500);
       } else {
@@ -76,7 +74,7 @@ app.post(tasksURL + "add", (req, res) => {
   }
 });
 app.put(tasksURL + ":id", (req, res) => {
-  collection.updateOne(
+  collectionTasks.updateOne(
     { _id: ObjectId(req.params.id) },
     {
       $set: {
@@ -126,9 +124,23 @@ app.delete(balanceURL + ":id", (req, res) => {
     res.sendStatus(200);
   });
 });
+app.put(balanceURL + ":id", (req, res) => {
+  collectionBalance.updateOne(
+    { _id: ObjectId(req.params.id) },
+    {
+      $set: { values: req.body.values },
+    },
+    (err) => {
+      if (err) {
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    }
+  );
+});
 
 client.connect(function (err) {
-  collection = client.db("taskListDB").collection("tasks");
+  collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
   console.log("Connected successfully to server...");
   app.listen(PORT, () => {

@@ -4,7 +4,7 @@ import { CLIENTS } from "../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../images/arrow.png";
 import { useParams } from "react-router-dom";
-import Header from "../Header/Header";
+import Header from "../../shared/Header/Header";
 function Karussell(props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationClass, setAnimationClass] = useState("");

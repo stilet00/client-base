@@ -1,6 +1,5 @@
 import "./App.css";
 import Karussell from "./modules/Karussell/Karussell";
-import Footer from "./modules/Footer/Footer";
 import logo from "./images/logo.png";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";

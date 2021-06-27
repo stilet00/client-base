@@ -6,7 +6,7 @@ import DiscreteSlider from "../../shared/Slider/Slider";
 import { useParams } from "react-router-dom";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import moment from "moment";
-import Header from "../Header/Header";
+import Header from "../../shared/Header/Header";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const { status } = useParams();
