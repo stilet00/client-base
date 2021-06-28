@@ -1,6 +1,6 @@
 import axios from "axios";
 // const balanceURL = "http://localhost:80/balance/";
-const balanceURL = "https://sunrise-agency.herokuapp.com/balance/"
+const balanceURL = "https://sunrise-agency.herokuapp.com/balance/";
 
 export function getBalance() {
   return axios.get(balanceURL + "get/");

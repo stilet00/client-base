@@ -30,7 +30,10 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
         ],
         borderWidth: 1,
         data: graph.values,
-        label: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
+        label: "Balance flow by days",
+        tension: 0.2,
+        cubicInterpolationMode: "monotone",
+        borderRadius: 5,
       },
     ],
   });
@@ -43,6 +46,12 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
           },
         },
       ],
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
+      },
     },
   };
   const paint =

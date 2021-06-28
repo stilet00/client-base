@@ -9,6 +9,7 @@ import {
   removeYear,
 } from "../../services/balanceServices/services";
 import ChartForm from "./ChartForm/ChartForm";
+import Loader from "../../shared/Loader/Loader";
 function Chart(props) {
   const [months, setMonths] = useState([]);
   function compareNumeric(a, b) {
@@ -48,30 +49,28 @@ function Chart(props) {
             item._id === valueOfDay._id ? valueOfDay : item
           )
         );
-        // getBalance().then((res) => {
-        //   if (res.status === 200) {
-        //     setMonths(res.data.sort(compareNumeric));
-        //   }
-        // });
       }
     });
   }
+  const page = !months.length ? (
+    <Loader />
+  ) : (
+    <ul>
+      {months.map((month, index) => (
+        <SmallChart
+          onValueSubmit={onValueSubmit}
+          graph={month}
+          index={index}
+          key={month._id}
+          deleteGraph={deleteGraph}
+        />
+      ))}
+    </ul>
+  );
   return (
     <>
       <Header />
-      <div className={"inner-gallery-container chart-container"}>
-        <ul>
-          {months.map((month, index) => (
-            <SmallChart
-              onValueSubmit={onValueSubmit}
-              graph={month}
-              index={index}
-              key={month._id}
-              deleteGraph={deleteGraph}
-            />
-          ))}
-        </ul>
-      </div>
+      <div className={"inner-gallery-container chart-container"}>{page}</div>
       <div className={"socials button-add-container"}>
         <ChartForm onMonthSubmit={onMonthSubmit} />
       </div>

@@ -1,16 +1,21 @@
 .single-chart {
-  width: 90%; }
+  width: 90%;
+}
 
 .button-chart-edit {
   margin: 0 auto;
   width: 60%;
   display: flex;
-  justify-content: space-between; }
-  .button-chart-edit button {
-    width: 50px; }
+  justify-content: space-between;
+}
+.button-chart-edit button {
+  width: 50px;
+}
 
 @media (min-width: 900px) {
   .single-chart {
-    width: 80%; } }
+    width: 80%;
+  }
+}
 
 /*# sourceMappingURL=SmallChart.css.map */

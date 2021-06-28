@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import "./karussell-inner.css";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import instaIcon from "../../../images/instagram-icon.png";
 import onlyIcon from "../../../images/onlyfans-icon.png";
+import Loader from "../../../shared/Loader/Loader";
 function KarusellInner({ data, animation }) {
+  const [imageLoaded, setImageLoaded] = useState("none");
   const fans = data.onlyFans ? (
     <a href={data.onlyFans} target={"_blank"} rel="noreferrer">
       <img src={onlyIcon} width={"20px"} height={"20px"} alt={"onlyfans"}></img>
@@ -19,6 +21,7 @@ function KarusellInner({ data, animation }) {
       ></img>
     </a>
   ) : null;
+  const loader = imageLoaded === "none" ? <Loader /> : null;
   return (
     <SwitchTransition mode={"out-in"}>
       <CSSTransition
@@ -29,7 +32,14 @@ function KarusellInner({ data, animation }) {
       >
         <div className="karussell">
           <h3>{data.name}</h3>
-          <img src={data.image} alt="lady" className={"main-photo"} />
+          {loader}
+          <img
+            src={data.image}
+            alt="lady"
+            className={"main-photo"}
+            onLoad={() => setImageLoaded("block")}
+            style={{ display: imageLoaded }}
+          />
           <div className="socials">
             {insta}
             {fans}

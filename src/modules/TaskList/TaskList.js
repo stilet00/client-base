@@ -11,6 +11,7 @@ import moment from "moment";
 import Form from "../Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Header from "../../shared/Header/Header";
+import Loader from "../../shared/Loader/Loader";
 function TaskList(props) {
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
@@ -49,25 +50,22 @@ function TaskList(props) {
       }
     });
   }
+  const page = !tasks.length ? (
+    <Loader />
+  ) : (
+    <TransitionGroup className="todo-list" component={"ul"}>
+      {tasks.map((item) => (
+        <CSSTransition key={item._id} timeout={500} classNames="item">
+          <SingleTask {...item} onDelete={deleteTask} onToggle={toggleTodo} />
+        </CSSTransition>
+      ))}
+    </TransitionGroup>
+  );
   return (
     <>
       <Header />
-      <div className={"taskList-container"}>
-        <TransitionGroup className="todo-list" component={"ul"}>
-          {tasks.map((item) => (
-            <CSSTransition key={item._id} timeout={500} classNames="item">
-              <SingleTask
-                {...item}
-                onDelete={deleteTask}
-                onToggle={toggleTodo}
-              />
-            </CSSTransition>
-          ))}
-        </TransitionGroup>
-      </div>
+      <div className={"taskList-container"}>{page}</div>
       <div className="socials button-add-container">
-        {/*<Button variant={"outlined"} onClick={newTask}><AddIcon /></Button>*/}
-        {/*<Button variant={"outlined"} onClick={newTask}><AddIcon />2</Button>*/}
         <Form addTask={newTask} />
       </div>
     </>
