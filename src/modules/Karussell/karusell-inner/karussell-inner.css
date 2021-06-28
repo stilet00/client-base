@@ -17,6 +17,8 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 459px;
+  min-width: 338px;
 }
 .socials {
   margin: 0 auto;
