@@ -1,7 +1,8 @@
 .App {
   text-align: center;
   background: url("images/background-27.png");
-  min-height: 100vh;
+  min-height: 120vh;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }

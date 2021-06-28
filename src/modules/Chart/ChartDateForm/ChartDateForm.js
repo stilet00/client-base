@@ -10,7 +10,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import AddBoxIcon from "@material-ui/icons/AddBox";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import CheckIcon from "@material-ui/icons/Check";
 import "./ChartDateForm.css";
 import moment from "moment";
@@ -58,7 +57,6 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
     <div className={"modal-wrapper date-wrapper"}>
       <Button type="button" onClick={handleOpen} variant={"outlined"}>
         <AddBoxIcon />
-        <AttachMoneyIcon />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -76,7 +74,7 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
           <div className={"form-container chart-date-form"}>
             <form
               onSubmit={(e) => {
-                e.preventDefault();
+                // e.preventDefault();
                 onValueSubmit({ selectedDate, value, id: monthData._id });
                 handleClose();
               }}

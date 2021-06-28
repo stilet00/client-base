@@ -34,14 +34,6 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       },
     ],
   });
-  // useEffect(() => {
-  //   setData({
-  //     ...data,
-  //     _id: graph._id,
-  //     labels: graph.days,
-  //     datasets: [{ ...data.datasets[0], label: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY") }],
-  //   });
-  // }, []);
   const options = {
     scales: {
       yAxes: [

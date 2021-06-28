@@ -1,7 +1,10 @@
 .chart-container {
   width: 90%;
   min-height: 500px;
-  overflow-y: scroll;
-}
+  overflow-y: scroll; }
+
+@media (min-width: 900px) {
+  .chart-container {
+    min-height: 80vh; } }
 
 /*# sourceMappingURL=Chart.css.map */
