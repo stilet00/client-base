@@ -8,12 +8,13 @@ import Header from "../../shared/Header/Header";
 function Karussell(props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationClass, setAnimationClass] = useState("");
+  const [imageLoaded, setImageLoaded] = useState("none");
   const { status } = useParams();
   const page =
     status === "true" ? (
       <div className={"karussell-container"}>
         <Header />
-        <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} />
+        <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} imageLoaded={imageLoaded} setImageLoaded={setImageLoaded}/>
         <button className={"control previous"} onClick={goPrevious}>
           <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />
         </button>
@@ -29,12 +30,14 @@ function Karussell(props) {
       </div>
     ) : null;
   function goNext() {
+    setImageLoaded("none");
     setAnimationClass("forward");
     CLIENTS.length - 1 !== currentStep
       ? setCurrentStep(currentStep + 1)
       : setCurrentStep(0);
   }
   function goPrevious() {
+    setImageLoaded("none");
     setAnimationClass("back");
     currentStep === 0
       ? setCurrentStep(CLIENTS.length - 1)
