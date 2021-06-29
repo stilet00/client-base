@@ -10,6 +10,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   const [data, setData] = useState({
     _id: graph._id,
     labels: graph.days || [],
+    title: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
     datasets: [
       {
         backgroundColor: [

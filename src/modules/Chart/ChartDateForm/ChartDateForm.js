@@ -74,14 +74,13 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
           <div className={"form-container chart-date-form"}>
             <form
               onSubmit={(e) => {
-                // e.preventDefault();
                 onValueSubmit({ selectedDate, value, id: monthData._id });
                 handleClose();
               }}
             >
               <h2 id="transition-modal-title">Enter parameters:</h2>
               <CssTextField
-                value={monthData.datasets[0].label}
+                value={monthData.title}
                 variant="outlined"
                 fullWidth
                 disabled
