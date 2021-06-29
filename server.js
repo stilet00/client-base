@@ -138,7 +138,12 @@ app.put(balanceURL + ":id", (req, res) => {
     }
   );
 });
-
+app.get(rootURL + "chart/", function(request, response, next) {
+  response.sendFile(__dirname + '/build/index.html');
+});
+app.get(rootURL + "chart?", function(request, response, next) {
+  response.sendFile(__dirname + '/build/index.html');
+});
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
