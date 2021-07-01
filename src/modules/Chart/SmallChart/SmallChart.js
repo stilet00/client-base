@@ -70,6 +70,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   return (
     <div className={"single-chart"}>
       {paint}
+      <p className={"total-sum"}>{`Total: ${graph.values.reduce((sum, current) => { return sum+Number(current)}, 0)} $`}</p>
       <div className="button-chart-edit">
         <Button onClick={() => deleteGraph(data._id)} variant={"outlined"}>
           <DeleteIcon />

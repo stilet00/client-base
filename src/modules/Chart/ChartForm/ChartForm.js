@@ -66,7 +66,7 @@ export default function ChartForm({ onMonthSubmit }) {
   };
   function getTotalDays() {
     const stringMonth =
-      selectedMonth < 9 ? "0" + (selectedMonth + 1) : selectedMonth + 1;
+        selectedMonth < 9 ? "0" + selectedMonth : selectedMonth;
     let totalDays = [];
     for (
       let i = 1;

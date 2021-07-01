@@ -1,21 +1,26 @@
 .single-chart {
-  width: 90%;
-}
+  width: 90%; }
 
 .button-chart-edit {
   margin: 0 auto;
   width: 60%;
   display: flex;
-  justify-content: space-between;
-}
-.button-chart-edit button {
-  width: 50px;
-}
+  justify-content: space-between; }
+  .button-chart-edit button {
+    width: 50px; }
+
+.total-sum {
+  width: 62%;
+  margin: 0 auto;
+  border: 1px solid #50C878;
+  border-top: none;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px;
+  margin-bottom: 5px; }
 
 @media (min-width: 900px) {
   .single-chart {
-    width: 80%;
-  }
-}
+    width: 80%; } }
 
 /*# sourceMappingURL=SmallChart.css.map */
