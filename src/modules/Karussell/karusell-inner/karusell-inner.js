@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./karussell-inner.css";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import instaIcon from "../../../images/instagram-icon.png";

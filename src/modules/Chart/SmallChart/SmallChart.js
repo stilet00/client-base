@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import "./SmallChart.css";
 import Button from "@material-ui/core/Button";

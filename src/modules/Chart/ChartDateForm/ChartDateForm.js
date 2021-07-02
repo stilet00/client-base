@@ -74,6 +74,7 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
           <div className={"form-container chart-date-form"}>
             <form
               onSubmit={(e) => {
+                e.preventDefault();
                 onValueSubmit({ selectedDate, value, id: monthData._id });
                 handleClose();
               }}

@@ -49,6 +49,7 @@ function Chart(props) {
             item._id === valueOfDay._id ? valueOfDay : item
           )
         );
+        window.location.reload();
       }
     });
   }

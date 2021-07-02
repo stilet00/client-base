@@ -52,7 +52,7 @@ export default function ChartForm({ onMonthSubmit }) {
           );
     }
     setMonths(monthsArray);
-  }, []);
+  }, [year]);
 
   const handleChange = (event) => {
     setSelectedMonth(event.target.value);
