@@ -7,6 +7,7 @@ let ObjectId = require("mongodb").ObjectID;
 let bodyParser = require("body-parser");
 let collectionTasks;
 let collectionBalance;
+let collectionClients;
 let rootURL = "/";
 let tasksURL = rootURL + "tasks/";
 let balanceURL = rootURL + "balance/";
@@ -144,9 +145,14 @@ app.get(rootURL + "chart/", function (request, response, next) {
 app.get(rootURL + "chart?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });
+
+//clients api
+
+
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
+  collectionClients = client.db("clientsDB").collection("clients");
   console.log("Connected successfully to server...");
   app.listen(PORT, () => {
     console.log("API started at port", PORT);

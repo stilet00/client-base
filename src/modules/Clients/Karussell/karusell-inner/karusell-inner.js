@@ -1,9 +1,9 @@
 import React from "react";
 import "./karussell-inner.css";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
-import instaIcon from "../../../images/instagram-icon.png";
-import onlyIcon from "../../../images/onlyfans-icon.png";
-import Loader from "../../../shared/Loader/Loader";
+import instaIcon from "../../../../images/instagram-icon.png";
+import onlyIcon from "../../../../images/onlyfans-icon.png";
+import Loader from "../../../../shared/Loader/Loader";
 function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
   const fans = data.onlyFans ? (
     <a href={data.onlyFans} target={"_blank"} rel="noreferrer">

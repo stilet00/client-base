@@ -1,5 +1,5 @@
 import "./App.css";
-import Karussell from "./modules/Karussell/Karussell";
+import Karussell from "./modules/Clients/Karussell/Karussell";
 import logo from "./images/logo.png";
 import React from "react";
 import {
@@ -9,7 +9,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import Media from "react-media";
-import Gallery from "./modules/Gallery/Gallery";
+import Gallery from "./modules/Clients/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import Unauthorized from "./shared/Unauthorized/Unauthorized";
 import TaskList from "./modules/TaskList/TaskList";
@@ -26,6 +26,9 @@ function App() {
         </div>
         <main>
           <Switch>
+            <Route path="/clients/true/add">
+
+            </Route>
             <Route path="/clients/:status">
               <Media query="(max-width: 811px)" render={() => <Karussell />} />
               <Media query="(min-width: 812px)" render={() => <Gallery />} />

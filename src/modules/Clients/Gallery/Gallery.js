@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "./Gallery.css";
-import { CLIENTS } from "../../database/database";
+import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
-import DiscreteSlider from "../../shared/Slider/Slider";
+import DiscreteSlider from "../../../shared/Slider/Slider";
 import { useParams } from "react-router-dom";
-import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import Unauthorized from "../../../shared/Unauthorized/Unauthorized";
 import moment from "moment";
-import Header from "../../shared/Header/Header";
+import Header from "../../../shared/Header/Header";
+import ClientsForm from "../ClientsForm/ClientsForm";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const { status } = useParams();
@@ -16,6 +17,7 @@ function Gallery(props) {
       <div className={"main-gallery-container"}>
         <div className="control-gallery">
           <Header pretty={{ borderBottom: "1px solid #50C878" }} />
+            <ClientsForm />
           <DiscreteSlider valuetext={valuetext} />
         </div>
         <div className={"inner-gallery-container"}>
