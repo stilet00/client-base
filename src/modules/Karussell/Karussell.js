@@ -14,7 +14,12 @@ function Karussell(props) {
     status === "true" ? (
       <div className={"karussell-container"}>
         <Header />
-        <KarusellInner data={CLIENTS[currentStep]} animation={animationClass} imageLoaded={imageLoaded} setImageLoaded={setImageLoaded}/>
+        <KarusellInner
+          data={CLIENTS[currentStep]}
+          animation={animationClass}
+          imageLoaded={imageLoaded}
+          setImageLoaded={setImageLoaded}
+        />
         <button className={"control previous"} onClick={goPrevious}>
           <img src={arrow} width={"20px"} height={"20px"} alt={"previous"} />
         </button>

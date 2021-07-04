@@ -2,7 +2,12 @@ import "./App.css";
 import Karussell from "./modules/Karussell/Karussell";
 import logo from "./images/logo.png";
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Media from "react-media";
 import Gallery from "./modules/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";

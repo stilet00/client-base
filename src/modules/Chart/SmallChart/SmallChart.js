@@ -13,6 +13,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
     title: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
     datasets: [
       {
+        fill: true,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -70,7 +71,25 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   return (
     <div className={"single-chart"}>
       {paint}
-      <p className={"total-sum"}>{`Total: ${graph.values.reduce((sum, current) => { return sum+Number(current)}, 0)} $`}</p>
+      <div className="total-sum">
+        <p className={"total-text"}>{`Total: ${graph.values.reduce(
+          (sum, current) => {
+            return sum + Number(current);
+          },
+          0
+        )} $`}</p>
+        <span className={"green-line"} />
+        <p className={"total-text"}>{`Middle: ${
+          graph.values.length
+            ? Math.floor(
+                graph.values.reduce((sum, current) => {
+                  return sum + Number(current);
+                }, 0) / graph.values.length
+              )
+            : "0"
+        } $`}</p>
+      </div>
+
       <div className="button-chart-edit">
         <Button onClick={() => deleteGraph(data._id)} variant={"outlined"}>
           <DeleteIcon />
