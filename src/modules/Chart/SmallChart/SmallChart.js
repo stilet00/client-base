@@ -51,7 +51,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       x: {
         ticks: {
           callback: function (value, index, values) {
-            return value + "." + graph.month;
+            return value + 1 + "." + graph.month;
           },
         },
       },
