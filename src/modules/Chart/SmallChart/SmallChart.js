@@ -32,7 +32,6 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
         ],
         borderWidth: 1,
         data: graph.values,
-        label: "Balance flow by days",
         tension: 0.2,
         cubicInterpolationMode: "monotone",
         borderRadius: 5,
@@ -41,15 +40,26 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   });
   const options = {
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
+      y: {
+        ticks: {
+          beginAtZero: true,
+          callback: function (value, index, values) {
+            return value + " $.";
           },
         },
-      ],
+      },
+      x: {
+        ticks: {
+          callback: function (value, index, values) {
+            return value + "." + graph.month;
+          },
+        },
+      },
     },
     plugins: {
+      legend: {
+        display: false,
+      },
       title: {
         display: true,
         text: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
