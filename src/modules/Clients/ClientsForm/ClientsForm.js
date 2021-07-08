@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, createRef } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -6,8 +6,14 @@ import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
-import moment from "moment";
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import LockIcon from '@material-ui/icons/Lock';
+import ImageIcon from '@material-ui/icons/Image';
 import "./ClientsForm.css";
+import { DEFAULT_CLIENT } from "../../../constants/constants";
+
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: "flex",
@@ -30,16 +36,14 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-export default function ClientsForm({ onMonthSubmit }) {
+export default function ClientsForm({ onMonthSubmit, editedClient }) {
     const classes = useStyles();
+    const [ client, setClient ] = useState(editedClient || DEFAULT_CLIENT)
     const [open, setOpen] = useState(false);
-    const [name, setName] = useState('');
-    const [insta, setInsta] = useState('');
-    const [onlyFans, setOnlyFans] = useState('');
 
-    // const handleChange = (event) => {
-    //     setSelectedMonth(event.target.value);
-    // };
+    const handleChange = (e) => {
+        setClient({...client, [e.target.name]: e.target.value});
+    };
     const handleOpen = () => {
         setOpen(true);
     };
@@ -47,8 +51,23 @@ export default function ClientsForm({ onMonthSubmit }) {
     const handleClose = () => {
         setOpen(false);
     };
-
-
+    const fileInput = createRef();
+    const createThumbnail = useCallback(
+        (file) => {
+            if (file) {
+                file = Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                });
+               setClient({...client, image: file})
+            }
+        },
+        [client]
+    );
+    function formSubmit(e) {
+        e.preventDefault();
+        console.log(client)
+    }
+    const preview = client.image.preview.length > 0 ? <img src={client.image.preview} width={"50px"} height={"50px"} alt={"preview"} className={"preview-image"}/> : null
     return (
         <div className={"socials add-client-button"}>
             <Button type="button" onClick={handleOpen} fullWidth>
@@ -68,30 +87,69 @@ export default function ClientsForm({ onMonthSubmit }) {
             >
                 <Fade in={open}>
                     <div className={"form-container clients-form"}>
-                        <form >
+                        <form onSubmit={formSubmit}>
                             <h2 id="transition-modal-title">Enter parameters:</h2>
                             <CssTextField
-                                id="filled-basic"
-                                value={name}
+                                name={"name"}
+                                onChange={handleChange}
+                                value={client.name}
                                 variant="outlined"
                                 label={"Name"}
                                 fullWidth
                                 required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <AccountCircle />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                             <CssTextField
-                                id="filled-basic"
-                                value={name}
+                                name={"instagram"}
+                                onChange={handleChange}
+                                value={client.instagram}
                                 variant="outlined"
                                 label={"Instagram"}
                                 fullWidth
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <InstagramIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                             <CssTextField
-                                id="filled-basic"
-                                value={name}
+                                name={"onlyFans"}
+                                onChange={handleChange}
+                                value={client.onlyFans}
                                 variant="outlined"
                                 label={"Onlyfans"}
                                 fullWidth
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
+                            <div
+                                className={"upload-container"}
+                            >
+                                <input
+                                    type="file"
+                                    ref={fileInput}
+                                    accept={"image/jpeg,image/png,image/gif"}
+                                    className={"photo-input"}
+                                    onChange={() => createThumbnail(fileInput.current.files[0])}
+                                />
+                                <ImageIcon fontSize={"large"} className={"photo-icon"} />
+                            </div>
+                            {preview}
+
+
 
                             <Button type={"submit"} fullWidth variant={"outlined"}>
                                 Add chart
