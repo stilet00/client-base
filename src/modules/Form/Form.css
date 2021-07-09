@@ -1,15 +1,13 @@
 .form-container {
   width: 400px;
-  height: 200px;
+  height: 230px;
   box-sizing: border-box;
   padding: 20px;
   background-color: white;
   border: 1px solid white;
-  border-radius: 10px;
-}
+  border-radius: 10px; }
 
 .modal-wrapper {
-  width: 90%;
-}
+  width: 90%; }
 
 /*# sourceMappingURL=Form.css.map */
