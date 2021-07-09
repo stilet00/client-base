@@ -36,11 +36,11 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-export default function ClientsForm({ onMonthSubmit, editedClient }) {
+export default function ClientsForm({ onFormSubmit, editedClient }) {
     const classes = useStyles();
     const [ client, setClient ] = useState(editedClient || DEFAULT_CLIENT)
     const [open, setOpen] = useState(false);
-
+    const [preview, setPreview] = useState('')
     const handleChange = (e) => {
         setClient({...client, [e.target.name]: e.target.value});
     };
@@ -54,20 +54,25 @@ export default function ClientsForm({ onMonthSubmit, editedClient }) {
     const fileInput = createRef();
     const createThumbnail = useCallback(
         (file) => {
+            // if (file) {
+            //     let file = Object.assign(file, {
+            //         preview: URL.createObjectURL(file),
+            //     });
+            //    setClient({...client, image: file})
+            // }
             if (file) {
-                file = Object.assign(file, {
-                    preview: URL.createObjectURL(file),
-                });
-               setClient({...client, image: file})
+                setPreview(URL.createObjectURL(file))
+                setClient({...client, image: file})
             }
+
         },
         [client]
     );
     function formSubmit(e) {
         e.preventDefault();
-        console.log(client)
+        onFormSubmit(client)
     }
-    const preview = client.image.preview.length > 0 ? <img src={client.image.preview} width={"50px"} height={"50px"} alt={"preview"} className={"preview-image"}/> : null
+    const previewImage = preview.length > 0 ? <img src={preview} width={"50px"} height={"50px"} alt={"preview"} className={"preview-image"}/> : null
     return (
         <div className={"socials add-client-button"}>
             <Button type="button" onClick={handleOpen} fullWidth>
@@ -147,7 +152,7 @@ export default function ClientsForm({ onMonthSubmit, editedClient }) {
                                 />
                                 <ImageIcon fontSize={"large"} className={"photo-icon"} />
                             </div>
-                            {preview}
+                            {previewImage}
 
 
 

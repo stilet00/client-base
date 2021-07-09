@@ -11,6 +11,7 @@ let collectionClients;
 let rootURL = "/";
 let tasksURL = rootURL + "tasks/";
 let balanceURL = rootURL + "balance/";
+let clientsURL = rootURL + "clients/";
 const PORT = process.env.PORT || 80;
 
 let app = express();
@@ -147,7 +148,28 @@ app.get(rootURL + "chart?", function (request, response, next) {
 });
 
 //clients api
+app.get(clientsURL + "get", (req, res) => {
+  collectionClients.find().toArray((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
+    res.send(docs);
+  });
+});
+app.post(clientsURL + "add", (req, res) => {
+  if (req.body) {
+    let client = { ...req.body };
 
+    collectionClients.insertOne(client, (err, result) => {
+      if (err) {
+        return res.sendStatus(500);
+      } else {
+        res.send(result.ops[0]._id);
+      }
+    });
+  }
+});
 
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");

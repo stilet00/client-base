@@ -8,16 +8,20 @@ import Unauthorized from "../../../shared/Unauthorized/Unauthorized";
 import moment from "moment";
 import Header from "../../../shared/Header/Header";
 import ClientsForm from "../ClientsForm/ClientsForm";
+import { addClient } from "../../../services/clientsServices/services";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const { status } = useParams();
+  function formSubmit(newClient)  {
+      addClient(newClient).then(res => console.log(res.status))
 
+  }
   const page =
     status === "true" ? (
       <div className={"main-gallery-container"}>
         <div className="control-gallery">
           <Header pretty={{ borderBottom: "1px solid #50C878" }} />
-            <ClientsForm />
+            <ClientsForm onFormSubmit={formSubmit}/>
           <DiscreteSlider valuetext={valuetext} />
         </div>
         <div className={"inner-gallery-container"}>
