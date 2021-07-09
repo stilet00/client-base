@@ -21,13 +21,6 @@ const useStyles = makeStyles((theme) => ({
   //     padding: theme.spacing(2, 4, 3),
   // },
 }));
-const CssTextField = withStyles({
-  root: {
-    "& .MuiInputBase-root": {
-      background: "#50C878",
-    },
-  },
-})(TextField);
 
 export default function Form({ addTask }) {
   const classes = useStyles();
@@ -70,12 +63,15 @@ export default function Form({ addTask }) {
               }}
             >
               <h2 id="transition-modal-title">Enter task name:</h2>
-              <CssTextField
-                id="filled-basic"
-                label="Filled"
-                variant="filled"
-                fullWidth
-                onChange={onInputChange}
+              <TextField
+                  id="filled-basic"
+                  label="Task"
+                  variant="outlined"
+                  fullWidth
+                  onChange={onInputChange}
+                  multiline
+                  rows={3}
+
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add task
