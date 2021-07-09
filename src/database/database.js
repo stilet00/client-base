@@ -11,6 +11,7 @@ import image10 from "../images/sycheva-min.png";
 import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
+import image14 from "../images/chernetskaya-min.png";
 import moment from "moment";
 export const CLIENTS = [
   {
@@ -106,6 +107,13 @@ export const CLIENTS = [
     instagram: "https://instagram.com/anya.sugar/",
     image: image13,
     age: moment("1991 12 23", "YYYY MM DO"),
+  },
+  {
+    id: 14,
+    name: "Margarita",
+    instagram: "https://www.instagram.com/rita_elixsir/?hl=ru",
+    image: image14,
+    age: moment("1984 02 25", "YYYY MM DO"),
   },
 ];
 export const PASSWORD = "7210stilet";
