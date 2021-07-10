@@ -34,6 +34,7 @@ main {
   align-items: center;
   /*height: 60vh;*/
   min-height: 520px;
+  margin-bottom: 50px;
 }
 .App-link {
   color: #61dafb;

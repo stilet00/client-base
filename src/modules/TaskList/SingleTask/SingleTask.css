@@ -36,4 +36,12 @@ p {
   color: green;
 }
 
+.not-completed {
+  background: rgba(80, 200, 120, 0.7);
+}
+
+.completed {
+  background: orange;
+}
+
 /*# sourceMappingURL=SingleTask.css.map */

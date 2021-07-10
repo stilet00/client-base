@@ -64,14 +64,13 @@ export default function Form({ addTask }) {
             >
               <h2 id="transition-modal-title">Enter task name:</h2>
               <TextField
-                  id="filled-basic"
-                  label="Task"
-                  variant="outlined"
-                  fullWidth
-                  onChange={onInputChange}
-                  multiline
-                  rows={3}
-
+                id="filled-basic"
+                label="Task"
+                variant="outlined"
+                fullWidth
+                onChange={onInputChange}
+                multiline
+                rows={3}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add task

@@ -23,8 +23,9 @@
 }
 .lds-facebook div:nth-child(3) {
   left: 56px;
-  animation-delay: 0;
+  animation-delay: 0s;
 }
+
 @keyframes lds-facebook {
   0% {
     top: 8px;
@@ -36,3 +37,5 @@
     height: 32px;
   }
 }
+
+/*# sourceMappingURL=Loader.css.map */

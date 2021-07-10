@@ -31,8 +31,11 @@ function SingleTask({
   return (
     <li
       id={_id}
-      className={"item-container gallery-item"}
-      style={{ backgroundColor: completed ? "orange" : "rgba(80,200,120,30%)" }}
+      className={
+        completed
+          ? "item-container gallery-item completed"
+          : "item-container gallery-item not-completed"
+      }
     >
       <p className={"task-name"}>
         <b>{taskName}</b>
