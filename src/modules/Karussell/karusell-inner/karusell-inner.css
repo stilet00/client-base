@@ -7,12 +7,13 @@ h3 {
   width: 60%;
   height: 30px;
   border: 1px solid #50c878;
-  background-color: rgba(80, 200, 120, 0.3);
+  background-color: rgba(80, 200, 120, 0.7);
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   letter-spacing: 1px;
 }
+
 .karussell {
   display: flex;
   flex-direction: column;
@@ -20,6 +21,7 @@ h3 {
   min-height: 459px;
   min-width: 338px;
 }
+
 .socials {
   margin: 0 auto;
   padding: 5px;
@@ -33,47 +35,58 @@ h3 {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: none;
-  background-color: rgba(80, 200, 120, 0.3);
+  background-color: rgba(80, 200, 120, 0.7);
 }
+
 .main-photo {
   width: 90%;
   border-radius: 10px;
   margin-bottom: 0;
   border: 2px solid #50c878;
 }
+
 /*forward animation */
 .forward-enter {
   opacity: 0;
   transform: translateX(200px);
 }
+
 .forward-enter-active {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
 }
+
 .forward-exit {
   opacity: 1;
 }
+
 .forward-exit-active {
   opacity: 0;
   transform: translateX(-200px);
   transition: opacity 300ms, transform 300ms;
 }
-/*back animation*/
+
+/*back animation */
 .back-enter {
   opacity: 0;
   transform: translateX(-200px);
 }
+
 .back-enter-active {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
 }
+
 .back-exit {
   opacity: 1;
 }
+
 .back-exit-active {
   opacity: 0;
   transform: translateX(200px);
   transition: opacity 300ms, transform 300ms;
 }
+
+/*# sourceMappingURL=karusell-inner.css.map */
