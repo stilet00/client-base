@@ -31,14 +31,17 @@ function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
       >
         <div className="karussell">
           <h3>{data.name}</h3>
-          {loader}
-          <img
-            src={data.image}
-            alt="lady"
-            className={"main-photo"}
-            onLoad={() => setImageLoaded("block")}
-            style={{ display: imageLoaded }}
-          />
+            <div className="main-photo-container">
+                {loader}
+                <img
+                    src={data.image}
+                    alt="lady"
+                    className={"main-photo"}
+                    onLoad={() => setImageLoaded("block")}
+                    style={{ display: imageLoaded }}
+                />
+            </div>
+
           <div className="socials">
             {insta}
             {fans}
