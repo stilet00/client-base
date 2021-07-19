@@ -21,7 +21,7 @@ function Chart(props) {
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
-        setMonths(res.data.sort(compareNumeric));
+        setMonths(res.data.sort(compareNumeric).reverse());
       }
     });
   }, []);
@@ -35,7 +35,7 @@ function Chart(props) {
       if (res.status === 200) {
         getBalance().then((res) => {
           if (res.status === 200) {
-            setMonths(res.data.sort(compareNumeric));
+            setMonths(res.data.sort(compareNumeric).reverse());
           }
         });
       }
