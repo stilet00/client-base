@@ -14,8 +14,8 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
     datasets: [
       {
         fill: true,
-        backgroundColor: ["rgba(80,200,120,0.5)"],
-        borderColor: ["rgba(25,135,62,0.5)"],
+        backgroundColor: ["rgba(255,165,0,0.8)"],
+        borderColor: ["rgba(25,135,62,0.9)"],
         borderWidth: 2,
         data: graph.values,
         tension: 0.2,
@@ -54,9 +54,9 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   };
   const paint =
     index % 2 ? (
-      <Line data={data} options={options} />
-    ) : (
       <Bar data={data} options={options} />
+    ) : (
+      <Line data={data} options={options} />
     );
   function onChartChange(data) {
     let newArray = graph.values;
