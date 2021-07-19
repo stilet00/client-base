@@ -89,7 +89,8 @@ export default function ChartForm({ onMonthSubmit }) {
   return (
     <div className={"modal-wrapper"}>
       <Button type="button" onClick={handleOpen} fullWidth>
-        Add month<AddIcon />
+        Add month
+        <AddIcon />
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"

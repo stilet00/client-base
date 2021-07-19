@@ -52,7 +52,7 @@ const PrettoSlider = withStyles({
 export default function DiscreteSlider({ valuetext }) {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div className={classes.root + " " + "filter-container"}>
       <Typography id="discrete-slider" gutterBottom className={"filter-label"}>
         Filter by age
       </Typography>

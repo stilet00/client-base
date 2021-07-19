@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACA,iBAAiB;EACf,MAAM,EAAE,MAAM;EACd,KAAK,EAAE,IAAI;EACX,UAAU,EAAE,UAAU;EACtB,OAAO,EAAE,GAAG;EACZ,MAAM,EAAE,iBAAqB;EAC7B,aAAa,EAAE,IAAI;EACnB,aAAa,EAAE,GAAG;EAClB,UAAU,ECRS,uBAAoB",
+"sources": ["NameFilter.sass","../../variables.sass"],
+"names": [],
+"file": "NameFilter.css"
+}
