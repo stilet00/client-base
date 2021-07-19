@@ -138,12 +138,24 @@ app.put(balanceURL + ":id", (req, res) => {
     }
   );
 });
+//routes
+
 app.get(rootURL + "chart/", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });
 app.get(rootURL + "chart?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });
+app.get(rootURL + "clients/true?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "tasks/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
