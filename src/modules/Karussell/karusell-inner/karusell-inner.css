@@ -34,6 +34,12 @@ h3 {
   border-top-right-radius: 0;
   border-top: none;
   background-color: rgba(80, 200, 120, 0.7); }
+.main-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 384px;
+  margin: 0 auto; }
 
 .main-photo {
   width: 90%;
