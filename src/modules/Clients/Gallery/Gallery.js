@@ -14,6 +14,7 @@ function Gallery(props) {
   const { status } = useParams();
   function formSubmit(newClient)  {
       addClient(newClient).then(res => console.log(res.status))
+      // console.log(addClient(newClient))
 
   }
   const page =
