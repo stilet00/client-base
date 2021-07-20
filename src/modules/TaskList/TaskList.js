@@ -12,6 +12,8 @@ import Form from "../Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Header from "../../shared/Header/Header";
 import Loader from "../../shared/Loader/Loader";
+import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import { FirebaseAuthConsumer } from "@react-firebase/auth";
 function TaskList(props) {
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
@@ -62,13 +64,21 @@ function TaskList(props) {
     </TransitionGroup>
   );
   return (
-    <>
-      <Header />
-      <div className={"taskList-container"}>{page}</div>
-      <div className="socials button-add-container">
-        <Form addTask={newTask} />
-      </div>
-    </>
+    <FirebaseAuthConsumer>
+      {({ isSignedIn, user, providerId }) => {
+        return isSignedIn ? (
+          <>
+            <Header />
+            <div className={"taskList-container"}>{page}</div>
+            <div className="socials button-add-container">
+              <Form addTask={newTask} />
+            </div>
+          </>
+        ) : (
+          <Unauthorized />
+        );
+      }}
+    </FirebaseAuthConsumer>
   );
 }
 

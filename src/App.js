@@ -1,6 +1,5 @@
 import "./App.css";
 import Karussell from "./modules/Karussell/Karussell";
-import logo from "./images/logo.png";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -11,41 +10,44 @@ import {
 import Media from "react-media";
 import Gallery from "./modules/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
-import Unauthorized from "./shared/Unauthorized/Unauthorized";
 import TaskList from "./modules/TaskList/TaskList";
 import Chart from "./modules/Chart/Chart";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { FirebaseAuthProvider } from "@react-firebase/auth";
+import { firebaseConfig } from "./fireBaseConfig";
+import LogoHeader from "./shared/LogoHeader/LogoHeader";
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <div className="App-header">
-          <h2>
-            Sunrise <img src={logo} className="App-logo" alt="logo" /> models
-          </h2>
+      <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
+        <div className="App">
+          <LogoHeader />
+          <main>
+            <Switch>
+              <Route path="/clients">
+                <Media
+                  query="(max-width: 811px)"
+                  render={() => <Karussell />}
+                />
+                <Media query="(min-width: 812px)" render={() => <Gallery />} />
+              </Route>
+              <Route path="/tasks/">
+                <TaskList />
+              </Route>
+              <Redirect from="/chart/*" to="/chart" />
+              <Route path="/chart">
+                <Chart />
+              </Route>
+              <Route path="/" exact>
+                <AuthorizationPage />
+              </Route>
+              <Redirect from="/*" to="/" />
+            </Switch>
+          </main>
         </div>
-        <main>
-          <Switch>
-            <Route path="/clients/:status">
-              <Media query="(max-width: 811px)" render={() => <Karussell />} />
-              <Media query="(min-width: 812px)" render={() => <Gallery />} />
-            </Route>
-            <Route path="/clients/">
-              <Unauthorized />
-            </Route>
-            <Route path="/tasks/">
-              <TaskList />
-            </Route>
-            <Redirect from="/chart/*" to="/chart/" />
-            <Route path="/chart/">
-              <Chart />
-            </Route>
-            <Route path="/" exact>
-              <AuthorizationPage />
-            </Route>
-          </Switch>
-        </main>
-      </div>
+      </FirebaseAuthProvider>
     </Router>
   );
 }
