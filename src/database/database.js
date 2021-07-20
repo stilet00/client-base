@@ -116,4 +116,3 @@ export const CLIENTS = [
     age: moment("1984 02 25", "YYYY MM DO"),
   },
 ];
-export const PASSWORD = "7210stilet";

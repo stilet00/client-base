@@ -10,6 +10,8 @@ import {
 } from "../../services/balanceServices/services";
 import ChartForm from "./ChartForm/ChartForm";
 import Loader from "../../shared/Loader/Loader";
+import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import { FirebaseAuthConsumer } from "@react-firebase/auth";
 function Chart(props) {
   const [months, setMonths] = useState([]);
   function compareNumeric(a, b) {
@@ -69,13 +71,23 @@ function Chart(props) {
     </ul>
   );
   return (
-    <>
-      <Header />
-      <div className={"inner-gallery-container chart-container"}>{page}</div>
-      <div className={"socials button-add-container"}>
-        <ChartForm onMonthSubmit={onMonthSubmit} />
-      </div>
-    </>
+    <FirebaseAuthConsumer>
+      {({ isSignedIn, user, providerId }) => {
+        return isSignedIn ? (
+          <>
+            <Header />
+            <div className={"inner-gallery-container chart-container"}>
+              {page}
+            </div>
+            <div className={"socials button-add-container"}>
+              <ChartForm onMonthSubmit={onMonthSubmit} />
+            </div>
+          </>
+        ) : (
+          <Unauthorized />
+        );
+      }}
+    </FirebaseAuthConsumer>
   );
 }
 

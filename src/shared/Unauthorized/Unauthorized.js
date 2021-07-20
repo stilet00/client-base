@@ -24,7 +24,7 @@ function Unauthorized(props) {
   return (
     <>
       <div className={"unauthorized"}>
-        <h1>You should enter a password...</h1>
+        <h1>You should log in before using this service...</h1>
       </div>
       <StyledButton>
         <Link to={"/"}>Back</Link>

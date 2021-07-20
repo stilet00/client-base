@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@react-firebase/auth": "^0.2.10",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -13,6 +14,7 @@
     "chart.js": "^3.3.2",
     "D": "^1.0.0",
     "express": "^4.17.1",
+    "firebase": "^8.7.1",
     "moment": "^2.29.1",
     "mongodb": "^3.6.9",
     "nodemon": "^2.0.7",
