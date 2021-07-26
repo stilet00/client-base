@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,aAAa;EACX,KAAK,EAAE,IAAI;;AACb,gBAAgB;EACd,MAAM,EAAE,KAAK",
+"mappings": "AAAA,gBAAgB;EACd,MAAM,EAAE,KAAK",
 "sources": ["ChartDateForm.sass"],
 "names": [],
 "file": "ChartDateForm.css"

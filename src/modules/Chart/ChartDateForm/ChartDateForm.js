@@ -13,6 +13,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import CheckIcon from "@material-ui/icons/Check";
 import "./ChartDateForm.css";
 import moment from "moment";
+import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -54,10 +55,10 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
     setValue(e.target.value);
   }
   return (
-    <div className={"modal-wrapper date-wrapper"}>
-      <Button type="button" onClick={handleOpen} variant={"outlined"}>
+    <div className={"date-wrapper"}>
+      <ColoredButton type="button" onClick={handleOpen} variant={"outlined"}>
         <AddBoxIcon />
-      </Button>
+      </ColoredButton>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
