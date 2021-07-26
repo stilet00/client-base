@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AACA,YAAY;EACV,MAAM,EAAE,CAAC;EACT,KAAK,EAAE,MAAM;EACb,SAAS,EAAE,IAAI",
-"sources": ["LogoHeader.sass"],
+"mappings": "AACA,YAAY;EACV,MAAM,EAAE,CAAC;EACT,WAAW,EAAE,IAAI;EACjB,SAAS,EAAE,IAAI;EACf,SAAS,EAAE,KAAK;EAChB,KAAK,ECNM,OAAO;EDOlB,UAAU,EAAE,MAAM;;AACpB,WAAW;EACT,KAAK,EAAE,MAAM;EACb,UAAU,EAAE,MAAM",
+"sources": ["LogoHeader.sass","../../variables.sass"],
 "names": [],
 "file": "LogoHeader.css"
 }

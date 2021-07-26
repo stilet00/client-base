@@ -3,8 +3,8 @@ import logo from "../../images/logo.png";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import "./LogoHeader.css";
 import firebase from "firebase";
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
+import ColoredButton from "../ColoredButton/ColoredButton";
 function LogoHeader(props) {
   const history = useHistory();
   return (
@@ -18,8 +18,11 @@ function LogoHeader(props) {
             {isSignedIn ? (
               <>
                 <p className={"logged-user"}>
-                  {isSignedIn ? `Welcome, ${user.email}` : null}{" "}
-                  <Button
+                  Welcome,
+                  <span className={"user-email"}>
+                    {isSignedIn ? ` ${user.email}` : null}{" "}
+                  </span>
+                  <ColoredButton
                     variant={"outlined"}
                     onClick={() => {
                       firebase.auth().signOut();
@@ -27,9 +30,8 @@ function LogoHeader(props) {
                         history.push("/");
                       }, 1000);
                     }}
-                  >
-                    Log out
-                  </Button>
+                    innerContent={"LOG OUT"}
+                  />
                 </p>
               </>
             ) : null}

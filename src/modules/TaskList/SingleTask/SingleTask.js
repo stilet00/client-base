@@ -5,6 +5,7 @@ import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import moment from "moment";
 import "./SingleTask.css";
+import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
 function SingleTask({
   taskName,
   _id,
@@ -43,12 +44,16 @@ function SingleTask({
       <p className={"task-date"}>Created: {created}</p>
       {done}
       <div className="button-container">
-        <Button variant={"outlined"} onClick={() => onDelete(_id)}>
+        <ColoredButton variant={"outlined"} onClick={() => onDelete(_id)}>
           <DeleteForeverIcon />
-        </Button>
-        <Button variant={"outlined"} onClick={toggler} disabled={completed}>
+        </ColoredButton>
+        <ColoredButton
+          variant={"outlined"}
+          onClick={toggler}
+          disabled={completed}
+        >
           {toggleButton}
-        </Button>
+        </ColoredButton>
       </div>
     </li>
   );

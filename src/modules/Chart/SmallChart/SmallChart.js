@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ChartDateForm from "../ChartDateForm/ChartDateForm";
 import moment from "moment";
+import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
 
 function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   const [data, setData] = useState({
@@ -14,13 +15,13 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
     datasets: [
       {
         fill: true,
-        backgroundColor: ["rgba(255,165,0,0.8)"],
-        borderColor: ["rgba(25,135,62,0.9)"],
+        backgroundColor: ["rgba(25,135,62,0.2)"],
+        borderColor: ["rgba(0,0,0,0.5)"],
         borderWidth: 2,
         data: graph.values,
         tension: 0.2,
         cubicInterpolationMode: "monotone",
-        borderRadius: 5,
+        borderRadius: 3,
       },
     ],
   });
@@ -87,9 +88,12 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       </div>
 
       <div className="button-chart-edit">
-        <Button onClick={() => deleteGraph(data._id)} variant={"outlined"}>
+        <ColoredButton
+          onClick={() => deleteGraph(data._id)}
+          variant={"outlined"}
+        >
           <DeleteIcon />
-        </Button>
+        </ColoredButton>
         <ChartDateForm monthData={data} onValueSubmit={onChartChange} />
       </div>
     </div>
