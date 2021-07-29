@@ -14,6 +14,9 @@ import CheckIcon from "@material-ui/icons/Check";
 import "./ChartDateForm.css";
 import moment from "moment";
 import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -87,6 +90,13 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
                 fullWidth
                 disabled
                 label={"Date"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <CalendarTodayIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               <FormControl
                 variant="outlined"
@@ -109,11 +119,18 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
               <CssTextField
                 value={value}
                 variant="outlined"
-                label={"Summ $"}
+                label={"Summ"}
                 fullWidth
                 type={"number"}
                 onChange={onInputChange}
                 required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <AttachMoneyIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add sum by this day <CheckIcon />

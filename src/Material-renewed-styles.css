@@ -1,0 +1,13 @@
+.MuiFormLabel-root {
+  color: black;
+}
+
+.MuiInputLabel-shrink {
+  color: black !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: orange !important;
+}
+
+/*# sourceMappingURL=Material-renewed-styles.css.map */

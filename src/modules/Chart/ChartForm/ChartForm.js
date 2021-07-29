@@ -11,7 +11,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import moment from "moment";
+
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "./ChartForm.css";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -115,6 +119,13 @@ export default function ChartForm({ onMonthSubmit }) {
                 fullWidth
                 type={"number"}
                 disabled
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <CalendarTodayIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               <FormControl
                 variant="outlined"

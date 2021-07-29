@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
-  margin: {
+  styledButton: {
     marginTop: theme.spacing(1),
   },
 }));
@@ -34,7 +34,7 @@ export default function ColoredButton({
         <Button
           variant="contained"
           color="primary"
-          className={classes.margin}
+          className={classes.styledButton}
           disabled={disabled}
           onClick={onClick}
           type={type}
