@@ -1,22 +1,9 @@
 import React from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import "./Slider.css";
-// const useStyles = makeStyles({
-//     root: {
-//         width: 500,
-//     }
-//
-// });
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 300 + theme.spacing(3) * 2,
-  },
-  margin: {
-    height: theme.spacing(3),
-  },
-}));
+
 const PrettoSlider = withStyles({
   root: {
     color: "#52af77",
@@ -50,9 +37,8 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 export default function DiscreteSlider({ valuetext }) {
-  const classes = useStyles();
   return (
-    <div className={classes.root + " " + "filter-container"}>
+    <div className={"filter-container"}>
       <Typography id="discrete-slider" gutterBottom className={"filter-label"}>
         Filter by age
       </Typography>

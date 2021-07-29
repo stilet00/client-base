@@ -3,7 +3,6 @@ import "./karusell.css";
 import { CLIENTS } from "../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../images/arrow.png";
-import { useParams } from "react-router-dom";
 import Header from "../../shared/Header/Header";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
