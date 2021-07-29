@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import "./SmallChart.css";
-import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ChartDateForm from "../ChartDateForm/ChartDateForm";
 import moment from "moment";
@@ -16,10 +15,11 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       {
         fill: true,
         backgroundColor: ["rgba(25,135,62,0.2)"],
-        borderColor: ["rgba(0,0,0,0.5)"],
-        borderWidth: 2,
+        borderColor: ["rgba(0,0,0,0.8)"],
+        borderWidth: 1.5,
         data: graph.values,
-        tension: 0.2,
+        tension: 0.4,
+        borderDash: [2, 2],
         cubicInterpolationMode: "monotone",
         borderRadius: 3,
       },
@@ -28,6 +28,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
   const options = {
     scales: {
       y: {
+        suggestedMin: 0,
         ticks: {
           beginAtZero: true,
           callback: function (value, index, values) {
