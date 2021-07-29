@@ -38,10 +38,9 @@ const StyledInput = withStyles({
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: "orange",
-        borderWidth: 2,
+        borderWidth: 1,
       },
       "&:hover fieldset": {
-        borderWidth: 1,
         borderColor: "orange",
       },
       "&.Mui-focused fieldset": {
