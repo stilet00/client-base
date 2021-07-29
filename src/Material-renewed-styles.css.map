@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AACA,kBAAkB;EAChB,KAAK,EAAE,KAAK;;AACd,qBAAqB;EACnB,KAAK,EAAE,gBAAe;;AACxB,gCAAgC;EAC9B,YAAY,EAAE,iBAA0B",
-"sources": ["Material-renewed-styles.sass"],
-"names": [],
-"file": "Material-renewed-styles.css"
-}

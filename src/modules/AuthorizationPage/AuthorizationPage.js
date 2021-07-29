@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./AuthorizationPage.css";
 import { Button, TextField } from "@material-ui/core";
-import { PASSWORD } from "../../database/database";
 import { withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import AlertMessage from "../../shared/AlertMessage/AlertMessage";
+import { DEFAULT_ERROR } from "../../constants";
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
@@ -26,24 +26,50 @@ const StyledButton = withStyles({
 })(Button);
 const StyledInput = withStyles({
   root: {
-    "& input:valid + fieldset": {
-      borderColor: "orange",
-      borderWidth: 2,
+    "& label.Mui-focused": {
+      color: "green",
     },
-    "&:focus": {
-      border: "1px solid red",
-      color: "red",
+    "& label": {
+      color: "orange",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "green",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "orange",
+        borderWidth: 2,
+      },
+      "&:hover fieldset": {
+        borderWidth: 1,
+        borderColor: "orange",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "green",
+      },
     },
   },
 })(TextField);
 function AuthorizationPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState({ email: false, password: false });
+  const [error, setError] = useState({
+    email: DEFAULT_ERROR,
+    password: DEFAULT_ERROR,
+  });
   const history = useHistory();
+  const [alertOpen, setAlertOpen] = useState(false);
+
+  const openAlert = () => {
+    setAlertOpen(true);
+  };
+
+  const closeAlert = () => {
+    setAlertOpen(false);
+  };
   function onPasswordChange(e) {
-    if (error.password) {
-      setError({ ...error, password: false });
+    if (error.password.status) {
+      setError({ ...error, password: DEFAULT_ERROR });
       setPassword(e.target.value.trim());
     } else {
       setPassword(e.target.value.trim());
@@ -51,7 +77,7 @@ function AuthorizationPage(props) {
   }
   function onEmailChange(e) {
     if (error.email) {
-      setError({ ...error, email: false });
+      setError({ ...error, email: DEFAULT_ERROR });
       setEmail(e.target.value.trim());
     } else {
       setEmail(e.target.value.trim());
@@ -62,16 +88,35 @@ function AuthorizationPage(props) {
     signInWithEmailPassword();
   }
   function signInWithEmailPassword() {
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(() => {
-          return firebase.auth().signInWithEmailAndPassword(email, password);
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(errorMessage)
-        });
+    firebase
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(() => {
+        return firebase.auth().signInWithEmailAndPassword(email, password);
+      })
+      .catch((errorFromServer) => {
+        const message = errorFromServer.message;
+        const code = errorFromServer.code;
+        console.log(errorFromServer);
+        if (code === "auth/user-not-found") {
+          setError({
+            ...error,
+            email: { ...error.email, text: message, status: true },
+            password: { status: true, text: "" },
+          });
+        } else if (code === "auth/wrong-password") {
+          setError({ ...error, password: { status: true, text: message } });
+        } else if (code === "auth/too-many-requests") {
+          setError({
+            ...error,
+            email: { ...error.email, text: message, status: true },
+            password: { status: true, text: "" },
+          });
+        }
+
+        openAlert();
+        setTimeout(closeAlert, 5000);
+      });
   }
 
   return (
@@ -87,7 +132,7 @@ function AuthorizationPage(props) {
                 Please, log in to proceed...
               </h2>
               <StyledInput
-                error={error.email}
+                error={error.email.status}
                 label="Email"
                 type="email"
                 fullWidth
@@ -96,9 +141,10 @@ function AuthorizationPage(props) {
                 name={"email"}
                 value={email}
                 onChange={onEmailChange}
+                required
               />
               <StyledInput
-                error={error.password}
+                error={error.password.status}
                 label="Password"
                 type="password"
                 fullWidth
@@ -107,6 +153,7 @@ function AuthorizationPage(props) {
                 name={"password"}
                 value={password}
                 onChange={onPasswordChange}
+                required
               />
               <StyledButton
                 variant="contained"
@@ -117,6 +164,12 @@ function AuthorizationPage(props) {
                 Enter
               </StyledButton>
             </form>
+            <AlertMessage
+              text={error.email.text || error.password.text}
+              open={alertOpen}
+              handleOpen={openAlert}
+              handleClose={closeAlert}
+            />
           </div>
         );
       }}

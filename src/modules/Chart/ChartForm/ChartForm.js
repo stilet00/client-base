@@ -15,7 +15,6 @@ import moment from "moment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "./ChartForm.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
