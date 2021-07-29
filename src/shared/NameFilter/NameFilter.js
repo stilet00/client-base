@@ -2,6 +2,8 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import "./NameFilter.css";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
 
 function NameFilter({ onChange, nameFilter }) {
   return (
@@ -11,11 +13,17 @@ function NameFilter({ onChange, nameFilter }) {
       </Typography>
       <TextField
         id="outlined-basic"
-        label="Filter by name"
         variant="outlined"
         fullWidth
         value={nameFilter}
         onChange={(e) => onChange(e.target.value)}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <TextFieldsIcon />
+            </InputAdornment>
+          ),
+        }}
       />
     </div>
   );
