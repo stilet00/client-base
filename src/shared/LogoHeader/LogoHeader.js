@@ -10,6 +10,7 @@ function LogoHeader(props) {
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
+        console.log(user)
         return (
           <div className="App-header">
             <h2>
