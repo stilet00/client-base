@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,gBAAgB;EACd,KAAK,EAAE,GAAG;EACV,UAAU,EAAE,KAAK;EACjB,UAAU,EAAE,MAAM;;AAEpB,yBAAyB;EACvB,gBAAgB;IACd,UAAU,EAAE,IAAI",
+"mappings": "AAAA,gBAAgB;EACd,KAAK,EAAE,GAAG;EACV,UAAU,EAAE,KAAK;EACjB,UAAU,EAAE,KAAK;EACjB,UAAU,EAAE,MAAM;;AAEpB,yBAAyB;EACvB,gBAAgB;IACd,UAAU,EAAE,IAAI",
 "sources": ["Chart.sass"],
 "names": [],
 "file": "Chart.css"
