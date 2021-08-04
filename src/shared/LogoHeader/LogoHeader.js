@@ -13,7 +13,7 @@ function LogoHeader(props) {
         console.log(user);
         return (
           <div className="App-header">
-            <h2>
+            <h2 className={"sunrise-header"}>
               Sunrise <img src={logo} className="App-logo" alt="logo" /> models
             </h2>
             {isSignedIn ? (

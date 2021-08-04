@@ -9,18 +9,14 @@
   border: 2px solid orange;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
-  margin-bottom: 10px;
-}
-.unauthorized h1 {
-  color: orange;
-  text-shadow: none;
-}
+  margin-bottom: 10px; }
+  .unauthorized h1 {
+    color: orange;
+    text-shadow: none; }
 
 a {
-  text-decoration: none;
-}
-a:visited {
-  color: #50c878;
-}
+  text-decoration: none; }
+  a:visited {
+    color: #50C878; }
 
 /*# sourceMappingURL=Unauthorized.css.map */
