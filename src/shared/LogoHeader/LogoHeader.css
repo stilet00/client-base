@@ -1,15 +1,19 @@
 .logged-user {
-  margin: 0;
+  margin: 10px;
   font-weight: bold;
   font-size: 15px;
   max-width: 212px;
-  color: #50c878;
-  font-style: italic;
-}
+  color: #50C878;
+  font-style: italic; }
 
 .user-email {
   color: orange;
-  font-style: normal;
-}
+  font-style: normal; }
+
+.sunrise-header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8); }
 
 /*# sourceMappingURL=LogoHeader.css.map */
