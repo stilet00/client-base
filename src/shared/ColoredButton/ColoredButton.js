@@ -25,6 +25,7 @@ export default function ColoredButton({
   disabled,
   onClick,
   type,
+  style
 }) {
   const classes = useStyles();
 
@@ -39,6 +40,7 @@ export default function ColoredButton({
           onClick={onClick}
           type={type}
           fullWidth
+          style={style}
         >
           {innerContent || children}
         </Button>
