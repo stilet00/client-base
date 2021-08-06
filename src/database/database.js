@@ -12,8 +12,16 @@ import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
 import image14 from "../images/chernetskaya-min.png";
+import image15 from "../images/davydenkova-min.png"
 import moment from "moment";
 export const CLIENTS = [
+  {
+    id: 14,
+    name: "Elena",
+    instagram: "https://www.instagram.com/alena_davids",
+    image: image15,
+    age: moment("1993 04 21", "YYYY MM DO"),
+  },
   {
     id: 1,
     name: "Viktoria",
