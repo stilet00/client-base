@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import "./Gallery.css";
-import { CLIENTS } from "../../database/database";
+import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
-import DiscreteSlider from "../../shared/Slider/Slider";
-import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import DiscreteSlider from "../../../shared/Slider/Slider";
+import Unauthorized from "../../../shared/Unauthorized/Unauthorized";
 import moment from "moment";
-import Header from "../../shared/Header/Header";
-import NameFilter from "../../shared/NameFilter/NameFilter";
+import Header from "../../../shared/Header/Header";
+import NameFilter from "../../../shared/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
+import ClientsForm from "../ClientsForm/ClientsForm";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const [nameFilter, setNameFilter] = useState("");
@@ -25,6 +26,7 @@ function Gallery(props) {
           <div className={"main-gallery-container"}>
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
+              <ClientsForm />
               <DiscreteSlider valuetext={valuetext} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
