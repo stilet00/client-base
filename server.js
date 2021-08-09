@@ -7,9 +7,11 @@ let ObjectId = require("mongodb").ObjectID;
 let bodyParser = require("body-parser");
 let collectionTasks;
 let collectionBalance;
+let collectionClients;
 let rootURL = "/";
 let tasksURL = rootURL + "tasks/";
 let balanceURL = rootURL + "balance/";
+let clientsURL = rootURL + "clients/";
 const PORT = process.env.PORT || 80;
 
 let app = express();
@@ -23,23 +25,6 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   next();
 });
-
-// app.get(rootURL, function(req, res) {
-//     fs.readFile(__dirname + "/build/index.html")
-//         .then(contents => {
-//             res.setHeader("Content-Type", "text/html");
-//             res.writeHead(200);
-//             res.end(contents);
-//         })
-//
-// });
-// app.get(rootURL + 'style.css', function(req, res) {
-//     res.sendFile(__dirname + "/build/static/css/main.c866b758.chunk.css");
-// });
-// app.get(rootURL + 'bundle.js', function(req, res) {
-//     res.sendFile(__dirname + "/bundle.js");
-// });
-
 // task list api
 
 app.get(tasksURL + "get", (req, res) => {
@@ -138,6 +123,32 @@ app.put(balanceURL + ":id", (req, res) => {
     }
   );
 });
+
+//clients api
+
+app.get(clientsURL + "get", (req, res) => {
+  collectionClients.find().toArray((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
+    res.send(docs);
+  });
+});
+app.post(clientsURL + "add", (req, res) => {
+  if (req.body) {
+    let client = { ...req.body };
+
+    collectionClients.insertOne(client, (err, result) => {
+      if (err) {
+        return res.sendStatus(500);
+      } else {
+        res.send(result.ops[0]._id);
+      }
+    });
+  }
+});
+
 //routes
 
 app.get(rootURL + "chart/", function (request, response, next) {
@@ -159,6 +170,7 @@ app.get(rootURL + "tasks/?", function (request, response, next) {
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
+  collectionClients = client.db("clientsDB").collection("clients");
   console.log("Connected successfully to server...");
   app.listen(PORT, () => {
     console.log("API started at port", PORT);
