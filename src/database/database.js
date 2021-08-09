@@ -12,7 +12,7 @@ import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
 import image14 from "../images/chernetskaya-min.png";
-import image15 from "../images/davydenkova-min.png"
+import image15 from "../images/davydenkova-min.png";
 import moment from "moment";
 export const CLIENTS = [
   {

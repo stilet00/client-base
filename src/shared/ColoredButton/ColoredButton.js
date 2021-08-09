@@ -25,7 +25,7 @@ export default function ColoredButton({
   disabled,
   onClick,
   type,
-  style
+  style,
 }) {
   const classes = useStyles();
 

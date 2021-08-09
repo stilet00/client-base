@@ -12,11 +12,14 @@
   background-color: white;
   border: 1px solid red;
   border-radius: 10px;
-  text-align: center; }
-  .message-container h2 {
-    color: red;
-    text-shadow: none; }
-  .message-container p {
-    color: orange; }
+  text-align: center;
+}
+.message-container h2 {
+  color: red;
+  text-shadow: none;
+}
+.message-container p {
+  color: orange;
+}
 
 /*# sourceMappingURL=AlertMessage.css.map */

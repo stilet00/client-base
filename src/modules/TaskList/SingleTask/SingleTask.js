@@ -43,7 +43,11 @@ function SingleTask({
       <p className={"task-date"}>Created: {created}</p>
       {done}
       <div className="button-container">
-        <ColoredButton variant={"outlined"} onClick={() => onDelete(_id)} style={completed ? {backgroundColor: "rgb(255,145,0)"} : null}>
+        <ColoredButton
+          variant={"outlined"}
+          onClick={() => onDelete(_id)}
+          style={completed ? { backgroundColor: "rgb(255,145,0)" } : null}
+        >
           <DeleteForeverIcon />
         </ColoredButton>
         <ColoredButton
