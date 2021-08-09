@@ -6,4 +6,5 @@ export const DEFAULT_CLIENT = {
     preview: "",
   },
   age: "",
+  translators: []
 };

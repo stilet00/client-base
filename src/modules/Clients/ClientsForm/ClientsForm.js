@@ -54,12 +54,6 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   const fileInput = createRef();
   const createThumbnail = useCallback(
     (file) => {
-      // if (file) {
-      //     let file = Object.assign(file, {
-      //         preview: URL.createObjectURL(file),
-      //     });
-      //    setClient({...client, image: file})
-      // }
       if (file) {
         setPreview(URL.createObjectURL(file));
         setClient({ ...client, image: file });
@@ -161,7 +155,7 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
               {previewImage}
 
               <Button type={"submit"} fullWidth variant={"outlined"}>
-                Add chart
+                Add client
               </Button>
             </form>
           </div>

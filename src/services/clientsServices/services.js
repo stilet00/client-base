@@ -6,7 +6,8 @@ export function getClients() {
   return axios.get(clientsURL + "get/");
 }
 export function addClient(client) {
-  return axios.post(clientsURL + "add/", client);
+  // return axios.post(clientsURL + "add/", client);
+  console.log(client.image)
 }
 export function removeClient(id) {
   return axios.delete(clientsURL + id);
