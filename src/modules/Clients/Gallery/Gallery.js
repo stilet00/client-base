@@ -21,7 +21,7 @@ function Gallery(props) {
     setNameFilter(text);
   }
   function formSubmit(newClient) {
-    addClient(newClient).then((res) => console.log(res));
+    return addClient(newClient)
   }
   return (
     <FirebaseAuthConsumer>

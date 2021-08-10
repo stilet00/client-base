@@ -40,7 +40,7 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   const [open, setOpen] = useState(false);
   // const [preview, setPreview] = useState("");
   const handleChange = (e) => {
-    setClient({ ...client, [e.target.name]: e.target.value });
+    setClient({ ...client, [e.target.name]: e.target.value.trim() });
   };
   const handleOpen = () => {
     setOpen(true);
@@ -53,7 +53,14 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
 
   function formSubmit(e) {
     e.preventDefault();
-    onFormSubmit(client);
+    onFormSubmit(client).then(res => {
+        if (res.status === 200) {
+            handleClose();
+        } else {
+            console.log(res.text)
+        }
+    });
+
   }
   // const previewImage =
   //   preview.length > 0 ? (
