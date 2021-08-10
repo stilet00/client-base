@@ -11,6 +11,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import LockIcon from "@material-ui/icons/Lock";
 import ImageIcon from "@material-ui/icons/Image";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import "./ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
 
@@ -40,7 +41,7 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   const classes = useStyles();
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
   const [open, setOpen] = useState(false);
-  const [preview, setPreview] = useState("");
+  // const [preview, setPreview] = useState("");
   const handleChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
   };
@@ -51,30 +52,22 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const fileInput = createRef();
-  const createThumbnail = useCallback(
-    (file) => {
-      if (file) {
-        setPreview(URL.createObjectURL(file));
-        setClient({ ...client, image: file });
-      }
-    },
-    [client]
-  );
+  // const fileInput = createRef();
+
   function formSubmit(e) {
     e.preventDefault();
     onFormSubmit(client);
   }
-  const previewImage =
-    preview.length > 0 ? (
-      <img
-        src={preview}
-        width={"50px"}
-        height={"50px"}
-        alt={"preview"}
-        className={"preview-image"}
-      />
-    ) : null;
+  // const previewImage =
+  //   preview.length > 0 ? (
+  //     <img
+  //       src={preview}
+  //       width={"50px"}
+  //       height={"50px"}
+  //       alt={"preview"}
+  //       className={"preview-image"}
+  //     />
+  //   ) : null;
   return (
     <div className={"socials add-client-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>
@@ -95,7 +88,7 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
         <Fade in={open}>
           <div className={"form-container clients-form"}>
             <form onSubmit={formSubmit}>
-              <h2 id="transition-modal-title">Enter parameters:</h2>
+              <h2 id="transition-modal-title">Enter client's name and surname:</h2>
               <CssTextField
                 name={"name"}
                 onChange={handleChange}
@@ -113,46 +106,63 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
                 }}
               />
               <CssTextField
-                name={"instagram"}
-                onChange={handleChange}
-                value={client.instagram}
-                variant="outlined"
-                label={"Instagram"}
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <InstagramIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                  name={"surname"}
+                  onChange={handleChange}
+                  value={client.surname}
+                  variant="outlined"
+                  label={"Surname"}
+                  fullWidth
+                  required
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                          <AssignmentIndIcon />
+                        </InputAdornment>
+                    ),
+                  }}
               />
-              <CssTextField
-                name={"onlyFans"}
-                onChange={handleChange}
-                value={client.onlyFans}
-                variant="outlined"
-                label={"Onlyfans"}
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <div className={"upload-container"}>
-                <input
-                  type="file"
-                  ref={fileInput}
-                  accept={"image/jpeg,image/png,image/gif"}
-                  className={"photo-input"}
-                  onChange={() => createThumbnail(fileInput.current.files[0])}
-                />
-                <ImageIcon fontSize={"large"} className={"photo-icon"} />
-              </div>
-              {previewImage}
+              {/*<CssTextField*/}
+              {/*  name={"instagram"}*/}
+              {/*  onChange={handleChange}*/}
+              {/*  value={client.instagram}*/}
+              {/*  variant="outlined"*/}
+              {/*  label={"Instagram"}*/}
+              {/*  fullWidth*/}
+              {/*  InputProps={{*/}
+              {/*    startAdornment: (*/}
+              {/*      <InputAdornment position="start">*/}
+              {/*        <InstagramIcon />*/}
+              {/*      </InputAdornment>*/}
+              {/*    ),*/}
+              {/*  }}*/}
+              {/*/>*/}
+              {/*<CssTextField*/}
+              {/*  name={"onlyFans"}*/}
+              {/*  onChange={handleChange}*/}
+              {/*  value={client.onlyFans}*/}
+              {/*  variant="outlined"*/}
+              {/*  label={"Onlyfans"}*/}
+              {/*  fullWidth*/}
+              {/*  InputProps={{*/}
+              {/*    startAdornment: (*/}
+              {/*      <InputAdornment position="start">*/}
+              {/*        <LockIcon />*/}
+              {/*      </InputAdornment>*/}
+              {/*    ),*/}
+              {/*  }}*/}
+              {/*/>*/}
+              {/*<div className={"upload-container"}>*/}
+              {/*  <input*/}
+              {/*    type="file"*/}
+              {/*    ref={fileInput}*/}
+              {/*    accept={"image/jpeg,image/png,image/gif"}*/}
+              {/*    className={"photo-input"}*/}
+              {/*    onChange={() => createThumbnail(fileInput.current.files[0])}*/}
+              {/*    name={"image"}*/}
+              {/*  />*/}
+              {/*  <ImageIcon fontSize={"large"} className={"photo-icon"} />*/}
+              {/*</div>*/}
+              {/*{previewImage}*/}
 
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add client

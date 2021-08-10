@@ -22,7 +22,6 @@ function Gallery(props) {
   }
   function formSubmit(newClient) {
     addClient(newClient).then((res) => console.log(res));
-    // addClient(newClient)
   }
   return (
     <FirebaseAuthConsumer>

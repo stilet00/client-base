@@ -16,7 +16,7 @@ import image15 from "../images/davydenkova-min.png";
 import moment from "moment";
 export const CLIENTS = [
   {
-    id: 14,
+    id: 15,
     name: "Elena",
     instagram: "https://www.instagram.com/alena_davids",
     image: image15,

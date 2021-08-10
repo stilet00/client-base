@@ -8,7 +8,7 @@ import {
 import "./TaskList.css";
 import SingleTask from "./SingleTask/SingleTask";
 import moment from "moment";
-import Form from "../Form/Form";
+import Form from "./Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Header from "../../shared/Header/Header";
 import Loader from "../../shared/Loader/Loader";
