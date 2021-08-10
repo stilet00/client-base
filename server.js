@@ -1,4 +1,6 @@
 let express = require("express");
+let multer = require("multer");
+let path = require("path");
 let MongoClient = require("mongodb").MongoClient;
 const uri =
   "mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority";
@@ -135,19 +137,19 @@ app.get(clientsURL + "get", (req, res) => {
     res.send(docs);
   });
 });
-app.post(clientsURL + "add", (req, res) => {
-  if (req.body) {
-    let client = { ...req.body };
-
-    collectionClients.insertOne(client, (err, result) => {
-      if (err) {
-        return res.sendStatus(500);
-      } else {
-        res.send(result.ops[0]._id);
-      }
-    });
-  }
-});
+// app.post(clientsURL + "add", (req, res) => {
+//   if (req.body) {
+//     let client = { ...req.body };
+//
+//     collectionClients.insertOne(client, (err, result) => {
+//       if (err) {
+//         return res.sendStatus(500);
+//       } else {
+//         res.send(result.ops[0]._id);
+//       }
+//     });
+//   }
+// });
 
 //routes
 
@@ -165,6 +167,21 @@ app.get(rootURL + "clients/?", function (request, response, next) {
 });
 app.get(rootURL + "tasks/?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
+});
+
+
+//images
+
+
+app.use(express.static(__dirname));
+const upload = multer({ dest: 'uploads/' })
+app.post(clientsURL + "add", upload.single("avatar"), function (req, res, next) {
+  let filedata = req.file;
+  console.log(filedata);
+  // if(!filedata)
+  //   res.send("Ошибка при загрузке файла");
+  // else
+  //   res.send("Файл загружен");
 });
 
 client.connect(function (err) {
