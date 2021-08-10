@@ -86,11 +86,17 @@ export default function Header({ pretty }) {
                 </ListItemIcon>
                 <ListItemText primary={"Balance chart"} />
               </ListItem>
-              <ListItem button onClick={() => history.push("/clients/true")}>
+              <ListItem button onClick={() => history.push("/clients")}>
                 <ListItemIcon>
                   <SupervisorAccountIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Clients"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/translators")}>
+                <ListItemIcon>
+                  <SupervisorAccountIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Translators"} />
               </ListItem>
               {isSignedIn ? logoutButton : null}
             </List>
