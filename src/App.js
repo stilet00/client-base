@@ -1,5 +1,5 @@
 import "./App.css";
-import Karussell from "./modules/Karussell/Karussell";
+import Karussell from "./modules/Clients/Karussell/Karussell";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -8,7 +8,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import Media from "react-media";
-import Gallery from "./modules/Gallery/Gallery";
+import Gallery from "./modules/Clients/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import TaskList from "./modules/TaskList/TaskList";
 import Chart from "./modules/Chart/Chart";

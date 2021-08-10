@@ -2,11 +2,7 @@ import React from "react";
 import logo from "../../images/logo.png";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import "./LogoHeader.css";
-import firebase from "firebase";
-import { useHistory } from "react-router-dom";
-import ColoredButton from "../ColoredButton/ColoredButton";
 function LogoHeader(props) {
-  const history = useHistory();
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {

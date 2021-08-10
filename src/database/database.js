@@ -6,7 +6,6 @@ import image5 from "../images/shukurova-min.png";
 import image6 from "../images/henriksen-min.png";
 import image7 from "../images/krasnoschekova-min.png";
 import image8 from "../images/purkarita-min.png";
-import image9 from "../images/shalev-min.png";
 import image10 from "../images/sycheva-min.png";
 import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
@@ -16,7 +15,7 @@ import image15 from "../images/davydenkova-min.png";
 import moment from "moment";
 export const CLIENTS = [
   {
-    id: 14,
+    id: 15,
     name: "Elena",
     instagram: "https://www.instagram.com/alena_davids",
     image: image15,
