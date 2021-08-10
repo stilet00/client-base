@@ -12,7 +12,7 @@ import image11 from "../images/rudaya-min.png";
 import image12 from "../images/popova-min.png";
 import image13 from "../images/saharova-min.png";
 import image14 from "../images/chernetskaya-min.png";
-import image15 from "../images/davydenkova-min.png"
+import image15 from "../images/davydenkova-min.png";
 import moment from "moment";
 export const CLIENTS = [
   {
@@ -79,13 +79,6 @@ export const CLIENTS = [
     instagram: "https://www.instagram.com/simona.claudia7/",
     image: image8,
     age: moment("1990 05 18", "YYYY MM DO"),
-  },
-  {
-    id: 9,
-    name: "Sapir",
-    instagram: "https://www.instagram.com/la_barbie_sapir/",
-    image: image9,
-    age: moment("1992 02 09", "YYYY MM DO"),
   },
   {
     id: 10,

@@ -10,7 +10,6 @@ function LogoHeader(props) {
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
-        console.log(user);
         return (
           <div className="App-header">
             <h2 className={"sunrise-header"}>
@@ -23,16 +22,6 @@ function LogoHeader(props) {
                   <span className={"user-email"}>
                     {isSignedIn ? ` ${user.email}` : null}{" "}
                   </span>
-                  <ColoredButton
-                    variant={"outlined"}
-                    onClick={() => {
-                      firebase.auth().signOut();
-                      setTimeout(() => {
-                        history.push("/");
-                      }, 1000);
-                    }}
-                    innerContent={"LOG OUT"}
-                  />
                 </p>
               </>
             ) : null}

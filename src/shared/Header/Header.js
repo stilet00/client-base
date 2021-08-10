@@ -12,6 +12,9 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { useHistory } from "react-router-dom";
 import "./Header.css";
+import firebase from "firebase";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { FirebaseAuthConsumer } from "@react-firebase/auth";
 
 const useStyles = makeStyles({
   list: {
@@ -41,37 +44,60 @@ export default function Header({ pretty }) {
     }
     setState({ ...state, [anchor]: open });
   };
+  const logoutButton = (
+    <ListItem
+      button
+      onClick={() => {
+        firebase.auth().signOut();
+        setTimeout(() => {
+          history.push("/");
+        }, 1000);
+      }}
+    >
+      <ListItemIcon>
+        <ExitToAppIcon />
+      </ListItemIcon>
+      <ListItemText primary={"Log out"} />
+    </ListItem>
+  );
 
   const list = (anchor) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List className={"fallDown-menu"}>
-        <ListItem button onClick={() => history.push("/tasks")}>
-          <ListItemIcon>
-            <FormatListNumberedIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Task List"} />
-        </ListItem>
-        <ListItem button onClick={() => history.push("/chart")}>
-          <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Balance chart"} />
-        </ListItem>
-        <ListItem button onClick={() => history.push("/clients/true")}>
-          <ListItemIcon>
-            <SupervisorAccountIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Clients"} />
-        </ListItem>
-      </List>
-    </div>
+    <FirebaseAuthConsumer>
+      {({ isSignedIn, user, providerId }) => {
+        return (
+          <div
+            className={clsx(classes.list, {
+              [classes.fullList]: anchor === "top" || anchor === "bottom",
+            })}
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+          >
+            <List className={"fallDown-menu"}>
+              <ListItem button onClick={() => history.push("/tasks")}>
+                <ListItemIcon>
+                  <FormatListNumberedIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Task List"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/chart")}>
+                <ListItemIcon>
+                  <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Balance chart"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/clients/true")}>
+                <ListItemIcon>
+                  <SupervisorAccountIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Clients"} />
+              </ListItem>
+              {isSignedIn ? logoutButton : null}
+            </List>
+          </div>
+        );
+      }}
+    </FirebaseAuthConsumer>
   );
 
   return (
