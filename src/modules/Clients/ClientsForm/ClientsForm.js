@@ -53,7 +53,14 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
 
   function formSubmit(e) {
     e.preventDefault();
-    onFormSubmit(client);
+    onFormSubmit(client).then(res => {
+        if (res.status === 200) {
+            handleClose();
+            console.log(res.data)
+        } else {
+            console.log(res.data)
+        }
+    });
   }
   // const previewImage =
   //   preview.length > 0 ? (

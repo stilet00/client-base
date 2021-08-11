@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from "../../shared/Header/Header";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { getClients } from "../../services/clientsServices/services";
@@ -17,29 +13,12 @@ import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import { getTranslators } from "../../services/translatorsServices/services";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
 import "./Translators.css"
-import { Divider } from "@material-ui/core";
-const useStyles = makeStyles({
-    list: {
-        width: 250,
-    },
-    color: {
-        color: "red",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    blackDivider: {
-        backgroundColor: "black"
-    }
-});
+
 function Translators (props) {
     const [clients, setClients] = useState([]);
     const [translators, setTranslators] = useState([]);
-    const classes = useStyles();
-    const [state, setState] = React.useState({
-        top: false,
+    const [state, setState] = useState({
         left: false,
-        bottom: false,
-        right: false,
     });
     useEffect(() => {
         getTranslators().then(res => {
@@ -65,30 +44,46 @@ function Translators (props) {
         }
         setState({ ...state, [anchor]: open });
     };
-    const list = (anchor) => (
-        <div
-            className={clsx(classes.list)}
-            role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
-        >
-            <List className={"fallDown-menu"}>
-                <ListItem>
-                    <ListItemText primary={"Not assigned clients:"} className={classes.color}/>
-                </ListItem>
-            </List>
-            <Divider />
-            <List className={"fallDown-menu"}>
-                {clients.map((client, index) => (
-                    <ListItem button key={client._id} draggable={true}>
-                        <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}</ListItemIcon>
-                        <ListItemText primary={`${client.name} ${client.surname}`} />
-                    </ListItem>
-                ))}
-            </List>
+    //drag & drop handler
+    const [currentTranslator, setCurrentTranslator] = useState(null)
+    const [currentClient, setCurrentClient] = useState(null)
+    function dragStartHandler (e, client) {
+        setCurrentClient(client);
+        e.target.style.background = "rgba(103, 128, 159, 0.5)";
+    }
 
-        </div>
-    );
+    function dragLeaveHandler (e) {
+        if (state.left === true) {
+            setState({ left: false })
+        }
+        console.log(e.target)
+        e.target.style.background = "none"
+    }
+    function dragEndHandler (e) {
+        e.target.style.background = "none"
+
+    }
+
+    function dragOverHandler (e) {
+        e.preventDefault();
+        if (e.target.tagName === "UL") {
+            e.target.style.background = "rgba(255,165,0,1)"
+        }
+    }
+
+    function dragDropHandler (e, task, board) {
+        e.preventDefault();
+    }
+    function onBoardDrop(e, translatorID) {
+        e.preventDefault();
+        e.target.style.background = "none"
+        setTranslators(translators.map(item => {
+            return item._id === translatorID ? {...item, clients: [...item.clients, currentClient]} : item
+        }))
+        setClients(clients.filter(item => item._id !== currentClient._id))
+        setCurrentClient(null);
+
+    }
     return (
         <FirebaseAuthConsumer>
             {({ isSignedIn, user, providerId }) => {
@@ -103,7 +98,14 @@ function Translators (props) {
                                             <h3>Unassigned clients:</h3>
                                             <ul>
                                                 {clients.map((client, index) => (
-                                                    <li key={client._id} draggable={true} className={"left-menu-item"}>
+                                                    <li key={client._id} className={"left-menu-item"}
+                                                        draggable={true}
+                                                        onDragStart={(e) => dragStartHandler(e, client)}
+                                                        onDragOver={dragOverHandler}
+                                                        onDragLeave={dragLeaveHandler}
+                                                        onDragEnd={dragEndHandler}
+                                                        onDrop={(e) => dragDropHandler(e)}
+                                                    >
                                                         <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}</ListItemIcon>
                                                         <ListItemText primary={`${client.name} ${client.surname}`} />
                                                     </li>
@@ -115,7 +117,7 @@ function Translators (props) {
                             <TranslatorsForm />
                         </div>
                         <div className={"inner-gallery-container  translators-container"}>
-                            {translators.map(item => <SingleTranslator {...item} key={item._id}/>)}
+                            {translators.map(item => <SingleTranslator {...item} key={item._id} dragOverHandler={dragOverHandler} onBoardDrop={onBoardDrop} dragLeaveHandler={dragLeaveHandler}/>)}
                         </div>
                     </div>
                 ) : (
