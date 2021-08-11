@@ -20,9 +20,6 @@ function Gallery(props) {
   function onNameFilter(text) {
     setNameFilter(text);
   }
-  function formSubmit(newClient) {
-    return addClient(newClient);
-  }
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -30,7 +27,7 @@ function Gallery(props) {
           <div className={"main-gallery-container"}>
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
-              <ClientsForm onFormSubmit={formSubmit} />
+              <ClientsForm />
               <DiscreteSlider valuetext={valuetext} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>

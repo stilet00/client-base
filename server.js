@@ -126,7 +126,6 @@ app.put(balanceURL + ":id", (req, res) => {
   );
 });
 
-
 // app.post(clientsURL + "add", (req, res) => {
 //   if (req.body) {
 //     let client = { ...req.body };
@@ -186,11 +185,20 @@ app.post(clientsURL + "add", function (req, res, next) {
     });
   }
 });
+app.delete(clientsURL + ":id", (req, res) => {
+  collectionClients.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
+    if (err) {
+      return res.sendStatus(500);
+    } else {
+      res.send("Клиентка удалена");
+    }
+    res.sendStatus(200);
+  });
+});
 // translators api
 app.get(translatorsURL + "get", (req, res) => {
   collectionTranslators.find().toArray((err, docs) => {
     if (err) {
-      console.log(err);
       return res.sendStatus(500);
     }
     res.send(docs);
@@ -208,6 +216,26 @@ app.post(translatorsURL + "add", function (req, res, next) {
       }
     });
   }
+});
+app.put(translatorsURL + ":id", (req, res) => {
+  collectionTranslators.updateOne(
+    { _id: ObjectId(req.params.id) },
+    {
+      $set: {
+        name: req.body.name,
+        surname: req.body.surname,
+        clients: req.body.clients,
+      },
+    },
+    (err) => {
+      if (err) {
+        return res.sendStatus(500);
+      } else {
+        res.send("Переводчик сохранен");
+      }
+      res.sendStatus(200);
+    }
+  );
 });
 
 client.connect(function (err) {

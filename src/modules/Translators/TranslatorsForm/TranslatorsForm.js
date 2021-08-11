@@ -8,7 +8,7 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "./TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
 import { addTranslator } from "../../../services/translatorsServices/services";
@@ -37,11 +37,13 @@ const CssTextField = withStyles({
 
 export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   const classes = useStyles();
-  const [translator, setTranslator] = useState(editedTranslator || DEFAULT_TRANSLATOR);
+  const [translator, setTranslator] = useState(
+    editedTranslator || DEFAULT_TRANSLATOR
+  );
   const [open, setOpen] = useState(false);
   // const [preview, setPreview] = useState("");
   const handleChange = (e) => {
-      setTranslator({ ...translator, [e.target.name]: e.target.value.trim() });
+    setTranslator({ ...translator, [e.target.name]: e.target.value.trim() });
   };
   const handleOpen = () => {
     setOpen(true);
@@ -53,22 +55,21 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
 
   function formSubmit(e) {
     // e.preventDefault();
-    addTranslator(translator)
-        .then(res => {
-        if (res.status === 200) {
-            handleClose();
-            setTranslator(DEFAULT_TRANSLATOR);
-            console.log(res.data);
-        } else {
-            console.log(res.status)
-        }
+    addTranslator(translator).then((res) => {
+      if (res.status === 200) {
+        handleClose();
+        setTranslator(DEFAULT_TRANSLATOR);
+        console.log(res.data);
+      } else {
+        console.log(res.status);
+      }
     });
   }
 
   return (
-    <div className={"socials add-translator-button"}>
+    <div className={"socials add-translator-button bottom-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>
-        <AddIcon />
+        <AddIcon /> Add translator
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -85,7 +86,9 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
         <Fade in={open}>
           <div className={"form-container clients-form"}>
             <form onSubmit={formSubmit}>
-              <h2 id="transition-modal-title">Enter translator's name and surname:</h2>
+              <h2 id="transition-modal-title">
+                Enter translator's name and surname:
+              </h2>
               <CssTextField
                 name={"name"}
                 onChange={handleChange}
@@ -103,20 +106,20 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                 }}
               />
               <CssTextField
-                  name={"surname"}
-                  onChange={handleChange}
-                  value={translator.surname}
-                  variant="outlined"
-                  label={"Surname"}
-                  fullWidth
-                  required
-                  InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                          <AssignmentIndIcon />
-                        </InputAdornment>
-                    ),
-                  }}
+                name={"surname"}
+                onChange={handleChange}
+                value={translator.surname}
+                variant="outlined"
+                label={"Surname"}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AssignmentIndIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add translator

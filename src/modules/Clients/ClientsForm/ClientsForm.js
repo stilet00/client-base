@@ -8,9 +8,10 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "./ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
+import { addClient } from "../../../services/clientsServices/services";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -34,7 +35,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ClientsForm({ onFormSubmit, editedClient }) {
+export default function ClientsForm({ editedClient }) {
   const classes = useStyles();
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
   const [open, setOpen] = useState(false);
@@ -53,13 +54,14 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
 
   function formSubmit(e) {
     e.preventDefault();
-    onFormSubmit(client).then(res => {
-        if (res.status === 200) {
-            handleClose();
-            console.log(res.data)
-        } else {
-            console.log(res.data)
-        }
+    addClient(client).then((res) => {
+      if (res.status === 200) {
+        handleClose();
+        console.log(res.data);
+        window.location.reload();
+      } else {
+        console.log(res.data);
+      }
     });
   }
   // const previewImage =
@@ -73,9 +75,9 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   //     />
   //   ) : null;
   return (
-    <div className={"socials add-client-button"}>
+    <div className={"socials add-client-button middle-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>
-        <AddIcon />
+        <AddIcon /> Add client
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -92,7 +94,9 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
         <Fade in={open}>
           <div className={"form-container clients-form"}>
             <form onSubmit={formSubmit}>
-              <h2 id="transition-modal-title">Enter client's name and surname:</h2>
+              <h2 id="transition-modal-title">
+                Enter client's name and surname:
+              </h2>
               <CssTextField
                 name={"name"}
                 onChange={handleChange}
@@ -110,20 +114,20 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
                 }}
               />
               <CssTextField
-                  name={"surname"}
-                  onChange={handleChange}
-                  value={client.surname}
-                  variant="outlined"
-                  label={"Surname"}
-                  fullWidth
-                  required
-                  InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                          <AssignmentIndIcon />
-                        </InputAdornment>
-                    ),
-                  }}
+                name={"surname"}
+                onChange={handleChange}
+                value={client.surname}
+                variant="outlined"
+                label={"Surname"}
+                fullWidth
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AssignmentIndIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               {/*<CssTextField*/}
               {/*  name={"instagram"}*/}

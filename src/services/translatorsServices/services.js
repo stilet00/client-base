@@ -3,14 +3,14 @@ const translatorsURL = "http://localhost:80/translators/";
 // const translatorsURL = "https://sunrise-agency.herokuapp.com/translators/";
 
 export function getTranslators() {
-    return axios.get(translatorsURL + "get/");
+  return axios.get(translatorsURL + "get/");
 }
 export function addTranslator(translator) {
-    return axios.post(translatorsURL + "add/", translator);
+  return axios.post(translatorsURL + "add/", translator);
 }
 export function removeTranslator(id) {
-    return axios.delete(translatorsURL + id);
+  return axios.delete(translatorsURL + id);
 }
-// export function changeChartValue(chart) {
-//     return axios.put(clientsURL + chart._id, chart);
-// }
+export function updateTranslator(translator) {
+  return axios.put(translatorsURL + translator._id, translator);
+}
