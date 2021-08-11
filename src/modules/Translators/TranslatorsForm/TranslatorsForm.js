@@ -52,7 +52,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   };
 
   function formSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     addTranslator(translator)
         .then(res => {
         if (res.status === 200) {

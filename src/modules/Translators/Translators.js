@@ -17,17 +17,18 @@ import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import { getTranslators } from "../../services/translatorsServices/services";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
 import "./Translators.css"
+import { Divider } from "@material-ui/core";
 const useStyles = makeStyles({
     list: {
         width: 250,
-    },
-    fullList: {
-        width: 'auto',
     },
     color: {
         color: "red",
         fontWeight: "bold",
         textAlign: "center"
+    },
+    blackDivider: {
+        backgroundColor: "black"
     }
 });
 function Translators (props) {
@@ -66,9 +67,7 @@ function Translators (props) {
     };
     const list = (anchor) => (
         <div
-            className={clsx(classes.list, {
-                [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-            })}
+            className={clsx(classes.list)}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
@@ -77,6 +76,9 @@ function Translators (props) {
                 <ListItem>
                     <ListItemText primary={"Not assigned clients:"} className={classes.color}/>
                 </ListItem>
+            </List>
+            <Divider />
+            <List className={"fallDown-menu"}>
                 {clients.map((client, index) => (
                     <ListItem button key={client._id} draggable={true}>
                         <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}</ListItemIcon>
@@ -84,6 +86,7 @@ function Translators (props) {
                     </ListItem>
                 ))}
             </List>
+
         </div>
     );
     return (
@@ -96,12 +99,22 @@ function Translators (props) {
                             <div className={"socials button-add-container middle-button"}>
                                         <Button onClick={toggleDrawer("left", true)} fullWidth>Show clients</Button>
                                         <Drawer anchor={"left"} open={state["left"]} onClose={toggleDrawer("left", false)}>
-                                            {list("left")}
+                                            <div className={"side-clients-menu"}>
+                                            <h3>Unassigned clients:</h3>
+                                            <ul>
+                                                {clients.map((client, index) => (
+                                                    <li key={client._id} draggable={true} className={"left-menu-item"}>
+                                                        <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}</ListItemIcon>
+                                                        <ListItemText primary={`${client.name} ${client.surname}`} />
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            </div>
                                         </Drawer>
                             </div>
                             <TranslatorsForm />
                         </div>
-                        <div className={"inner-gallery-container"}>
+                        <div className={"inner-gallery-container  translators-container"}>
                             {translators.map(item => <SingleTranslator {...item} key={item._id}/>)}
                         </div>
                     </div>
