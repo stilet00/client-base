@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,cAAc;EACZ,aAAa,EAAE,CAAC",
+"sources": ["Translators.sass"],
+"names": [],
+"file": "Translators.css"
+}
