@@ -15,6 +15,7 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import {
   getTranslators,
+  removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
@@ -91,27 +92,40 @@ function Translators(props) {
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
     );
-    editedTranslator = {
-      ...editedTranslator,
-      clients: [...editedTranslator.clients, currentClient],
-    };
-    updateTranslator(editedTranslator).then((res) => {
-      if (res.status === 200) {
-        setTranslators(
-          translators.map((item) => {
-            return item._id === translatorID ? editedTranslator : item;
-          })
-        );
-      } else {
-        console.log(res.data);
-      }
-    });
+    if (editedTranslator.clients.includes(currentClient)) {
+      console.log("already there");
+    } else {
+      editedTranslator = {
+        ...editedTranslator,
+        clients: [...editedTranslator.clients, currentClient],
+      };
+      updateTranslator(editedTranslator).then((res) => {
+        if (res.status === 200) {
+          setTranslators(
+            translators.map((item) => {
+              return item._id === translatorID ? editedTranslator : item;
+            })
+          );
+        } else {
+          console.log(res.data);
+        }
+      });
+    }
     setCurrentClient(null);
   }
   function deleteClient(id) {
     removeClient(id).then((res) => {
       if (res.status === 200) {
         setClients(clients.filter((item) => item._id !== id));
+      } else {
+        console.log(res.data);
+      }
+    });
+  }
+  function onTranslatorDelete(id) {
+    removeTranslator(id).then((res) => {
+      if (res.status === 200) {
+        setTranslators(translators.filter((item) => item._id !== id));
       } else {
         console.log(res.data);
       }
@@ -173,6 +187,7 @@ function Translators(props) {
               <h3>List of translators:</h3>
               {translators.map((item) => (
                 <SingleTranslator
+                  deleteTranslator={onTranslatorDelete}
                   {...item}
                   key={item._id}
                   dragOverHandler={dragOverHandler}

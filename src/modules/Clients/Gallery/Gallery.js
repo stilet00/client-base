@@ -9,7 +9,6 @@ import Header from "../../../shared/Header/Header";
 import NameFilter from "../../../shared/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
-import { addClient } from "../../../services/clientsServices/services";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const [nameFilter, setNameFilter] = useState("");

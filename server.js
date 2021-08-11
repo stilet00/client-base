@@ -179,9 +179,8 @@ app.post(clientsURL + "add", function (req, res, next) {
     collectionClients.insertOne(req.body, (err, result) => {
       if (err) {
         return res.sendStatus(500);
-      } else {
-        res.send("Клиентка загружена");
       }
+      res.sendStatus(200);
     });
   }
 });
@@ -189,8 +188,6 @@ app.delete(clientsURL + ":id", (req, res) => {
   collectionClients.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
     if (err) {
       return res.sendStatus(500);
-    } else {
-      res.send("Клиентка удалена");
     }
     res.sendStatus(200);
   });
@@ -232,6 +229,17 @@ app.put(translatorsURL + ":id", (req, res) => {
         return res.sendStatus(500);
       } else {
         res.send("Переводчик сохранен");
+      }
+      res.sendStatus(200);
+    }
+  );
+});
+app.delete(translatorsURL + ":id", (req, res) => {
+  collectionTranslators.deleteOne(
+    { _id: ObjectId(req.params.id) },
+    (err, docs) => {
+      if (err) {
+        return res.sendStatus(500);
       }
       res.sendStatus(200);
     }

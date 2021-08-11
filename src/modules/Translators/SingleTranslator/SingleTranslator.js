@@ -1,5 +1,7 @@
 import React from "react";
 import "./SingleTranslator.css";
+import { Button } from "@material-ui/core";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 function SingleTranslator({
   name,
   surname,
@@ -8,6 +10,7 @@ function SingleTranslator({
   dragOverHandler,
   onBoardDrop,
   dragLeaveHandler,
+  deleteTranslator,
 }) {
   return (
     <div className={"gallery-item translator-item"}>
@@ -28,6 +31,9 @@ function SingleTranslator({
           ))}
         </ul>
       </div>
+      <Button onClick={() => deleteTranslator(_id)}>
+        <DeleteForeverIcon />
+      </Button>
     </div>
   );
 }
