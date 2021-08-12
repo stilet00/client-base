@@ -5,6 +5,8 @@
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   max-width: 326px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .fallDown-menu {

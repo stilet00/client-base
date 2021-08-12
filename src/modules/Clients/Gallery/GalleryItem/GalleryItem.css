@@ -9,11 +9,6 @@
   background: rgba(80, 200, 120, 0.7);
   box-shadow: 2px 2px 2px grey;
 }
-.gallery-item p {
-  margin: 0;
-  font-family: "Baloo Tammudu 2", cursive;
-  letter-spacing: 1px;
-}
 
 .gallery-socials {
   border: none;

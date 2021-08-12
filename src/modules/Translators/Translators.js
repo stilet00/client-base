@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../shared/Header/Header";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
@@ -23,10 +23,14 @@ import "./Translators.css";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
+import { useAlert } from "../../shared/AlertMessage/hooks";
+import Loader from "../../shared/Loader/Loader";
+import AlertMessage from "../../shared/AlertMessage/AlertMessage";
 
 function Translators(props) {
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
+  const { alertOpen, closeAlertNoReload, openAlert } = useAlert();
   const [state, setState] = useState({
     left: false,
   });
@@ -34,7 +38,6 @@ function Translators(props) {
     getTranslators().then((res) => {
       if (res.status === 200) {
         setTranslators(res.data);
-        console.log(res.data);
       } else {
         console.log("No translators");
       }
@@ -42,7 +45,6 @@ function Translators(props) {
     getClients().then((res) => {
       if (res.status === 200) {
         setClients(res.data);
-        console.log(res.data);
       } else {
         console.log("No clients");
       }
@@ -92,8 +94,12 @@ function Translators(props) {
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
     );
-    if (editedTranslator.clients.includes(currentClient)) {
-      console.log("already there");
+    if (
+      editedTranslator.clients.filter((item) => item._id === currentClient._id)
+        .length > 0
+    ) {
+      openAlert();
+      setTimeout(closeAlertNoReload, 1500);
     } else {
       editedTranslator = {
         ...editedTranslator,
@@ -111,7 +117,6 @@ function Translators(props) {
         }
       });
     }
-    setCurrentClient(null);
   }
   function deleteClient(id) {
     removeClient(id).then((res) => {
@@ -131,6 +136,21 @@ function Translators(props) {
       }
     });
   }
+  const page =
+    translators.length > 0 ? (
+      translators.map((item) => (
+        <SingleTranslator
+          deleteTranslator={onTranslatorDelete}
+          {...item}
+          key={item._id}
+          dragOverHandler={dragOverHandler}
+          onBoardDrop={onBoardDrop}
+          dragLeaveHandler={dragLeaveHandler}
+        />
+      ))
+    ) : (
+      <Loader />
+    );
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -139,8 +159,9 @@ function Translators(props) {
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
+                <ListAltIcon />
                 <Button onClick={toggleDrawer("left", true)} fullWidth>
-                  <ListAltIcon /> Show clients
+                  Show clients
                 </Button>
                 <Drawer
                   anchor={"left"}
@@ -185,17 +206,15 @@ function Translators(props) {
             </div>
             <div className={"inner-gallery-container  translators-container"}>
               <h3>List of translators:</h3>
-              {translators.map((item) => (
-                <SingleTranslator
-                  deleteTranslator={onTranslatorDelete}
-                  {...item}
-                  key={item._id}
-                  dragOverHandler={dragOverHandler}
-                  onBoardDrop={onBoardDrop}
-                  dragLeaveHandler={dragLeaveHandler}
-                />
-              ))}
+              {page}
             </div>
+            <AlertMessage
+              mainText={"Translator already has this client!"}
+              open={alertOpen}
+              handleOpen={openAlert}
+              handleClose={closeAlertNoReload}
+              status={false}
+            />
           </div>
         ) : (
           <Unauthorized />

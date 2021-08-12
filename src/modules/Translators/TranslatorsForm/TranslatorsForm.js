@@ -4,7 +4,6 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -14,6 +13,7 @@ import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
 import { addTranslator } from "../../../services/translatorsServices/services";
 import AlertMessage from "../../../shared/AlertMessage/AlertMessage";
 import { useAlert } from "../../../shared/AlertMessage/hooks";
+import AirlineSeatReclineNormalIcon from "@material-ui/icons/AirlineSeatReclineNormal";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -61,8 +61,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
     addTranslator(translator).then((res) => {
       if (res.status === 200) {
         openAlert();
-        setTimeout(closeAlert, 3000);
-        console.log(res.data);
+        setTimeout(closeAlert, 1000);
       } else {
         console.log(res.status);
       }
@@ -71,8 +70,9 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
 
   return (
     <div className={"socials add-translator-button bottom-button"}>
+      <AirlineSeatReclineNormalIcon />
       <Button type="button" onClick={handleOpen} fullWidth>
-        <AddIcon /> Add translator
+        Add translator
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"

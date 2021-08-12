@@ -193,6 +193,7 @@ app.delete(clientsURL + ":id", (req, res) => {
   });
 });
 // translators api
+
 app.get(translatorsURL + "get", (req, res) => {
   collectionTranslators.find().toArray((err, docs) => {
     if (err) {
@@ -227,10 +228,8 @@ app.put(translatorsURL + ":id", (req, res) => {
     (err) => {
       if (err) {
         return res.sendStatus(500);
-      } else {
-        res.send("Переводчик сохранен");
       }
-      res.sendStatus(200);
+      res.send("Переводчик сохранен");
     }
   );
 });

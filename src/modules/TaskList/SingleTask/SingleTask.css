@@ -1,4 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .item-container {
+  font-family: "Lato";
   list-style: none;
   display: flex;
   flex-direction: column;
