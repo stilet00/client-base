@@ -23,22 +23,21 @@ import "./Translators.css";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
-import AlertMessage from "../../shared/AlertMessage/AlertMessage";
 import { useAlert } from "../../shared/AlertMessage/hooks";
 import Loader from "../../shared/Loader/Loader";
+import AlertMessage from "../../shared/AlertMessage/AlertMessage";
 
 function Translators(props) {
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
+  const { alertOpen, closeAlertNoReload, openAlert } = useAlert();
   const [state, setState] = useState({
     left: false,
   });
-  const { alertOpen, closeAlert, openAlert } = useAlert();
   useEffect(() => {
     getTranslators().then((res) => {
       if (res.status === 200) {
         setTranslators(res.data);
-        console.log(res.data);
       } else {
         console.log("No translators");
       }
@@ -46,7 +45,6 @@ function Translators(props) {
     getClients().then((res) => {
       if (res.status === 200) {
         setClients(res.data);
-        console.log(res.data);
       } else {
         console.log("No clients");
       }
@@ -96,36 +94,29 @@ function Translators(props) {
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
     );
-    console.log(editedTranslator.clients.includes(currentClient))
-    editedTranslator = {
-          ...editedTranslator,
-          clients: [...editedTranslator.clients, currentClient],
-        };
-    setTranslators(
-                translators.map((item) => {
-                  return item._id === translatorID ? editedTranslator : item;
-                })
-              );
-    // if (editedTranslator.clients.includes(currentClient)) {
-    //   openAlert()
-    // } else {
-    //   editedTranslator = {
-    //     ...editedTranslator,
-    //     clients: [...editedTranslator.clients, currentClient],
-    //   };
-    //   updateTranslator(editedTranslator).then((res) => {
-    //     if (res.status === 200) {
-    //       setTranslators(
-    //         translators.map((item) => {
-    //           return item._id === translatorID ? editedTranslator : item;
-    //         })
-    //       );
-    //     } else {
-    //       console.log(res.data);
-    //     }
-    //   });
-    // }
-    setCurrentClient(null);
+    if (
+      editedTranslator.clients.filter((item) => item._id === currentClient._id)
+        .length > 0
+    ) {
+      openAlert();
+      setTimeout(closeAlertNoReload, 1500);
+    } else {
+      editedTranslator = {
+        ...editedTranslator,
+        clients: [...editedTranslator.clients, currentClient],
+      };
+      updateTranslator(editedTranslator).then((res) => {
+        if (res.status === 200) {
+          setTranslators(
+            translators.map((item) => {
+              return item._id === translatorID ? editedTranslator : item;
+            })
+          );
+        } else {
+          console.log(res.data);
+        }
+      });
+    }
   }
   function deleteClient(id) {
     removeClient(id).then((res) => {
@@ -145,19 +136,21 @@ function Translators(props) {
       }
     });
   }
-  const page = translators.length > 0 ? <div className={"inner-gallery-container  translators-container"}>
-    <h3>List of translators:</h3>
-    {translators.map((item) => (
+  const page =
+    translators.length > 0 ? (
+      translators.map((item) => (
         <SingleTranslator
-            deleteTranslator={onTranslatorDelete}
-            {...item}
-            key={item._id}
-            dragOverHandler={dragOverHandler}
-            onBoardDrop={onBoardDrop}
-            dragLeaveHandler={dragLeaveHandler}
+          deleteTranslator={onTranslatorDelete}
+          {...item}
+          key={item._id}
+          dragOverHandler={dragOverHandler}
+          onBoardDrop={onBoardDrop}
+          dragLeaveHandler={dragLeaveHandler}
         />
-    ))}
-  </div> : <Loader />
+      ))
+    ) : (
+      <Loader />
+    );
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -166,8 +159,9 @@ function Translators(props) {
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
+                <ListAltIcon />
                 <Button onClick={toggleDrawer("left", true)} fullWidth>
-                  <ListAltIcon /> Show clients
+                  Show clients
                 </Button>
                 <Drawer
                   anchor={"left"}
@@ -210,13 +204,16 @@ function Translators(props) {
               <ClientsForm />
               <TranslatorsForm />
             </div>
-            {page}
+            <div className={"inner-gallery-container  translators-container"}>
+              <h3>List of translators:</h3>
+              {page}
+            </div>
             <AlertMessage
-                mainText={"Translator already has this client!"}
-                open={alertOpen}
-                handleOpen={openAlert}
-                handleClose={closeAlert}
-                status={true}
+              mainText={"Translator already has this client!"}
+              open={alertOpen}
+              handleOpen={openAlert}
+              handleClose={closeAlertNoReload}
+              status={false}
             />
           </div>
         ) : (

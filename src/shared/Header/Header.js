@@ -15,6 +15,8 @@ import "./Header.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
+import MenuIcon from "@material-ui/icons/Menu";
+import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles({
   list: {
@@ -94,7 +96,7 @@ export default function Header({ pretty }) {
               </ListItem>
               <ListItem button onClick={() => history.push("/translators")}>
                 <ListItemIcon>
-                  <SupervisorAccountIcon />
+                  <WorkIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Translators"} />
               </ListItem>
@@ -111,6 +113,7 @@ export default function Header({ pretty }) {
       className={"socials button-add-container menu-container upper-menu"}
       style={pretty}
     >
+      <MenuIcon />
       <Button onClick={toggleDrawer("top", true)} fullWidth>
         Menu
       </Button>
