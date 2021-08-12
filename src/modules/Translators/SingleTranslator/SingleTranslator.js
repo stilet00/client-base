@@ -12,10 +12,20 @@ function SingleTranslator({
   dragLeaveHandler,
   deleteTranslator,
 }) {
+    const clientsInner = clients.length > 0 ? clients.map((client) => (
+        <li key={client._id}>
+            <p>{`${client.name} ${client.surname}`}</p>
+        </li>
+    )) : <p>Drag client here...</p>
   return (
     <div className={"gallery-item translator-item"}>
-      <h4>{name + " " + surname}</h4>
-      <p>Clients in work:</p>
+      <div className={"name-table"}>
+          <p><b>Name:</b></p>
+          <p>{name}</p>
+          <p><b>Surname:</b></p>
+          <p>{surname}</p>
+      </div>
+      <p><b>Clients in work:</b></p>
       <div className="clients-box">
         <ul
           className={"clients-list"}
@@ -24,11 +34,7 @@ function SingleTranslator({
           onDragLeave={dragLeaveHandler}
           onDrop={(e) => onBoardDrop(e, _id)}
         >
-          {clients.map((client) => (
-            <li key={client._id}>
-              <p>{`${client.name} ${client.surname}`}</p>
-            </li>
-          ))}
+          {clientsInner}
         </ul>
       </div>
       <Button onClick={() => deleteTranslator(_id)}>

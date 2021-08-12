@@ -71,7 +71,11 @@ function Translators(props) {
     if (state.left === true) {
       setState({ left: false });
     }
-    e.target.style.background = "none";
+    if (e.target.tagName === "UL") {
+      e.target.style.background = "none";
+    } else if (e.target.tagName === "LI") {
+      e.target.parentNode.style.background = "none"
+    }
   }
   function dragEndHandler(e) {
     e.target.style.background = "none";
@@ -80,7 +84,9 @@ function Translators(props) {
   function dragOverHandler(e) {
     e.preventDefault();
     if (e.target.tagName === "UL") {
-      e.target.style.background = "rgba(255,165,0,1)";
+      e.target.style.background = "rgba(200, 247, 197, 1)";
+    } else if (e.target.tagName === "LI") {
+      e.target.parentNode.style.background = "rgba(200, 247, 197, 1)"
     }
   }
 
@@ -90,7 +96,11 @@ function Translators(props) {
   }
   function onBoardDrop(e, translatorID) {
     e.preventDefault();
-    e.target.style.background = "none";
+    if (e.target.tagName === "UL") {
+      e.target.style.background = "none";
+    } else if (e.target.tagName === "LI") {
+      e.target.parentNode.style.background = "none"
+    }
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
     );
@@ -149,7 +159,9 @@ function Translators(props) {
         />
       ))
     ) : (
-      <Loader />
+        <div className="empty">
+          <h1 className>No translators yet.</h1>
+        </div>
     );
   return (
     <FirebaseAuthConsumer>
