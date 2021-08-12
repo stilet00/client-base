@@ -17,6 +17,7 @@ import "firebase/auth";
 import { FirebaseAuthProvider } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
 import LogoHeader from "./shared/LogoHeader/LogoHeader";
+import Translators from "./modules/Translators/Translators";
 
 function App() {
   return (
@@ -35,6 +36,9 @@ function App() {
               </Route>
               <Route path="/tasks/">
                 <TaskList />
+              </Route>
+              <Route path="/translators/">
+                <Translators />
               </Route>
               <Redirect from="/chart/*" to="/chart" />
               <Route path="/chart">

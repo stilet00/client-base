@@ -1,6 +1,4 @@
 let express = require("express");
-let multer = require("multer");
-let path = require("path");
 let MongoClient = require("mongodb").MongoClient;
 const uri =
   "mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority";
@@ -10,10 +8,12 @@ let bodyParser = require("body-parser");
 let collectionTasks;
 let collectionBalance;
 let collectionClients;
+let collectionTranslators;
 let rootURL = "/";
 let tasksURL = rootURL + "tasks/";
 let balanceURL = rootURL + "balance/";
 let clientsURL = rootURL + "clients/";
+let translatorsURL = rootURL + "translators/";
 const PORT = process.env.PORT || 80;
 
 let app = express();
@@ -126,7 +126,6 @@ app.put(balanceURL + ":id", (req, res) => {
   );
 });
 
-
 // app.post(clientsURL + "add", (req, res) => {
 //   if (req.body) {
 //     let client = { ...req.body };
@@ -158,7 +157,9 @@ app.get(rootURL + "clients/?", function (request, response, next) {
 app.get(rootURL + "tasks/?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });
-
+app.get(rootURL + "translators/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
 
 //clients api
 
@@ -178,22 +179,78 @@ app.post(clientsURL + "add", function (req, res, next) {
     collectionClients.insertOne(req.body, (err, result) => {
       if (err) {
         return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    });
+  }
+});
+app.delete(clientsURL + ":id", (req, res) => {
+  collectionClients.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.sendStatus(200);
+  });
+});
+// translators api
+app.get(translatorsURL + "get", (req, res) => {
+  collectionTranslators.find().toArray((err, docs) => {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.send(docs);
+  });
+});
+app.post(translatorsURL + "add", function (req, res, next) {
+  if (!req.body) {
+    res.send("Ошибка при загрузке переводчика");
+  } else {
+    collectionTranslators.insertOne(req.body, (err, result) => {
+      if (err) {
+        return res.sendStatus(500);
       } else {
-        res.send("Клиентка загружена");
+        res.send("Переводчик загружен");
       }
     });
   }
-
-  // if(!filedata)
-  //   res.send("Ошибка при загрузке файла");
-  // else
-  //   res.send("Файл загружен");
+});
+app.put(translatorsURL + ":id", (req, res) => {
+  collectionTranslators.updateOne(
+    { _id: ObjectId(req.params.id) },
+    {
+      $set: {
+        name: req.body.name,
+        surname: req.body.surname,
+        clients: req.body.clients,
+      },
+    },
+    (err) => {
+      if (err) {
+        return res.sendStatus(500);
+      } else {
+        res.send("Переводчик сохранен");
+      }
+      res.sendStatus(200);
+    }
+  );
+});
+app.delete(translatorsURL + ":id", (req, res) => {
+  collectionTranslators.deleteOne(
+    { _id: ObjectId(req.params.id) },
+    (err, docs) => {
+      if (err) {
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    }
+  );
 });
 
 client.connect(function (err) {
   collectionTasks = client.db("taskListDB").collection("tasks");
   collectionBalance = client.db("taskListDB").collection("totalBalance");
   collectionClients = client.db("clientsDB").collection("clients");
+  collectionTranslators = client.db("translatorsDB").collection("translators");
   console.log("Connected successfully to server...");
   app.listen(PORT, () => {
     console.log("API started at port", PORT);

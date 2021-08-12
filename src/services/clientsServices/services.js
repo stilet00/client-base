@@ -11,6 +11,3 @@ export function addClient(client) {
 export function removeClient(id) {
   return axios.delete(clientsURL + id);
 }
-// export function changeChartValue(chart) {
-//     return axios.put(clientsURL + chart._id, chart);
-// }

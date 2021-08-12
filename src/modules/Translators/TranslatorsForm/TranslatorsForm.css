@@ -1,0 +1,11 @@
+.add-translator-button {
+  border-top: 1px solid #50c878;
+  border-radius: 5px;
+}
+
+.bottom-button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/*# sourceMappingURL=TranslatorsForm.css.map */

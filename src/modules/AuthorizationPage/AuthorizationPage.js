@@ -30,18 +30,18 @@ const StyledInput = withStyles({
       color: "green",
     },
     "& label": {
-      color: "orange",
+      color: "green",
     },
     "& .MuiInput-underline:after": {
       borderBottomColor: "green",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "orange",
+        borderColor: "green",
         borderWidth: 1,
       },
       "&:hover fieldset": {
-        borderColor: "orange",
+        borderColor: "green",
       },
       "&.Mui-focused fieldset": {
         borderColor: "green",

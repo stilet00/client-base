@@ -9,9 +9,9 @@ import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import "./ClientsForm.css";
-import { DEFAULT_CLIENT } from "../../../constants/constants";
-import { addClient } from "../../../services/clientsServices/services";
+import "./TranslatorsForm.css";
+import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
+import { addTranslator } from "../../../services/translatorsServices/services";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -35,13 +35,15 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ClientsForm({ editedClient }) {
+export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   const classes = useStyles();
-  const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
+  const [translator, setTranslator] = useState(
+    editedTranslator || DEFAULT_TRANSLATOR
+  );
   const [open, setOpen] = useState(false);
   // const [preview, setPreview] = useState("");
   const handleChange = (e) => {
-    setClient({ ...client, [e.target.name]: e.target.value.trim() });
+    setTranslator({ ...translator, [e.target.name]: e.target.value.trim() });
   };
   const handleOpen = () => {
     setOpen(true);
@@ -50,34 +52,24 @@ export default function ClientsForm({ editedClient }) {
   const handleClose = () => {
     setOpen(false);
   };
-  // const fileInput = createRef();
 
   function formSubmit(e) {
-    e.preventDefault();
-    addClient(client).then((res) => {
+    // e.preventDefault();
+    addTranslator(translator).then((res) => {
       if (res.status === 200) {
         handleClose();
+        setTranslator(DEFAULT_TRANSLATOR);
         console.log(res.data);
-        window.location.reload();
       } else {
-        console.log(res.data);
+        console.log(res.status);
       }
     });
   }
-  // const previewImage =
-  //   preview.length > 0 ? (
-  //     <img
-  //       src={preview}
-  //       width={"50px"}
-  //       height={"50px"}
-  //       alt={"preview"}
-  //       className={"preview-image"}
-  //     />
-  //   ) : null;
+
   return (
-    <div className={"socials add-client-button middle-button"}>
+    <div className={"socials add-translator-button bottom-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>
-        <AddIcon /> Add client
+        <AddIcon /> Add translator
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -95,12 +87,12 @@ export default function ClientsForm({ editedClient }) {
           <div className={"form-container clients-form"}>
             <form onSubmit={formSubmit}>
               <h2 id="transition-modal-title">
-                Enter client's name and surname:
+                Enter translator's name and surname:
               </h2>
               <CssTextField
                 name={"name"}
                 onChange={handleChange}
-                value={client.name}
+                value={translator.name}
                 variant="outlined"
                 label={"Name"}
                 fullWidth
@@ -116,7 +108,7 @@ export default function ClientsForm({ editedClient }) {
               <CssTextField
                 name={"surname"}
                 onChange={handleChange}
-                value={client.surname}
+                value={translator.surname}
                 variant="outlined"
                 label={"Surname"}
                 fullWidth
@@ -129,51 +121,8 @@ export default function ClientsForm({ editedClient }) {
                   ),
                 }}
               />
-              {/*<CssTextField*/}
-              {/*  name={"instagram"}*/}
-              {/*  onChange={handleChange}*/}
-              {/*  value={client.instagram}*/}
-              {/*  variant="outlined"*/}
-              {/*  label={"Instagram"}*/}
-              {/*  fullWidth*/}
-              {/*  InputProps={{*/}
-              {/*    startAdornment: (*/}
-              {/*      <InputAdornment position="start">*/}
-              {/*        <InstagramIcon />*/}
-              {/*      </InputAdornment>*/}
-              {/*    ),*/}
-              {/*  }}*/}
-              {/*/>*/}
-              {/*<CssTextField*/}
-              {/*  name={"onlyFans"}*/}
-              {/*  onChange={handleChange}*/}
-              {/*  value={client.onlyFans}*/}
-              {/*  variant="outlined"*/}
-              {/*  label={"Onlyfans"}*/}
-              {/*  fullWidth*/}
-              {/*  InputProps={{*/}
-              {/*    startAdornment: (*/}
-              {/*      <InputAdornment position="start">*/}
-              {/*        <LockIcon />*/}
-              {/*      </InputAdornment>*/}
-              {/*    ),*/}
-              {/*  }}*/}
-              {/*/>*/}
-              {/*<div className={"upload-container"}>*/}
-              {/*  <input*/}
-              {/*    type="file"*/}
-              {/*    ref={fileInput}*/}
-              {/*    accept={"image/jpeg,image/png,image/gif"}*/}
-              {/*    className={"photo-input"}*/}
-              {/*    onChange={() => createThumbnail(fileInput.current.files[0])}*/}
-              {/*    name={"image"}*/}
-              {/*  />*/}
-              {/*  <ImageIcon fontSize={"large"} className={"photo-icon"} />*/}
-              {/*</div>*/}
-              {/*{previewImage}*/}
-
               <Button type={"submit"} fullWidth variant={"outlined"}>
-                Add client
+                Add translator
               </Button>
             </form>
           </div>

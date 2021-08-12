@@ -9,7 +9,6 @@ import Header from "../../../shared/Header/Header";
 import NameFilter from "../../../shared/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
-import { addClient } from "../../../services/clientsServices/services";
 function Gallery(props) {
   const [ageFilter, setAgeFilter] = useState(18);
   const [nameFilter, setNameFilter] = useState("");
@@ -20,9 +19,6 @@ function Gallery(props) {
   function onNameFilter(text) {
     setNameFilter(text);
   }
-  function formSubmit(newClient) {
-    return addClient(newClient)
-  }
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -30,7 +26,7 @@ function Gallery(props) {
           <div className={"main-gallery-container"}>
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
-              <ClientsForm onFormSubmit={formSubmit} />
+              <ClientsForm />
               <DiscreteSlider valuetext={valuetext} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
