@@ -7,6 +7,7 @@ import firebase from "firebase";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../shared/AlertMessage/AlertMessage";
 import { DEFAULT_ERROR } from "../../constants";
+import { useAlert } from "../../shared/AlertMessage/hooks";
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
@@ -57,15 +58,7 @@ function AuthorizationPage(props) {
     password: DEFAULT_ERROR,
   });
   const history = useHistory();
-  const [alertOpen, setAlertOpen] = useState(false);
-
-  const openAlert = () => {
-    setAlertOpen(true);
-  };
-
-  const closeAlert = () => {
-    setAlertOpen(false);
-  };
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   function onPasswordChange(e) {
     if (error.password.status) {
       setError({ ...error, password: DEFAULT_ERROR });
@@ -164,10 +157,12 @@ function AuthorizationPage(props) {
               </StyledButton>
             </form>
             <AlertMessage
-              text={error.email.text || error.password.text}
+              mainText={"You've not been authorized :("}
+              additionalText={error.email.text || error.password.text}
               open={alertOpen}
               handleOpen={openAlert}
               handleClose={closeAlert}
+              status={true}
             />
           </div>
         );
