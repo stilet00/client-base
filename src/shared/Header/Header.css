@@ -1,21 +1,18 @@
 .upper-menu {
   border-bottom: none;
-  border-top: 1px solid #50c878;
+  border-top: 1px solid #50C878;
   border-radius: 0px;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   max-width: 326px;
   display: flex;
-  justify-content: flex-start;
-}
+  justify-content: flex-start; }
 
 .fallDown-menu {
-  background: rgba(80, 200, 120, 0.7);
-}
+  background: rgba(80, 200, 120, 0.7); }
 
 .MuiDrawer-paper {
   border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
+  border-bottom-left-radius: 10px; }
 
 /*# sourceMappingURL=Header.css.map */
