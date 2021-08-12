@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../shared/Header/Header";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
@@ -23,6 +23,9 @@ import "./Translators.css";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
+import AlertMessage from "../../shared/AlertMessage/AlertMessage";
+import { useAlert } from "../../shared/AlertMessage/hooks";
+import Loader from "../../shared/Loader/Loader";
 
 function Translators(props) {
   const [clients, setClients] = useState([]);
@@ -30,6 +33,7 @@ function Translators(props) {
   const [state, setState] = useState({
     left: false,
   });
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   useEffect(() => {
     getTranslators().then((res) => {
       if (res.status === 200) {
@@ -93,7 +97,7 @@ function Translators(props) {
       (item) => item._id === translatorID
     );
     if (editedTranslator.clients.includes(currentClient)) {
-      console.log("already there");
+      openAlert()
     } else {
       editedTranslator = {
         ...editedTranslator,
@@ -131,6 +135,19 @@ function Translators(props) {
       }
     });
   }
+  const page = translators.length > 0 ? <div className={"inner-gallery-container  translators-container"}>
+    <h3>List of translators:</h3>
+    {translators.map((item) => (
+        <SingleTranslator
+            deleteTranslator={onTranslatorDelete}
+            {...item}
+            key={item._id}
+            dragOverHandler={dragOverHandler}
+            onBoardDrop={onBoardDrop}
+            dragLeaveHandler={dragLeaveHandler}
+        />
+    ))}
+  </div> : <Loader />
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -183,19 +200,14 @@ function Translators(props) {
               <ClientsForm />
               <TranslatorsForm />
             </div>
-            <div className={"inner-gallery-container  translators-container"}>
-              <h3>List of translators:</h3>
-              {translators.map((item) => (
-                <SingleTranslator
-                  deleteTranslator={onTranslatorDelete}
-                  {...item}
-                  key={item._id}
-                  dragOverHandler={dragOverHandler}
-                  onBoardDrop={onBoardDrop}
-                  dragLeaveHandler={dragLeaveHandler}
-                />
-              ))}
-            </div>
+            {page}
+            <AlertMessage
+                mainText={"Translator already has this client!"}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={true}
+            />
           </div>
         ) : (
           <Unauthorized />

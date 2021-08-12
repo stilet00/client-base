@@ -12,27 +12,20 @@
   background-color: white;
   border: 1px solid;
   border-radius: 10px;
-  text-align: center;
-}
-.message-container h2 {
-  text-shadow: none;
-}
-.message-container p {
-  color: orange;
-}
+  text-align: center; }
+  .message-container h2 {
+    text-shadow: none; }
+  .message-container p {
+    color: orange; }
 
 .green-box {
-  border-color: #50c878;
-}
+  border-color: #50C878; }
 
 .red-box {
-  border-color: red;
-}
-.red-box .green-text {
-  color: #50c878;
-}
-.red-box .red-text {
-  color: red;
-}
+  border-color: red; }
+  .red-box .green-text {
+    color: #50C878; }
+  .red-box .red-text {
+    color: red; }
 
 /*# sourceMappingURL=AlertMessage.css.map */

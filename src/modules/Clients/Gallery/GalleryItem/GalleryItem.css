@@ -7,23 +7,15 @@
   border-radius: 5px;
   width: 120px;
   background: rgba(80, 200, 120, 0.7);
-  box-shadow: 2px 2px 2px grey;
-}
-.gallery-item p {
-  margin: 0;
-  font-family: "Baloo Tammudu 2", cursive;
-  letter-spacing: 1px;
-}
+  box-shadow: 2px 2px 2px grey; }
 
 .gallery-socials {
   border: none;
-  background: none;
-}
+  background: none; }
 
 .lady-thumbnail {
   border-radius: 5px;
   margin-top: 10px;
-  box-shadow: 1px 1px 1px lightblue;
-}
+  box-shadow: 1px 1px 1px lightblue; }
 
 /*# sourceMappingURL=GalleryItem.css.map */
