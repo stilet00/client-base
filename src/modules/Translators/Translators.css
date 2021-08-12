@@ -24,9 +24,12 @@
   padding: 6px;
   cursor: grab; }
 
-.translators-container h3 {
-  background: transparent;
-  border: none; }
+.translators-container {
+  align-content: flex-start; }
+  .translators-container h3 {
+    background: transparent;
+    border: none;
+    height: 20px; }
 
 .MuiPaper-root {
   background-color: #50C878 !important; }
