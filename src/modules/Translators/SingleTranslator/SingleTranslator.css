@@ -14,10 +14,10 @@
 
 .clients-list {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; }
+  height: 100%; }
+  .clients-list li {
+    width: 100%;
+    text-align: left; }
 
 @media (max-width: 500px) {
   .translator-item {

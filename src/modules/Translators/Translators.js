@@ -96,25 +96,35 @@ function Translators(props) {
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
     );
-    if (editedTranslator.clients.includes(currentClient)) {
-      openAlert()
-    } else {
-      editedTranslator = {
-        ...editedTranslator,
-        clients: [...editedTranslator.clients, currentClient],
-      };
-      updateTranslator(editedTranslator).then((res) => {
-        if (res.status === 200) {
-          setTranslators(
-            translators.map((item) => {
-              return item._id === translatorID ? editedTranslator : item;
-            })
-          );
-        } else {
-          console.log(res.data);
-        }
-      });
-    }
+    console.log(editedTranslator.clients.includes(currentClient))
+    editedTranslator = {
+          ...editedTranslator,
+          clients: [...editedTranslator.clients, currentClient],
+        };
+    setTranslators(
+                translators.map((item) => {
+                  return item._id === translatorID ? editedTranslator : item;
+                })
+              );
+    // if (editedTranslator.clients.includes(currentClient)) {
+    //   openAlert()
+    // } else {
+    //   editedTranslator = {
+    //     ...editedTranslator,
+    //     clients: [...editedTranslator.clients, currentClient],
+    //   };
+    //   updateTranslator(editedTranslator).then((res) => {
+    //     if (res.status === 200) {
+    //       setTranslators(
+    //         translators.map((item) => {
+    //           return item._id === translatorID ? editedTranslator : item;
+    //         })
+    //       );
+    //     } else {
+    //       console.log(res.data);
+    //     }
+    //   });
+    // }
     setCurrentClient(null);
   }
   function deleteClient(id) {
