@@ -12,6 +12,8 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "./TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
 import { addTranslator } from "../../../services/translatorsServices/services";
+import AlertMessage from "../../../shared/AlertMessage/AlertMessage";
+import { useAlert } from "../../../shared/AlertMessage/hooks";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -40,6 +42,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   const [translator, setTranslator] = useState(
     editedTranslator || DEFAULT_TRANSLATOR
   );
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   const [open, setOpen] = useState(false);
   // const [preview, setPreview] = useState("");
   const handleChange = (e) => {
@@ -57,9 +60,8 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
     e.preventDefault();
     addTranslator(translator).then((res) => {
       if (res.status === 200) {
-        handleClose();
-        setTranslator(DEFAULT_TRANSLATOR);
-        window.location.reload();
+        openAlert();
+        setTimeout(closeAlert, 3000);
         console.log(res.data);
       } else {
         console.log(res.status);
@@ -121,6 +123,13 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                     </InputAdornment>
                   ),
                 }}
+              />
+              <AlertMessage
+                mainText={"Translator has been added!"}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={true}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add translator

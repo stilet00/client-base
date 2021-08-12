@@ -31,7 +31,7 @@ export default function Form({ addTask }) {
     setTaskName(e.target.value.trim());
   }
   return (
-    <div className={"modal-wrapper"}>
+    <div className={"modal-wrapper down-add-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>
         <AddIcon />
       </Button>

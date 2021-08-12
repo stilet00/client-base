@@ -12,8 +12,11 @@ import ChartForm from "./ChartForm/ChartForm";
 import Loader from "../../shared/Loader/Loader";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
+import AlertMessage from "../../shared/AlertMessage/AlertMessage";
+import { useAlert } from "../../shared/AlertMessage/hooks";
 function Chart(props) {
   const [months, setMonths] = useState([]);
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   function compareNumeric(a, b) {
     if (a.month > b.month) return 1;
     if (a.month === b.month) return 0;
@@ -35,23 +38,22 @@ function Chart(props) {
   function onMonthSubmit(date) {
     addMonth(date).then((res) => {
       if (res.status === 200) {
-        getBalance().then((res) => {
-          if (res.status === 200) {
-            setMonths(res.data.sort(compareNumeric).reverse());
-          }
-        });
+        openAlert();
+        setTimeout(closeAlert, 1500);
       }
     });
   }
   function onValueSubmit(valueOfDay) {
     changeChartValue(valueOfDay).then((res) => {
       if (res.status === 200) {
-        setMonths(
-          months.map((item) =>
-            item._id === valueOfDay._id ? valueOfDay : item
-          )
-        );
-        window.location.reload();
+        openAlert();
+        setTimeout(closeAlert, 1500);
+        // setMonths(
+        //   months.map((item) =>
+        //     item._id === valueOfDay._id ? valueOfDay : item
+        //   )
+        // );
+        // window.location.reload();
       }
     });
   }
@@ -82,6 +84,13 @@ function Chart(props) {
             <div className={"socials button-add-container"}>
               <ChartForm onMonthSubmit={onMonthSubmit} />
             </div>
+            <AlertMessage
+              mainText={"Data has been added!"}
+              open={alertOpen}
+              handleOpen={openAlert}
+              handleClose={closeAlert}
+              status={true}
+            />
           </>
         ) : (
           <Unauthorized />

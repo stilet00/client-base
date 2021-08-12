@@ -10,15 +10,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AlertMessage({ text, handleOpen, handleClose, open }) {
+export default function AlertMessage({
+  mainText,
+  additionalText,
+  handleOpen,
+  handleClose,
+  open,
+  status,
+}) {
   const classes = useStyles();
 
   return (
     <div>
       <Modal open={open} onClose={handleClose} className={classes.modal}>
-        <div className={"message-container"}>
-          <h2>You've not been authorized :(</h2>
-          <p>{text}</p>
+        <div
+          className={
+            status ? "message-container green-box" : "message-container red-box"
+          }
+        >
+          <h2 className={status ? "green-text" : "red-text"}>{mainText}</h2>
+          {additionalText ? <p>{additionalText}</p> : null}
         </div>
       </Modal>
     </div>

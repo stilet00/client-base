@@ -4,22 +4,35 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  top: 10%;
+  top: 30%;
   width: 300px;
-  height: 230px;
+  min-height: 150px;
   box-sizing: border-box;
   padding: 20px;
   background-color: white;
-  border: 1px solid red;
+  border: 1px solid;
   border-radius: 10px;
   text-align: center;
 }
 .message-container h2 {
-  color: red;
   text-shadow: none;
 }
 .message-container p {
   color: orange;
+}
+
+.green-box {
+  border-color: #50c878;
+}
+
+.red-box {
+  border-color: red;
+}
+.red-box .green-text {
+  color: #50c878;
+}
+.red-box .red-text {
+  color: red;
 }
 
 /*# sourceMappingURL=AlertMessage.css.map */

@@ -12,6 +12,8 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "./ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
 import { addClient } from "../../../services/clientsServices/services";
+import AlertMessage from "../../../shared/AlertMessage/AlertMessage";
+import { useAlert } from "../../../shared/AlertMessage/hooks";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -40,6 +42,7 @@ export default function ClientsForm({ editedClient }) {
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
   const [open, setOpen] = useState(false);
   // const [preview, setPreview] = useState("");
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   const handleChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value.trim() });
   };
@@ -56,9 +59,10 @@ export default function ClientsForm({ editedClient }) {
     e.preventDefault();
     addClient(client).then((res) => {
       if (res.status === 200) {
-        handleClose();
+        openAlert();
+        setTimeout(closeAlert, 3000);
+        // handleClose();
         console.log(res.data);
-        window.location.reload();
       } else {
         console.log(res.data);
       }
@@ -171,7 +175,13 @@ export default function ClientsForm({ editedClient }) {
               {/*  <ImageIcon fontSize={"large"} className={"photo-icon"} />*/}
               {/*</div>*/}
               {/*{previewImage}*/}
-
+              <AlertMessage
+                mainText={"Client has been added!"}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={true}
+              />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add client
               </Button>
