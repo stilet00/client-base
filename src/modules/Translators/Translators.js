@@ -34,9 +34,12 @@ function Translators(props) {
   const [state, setState] = useState({
     left: false,
   });
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true)
     getTranslators().then((res) => {
       if (res.status === 200) {
+        setLoading(false)
         setTranslators(res.data);
       } else {
         console.log("No translators");
@@ -146,6 +149,7 @@ function Translators(props) {
       }
     });
   }
+
   const page =
     translators.length > 0 ? (
       translators.map((item) => (
@@ -160,7 +164,7 @@ function Translators(props) {
       ))
     ) : (
         <div className="empty">
-          <h1 className>No translators yet.</h1>
+          {loading ? <Loader /> : <h1>No translators yet.</h1>}
         </div>
     );
   return (
