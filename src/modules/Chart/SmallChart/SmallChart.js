@@ -14,8 +14,8 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
     datasets: [
       {
         fill: true,
-        backgroundColor: ["rgba(25,135,62,0.2)"],
-        borderColor: ["rgba(0,0,0,0.8)"],
+        backgroundColor: ["rgba(78, 205, 196, 0.7)"],
+        borderColor: ["#DFF0D8"],
         borderWidth: 1.5,
         data: graph.values,
         tension: 0.4,

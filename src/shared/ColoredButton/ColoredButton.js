@@ -2,10 +2,9 @@ import React from "react";
 import {
   makeStyles,
   ThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   styledButton: {
@@ -13,9 +12,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    primary: green,
+    primary: {
+      main: "rgba(78, 205, 196, 1)"
+    }
   },
 });
 

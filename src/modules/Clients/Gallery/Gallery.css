@@ -12,11 +12,11 @@
   box-sizing: border-box;
   min-height: 232px;
   overflow-x: scroll;
-  border: 2px solid #50C878;
+  border: 2px solid #4ecdc4;
   border-radius: 10px; }
 
 .control-gallery {
-  border: 2px solid #50C878;
+  border: 2px solid #4ecdc4;
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;

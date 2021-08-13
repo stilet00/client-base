@@ -3,8 +3,7 @@ h2 {
   display: flex;
   align-items: center;
   letter-spacing: 0.2rem;
-  color: #50c878;
-}
+  color: #4ecdc4; }
 
 .karussell-container {
   width: 90%;
@@ -14,60 +13,47 @@ h2 {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
+  align-items: center; }
 
 .control {
   position: absolute;
   top: 39%;
   border: 1px solid lightblue;
-  background-color: #50c878;
+  background-color: #4ecdc4;
   border-radius: 5px;
   outline: none;
   color: white;
   transition: 0.5s;
-  cursor: pointer;
-}
-.control:active {
-  background: red;
-}
+  cursor: pointer; }
+  .control:active {
+    background: red; }
 
 .previous {
-  left: -15px;
-}
-.previous:hover {
-  box-shadow: 2px 2px 2px lightblue;
-}
+  left: -15px; }
+  .previous:hover {
+    box-shadow: 2px 2px 2px lightblue; }
 
 .next {
-  right: -15px;
-}
-.next:hover {
-  box-shadow: -2px 2px 2px lightblue;
-}
+  right: -15px; }
+  .next:hover {
+    box-shadow: -2px 2px 2px lightblue; }
 
 .control-buttons {
   width: 50%;
   display: flex;
-  justify-content: space-between;
-}
+  justify-content: space-between; }
 
 .rotated-icon {
-  transform: rotate(180deg);
-}
+  transform: rotate(180deg); }
 
 @media (min-width: 500px) {
   .control {
-    top: 45%;
-  }
+    top: 45%; }
 
   .next {
-    right: 7px;
-  }
+    right: 7px; }
 
   .previous {
-    left: 7px;
-  }
-}
+    left: 7px; } }
 
 /*# sourceMappingURL=karusell.css.map */
