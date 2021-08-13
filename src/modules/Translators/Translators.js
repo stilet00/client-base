@@ -26,7 +26,7 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import { useAlert } from "../../shared/AlertMessage/hooks";
 import Loader from "../../shared/Loader/Loader";
 import AlertMessage from "../../shared/AlertMessage/AlertMessage";
-
+import backgroundImage from "../../images/background-27.png";
 function Translators(props) {
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
@@ -67,7 +67,7 @@ function Translators(props) {
   const [currentClient, setCurrentClient] = useState(null);
   function dragStartHandler(e, client) {
     setCurrentClient(client);
-    e.target.style.background = "rgba(103, 128, 159, 0.5)";
+    e.target.style.border = "2px solid orange";
   }
 
   function dragLeaveHandler(e) {
@@ -184,7 +184,7 @@ function Translators(props) {
                   open={state["left"]}
                   onClose={toggleDrawer("left", false)}
                 >
-                  <div className={"side-clients-menu"}>
+                  <div className={"side-clients-menu fallDown-menu"}>
                     <h3>All clients:</h3>
                     <ul>
                       {clients.map((client, index) => (

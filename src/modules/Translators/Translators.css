@@ -5,9 +5,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #50C878;
   padding: 10px;
-  min-width: 280px; }
+  min-width: 280px;
+  height: 100%; }
   .side-clients-menu h3 {
     width: 90%;
     border-bottom: 2px solid black;
@@ -30,9 +30,6 @@
     background: transparent;
     border: none;
     height: 20px; }
-
-.MuiPaper-root {
-  background-color: #50C878 !important; }
 
 @media (max-width: 900px) {
   .translators-container {

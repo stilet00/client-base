@@ -9,7 +9,8 @@
   justify-content: flex-start; }
 
 .fallDown-menu {
-  background: rgba(80, 200, 120, 0.7); }
+  background: url("/src/images/background-27.png");
+  background-size: cover; }
 
 .MuiDrawer-paper {
   border-bottom-right-radius: 10px;
