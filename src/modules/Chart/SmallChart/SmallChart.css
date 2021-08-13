@@ -1,29 +1,23 @@
 p {
-  margin: 10px;
-}
+  margin: 10px; }
 
 .green-line {
   width: 95%;
-  border-top: 2px solid #50c878;
-}
+  border-top: 2px solid #4ecdc4; }
 
 .total-text {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 .single-chart {
-  width: 90%;
-}
+  width: 90%; }
 
 .button-chart-edit {
   margin: 0 auto;
   width: 60%;
   display: flex;
-  justify-content: space-between;
-}
-.button-chart-edit button {
-  width: 50px;
-}
+  justify-content: space-between; }
+  .button-chart-edit button {
+    width: 50px; }
 
 .total-sum {
   display: flex;
@@ -31,18 +25,15 @@ p {
   align-items: center;
   width: 62%;
   margin: 0 auto;
-  border: 2px solid #50c878;
+  border: 2px solid #4ecdc4;
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   padding: 10px;
-  margin-bottom: 5px;
-}
+  margin-bottom: 5px; }
 
 @media (min-width: 900px) {
   .single-chart {
-    width: 80%;
-  }
-}
+    width: 80%; } }
 
 /*# sourceMappingURL=SmallChart.css.map */

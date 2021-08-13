@@ -25,7 +25,7 @@ function Gallery(props) {
         return isSignedIn ? (
           <div className={"main-gallery-container"}>
             <div className="control-gallery">
-              <Header pretty={{ borderBottom: "1px solid #50C878" }} />
+              <Header />
               <ClientsForm />
               <DiscreteSlider valuetext={valuetext} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />

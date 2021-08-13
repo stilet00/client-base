@@ -15,7 +15,7 @@
   transition: 0.5s;
   overflow: scroll; }
   .item-container:hover {
-    box-shadow: 2px 2px 2px #50C878; }
+    box-shadow: 2px 2px 2px #4ecdc4; }
 
 p {
   margin: 0;
@@ -33,7 +33,7 @@ p {
   color: green; }
 
 .not-completed {
-  background: rgba(80, 200, 120, 0.7); }
+  background: rgba(78, 205, 196, 0.7); }
 
 .completed {
   background: orange; }
