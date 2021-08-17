@@ -15,13 +15,13 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       {
         fill: true,
         backgroundColor: ["rgba(78, 205, 196, 0.7)"],
-        borderColor: ["#DFF0D8"],
+        borderColor: ["#000000"],
         borderWidth: 1.5,
         data: graph.values,
         tension: 0.4,
-        borderDash: [2, 2],
+        borderDash: [5, 2],
         cubicInterpolationMode: "monotone",
-        borderRadius: 3,
+        borderRadius: 4,
       },
     ],
   });
