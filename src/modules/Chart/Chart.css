@@ -1,14 +1,5 @@
-.chart-container {
-  width: 90%;
-  min-height: 500px;
-  max-height: 100vh;
-  overflow-y: scroll;
-}
-
-@media (min-width: 900px) {
+@media (max-width: 900px) {
   .chart-container {
-    min-height: 80vh;
-  }
-}
+    max-width: none; } }
 
 /*# sourceMappingURL=Chart.css.map */

@@ -78,7 +78,7 @@ function Chart(props) {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"taskList-container"}>
+            <div className={"taskList-container chart-container"}>
               {page}
             </div>
             <div className={"socials button-add-container"}>
