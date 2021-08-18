@@ -4,6 +4,7 @@
   width: 90%;
   max-width: 500px;
   min-height: 528px;
+  max-height: 70vh;
   margin: 0 auto;
   overflow-y: scroll; }
 
