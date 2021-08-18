@@ -31,7 +31,7 @@ function Gallery(props) {
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
             <div className={"inner-gallery-container"}>
-              <h3>List of clients:</h3>
+              <h3 className={"clients-header"}>List of clients:</h3>
               {CLIENTS.filter(
                 (item) =>
                   moment().diff(item.age, "years") >= ageFilter &&

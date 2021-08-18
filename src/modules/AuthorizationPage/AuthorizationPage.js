@@ -12,14 +12,17 @@ const StyledButton = withStyles({
   root: {
     borderRadius: 3,
     border: 0,
-    color: "#50C878",
+    color: "black",
     height: 48,
     padding: "0 30px",
     background:
-      "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(80,200,120,1) 100%)",
-    boxShadow: "0 3px 5px 2px rgba(80, 200, 120, .3)",
+      "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(78, 205, 196, 1) 100%)",
+    boxShadow: "none",
     letterSpacing: "3px",
     fontWeight: "bold",
+    "&:hover" : {
+      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)"
+    }
   },
   label: {
     textTransform: "capitalize",
@@ -28,24 +31,24 @@ const StyledButton = withStyles({
 const StyledInput = withStyles({
   root: {
     "& label.Mui-focused": {
-      color: "green",
+      color: "black",
     },
     "& label": {
-      color: "green",
+      color: "black",
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "green",
+      borderBottomColor: "black",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "green",
+        borderColor: "black",
         borderWidth: 1,
       },
       "&:hover fieldset": {
-        borderColor: "green",
+        borderColor: "black",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "green",
+        borderColor: "black",
       },
     },
   },

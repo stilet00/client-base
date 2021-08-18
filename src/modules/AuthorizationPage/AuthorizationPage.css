@@ -4,23 +4,20 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-}
+  justify-content: space-between; }
 
 .authorization-container {
   width: 90%;
   height: 250px;
-  max-width: 400px;
-}
+  max-width: 400px; }
 
 .authorization-welcome {
   letter-spacing: 0.5px;
   text-shadow: none;
-}
+  color: black; }
 
 .password-container {
   width: 90%;
-  max-width: 420.5px;
-}
+  max-width: 420.5px; }
 
 /*# sourceMappingURL=AuthorizationPage.css.map */

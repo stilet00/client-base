@@ -15,8 +15,8 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       {
         fill: true,
         backgroundColor: ["rgba(78, 205, 196, 0.7)"],
-        borderColor: ["#000000"],
-        borderWidth: 1.5,
+        borderColor: ["#ffffff"],
+        borderWidth: 0.5,
         data: graph.values,
         tension: 0.4,
         borderDash: [5, 2],
@@ -30,6 +30,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       y: {
         suggestedMin: 0,
         ticks: {
+          color: "white",
           beginAtZero: true,
           callback: function (value, index, values) {
             return value + " $.";
@@ -38,6 +39,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
       },
       x: {
         ticks: {
+          color: "white",
           callback: function (value, index, values) {
             return value + 1 + "." + graph.month;
           },
@@ -49,6 +51,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
         display: false,
       },
       title: {
+        color: "white",
         display: true,
         text: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
       },
