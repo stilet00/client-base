@@ -1,0 +1,36 @@
+.message-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  top: 30%;
+  width: 300px;
+  min-height: 150px;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid;
+  border-radius: 10px;
+  text-align: center; }
+  .message-container h2 {
+    text-shadow: none; }
+  .message-container p {
+    color: orange; }
+
+.green-box {
+  border-color: #4ecdc4; }
+
+.red-box {
+  border-color: red; }
+  .red-box .green-text {
+    color: #4ecdc4; }
+  .red-box .red-text {
+    color: red; }
+
+.confirmation-buttons {
+  width: 90%;
+  display: flex;
+  justify-content: space-between; }
+
+/*# sourceMappingURL=AlertMessageConfirmation.css.map */
