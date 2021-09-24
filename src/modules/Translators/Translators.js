@@ -26,7 +26,6 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import { useAlert } from "../../shared/AlertMessage/hooks";
 import Loader from "../../shared/Loader/Loader";
 import AlertMessage from "../../shared/AlertMessage/AlertMessage";
-import backgroundImage from "../../images/background-27.png";
 function Translators(props) {
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
@@ -63,7 +62,7 @@ function Translators(props) {
     setState({ ...state, [anchor]: open });
   };
   //drag & drop handler
-  const [currentTranslator, setCurrentTranslator] = useState(null);
+  // const [currentTranslator, setCurrentTranslator] = useState(null);
   const [currentClient, setCurrentClient] = useState(null);
   function dragStartHandler(e, client) {
     setCurrentClient(client);
