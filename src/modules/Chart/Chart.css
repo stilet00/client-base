@@ -1,5 +1,5 @@
-@media (max-width: 900px) {
+@media (min-width: 900px) {
   .chart-container {
-    max-width: none; } }
+    max-width: 90vw; } }
 
 /*# sourceMappingURL=Chart.css.map */
