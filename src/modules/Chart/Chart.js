@@ -19,7 +19,7 @@ import AlertMessageConfirmation from "../../shared/AlertMessageConfirmation/Aler
 import moment from "moment";
 function Chart(props) {
   const [months, setMonths] = useState([]);
-  const { alertOpen, closeAlert, openAlert } = useAlert();
+  const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
   const {alertStatusConfirmation, closeAlertConfirmation, openAlertConfirmation, closeAlertConfirmationNoReload } = useAlertConfirmation();
   const [deletedMonth, setDeletedMonth] = useState(null);
   function compareNumeric(a, b) {
@@ -41,6 +41,8 @@ function Chart(props) {
 
   }
   function deleteGraphClicked() {
+    console.log(moment(`${deletedMonth.year}-${deletedMonth.month}`).format("MMMM-YYYY"))
+    console.log(deletedMonth)
     removeYear(deletedMonth._id).then((res) => {
           setMonths(months.filter((item) => item._id !== deletedMonth._id))
           setDeletedMonth(null);
@@ -56,7 +58,8 @@ function Chart(props) {
     addMonth(date).then((res) => {
       if (res.status === 200) {
         openAlert();
-        setTimeout(closeAlert, 1500);
+        setMonths([...months, {...date, _id: res.data}].sort(compareNumeric).reverse())
+        setTimeout(closeAlertNoReload, 1500);
       }
     });
   }
@@ -110,7 +113,7 @@ function Chart(props) {
             />
             <AlertMessageConfirmation
                 mainText={"Please confirm that you want to delete chart?"}
-                additionalText={ deletedMonth ? `Deleting month: ${moment(`${deletedMonth.year} ${deletedMonth.month}`).format("MMMM YYYY")}` : null}
+                additionalText={ deletedMonth ? `Deleting month: ${moment(`${deletedMonth.year}-${deletedMonth.month}`).format("MMMM-YYYY")}` : null}
                 open={alertStatusConfirmation}
                 handleClose={closeAlertConfirmation}
                 handleOpen={openAlertConfirmation}
