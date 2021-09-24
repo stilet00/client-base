@@ -41,8 +41,6 @@ function Chart(props) {
 
   }
   function deleteGraphClicked() {
-    console.log(moment(`${deletedMonth.year}-${deletedMonth.month}`).format("MMMM-YYYY"))
-    console.log(deletedMonth)
     removeYear(deletedMonth._id).then((res) => {
           setMonths(months.filter((item) => item._id !== deletedMonth._id))
           setDeletedMonth(null);
