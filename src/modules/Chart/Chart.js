@@ -14,9 +14,14 @@ import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../shared/AlertMessage/AlertMessage";
 import { useAlert } from "../../shared/AlertMessage/hooks";
+import { useAlertConfirmation } from "../../shared/AlertMessageConfirmation/hooks";
+import AlertMessageConfirmation from "../../shared/AlertMessageConfirmation/AlertMessageConfirmation";
+import moment from "moment";
 function Chart(props) {
   const [months, setMonths] = useState([]);
   const { alertOpen, closeAlert, openAlert } = useAlert();
+  const {alertStatusConfirmation, closeAlertConfirmation, openAlertConfirmation, closeAlertConfirmationNoReload } = useAlertConfirmation();
+  const [deletedMonth, setDeletedMonth] = useState(null);
   function compareNumeric(a, b) {
     if (a.month > b.month) return 1;
     if (a.month === b.month) return 0;
@@ -31,9 +36,21 @@ function Chart(props) {
     });
   }, []);
   function deleteGraph(id) {
-    removeYear(id).then((res) =>
-      setMonths(months.filter((item) => item._id !== id))
+    setDeletedMonth(months.find(item => item._id === id));
+    openAlertConfirmation();
+
+  }
+  function deleteGraphClicked() {
+    removeYear(deletedMonth._id).then((res) => {
+          setMonths(months.filter((item) => item._id !== deletedMonth._id))
+          setDeletedMonth(null);
+          closeAlertConfirmationNoReload();
+    }
     );
+  }
+  function cancelDeleteGraphClicked() {
+    setDeletedMonth(null);
+    closeAlertConfirmationNoReload();
   }
   function onMonthSubmit(date) {
     addMonth(date).then((res) => {
@@ -90,6 +107,16 @@ function Chart(props) {
               handleOpen={openAlert}
               handleClose={closeAlert}
               status={true}
+            />
+            <AlertMessageConfirmation
+                mainText={"Please confirm that you want to delete chart?"}
+                additionalText={ deletedMonth ? `Deleting month: ${moment(`${deletedMonth.year} ${deletedMonth.month}`).format("MMMM YYYY")}` : null}
+                open={alertStatusConfirmation}
+                handleClose={closeAlertConfirmation}
+                handleOpen={openAlertConfirmation}
+                status={false}
+                onCancel={cancelDeleteGraphClicked}
+                onConfirm={deleteGraphClicked}
             />
           </>
         ) : (
