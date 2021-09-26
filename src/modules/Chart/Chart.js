@@ -99,7 +99,7 @@ function Chart(props) {
             <div className={"taskList-container chart-container"}>
               {page}
             </div>
-            <div className={"socials button-add-container"}>
+            <div className={"socials button-add-container resized-container"}>
               <ChartForm onMonthSubmit={onMonthSubmit} />
             </div>
             <AlertMessage
