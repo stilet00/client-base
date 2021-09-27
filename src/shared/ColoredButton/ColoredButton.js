@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
 const theme = createTheme({
   palette: {
     primary: {
-      main: "rgba(78, 205, 196, 1)"
-    }
+      main: "rgba(78, 205, 196, 1)",
+    },
   },
 });
 

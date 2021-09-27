@@ -20,7 +20,12 @@ import moment from "moment";
 function Chart(props) {
   const [months, setMonths] = useState([]);
   const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
-  const {alertStatusConfirmation, closeAlertConfirmation, openAlertConfirmation, closeAlertConfirmationNoReload } = useAlertConfirmation();
+  const {
+    alertStatusConfirmation,
+    closeAlertConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
+  } = useAlertConfirmation();
   const [deletedMonth, setDeletedMonth] = useState(null);
   function compareNumeric(a, b) {
     if (a.month > b.month) return 1;
@@ -36,17 +41,15 @@ function Chart(props) {
     });
   }, []);
   function deleteGraph(id) {
-    setDeletedMonth(months.find(item => item._id === id));
+    setDeletedMonth(months.find((item) => item._id === id));
     openAlertConfirmation();
-
   }
   function deleteGraphClicked() {
     removeYear(deletedMonth._id).then((res) => {
-          setMonths(months.filter((item) => item._id !== deletedMonth._id))
-          setDeletedMonth(null);
-          closeAlertConfirmationNoReload();
-    }
-    );
+      setMonths(months.filter((item) => item._id !== deletedMonth._id));
+      setDeletedMonth(null);
+      closeAlertConfirmationNoReload();
+    });
   }
   function cancelDeleteGraphClicked() {
     setDeletedMonth(null);
@@ -56,7 +59,9 @@ function Chart(props) {
     addMonth(date).then((res) => {
       if (res.status === 200) {
         openAlert();
-        setMonths([...months, {...date, _id: res.data}].sort(compareNumeric).reverse())
+        setMonths(
+          [...months, { ...date, _id: res.data }].sort(compareNumeric).reverse()
+        );
         setTimeout(closeAlertNoReload, 1500);
       }
     });
@@ -96,10 +101,8 @@ function Chart(props) {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"taskList-container chart-container"}>
-              {page}
-            </div>
-            <div className={"socials button-add-container"}>
+            <div className={"taskList-container chart-container"}>{page}</div>
+            <div className={"socials button-add-container resized-container"}>
               <ChartForm onMonthSubmit={onMonthSubmit} />
             </div>
             <AlertMessage
@@ -110,14 +113,20 @@ function Chart(props) {
               status={true}
             />
             <AlertMessageConfirmation
-                mainText={"Please confirm that you want to delete chart?"}
-                additionalText={ deletedMonth ? `Deleting month: ${moment(`${deletedMonth.year}-${deletedMonth.month}`).format("MMMM-YYYY")}` : null}
-                open={alertStatusConfirmation}
-                handleClose={closeAlertConfirmation}
-                handleOpen={openAlertConfirmation}
-                status={false}
-                onCancel={cancelDeleteGraphClicked}
-                onConfirm={deleteGraphClicked}
+              mainText={"Please confirm that you want to delete chart?"}
+              additionalText={
+                deletedMonth
+                  ? `Deleting month: ${moment(
+                      `${deletedMonth.year}-${deletedMonth.month}`
+                    ).format("MMMM-YYYY")}`
+                  : null
+              }
+              open={alertStatusConfirmation}
+              handleClose={closeAlertConfirmation}
+              handleOpen={openAlertConfirmation}
+              status={false}
+              onCancel={cancelDeleteGraphClicked}
+              onConfirm={deleteGraphClicked}
             />
           </>
         ) : (

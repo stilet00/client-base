@@ -18,6 +18,7 @@ import { FirebaseAuthProvider } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
 import LogoHeader from "./shared/LogoHeader/LogoHeader";
 import Translators from "./modules/Translators/Translators";
+import Overview from "./modules/Overview/Overview";
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
                   render={() => <Karussell />}
                 />
                 <Media query="(min-width: 812px)" render={() => <Gallery />} />
+              </Route>
+              <Route path="/overview/">
+                <Overview />
               </Route>
               <Route path="/tasks/">
                 <TaskList />

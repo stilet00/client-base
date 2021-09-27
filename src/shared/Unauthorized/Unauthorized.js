@@ -11,13 +11,13 @@ const StyledButton = withStyles({
     height: 48,
     padding: "0 30px",
     background:
-        "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(78, 205, 196, 1) 100%)",
+      "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(78, 205, 196, 1) 100%)",
     boxShadow: "none",
     letterSpacing: "3px",
     fontWeight: "bold",
-    "&:hover" : {
-      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)"
-    }
+    "&:hover": {
+      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)",
+    },
   },
   label: {
     textTransform: "capitalize",

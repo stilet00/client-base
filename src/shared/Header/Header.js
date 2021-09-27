@@ -17,6 +17,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import WorkIcon from "@material-ui/icons/Work";
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 const useStyles = makeStyles({
   list: {
@@ -76,17 +77,23 @@ export default function Header({ pretty }) {
             onKeyDown={toggleDrawer(anchor, false)}
           >
             <List className={"fallDown-menu"}>
-              <ListItem button onClick={() => history.push("/tasks")}>
+              <ListItem button onClick={() => history.push("/overview")}>
                 <ListItemIcon>
-                  <FormatListNumberedIcon />
+                  <PageviewIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Task List"} />
+                <ListItemText primary={"Overview"} />
               </ListItem>
               <ListItem button onClick={() => history.push("/chart")}>
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Balance chart"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/tasks")}>
+                <ListItemIcon>
+                  <FormatListNumberedIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Task List"} />
               </ListItem>
               <ListItem button onClick={() => history.push("/clients")}>
                 <ListItemIcon>
@@ -109,9 +116,7 @@ export default function Header({ pretty }) {
   );
 
   return (
-    <div
-      className={"socials button-add-container menu-container upper-menu"}
-    >
+    <div className={"socials upper-menu resized-container"}>
       <MenuIcon />
       <Button onClick={toggleDrawer("top", true)} fullWidth>
         Menu

@@ -35,10 +35,10 @@ function Translators(props) {
   });
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     getTranslators().then((res) => {
       if (res.status === 200) {
-        setLoading(false)
+        setLoading(false);
         setTranslators(res.data);
       } else {
         console.log("No translators");
@@ -76,7 +76,7 @@ function Translators(props) {
     if (e.target.tagName === "UL") {
       e.target.style.background = "none";
     } else if (e.target.tagName === "LI") {
-      e.target.parentNode.style.background = "none"
+      e.target.parentNode.style.background = "none";
     }
   }
   function dragEndHandler(e) {
@@ -88,7 +88,7 @@ function Translators(props) {
     if (e.target.tagName === "UL") {
       e.target.style.background = "rgba(200, 247, 197, 1)";
     } else if (e.target.tagName === "LI") {
-      e.target.parentNode.style.background = "rgba(200, 247, 197, 1)"
+      e.target.parentNode.style.background = "rgba(200, 247, 197, 1)";
     }
   }
 
@@ -101,7 +101,7 @@ function Translators(props) {
     if (e.target.tagName === "UL") {
       e.target.style.background = "none";
     } else if (e.target.tagName === "LI") {
-      e.target.parentNode.style.background = "none"
+      e.target.parentNode.style.background = "none";
     }
     let editedTranslator = translators.find(
       (item) => item._id === translatorID
@@ -162,9 +162,9 @@ function Translators(props) {
         />
       ))
     ) : (
-        <div className="empty">
-          {loading ? <Loader /> : <h1>No translators yet.</h1>}
-        </div>
+      <div className="empty">
+        {loading ? <Loader /> : <h1>No translators yet.</h1>}
+      </div>
     );
   return (
     <FirebaseAuthConsumer>
