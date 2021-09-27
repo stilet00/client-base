@@ -148,6 +148,9 @@ app.get(rootURL + "chart/", function (request, response, next) {
 app.get(rootURL + "chart?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });
+app.get(rootURL + "overview/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
 app.get(rootURL + "clients/true?", function (request, response, next) {
   response.sendFile(__dirname + "/build/index.html");
 });

@@ -35,7 +35,8 @@ function App() {
                 />
                 <Media query="(min-width: 812px)" render={() => <Gallery />} />
               </Route>
-              <Route path="/overview/">
+              <Redirect from="/overview/*" to="/overview" />
+              <Route path="/overview">
                 <Overview />
               </Route>
               <Route path="/tasks/">
