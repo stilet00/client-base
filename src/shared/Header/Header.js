@@ -17,6 +17,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import WorkIcon from "@material-ui/icons/Work";
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 const useStyles = makeStyles({
   list: {
@@ -81,6 +82,12 @@ export default function Header({ pretty }) {
                   <FormatListNumberedIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Task List"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/overview")}>
+                <ListItemIcon>
+                  <PageviewIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Overview"} />
               </ListItem>
               <ListItem button onClick={() => history.push("/chart")}>
                 <ListItemIcon>
