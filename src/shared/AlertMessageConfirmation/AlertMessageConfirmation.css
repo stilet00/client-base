@@ -12,25 +12,33 @@
   background-color: white;
   border: 1px solid;
   border-radius: 10px;
-  text-align: center; }
-  .message-container h2 {
-    text-shadow: none; }
-  .message-container p {
-    color: orange; }
+  text-align: center;
+}
+.message-container h2 {
+  text-shadow: none;
+}
+.message-container p {
+  color: orange;
+}
 
 .green-box {
-  border-color: #4ecdc4; }
+  border-color: #4ecdc4;
+}
 
 .red-box {
-  border-color: red; }
-  .red-box .green-text {
-    color: #4ecdc4; }
-  .red-box .red-text {
-    color: red; }
+  border-color: red;
+}
+.red-box .green-text {
+  color: #4ecdc4;
+}
+.red-box .red-text {
+  color: red;
+}
 
 .confirmation-buttons {
   width: 90%;
   display: flex;
-  justify-content: space-between; }
+  justify-content: space-between;
+}
 
 /*# sourceMappingURL=AlertMessageConfirmation.css.map */

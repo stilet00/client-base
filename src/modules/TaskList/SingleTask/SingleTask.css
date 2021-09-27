@@ -13,29 +13,37 @@
   margin-bottom: 10px;
   border-radius: 5px;
   transition: 0.5s;
-  overflow: scroll; }
-  .item-container:hover {
-    box-shadow: 2px 2px 2px #4ecdc4; }
+  overflow: scroll;
+}
+.item-container:hover {
+  box-shadow: 2px 2px 2px #4ecdc4;
+}
 
 p {
   margin: 0;
-  display: block; }
+  display: block;
+}
 
 .task-date {
-  font-size: 10px; }
+  font-size: 10px;
+}
 
 .button-container {
   width: 50%;
   display: flex;
-  justify-content: space-between; }
+  justify-content: space-between;
+}
 
 .done-text {
-  color: green; }
+  color: green;
+}
 
 .not-completed {
-  background: rgba(78, 205, 196, 0.7); }
+  background: rgba(78, 205, 196, 0.7);
+}
 
 .completed {
-  background: orange; }
+  background: orange;
+}
 
 /*# sourceMappingURL=SingleTask.css.map */

@@ -77,12 +77,6 @@ export default function Header({ pretty }) {
             onKeyDown={toggleDrawer(anchor, false)}
           >
             <List className={"fallDown-menu"}>
-              <ListItem button onClick={() => history.push("/tasks")}>
-                <ListItemIcon>
-                  <FormatListNumberedIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Task List"} />
-              </ListItem>
               <ListItem button onClick={() => history.push("/overview")}>
                 <ListItemIcon>
                   <PageviewIcon />
@@ -94,6 +88,12 @@ export default function Header({ pretty }) {
                   <BarChartIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Balance chart"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/tasks")}>
+                <ListItemIcon>
+                  <FormatListNumberedIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Task List"} />
               </ListItem>
               <ListItem button onClick={() => history.push("/clients")}>
                 <ListItemIcon>
@@ -116,9 +116,7 @@ export default function Header({ pretty }) {
   );
 
   return (
-    <div
-      className={"socials upper-menu resized-container"}
-    >
+    <div className={"socials upper-menu resized-container"}>
       <MenuIcon />
       <Button onClick={toggleDrawer("top", true)} fullWidth>
         Menu

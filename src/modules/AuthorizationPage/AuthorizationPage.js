@@ -20,9 +20,9 @@ const StyledButton = withStyles({
     boxShadow: "none",
     letterSpacing: "3px",
     fontWeight: "bold",
-    "&:hover" : {
-      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)"
-    }
+    "&:hover": {
+      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)",
+    },
   },
   label: {
     textTransform: "capitalize",
@@ -118,7 +118,7 @@ function AuthorizationPage(props) {
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
         if (isSignedIn) {
-          history.push("/clients/");
+          history.push("/overview/");
         }
         return (
           <div className={"authorization-container"}>

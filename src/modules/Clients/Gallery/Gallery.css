@@ -4,10 +4,12 @@
   align-items: center;
   height: 100%;
   max-height: 80vh;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+}
 
 .clients-header {
-  color: white; }
+  color: white;
+}
 
 .inner-gallery-container {
   display: flex;
@@ -18,7 +20,8 @@
   min-height: 232px;
   overflow-x: scroll;
   border: 2px solid #4ecdc4;
-  border-radius: 10px; }
+  border-radius: 10px;
+}
 
 .control-gallery {
   border: 2px solid #4ecdc4;
@@ -26,16 +29,20 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   padding: 5px;
-  width: 362px; }
+  width: 362px;
+}
 
 .empty {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start; }
+  align-items: flex-start;
+}
 
 @media (max-width: 812px) {
   .inner-gallery-container {
-    width: 800px; } }
+    width: 800px;
+  }
+}
 
 /*# sourceMappingURL=Gallery.css.map */

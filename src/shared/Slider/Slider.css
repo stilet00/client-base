@@ -5,12 +5,16 @@
   margin-bottom: 0;
   margin-top: 10px !important;
   color: black;
-  letter-spacing: 1px !important; }
+  letter-spacing: 1px !important;
+}
 
 .MuiSlider-root {
-  color: lightblue !important; }
+  color: lightblue !important;
+}
 
-.MuiSlider-track, .MuiSlider-thumb {
-  color: #4ecdc4; }
+.MuiSlider-track,
+.MuiSlider-thumb {
+  color: #4ecdc4;
+}
 
 /*# sourceMappingURL=Slider.css.map */
