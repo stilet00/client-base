@@ -19,18 +19,24 @@ function Overview(props) {
   const [yearSum, setYearSum] = useState(null);
   useEffect(() => {
     getBalance().then((res) => {
-      let byYearFiltredArray = res.data.filter(
-        (item) => item.year === currentYear
-      );
-      setCharts(byYearFiltredArray);
-      getMonthProgress(byYearFiltredArray);
-      getYearSum(byYearFiltredArray);
+      if (res.status === 200) {
+        let byYearFiltredArray = res.data.filter(
+            (item) => item.year === currentYear
+        );
+        setCharts(byYearFiltredArray);
+        getMonthProgress(byYearFiltredArray);
+        getYearSum(byYearFiltredArray);
+      }
     });
     getClients().then((res) => {
-      setClients(res.data);
+      if (res.status === 200) {
+        setClients(res.data);
+      }
     });
     getTranslators().then((res) => {
-      setTranslators(res.data);
+      if (res.status === 200) {
+        setTranslators(res.data);
+      }
     });
   }, []);
   function reduceArray(array) {
