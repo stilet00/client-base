@@ -28,17 +28,21 @@ function Overview(props) {
         getYearSum(byYearFiltredArray);
       }
     });
+  }, []);
+  useEffect(() => {
     getClients().then((res) => {
       if (res.status === 200) {
         setClients(res.data);
       }
     });
+  }, [])
+  useEffect(() => {
     getTranslators().then((res) => {
       if (res.status === 200) {
         setTranslators(res.data);
       }
     });
-  }, []);
+  }, [])
   function reduceArray(array) {
     return array.reduce((sum, current) => {
       return Number(sum) + Number(current);
@@ -46,11 +50,13 @@ function Overview(props) {
   }
   function getSumTillNow(array) {
     let sum = 0;
-    array.values.forEach((item, index) => {
-      if (index < Number(moment().format("DD")) && item !== undefined) {
-        sum = sum + Number(item);
-      }
-    });
+    if (array) {
+      array.values.forEach((item, index) => {
+        if ((index < Number(moment().format("DD"))) && (item !== undefined)) {
+          sum = sum + Number(item);
+        }
+      });
+    }
     return sum;
   }
   function getYearSum(yearArray) {
@@ -66,10 +72,11 @@ function Overview(props) {
     );
     let previousMonthNumber = "0" + (Number(moment().format("MM")) - 1);
     let previousMonth = yearArray.find(
-      (item) => item.month === moment(previousMonthNumber).format("MM")
+      (item) => item.month === previousMonthNumber
     );
     let currentSum = getSumTillNow(currentMonth);
     let previousSum = getSumTillNow(previousMonth);
+
     if (currentSum > previousSum) {
       setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
     } else {
