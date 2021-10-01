@@ -15,6 +15,7 @@ import moment from "moment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "./ChartForm.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import SumArray from "../../../shared/SumArray/SumArray";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -43,6 +44,7 @@ export default function ChartForm({ onMonthSubmit }) {
   const [year, setYear] = useState(moment().format("YYYY"));
   const [months, setMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(1);
+  const [isMultipleChecked, setIsMultipleChecked] = useState(false)
   useEffect(() => {
     let monthsArray = [];
     for (let i = 1; i < 13; i++) {
@@ -67,6 +69,9 @@ export default function ChartForm({ onMonthSubmit }) {
   const handleClose = () => {
     setOpen(false);
   };
+  function onCheckboxChange () {
+    setIsMultipleChecked(!isMultipleChecked)
+  }
   function getTotalDays() {
     const stringMonth = selectedMonth < 9 ? "0" + selectedMonth : selectedMonth;
     let totalDays = [];
@@ -81,13 +86,15 @@ export default function ChartForm({ onMonthSubmit }) {
   }
   function onFormSubmit(e) {
     e.preventDefault();
-    onMonthSubmit({
+    let submittedMonth = {
       year: year,
       month: selectedMonth < 10 ? "0" + selectedMonth : String(selectedMonth),
       days: getTotalDays(),
       values: [],
-    });
-    handleClose();
+    }
+    console.log(submittedMonth)
+    // onMonthSubmit(submittedMonth);
+    // handleClose();
   }
   return (
     <div className={"modal-wrapper"}>
@@ -151,6 +158,7 @@ export default function ChartForm({ onMonthSubmit }) {
                   ))}
                 </Select>
               </FormControl>
+              <SumArray onCheckboxChange={onCheckboxChange} isMultipleChecked={isMultipleChecked} getTotalDays={getTotalDays} selectedMonth={selectedMonth}/>
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add chart
               </Button>
