@@ -23,6 +23,7 @@ function Overview(props) {
         let byYearFiltredArray = res.data.filter(
             (item) => item.year === currentYear
         );
+        console.log(byYearFiltredArray)
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
@@ -44,18 +45,27 @@ function Overview(props) {
     });
   }, [])
   function reduceArray(array) {
-    return array.reduce((sum, current) => {
-      return Number(sum) + Number(current);
-    });
-  }
-  function getSumTillNow(array) {
-    let sum = 0;
-    if (array) {
-      array.values.forEach((item, index) => {
-        if ((index < Number(moment().format("DD"))) && (item !== undefined)) {
-          sum = sum + Number(item);
-        }
+      return array.reduce((sum , current) => {
+        return Number(sum) + Number(current);
       });
+
+
+  }
+  function getSumTillNow(array, forFullMonth = false) {
+    let sum = 0;
+    if (forFullMonth) {
+      array.values.forEach(item => {
+        sum = item ? sum + Number(item) : sum
+      })
+    } else {
+      if (array) {
+        array.values.forEach((item, index) => {
+          if ((index < Number(moment().format("DD"))) && (item)) {
+            sum = sum + Number(item);
+          }
+        });
+    }
+
     }
     return sum;
   }
@@ -70,23 +80,40 @@ function Overview(props) {
     let currentMonth = yearArray.find(
       (item) => item.month === moment().format("MM")
     );
+
     let previousMonthNumber = "0" + (Number(moment().format("MM")) - 1);
     let previousMonth = yearArray.find(
       (item) => item.month === previousMonthNumber
     );
-    let currentSum = getSumTillNow(currentMonth);
-    let previousSum = getSumTillNow(previousMonth);
-
-    if (currentSum > previousSum) {
-      setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+    if (!currentMonth) {
+      currentMonth = yearArray[yearArray.length - 1]
+      previousMonth = yearArray[yearArray.length - 2]
+      let currentSum = getSumTillNow(currentMonth, true);
+      let previousSum = getSumTillNow(previousMonth, true);
+      if (currentSum > previousSum) {
+        setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+      } else {
+        setProgressStatus(false);
+        setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+      }
     } else {
-      setProgressStatus(false);
-      setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+      let currentSum = getSumTillNow(currentMonth);
+      let previousSum = getSumTillNow(previousMonth);
+      if (currentSum > previousSum) {
+        setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+      } else if (currentSum !== 0 && previousSum !== 0) {
+        setProgressStatus(false);
+        setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+      } else {
+        console.log(currentSum)
+        setProgressStatus(false)
+        setProgressValue(0)
+      }
     }
-  }
-  //Table rows
 
-  let monthProgressPage = progressValue ? (
+  }
+
+  let monthProgressPage = progressValue || progressValue === 0 ? (
     progressStatus ? (
       <span style={{ color: "green" }}> + {progressValue} %</span>
     ) : (
