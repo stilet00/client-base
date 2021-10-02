@@ -23,7 +23,6 @@ function Overview(props) {
         let byYearFiltredArray = res.data.filter(
             (item) => item.year === currentYear
         );
-        console.log(byYearFiltredArray)
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
@@ -59,11 +58,21 @@ function Overview(props) {
       })
     } else {
       if (array) {
-        array.values.forEach((item, index) => {
-          if ((index < Number(moment().format("DD"))) && (item)) {
-            sum = sum + Number(item);
-          }
-        });
+        const dayNumber = Number(moment().format("DD"))
+        if (dayNumber !== 1) {
+          array.values.forEach((item, index) => {
+            if ((index < dayNumber - 1 ) && (item)) {
+              sum = sum + Number(item);
+            }
+          });
+        } else {
+          array.values.forEach((item, index) => {
+            if ((index < dayNumber ) && (item)) {
+              sum = sum + Number(item);
+            }
+          });
+        }
+
     }
 
     }
@@ -100,12 +109,12 @@ function Overview(props) {
       let currentSum = getSumTillNow(currentMonth);
       let previousSum = getSumTillNow(previousMonth);
       if (currentSum > previousSum) {
+
         setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
       } else if (currentSum !== 0 && previousSum !== 0) {
         setProgressStatus(false);
         setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
       } else {
-        console.log(currentSum)
         setProgressStatus(false)
         setProgressValue(0)
       }
