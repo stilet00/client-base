@@ -100,20 +100,19 @@ function Overview(props) {
       let currentSum = getSumTillNow(currentMonth, true);
       let previousSum = getSumTillNow(previousMonth, true);
       if (currentSum > previousSum) {
-        setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
       } else {
         setProgressStatus(false);
-        setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
       }
     } else {
       let currentSum = getSumTillNow(currentMonth);
       let previousSum = getSumTillNow(previousMonth);
       if (currentSum > previousSum) {
-
-        setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
       } else if (currentSum !== 0 && previousSum !== 0) {
         setProgressStatus(false);
-        setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
       } else {
         setProgressStatus(false)
         setProgressValue(0)
