@@ -90,7 +90,7 @@ export default function ChartForm({ onMonthSubmit }) {
       year: year,
       month: selectedMonth < 10 ? "0" + selectedMonth : String(selectedMonth),
       days: getTotalDays(),
-      values: [],
+      values: ['0'],
     }
     console.log(submittedMonth)
     // onMonthSubmit(submittedMonth);
