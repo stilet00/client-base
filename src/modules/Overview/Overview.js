@@ -17,12 +17,15 @@ function Overview(props) {
   const [progressStatus, setProgressStatus] = useState(true);
   const [progressValue, setProgressValue] = useState(null);
   const [yearSum, setYearSum] = useState(null);
+  const [bestMonth, setBestMonth] = useState(null)
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
         let byYearFiltredArray = res.data.filter(
             (item) => item.year === currentYear
         );
+        let sumSortedArray = getArrayWithSums(res.data).sort(compareSums)
+        setBestMonth(sumSortedArray[sumSortedArray.length-1])
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
@@ -43,13 +46,20 @@ function Overview(props) {
       }
     });
   }, [])
+  function getArrayWithSums(array) {
+    return array.map(item => {
+      return {...item, values: reduceArray(item.values)}
+    })
+  }
+  function compareSums(a, b) {
+    return a.values - b.values
+  }
   function reduceArray(array) {
       return array.reduce((sum , current) => {
         return Number(sum) + Number(current);
       });
-
-
   }
+
   function getSumTillNow(array, forFullMonth = false) {
     let sum = 0;
     if (forFullMonth) {
@@ -123,9 +133,9 @@ function Overview(props) {
 
   let monthProgressPage = progressValue || progressValue === 0 ? (
     progressStatus ? (
-      <span style={{ color: "green" }}> + {progressValue} %</span>
+      <span className={"green-text"}> + {progressValue} %</span>
     ) : (
-      <span style={{ color: "red" }}> - {progressValue} %</span>
+      <span className={"red-text"}> - {progressValue} %</span>
     )
   ) : (
     <SmallLoader />
@@ -148,7 +158,7 @@ function Overview(props) {
     <SmallLoader />
   );
   let profitPage = yearSum ? (
-    <span style={{ color: "green" }}>
+    <span className={"green-text"}>
       {" "}
       {yearSum -
         Math.floor(yearSum * 0.4) -
@@ -158,7 +168,12 @@ function Overview(props) {
   ) : (
     <SmallLoader />
   );
-
+  let bestMonthPage = bestMonth ? (
+      <span>
+        {`${moment(bestMonth.month).format("MMM")} : `}
+        <b className={"green-text"}>{bestMonth.values + " $"}</b>
+      </span>
+  ) : <SmallLoader />
   return (
       <FirebaseAuthConsumer>
         {({ isSignedIn, user, providerId }) => {
@@ -185,6 +200,12 @@ function Overview(props) {
                     <td>Month progress</td>
                     <td>
                       <b>{monthProgressPage}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Best month of {moment().format("YYYY")}</td>
+                    <td>
+                      <b>{bestMonthPage}</b>
                     </td>
                   </tr>
                   <tr>
