@@ -168,9 +168,10 @@ function Overview(props) {
   ) : (
     <SmallLoader />
   );
+
   let bestMonthPage = bestMonth ? (
       <span>
-        {`${moment(bestMonth.month).format("MMM")} : `}
+        {`${moment(`${currentYear}-${bestMonth.month}-01`).format("MMM")} : `}
         <b className={"green-text"}>{bestMonth.values + " $"}</b>
       </span>
   ) : <SmallLoader />
