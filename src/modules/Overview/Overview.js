@@ -100,7 +100,8 @@ function Overview(props) {
       (item) => item.month === moment().format("MM")
     );
 
-    let previousMonthNumber = "0" + (Number(moment().format("MM")) - 1);
+    let previousMonthNumber = (Number(moment().format("MM")) - 1) < 10 ? "0" + (Number(moment().format("MM")) - 1) :  (moment().format("MM")) - 1 + "";
+    console.log(previousMonthNumber)
     let previousMonth = yearArray.find(
       (item) => item.month === previousMonthNumber
     );
