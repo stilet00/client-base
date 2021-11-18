@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import "./SmallChart.css";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -7,7 +6,7 @@ import moment from "moment";
 import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
 
 function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
-  const [data, setData] = useState({
+  const data = {
     _id: graph._id,
     labels: graph.days || [],
     title: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
@@ -24,7 +23,7 @@ function SmallChart({ graph, index, deleteGraph, onValueSubmit }) {
         borderRadius: 4,
       },
     ],
-  });
+  };
   const options = {
     scales: {
       y: {

@@ -8,30 +8,36 @@ import { getTranslators } from "../../services/translatorsServices/services";
 import SmallLoader from "../../shared/SmallLoader/SmallLoader";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import Loader from "../../shared/Loader/Loader";
 
-function Overview(props) {
+function Overview() {
   const [charts, setCharts] = useState([]);
-  const [currentYear, setCurrentYear] = useState(moment().format("YYYY"));
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
   const [progressStatus, setProgressStatus] = useState(true);
   const [progressValue, setProgressValue] = useState(null);
   const [yearSum, setYearSum] = useState(null);
   const [bestMonth, setBestMonth] = useState(null);
+  const [year, setYear] = useState(moment().format("YYYY"));
+  const [emptyStatus, setEmptyStatus] = useState(false);
+  const handleChange = (event) => {
+    setYear(event.target.value);
+  };
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
-        let byYearFiltredArray = res.data.filter(
-          (item) => item.year === currentYear
-        );
-        let sumSortedArray = getArrayWithSums(res.data).sort(compareSums);
+        let byYearFiltredArray = res.data.filter((item) => item.year === year);
+        setEmptyStatus(byYearFiltredArray >= 0);
+        let sumSortedArray =
+          getArrayWithSums(byYearFiltredArray).sort(compareSums);
         setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
       }
     });
-  }, []);
+  }, [year]);
   useEffect(() => {
     getClients().then((res) => {
       if (res.status === 200) {
@@ -55,15 +61,17 @@ function Overview(props) {
     return a.values - b.values;
   }
   function reduceArray(array) {
-    return array.reduce((sum, current) => {
-      return Number(sum) + Number(current);
-    });
+    return array.length > 0
+      ? array.reduce((sum, current) => {
+          return Number(sum) + Number(current);
+        })
+      : null;
   }
 
   function getSumTillNow(array, forFullMonth = false) {
     let sum = 0;
     if (forFullMonth) {
-      array.values.forEach((item) => {
+      array?.values.forEach((item) => {
         sum = item ? sum + Number(item) : sum;
       });
     } else {
@@ -102,7 +110,6 @@ function Overview(props) {
       Number(moment().format("MM")) - 1 < 10
         ? "0" + (Number(moment().format("MM")) - 1)
         : moment().format("MM") - 1 + "";
-    console.log(previousMonthNumber);
     let previousMonth = yearArray.find(
       (item) => item.month === previousMonthNumber
     );
@@ -181,7 +188,7 @@ function Overview(props) {
 
   let bestMonthPage = bestMonth ? (
     <span>
-      {`${moment(`${currentYear}-${bestMonth.month}-01`).format("MMM")} : `}
+      {`${moment(`${year}-${bestMonth.month}-01`).format("MMM")} : `}
       <b className={"green-text"}>{bestMonth.values + " $"}</b>
     </span>
   ) : (
@@ -193,81 +200,109 @@ function Overview(props) {
         return isSignedIn ? (
           <>
             <Header />
+            <div className={"socials button-add-container middle-button"}>
+              <AccessTimeIcon />
+              <select
+                onChange={handleChange}
+                className={"year-select-menu"}
+                defaultValue={year}
+              >
+                <option value={"2020"}>2020</option>
+                <option value={"2021"} selected>
+                  2021
+                </option>
+                <option value={"2022"}>2022</option>
+              </select>
+            </div>
             <div
               className={"taskList-container chart-container table-container"}
             >
               <h1>Agency statistics</h1>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Statistic's type</th>
-                    <th>Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Current month</td>
-                    <td>
-                      <b>{moment().format("MMMM YYYY")}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Month progress</td>
-                    <td>
-                      <b>{monthProgressPage}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Best month of {moment().format("YYYY")}</td>
-                    <td>
-                      <b>{bestMonthPage}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total clients</td>
-                    <td>
-                      <b>{clients.length ? clients.length : <SmallLoader />}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total translators</td>
-                    <td>
-                      <b>
-                        {translators.length ? (
-                          translators.length
-                        ) : (
-                          <SmallLoader />
-                        )}
-                      </b>
-                    </td>
-                  </tr>
+              {charts.length > 0 ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Statistic's type</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {year === moment().format("YYYY") ? (
+                      <>
+                        <tr>
+                          <td>Current month</td>
+                          <td>
+                            <b>{moment().format("MMMM YYYY")}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Month progress</td>
+                          <td>
+                            <b>{monthProgressPage}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Total clients</td>
+                          <td>
+                            <b>
+                              {clients.length ? (
+                                clients.length
+                              ) : (
+                                <SmallLoader />
+                              )}
+                            </b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Total translators</td>
+                          <td>
+                            <b>
+                              {translators.length ? (
+                                translators.length
+                              ) : (
+                                <SmallLoader />
+                              )}
+                            </b>
+                          </td>
+                        </tr>
+                      </>
+                    ) : null}
 
-                  <tr>
-                    <td>Year's balance</td>
-                    <td>
-                      <b>{yearSumPage}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Salary payed</td>
-                    <td>
-                      <b>{salaryPage}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Payments to clients</td>
-                    <td>
-                      <b>{clientsPaymentPage}</b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total profit</td>
-                    <td>
-                      <b>{profitPage}</b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    <tr>
+                      <td>Best month of {moment(year).format("YYYY")}</td>
+                      <td>
+                        <b>{bestMonthPage}</b>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Year's balance</td>
+                      <td>
+                        <b>{yearSumPage}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Salary payed</td>
+                      <td>
+                        <b>{salaryPage}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Payments to clients</td>
+                      <td>
+                        <b>{clientsPaymentPage}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total profit</td>
+                      <td>
+                        <b>{profitPage}</b>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              ) : emptyStatus ? <h1>No data available.</h1>
+               : <Loader /> }
             </div>
           </>
         ) : (

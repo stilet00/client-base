@@ -38,10 +38,9 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ChartForm({ onMonthSubmit }) {
+export default function ChartForm({ onMonthSubmit, year }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [year, setYear] = useState(moment().format("YYYY"));
   const [months, setMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(1);
   const [valuesArray, setValuesArray] = useState([]);
@@ -105,7 +104,6 @@ export default function ChartForm({ onMonthSubmit }) {
           );
     }
     setMonths(monthsArray);
-    setYear(moment().format("YYYY"));
     setSelectedMonth(1);
     setValuesArray([]);
   }
@@ -178,7 +176,7 @@ export default function ChartForm({ onMonthSubmit }) {
                 getTotalDays={getTotalDays}
                 selectedMonth={selectedMonth}
                 onSubmit={onValuesSubmit}
-                currentYear={year}
+                year={year}
                 valuesStatus={valuesArray.length > 0}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>

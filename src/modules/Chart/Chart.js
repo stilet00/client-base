@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Chart.css";
 import Header from "../../shared/Header/Header";
 import SmallChart from "./SmallChart/SmallChart";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import {
   addMonth,
   changeChartValue,
@@ -17,8 +18,14 @@ import { useAlert } from "../../shared/AlertMessage/hooks";
 import { useAlertConfirmation } from "../../shared/AlertMessageConfirmation/hooks";
 import AlertMessageConfirmation from "../../shared/AlertMessageConfirmation/AlertMessageConfirmation";
 import moment from "moment";
-function Chart(props) {
+function Chart() {
   const [months, setMonths] = useState([]);
+  const [year, setYear] = useState(moment().format("YYYY"));
+  const [deletedMonth, setDeletedMonth] = useState(null);
+  const [emptyStatus, setEmptyStatus] = useState(false);
+  const handleChange = (event) => {
+    setYear(event.target.value);
+  };
   const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
   const {
     alertStatusConfirmation,
@@ -26,7 +33,7 @@ function Chart(props) {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
-  const [deletedMonth, setDeletedMonth] = useState(null);
+
   function compareNumeric(a, b) {
     if (a.month > b.month) return 1;
     if (a.month === b.month) return 0;
@@ -36,19 +43,28 @@ function Chart(props) {
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
-        setMonths(res.data.sort(compareNumeric).reverse());
+        let filteredArray = res.data
+          .filter((item) => item.year === year)
+          .sort(compareNumeric)
+          .reverse();
+        setMonths(filteredArray);
+        setEmptyStatus(filteredArray.length <= 0);
+      } else {
+        console.log(res.status);
       }
     });
-  }, []);
+  }, [year]);
   function deleteGraph(id) {
     setDeletedMonth(months.find((item) => item._id === id));
     openAlertConfirmation();
   }
   function deleteGraphClicked() {
     removeYear(deletedMonth._id).then((res) => {
-      setMonths(months.filter((item) => item._id !== deletedMonth._id));
-      setDeletedMonth(null);
-      closeAlertConfirmationNoReload();
+      if (res.status === 200) {
+        setMonths(months.filter((item) => item._id !== deletedMonth._id));
+        setDeletedMonth(null);
+        closeAlertConfirmationNoReload();
+      }
     });
   }
   function cancelDeleteGraphClicked() {
@@ -71,39 +87,48 @@ function Chart(props) {
       if (res.status === 200) {
         openAlert();
         setTimeout(closeAlert, 1500);
-        // setMonths(
-        //   months.map((item) =>
-        //     item._id === valueOfDay._id ? valueOfDay : item
-        //   )
-        // );
-        // window.location.reload();
       }
     });
   }
-  const page = !months.length ? (
-    <Loader />
-  ) : (
-    <ul>
-      {months.map((month, index) => (
-        <SmallChart
-          onValueSubmit={onValueSubmit}
-          graph={month}
-          index={index}
-          key={month._id}
-          deleteGraph={deleteGraph}
-        />
-      ))}
-    </ul>
-  );
   return (
     <FirebaseAuthConsumer>
-      {({ isSignedIn, user, providerId }) => {
+      {({ isSignedIn }) => {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"taskList-container chart-container"}>{page}</div>
+            <div className={"socials button-add-container middle-button"}>
+              <AccessTimeIcon />
+              <select
+                onChange={handleChange}
+                className={"year-select-menu"}
+                defaultValue={year}
+              >
+                <option value={"2020"}>2020</option>
+                <option value={"2021"}>2021</option>
+                <option value={"2022"}>2022</option>
+              </select>
+            </div>
+            <div className={"taskList-container chart-container"}>
+              {months.length > 0 ? (
+                <ul>
+                  {months.map((month, index) => (
+                    <SmallChart
+                      onValueSubmit={onValueSubmit}
+                      graph={month}
+                      index={index}
+                      key={month._id}
+                      deleteGraph={deleteGraph}
+                    />
+                  ))}
+                </ul>
+              ) : emptyStatus ? (
+                <h1> No data available. </h1>
+              ) : (
+                <Loader />
+              )}
+            </div>
             <div className={"socials button-add-container resized-container"}>
-              <ChartForm onMonthSubmit={onMonthSubmit} />
+              <ChartForm onMonthSubmit={onMonthSubmit} year={year} />
             </div>
             <AlertMessage
               mainText={"Data has been added!"}

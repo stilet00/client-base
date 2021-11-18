@@ -12,4 +12,23 @@
   border-radius: 10px;
 }
 
+.year-select-menu {
+  width: 95%;
+  border: none;
+  height: 35px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background-color: transparent;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
+}
+.year-select-menu:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+option {
+  background-color: red;
+}
+
 /*# sourceMappingURL=ChartForm.css.map */
