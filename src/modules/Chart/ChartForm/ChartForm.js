@@ -11,10 +11,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import moment from "moment";
-
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "./ChartForm.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import SumArray from "./SumArray/SumArray";
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -43,6 +44,7 @@ export default function ChartForm({ onMonthSubmit }) {
   const [year, setYear] = useState(moment().format("YYYY"));
   const [months, setMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(1);
+  const [valuesArray, setValuesArray] = useState([]);
   useEffect(() => {
     let monthsArray = [];
     for (let i = 1; i < 13; i++) {
@@ -81,13 +83,36 @@ export default function ChartForm({ onMonthSubmit }) {
   }
   function onFormSubmit(e) {
     e.preventDefault();
-    onMonthSubmit({
+    let submittedMonth = {
       year: year,
       month: selectedMonth < 10 ? "0" + selectedMonth : String(selectedMonth),
       days: getTotalDays(),
-      values: [],
-    });
-    handleClose();
+      values: valuesArray,
+    }
+    onMonthSubmit(submittedMonth);
+    setDefault();
+  }
+  function onInputChange (e) {
+    let editedArray = valuesArray;
+    editedArray[Number(e.target.id) - 1] = e.target.value;
+    setValuesArray(editedArray)
+  }
+  function setDefault() {
+    setOpen(false);
+    let monthsArray = [];
+    for (let i = 1; i < 13; i++) {
+      i < 10
+          ? monthsArray.push(
+              moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+          )
+          : monthsArray.push(
+              moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+          );
+    }
+    setMonths(monthsArray)
+    setYear(moment().format("YYYY"));
+    setSelectedMonth(1);
+    setValuesArray([]);
   }
   return (
     <div className={"modal-wrapper"}>
@@ -151,6 +176,7 @@ export default function ChartForm({ onMonthSubmit }) {
                   ))}
                 </Select>
               </FormControl>
+              <SumArray getTotalDays={getTotalDays} onInputChange={onInputChange} selectedMonth={selectedMonth}/>
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add chart
               </Button>
