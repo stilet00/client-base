@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,mBAAmB;EACjB,KAAK,EAAE,IAAI;EACX,OAAO,EAAE,IAAI;EACb,cAAc,EAAE,MAAM;EACtB,QAAQ,EAAE,MAAM",
-"sources": ["SumArray.sass"],
-"names": [],
-"file": "SumArray.css"
-}
