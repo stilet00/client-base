@@ -17,12 +17,15 @@ function Overview(props) {
   const [progressStatus, setProgressStatus] = useState(true);
   const [progressValue, setProgressValue] = useState(null);
   const [yearSum, setYearSum] = useState(null);
+  const [bestMonth, setBestMonth] = useState(null)
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
         let byYearFiltredArray = res.data.filter(
             (item) => item.year === currentYear
         );
+        let sumSortedArray = getArrayWithSums(res.data).sort(compareSums)
+        setBestMonth(sumSortedArray[sumSortedArray.length-1])
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
@@ -43,19 +46,45 @@ function Overview(props) {
       }
     });
   }, [])
-  function reduceArray(array) {
-    return array.reduce((sum, current) => {
-      return Number(sum) + Number(current);
-    });
+  function getArrayWithSums(array) {
+    return array.map(item => {
+      return {...item, values: reduceArray(item.values)}
+    })
   }
-  function getSumTillNow(array) {
-    let sum = 0;
-    if (array) {
-      array.values.forEach((item, index) => {
-        if ((index < Number(moment().format("DD"))) && (item !== undefined)) {
-          sum = sum + Number(item);
-        }
+  function compareSums(a, b) {
+    return a.values - b.values
+  }
+  function reduceArray(array) {
+      return array.reduce((sum , current) => {
+        return Number(sum) + Number(current);
       });
+  }
+
+  function getSumTillNow(array, forFullMonth = false) {
+    let sum = 0;
+    if (forFullMonth) {
+      array.values.forEach(item => {
+        sum = item ? sum + Number(item) : sum
+      })
+    } else {
+      if (array) {
+        const dayNumber = Number(moment().format("DD"))
+        if (dayNumber !== 1) {
+          array.values.forEach((item, index) => {
+            if ((index < dayNumber - 1 ) && (item)) {
+              sum = sum + Number(item);
+            }
+          });
+        } else {
+          array.values.forEach((item, index) => {
+            if ((index < dayNumber ) && (item)) {
+              sum = sum + Number(item);
+            }
+          });
+        }
+
+    }
+
     }
     return sum;
   }
@@ -70,27 +99,44 @@ function Overview(props) {
     let currentMonth = yearArray.find(
       (item) => item.month === moment().format("MM")
     );
-    let previousMonthNumber = "0" + (Number(moment().format("MM")) - 1);
+
+    let previousMonthNumber = (Number(moment().format("MM")) - 1) < 10 ? "0" + (Number(moment().format("MM")) - 1) :  (moment().format("MM")) - 1 + "";
+    console.log(previousMonthNumber)
     let previousMonth = yearArray.find(
       (item) => item.month === previousMonthNumber
     );
-    let currentSum = getSumTillNow(currentMonth);
-    let previousSum = getSumTillNow(previousMonth);
-
-    if (currentSum > previousSum) {
-      setProgressValue((currentSum / previousSum).toFixed(2).split(".")[1]);
+    if (!currentMonth) {
+      currentMonth = yearArray[yearArray.length - 1]
+      previousMonth = yearArray[yearArray.length - 2]
+      let currentSum = getSumTillNow(currentMonth, true);
+      let previousSum = getSumTillNow(previousMonth, true);
+      if (currentSum > previousSum) {
+        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
+      } else {
+        setProgressStatus(false);
+        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
+      }
     } else {
-      setProgressStatus(false);
-      setProgressValue((previousSum / currentSum).toFixed(2).split(".")[1]);
+      let currentSum = getSumTillNow(currentMonth);
+      let previousSum = getSumTillNow(previousMonth);
+      if (currentSum > previousSum) {
+        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
+      } else if (currentSum !== 0 && previousSum !== 0) {
+        setProgressStatus(false);
+        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
+      } else {
+        setProgressStatus(false)
+        setProgressValue(0)
+      }
     }
-  }
-  //Table rows
 
-  let monthProgressPage = progressValue ? (
+  }
+
+  let monthProgressPage = progressValue || progressValue === 0 ? (
     progressStatus ? (
-      <span style={{ color: "green" }}> + {progressValue} %</span>
+      <span className={"green-text"}> + {progressValue} %</span>
     ) : (
-      <span style={{ color: "red" }}> - {progressValue} %</span>
+      <span className={"red-text"}> - {progressValue} %</span>
     )
   ) : (
     <SmallLoader />
@@ -113,7 +159,7 @@ function Overview(props) {
     <SmallLoader />
   );
   let profitPage = yearSum ? (
-    <span style={{ color: "green" }}>
+    <span className={"green-text"}>
       {" "}
       {yearSum -
         Math.floor(yearSum * 0.4) -
@@ -124,6 +170,12 @@ function Overview(props) {
     <SmallLoader />
   );
 
+  let bestMonthPage = bestMonth ? (
+      <span>
+        {`${moment(`${currentYear}-${bestMonth.month}-01`).format("MMM")} : `}
+        <b className={"green-text"}>{bestMonth.values + " $"}</b>
+      </span>
+  ) : <SmallLoader />
   return (
       <FirebaseAuthConsumer>
         {({ isSignedIn, user, providerId }) => {
@@ -150,6 +202,12 @@ function Overview(props) {
                     <td>Month progress</td>
                     <td>
                       <b>{monthProgressPage}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Best month of {moment().format("YYYY")}</td>
+                    <td>
+                      <b>{bestMonthPage}</b>
                     </td>
                   </tr>
                   <tr>
