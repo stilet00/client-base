@@ -17,7 +17,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function SumArray({ getTotalDays, onInputChange, selectedMonth }) {
+function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear }) {
   const [isMultipleChecked, setIsMultipleChecked] = useState(false);
   function onCheckboxChange() {
     setIsMultipleChecked(!isMultipleChecked);
@@ -53,9 +53,7 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth }) {
                 <>
                   <tr>
                     <td>
-                      {moment(selectedMonth + "-" + singleDay).format(
-                        "DD-MMMM"
-                      )}
+                      {moment(`${currentYear}/${selectedMonth}/${singleDay}`).format("MMMM-DD")}
                     </td>
                     <td>
                       <CssTextField

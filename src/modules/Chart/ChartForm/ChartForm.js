@@ -14,7 +14,7 @@ import moment from "moment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "./ChartForm.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import SumArray from "./SumArray/SumArray";
+import SumArray from "../../../shared/SumArray/SumArray";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -180,6 +180,7 @@ export default function ChartForm({ onMonthSubmit }) {
                 getTotalDays={getTotalDays}
                 onInputChange={onInputChange}
                 selectedMonth={selectedMonth}
+                currentYear={year}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add chart
