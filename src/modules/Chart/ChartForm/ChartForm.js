@@ -58,7 +58,6 @@ export default function ChartForm({ onMonthSubmit }) {
     }
     setMonths(monthsArray);
   }, [year]);
-
   const handleChange = (event) => {
     setSelectedMonth(event.target.value);
   };
@@ -92,11 +91,7 @@ export default function ChartForm({ onMonthSubmit }) {
     onMonthSubmit(submittedMonth);
     setDefault();
   }
-  function onInputChange(e) {
-    let editedArray = valuesArray;
-    editedArray[Number(e.target.id) - 1] = e.target.value;
-    setValuesArray(editedArray);
-  }
+
   function setDefault() {
     setOpen(false);
     let monthsArray = [];
@@ -113,6 +108,9 @@ export default function ChartForm({ onMonthSubmit }) {
     setYear(moment().format("YYYY"));
     setSelectedMonth(1);
     setValuesArray([]);
+  }
+  function onValuesSubmit(newValuesArray) {
+    setValuesArray(newValuesArray);
   }
   return (
     <div className={"modal-wrapper"}>
@@ -178,8 +176,8 @@ export default function ChartForm({ onMonthSubmit }) {
               </FormControl>
               <SumArray
                 getTotalDays={getTotalDays}
-                onInputChange={onInputChange}
                 selectedMonth={selectedMonth}
+                onSubmit={onValuesSubmit}
                 currentYear={year}
                 valuesStatus={valuesArray.length > 0}
               />

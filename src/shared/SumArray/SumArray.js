@@ -17,8 +17,20 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear, valuesStatus }) {
+function SumArray({
+  getTotalDays,
+  selectedMonth,
+  currentYear,
+  valuesStatus,
+  onSubmit,
+}) {
   const [isMultipleChecked, setIsMultipleChecked] = useState(false);
+  const [valuesArray, setValuesArray] = useState([]);
+  function onInputChange(e) {
+    let editedArray = valuesArray;
+    editedArray[Number(e.target.id) - 1] = e.target.value;
+    setValuesArray(editedArray);
+  }
   function onCheckboxChange() {
     setIsMultipleChecked(!isMultipleChecked);
   }
@@ -30,7 +42,11 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear, val
         }
         label="Enter multiple data"
       />
-      {valuesStatus ? <span className={"mass-data-flag green-text"}><b>Values added</b></span> : null}
+      {valuesStatus ? (
+        <span className={"mass-data-flag green-text"}>
+          <b>Values added</b>
+        </span>
+      ) : null}
       <div
         className={
           isMultipleChecked ? "data-input-table" : "data-input-table invisible"
@@ -54,7 +70,9 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear, val
                 <>
                   <tr>
                     <td>
-                      {moment(`${currentYear}/${selectedMonth}/${singleDay}`).format("MMMM-DD")}
+                      {moment(
+                        `${currentYear}/${selectedMonth}/${singleDay}`
+                      ).format("MMMM-DD")}
                     </td>
                     <td>
                       <CssTextField
@@ -77,7 +95,13 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear, val
             })}
             <tr>
               <td colSpan={"2"}>
-                <Button fullWidth onClick={onCheckboxChange}>
+                <Button
+                  fullWidth
+                  onClick={() => {
+                    onCheckboxChange();
+                    onSubmit(valuesArray);
+                  }}
+                >
                   <SaveIcon />
                 </Button>
               </td>
