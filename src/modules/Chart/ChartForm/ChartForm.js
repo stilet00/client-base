@@ -181,6 +181,7 @@ export default function ChartForm({ onMonthSubmit }) {
                 onInputChange={onInputChange}
                 selectedMonth={selectedMonth}
                 currentYear={year}
+                valuesStatus={valuesArray.length > 0}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add chart

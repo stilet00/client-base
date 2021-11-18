@@ -17,7 +17,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear }) {
+function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear, valuesStatus }) {
   const [isMultipleChecked, setIsMultipleChecked] = useState(false);
   function onCheckboxChange() {
     setIsMultipleChecked(!isMultipleChecked);
@@ -26,10 +26,11 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear }) {
     <div className={"checkbox-container"}>
       <FormControlLabel
         control={
-          <Checkbox onChange={onCheckboxChange} value={isMultipleChecked} />
+          <Checkbox onChange={onCheckboxChange} checked={isMultipleChecked} />
         }
         label="Enter multiple data"
       />
+      {valuesStatus ? <span className={"mass-data-flag green-text"}><b>Values added</b></span> : null}
       <div
         className={
           isMultipleChecked ? "data-input-table" : "data-input-table invisible"
@@ -69,7 +70,6 @@ function SumArray({ getTotalDays, onInputChange, selectedMonth, currentYear }) {
                         id={singleDay}
                         onChange={onInputChange}
                       />
-                      {/*<input type={"number"} id={singleDay} onChange={onInputChange} className={"value-input"}/>*/}
                     </td>
                   </tr>
                 </>
