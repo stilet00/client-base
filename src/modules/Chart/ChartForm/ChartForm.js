@@ -88,28 +88,28 @@ export default function ChartForm({ onMonthSubmit }) {
       month: selectedMonth < 10 ? "0" + selectedMonth : String(selectedMonth),
       days: getTotalDays(),
       values: valuesArray,
-    }
+    };
     onMonthSubmit(submittedMonth);
     setDefault();
   }
-  function onInputChange (e) {
+  function onInputChange(e) {
     let editedArray = valuesArray;
     editedArray[Number(e.target.id) - 1] = e.target.value;
-    setValuesArray(editedArray)
+    setValuesArray(editedArray);
   }
   function setDefault() {
     setOpen(false);
     let monthsArray = [];
     for (let i = 1; i < 13; i++) {
       i < 10
-          ? monthsArray.push(
-              moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+        ? monthsArray.push(
+            moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
           )
-          : monthsArray.push(
-              moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+        : monthsArray.push(
+            moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
           );
     }
-    setMonths(monthsArray)
+    setMonths(monthsArray);
     setYear(moment().format("YYYY"));
     setSelectedMonth(1);
     setValuesArray([]);
@@ -176,7 +176,11 @@ export default function ChartForm({ onMonthSubmit }) {
                   ))}
                 </Select>
               </FormControl>
-              <SumArray getTotalDays={getTotalDays} onInputChange={onInputChange} selectedMonth={selectedMonth}/>
+              <SumArray
+                getTotalDays={getTotalDays}
+                onInputChange={onInputChange}
+                selectedMonth={selectedMonth}
+              />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add chart
               </Button>

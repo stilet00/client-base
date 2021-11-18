@@ -17,15 +17,15 @@ function Overview(props) {
   const [progressStatus, setProgressStatus] = useState(true);
   const [progressValue, setProgressValue] = useState(null);
   const [yearSum, setYearSum] = useState(null);
-  const [bestMonth, setBestMonth] = useState(null)
+  const [bestMonth, setBestMonth] = useState(null);
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
         let byYearFiltredArray = res.data.filter(
-            (item) => item.year === currentYear
+          (item) => item.year === currentYear
         );
-        let sumSortedArray = getArrayWithSums(res.data).sort(compareSums)
-        setBestMonth(sumSortedArray[sumSortedArray.length-1])
+        let sumSortedArray = getArrayWithSums(res.data).sort(compareSums);
+        setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
         setCharts(byYearFiltredArray);
         getMonthProgress(byYearFiltredArray);
         getYearSum(byYearFiltredArray);
@@ -38,53 +38,51 @@ function Overview(props) {
         setClients(res.data);
       }
     });
-  }, [])
+  }, []);
   useEffect(() => {
     getTranslators().then((res) => {
       if (res.status === 200) {
         setTranslators(res.data);
       }
     });
-  }, [])
+  }, []);
   function getArrayWithSums(array) {
-    return array.map(item => {
-      return {...item, values: reduceArray(item.values)}
-    })
+    return array.map((item) => {
+      return { ...item, values: reduceArray(item.values) };
+    });
   }
   function compareSums(a, b) {
-    return a.values - b.values
+    return a.values - b.values;
   }
   function reduceArray(array) {
-      return array.reduce((sum , current) => {
-        return Number(sum) + Number(current);
-      });
+    return array.reduce((sum, current) => {
+      return Number(sum) + Number(current);
+    });
   }
 
   function getSumTillNow(array, forFullMonth = false) {
     let sum = 0;
     if (forFullMonth) {
-      array.values.forEach(item => {
-        sum = item ? sum + Number(item) : sum
-      })
+      array.values.forEach((item) => {
+        sum = item ? sum + Number(item) : sum;
+      });
     } else {
       if (array) {
-        const dayNumber = Number(moment().format("DD"))
+        const dayNumber = Number(moment().format("DD"));
         if (dayNumber !== 1) {
           array.values.forEach((item, index) => {
-            if ((index < dayNumber - 1 ) && (item)) {
+            if (index < dayNumber - 1 && item) {
               sum = sum + Number(item);
             }
           });
         } else {
           array.values.forEach((item, index) => {
-            if ((index < dayNumber ) && (item)) {
+            if (index < dayNumber && item) {
               sum = sum + Number(item);
             }
           });
         }
-
-    }
-
+      }
     }
     return sum;
   }
@@ -100,47 +98,58 @@ function Overview(props) {
       (item) => item.month === moment().format("MM")
     );
 
-    let previousMonthNumber = (Number(moment().format("MM")) - 1) < 10 ? "0" + (Number(moment().format("MM")) - 1) :  (moment().format("MM")) - 1 + "";
-    console.log(previousMonthNumber)
+    let previousMonthNumber =
+      Number(moment().format("MM")) - 1 < 10
+        ? "0" + (Number(moment().format("MM")) - 1)
+        : moment().format("MM") - 1 + "";
+    console.log(previousMonthNumber);
     let previousMonth = yearArray.find(
       (item) => item.month === previousMonthNumber
     );
     if (!currentMonth) {
-      currentMonth = yearArray[yearArray.length - 1]
-      previousMonth = yearArray[yearArray.length - 2]
+      currentMonth = yearArray[yearArray.length - 1];
+      previousMonth = yearArray[yearArray.length - 2];
       let currentSum = getSumTillNow(currentMonth, true);
       let previousSum = getSumTillNow(previousMonth, true);
       if (currentSum > previousSum) {
-        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
+        setProgressValue(
+          Math.round(((currentSum - previousSum) * 100) / currentSum)
+        );
       } else {
         setProgressStatus(false);
-        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
+        setProgressValue(
+          Math.round(((previousSum - currentSum) * 100) / previousSum)
+        );
       }
     } else {
       let currentSum = getSumTillNow(currentMonth);
       let previousSum = getSumTillNow(previousMonth);
       if (currentSum > previousSum) {
-        setProgressValue(Math.round((currentSum - previousSum) * 100 / currentSum));
+        setProgressValue(
+          Math.round(((currentSum - previousSum) * 100) / currentSum)
+        );
       } else if (currentSum !== 0 && previousSum !== 0) {
         setProgressStatus(false);
-        setProgressValue(Math.round((previousSum - currentSum) * 100 / previousSum));
+        setProgressValue(
+          Math.round(((previousSum - currentSum) * 100) / previousSum)
+        );
       } else {
-        setProgressStatus(false)
-        setProgressValue(0)
+        setProgressStatus(false);
+        setProgressValue(0);
       }
     }
-
   }
 
-  let monthProgressPage = progressValue || progressValue === 0 ? (
-    progressStatus ? (
-      <span className={"green-text"}> + {progressValue} %</span>
+  let monthProgressPage =
+    progressValue || progressValue === 0 ? (
+      progressStatus ? (
+        <span className={"green-text"}> + {progressValue} %</span>
+      ) : (
+        <span className={"red-text"}> - {progressValue} %</span>
+      )
     ) : (
-      <span className={"red-text"}> - {progressValue} %</span>
-    )
-  ) : (
-    <SmallLoader />
-  );
+      <SmallLoader />
+    );
   let yearSumPage = yearSum ? yearSum + " $" : <SmallLoader />;
   let salaryPage = yearSum ? (
     <span style={{ color: "orange" }}>
@@ -171,18 +180,22 @@ function Overview(props) {
   );
 
   let bestMonthPage = bestMonth ? (
-      <span>
-        {`${moment(`${currentYear}-${bestMonth.month}-01`).format("MMM")} : `}
-        <b className={"green-text"}>{bestMonth.values + " $"}</b>
-      </span>
-  ) : <SmallLoader />
+    <span>
+      {`${moment(`${currentYear}-${bestMonth.month}-01`).format("MMM")} : `}
+      <b className={"green-text"}>{bestMonth.values + " $"}</b>
+    </span>
+  ) : (
+    <SmallLoader />
+  );
   return (
-      <FirebaseAuthConsumer>
-        {({ isSignedIn, user, providerId }) => {
-          return isSignedIn ? (
+    <FirebaseAuthConsumer>
+      {({ isSignedIn, user, providerId }) => {
+        return isSignedIn ? (
           <>
             <Header />
-            <div className={"taskList-container chart-container table-container"}>
+            <div
+              className={"taskList-container chart-container table-container"}
+            >
               <h1>Agency statistics</h1>
               <table>
                 <thead>
@@ -220,7 +233,11 @@ function Overview(props) {
                     <td>Total translators</td>
                     <td>
                       <b>
-                        {translators.length ? translators.length : <SmallLoader />}
+                        {translators.length ? (
+                          translators.length
+                        ) : (
+                          <SmallLoader />
+                        )}
                       </b>
                     </td>
                   </tr>
@@ -253,11 +270,11 @@ function Overview(props) {
               </table>
             </div>
           </>
-          ) : (
-              <Unauthorized />
-          );
-        }}
-      </FirebaseAuthConsumer>
+        ) : (
+          <Unauthorized />
+        );
+      }}
+    </FirebaseAuthConsumer>
   );
 }
 

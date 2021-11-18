@@ -25,14 +25,14 @@ function SingleTranslator({
   return (
     <div className={"gallery-item translator-item"}>
       <div className={"name-table"}>
-        <p>
-          Name:
+        <p>Name:</p>
+        <p className={"value"}>
+          <b>{name}</b>
         </p>
-        <p className={'value'}>
-            <b>{name}</b></p>
-        <p>Surname:
+        <p>Surname:</p>
+        <p className={"value"}>
+          <b>{surname}</b>
         </p>
-        <p className={'value'}><b>{surname}</b></p>
       </div>
       <p>
         <b>Clients in work:</b>
