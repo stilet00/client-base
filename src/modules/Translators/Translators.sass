@@ -1,6 +1,9 @@
 @import "../../variables"
 .middle-button
   border-radius: 0
+.top-button
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
 .side-clients-menu
   display: flex
   flex-direction: column
@@ -43,3 +46,7 @@
     max-width: 376px
     border-top-left-radius: 0
     border-top-right-radius: 0
+@media (min-width: 900px)
+  .top-button
+    border-top-right-radius: 0
+    border-top-left-radius: 0

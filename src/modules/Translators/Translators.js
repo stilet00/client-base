@@ -173,7 +173,11 @@ function Translators(props) {
           <div className={"main-gallery-container"}>
             <div className="control-gallery">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
-              <div className={"socials button-add-container middle-button"}>
+              <div
+                className={
+                  "socials button-add-container middle-button top-button"
+                }
+              >
                 <ListAltIcon />
                 <Button onClick={toggleDrawer("left", true)} fullWidth>
                   Show clients

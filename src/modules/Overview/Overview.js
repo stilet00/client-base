@@ -9,35 +9,36 @@ import SmallLoader from "../../shared/SmallLoader/SmallLoader";
 import Unauthorized from "../../shared/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import Loader from "../../shared/Loader/Loader";
+import YearSelect from "../../shared/YearSelect/YearSelect";
 
 function Overview() {
-  const [charts, setCharts] = useState([]);
   const [clients, setClients] = useState([]);
   const [translators, setTranslators] = useState([]);
   const [progressStatus, setProgressStatus] = useState(true);
   const [progressValue, setProgressValue] = useState(null);
   const [yearSum, setYearSum] = useState(null);
   const [bestMonth, setBestMonth] = useState(null);
-  const [year, setYear] = useState(moment().format("YYYY"));
-  const [emptyStatus, setEmptyStatus] = useState(false);
+  const [arrayOfYears, setArrayOfYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
   const handleChange = (event) => {
-    setYear(event.target.value);
+    setSelectedYear(event.target.value);
   };
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
-        let byYearFiltredArray = res.data.filter((item) => item.year === year);
-        setEmptyStatus(byYearFiltredArray >= 0);
+        const yearList = res.data.map((item) => item.year);
+        setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
+        let byYearFilteredArray = res.data.filter(
+          (item) => item.year === selectedYear
+        );
         let sumSortedArray =
-          getArrayWithSums(byYearFiltredArray).sort(compareSums);
+          getArrayWithSums(byYearFilteredArray).sort(compareSums);
         setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-        setCharts(byYearFiltredArray);
-        getMonthProgress(byYearFiltredArray);
-        getYearSum(byYearFiltredArray);
+        getMonthProgress(byYearFilteredArray);
+        getYearSum(byYearFilteredArray);
       }
     });
-  }, [year]);
+  }, [selectedYear]);
   useEffect(() => {
     getClients().then((res) => {
       if (res.status === 200) {
@@ -119,6 +120,7 @@ function Overview() {
       let currentSum = getSumTillNow(currentMonth, true);
       let previousSum = getSumTillNow(previousMonth, true);
       if (currentSum > previousSum) {
+        setProgressStatus(true);
         setProgressValue(
           Math.round(((currentSum - previousSum) * 100) / currentSum)
         );
@@ -132,6 +134,7 @@ function Overview() {
       let currentSum = getSumTillNow(currentMonth);
       let previousSum = getSumTillNow(previousMonth);
       if (currentSum > previousSum) {
+        setProgressStatus(true);
         setProgressValue(
           Math.round(((currentSum - previousSum) * 100) / currentSum)
         );
@@ -146,7 +149,6 @@ function Overview() {
       }
     }
   }
-
   let monthProgressPage =
     progressValue || progressValue === 0 ? (
       progressStatus ? (
@@ -157,152 +159,145 @@ function Overview() {
     ) : (
       <SmallLoader />
     );
-  let yearSumPage = yearSum ? yearSum + " $" : <SmallLoader />;
-  let salaryPage = yearSum ? (
-    <span style={{ color: "orange" }}>
-      {" "}
-      {Math.floor(yearSum * 0.45) + " $"}{" "}
-    </span>
-  ) : (
-    <SmallLoader />
-  );
-  let clientsPaymentPage = yearSum ? (
-    <span style={{ color: "orange" }}>
-      {" "}
-      {Math.floor(yearSum * 0.1) + " $"}{" "}
-    </span>
-  ) : (
-    <SmallLoader />
-  );
-  let profitPage = yearSum ? (
-    <span className={"green-text"}>
-      {" "}
-      {yearSum -
-        Math.floor(yearSum * 0.4) -
-        Math.floor(yearSum * 0.1) +
-        " $"}{" "}
-    </span>
-  ) : (
-    <SmallLoader />
-  );
-
-  let bestMonthPage = bestMonth ? (
-    <span>
-      {`${moment(`${year}-${bestMonth.month}-01`).format("MMM")} : `}
-      <b className={"green-text"}>{bestMonth.values + " $"}</b>
-    </span>
-  ) : (
-    <SmallLoader />
-  );
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"socials button-add-container middle-button"}>
+            <div className={"socials button-add-container top-button"}>
               <AccessTimeIcon />
-              <select
-                onChange={handleChange}
-                className={"year-select-menu"}
-                defaultValue={year}
-              >
-                <option value={"2020"}>2020</option>
-                <option value={"2021"} selected>
-                  2021
-                </option>
-                <option value={"2022"}>2022</option>
-              </select>
+              <YearSelect
+                arrayOfYears={arrayOfYears}
+                year={selectedYear}
+                handleChange={handleChange}
+              />
             </div>
             <div
               className={"taskList-container chart-container table-container"}
             >
               <h1>Agency statistics</h1>
-              {charts.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Statistic's type</th>
-                      <th>Data</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {year === moment().format("YYYY") ? (
-                      <>
-                        <tr>
-                          <td>Current month</td>
-                          <td>
-                            <b>{moment().format("MMMM YYYY")}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Month progress</td>
-                          <td>
-                            <b>{monthProgressPage}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Total clients</td>
-                          <td>
-                            <b>
-                              {clients.length ? (
-                                clients.length
-                              ) : (
-                                <SmallLoader />
-                              )}
-                            </b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Total translators</td>
-                          <td>
-                            <b>
-                              {translators.length ? (
-                                translators.length
-                              ) : (
-                                <SmallLoader />
-                              )}
-                            </b>
-                          </td>
-                        </tr>
-                      </>
-                    ) : null}
+              <table>
+                <thead>
+                  <tr>
+                    <th>Statistic's type</th>
+                    <th>Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedYear === moment().format("YYYY") ? (
+                    <>
+                      <tr>
+                        <td>Current month</td>
+                        <td>
+                          <b>{moment().format("MMMM YYYY")}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Month progress</td>
+                        <td>
+                          <b>{monthProgressPage}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Total clients</td>
+                        <td>
+                          <b>
+                            {clients.length ? clients.length : <SmallLoader />}
+                          </b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Total translators</td>
+                        <td>
+                          <b>
+                            {translators.length ? (
+                              translators.length
+                            ) : (
+                              <SmallLoader />
+                            )}
+                          </b>
+                        </td>
+                      </tr>
+                    </>
+                  ) : null}
 
-                    <tr>
-                      <td>Best month of {moment(year).format("YYYY")}</td>
-                      <td>
-                        <b>{bestMonthPage}</b>
-                      </td>
-                    </tr>
+                  <tr>
+                    <td>Best month of {moment(selectedYear).format("YYYY")}</td>
+                    <td>
+                      <b>
+                        {bestMonth ? (
+                          <span>
+                            {`${moment(
+                              `${selectedYear}-${bestMonth.month}-01`
+                            ).format("MMM")} : `}
+                            <b className={"green-text"}>
+                              {bestMonth.values + " $"}
+                            </b>
+                          </span>
+                        ) : (
+                          <SmallLoader />
+                        )}
+                      </b>
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>Year's balance</td>
-                      <td>
-                        <b>{yearSumPage}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Salary payed</td>
-                      <td>
-                        <b>{salaryPage}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Payments to clients</td>
-                      <td>
-                        <b>{clientsPaymentPage}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Total profit</td>
-                      <td>
-                        <b>{profitPage}</b>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              ) : emptyStatus ? <h1>No data available.</h1>
-               : <Loader /> }
+                  <tr>
+                    <td>Year's balance</td>
+                    <td>
+                      <b>{yearSum ? yearSum + " $" : <SmallLoader />}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Salary payed</td>
+                    <td>
+                      <b>
+                        {yearSum ? (
+                          <span style={{ color: "orange" }}>
+                            {" "}
+                            {Math.floor(yearSum * 0.45) + " $"}{" "}
+                          </span>
+                        ) : (
+                          <SmallLoader />
+                        )}
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Payments to clients</td>
+                    <td>
+                      <b>
+                        {yearSum ? (
+                          <span style={{ color: "orange" }}>
+                            {" "}
+                            {Math.floor(yearSum * 0.1) + " $"}{" "}
+                          </span>
+                        ) : (
+                          <SmallLoader />
+                        )}
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Total profit</td>
+                    <td>
+                      <b>
+                        {yearSum ? (
+                          <span className={"green-text"}>
+                            {" "}
+                            {yearSum -
+                              Math.floor(yearSum * 0.4) -
+                              Math.floor(yearSum * 0.1) +
+                              " $"}{" "}
+                          </span>
+                        ) : (
+                          <SmallLoader />
+                        )}
+                      </b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </>
         ) : (

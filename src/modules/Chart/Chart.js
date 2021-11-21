@@ -18,13 +18,15 @@ import { useAlert } from "../../shared/AlertMessage/hooks";
 import { useAlertConfirmation } from "../../shared/AlertMessageConfirmation/hooks";
 import AlertMessageConfirmation from "../../shared/AlertMessageConfirmation/AlertMessageConfirmation";
 import moment from "moment";
+import YearSelect from "../../shared/YearSelect/YearSelect";
 function Chart() {
   const [months, setMonths] = useState([]);
-  const [year, setYear] = useState(moment().format("YYYY"));
+  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
   const [deletedMonth, setDeletedMonth] = useState(null);
   const [emptyStatus, setEmptyStatus] = useState(false);
+  const [arrayOfYears, setArrayOfYears] = useState([]);
   const handleChange = (event) => {
-    setYear(event.target.value);
+    setSelectedYear(event.target.value);
   };
   const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
   const {
@@ -43,8 +45,10 @@ function Chart() {
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
+        const yearList = res.data.map((item) => item.year);
+        setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
         let filteredArray = res.data
-          .filter((item) => item.year === year)
+          .filter((item) => item.year === selectedYear)
           .sort(compareNumeric)
           .reverse();
         setMonths(filteredArray);
@@ -53,7 +57,7 @@ function Chart() {
         console.log(res.status);
       }
     });
-  }, [year]);
+  }, [selectedYear]);
   function deleteGraph(id) {
     setDeletedMonth(months.find((item) => item._id === id));
     openAlertConfirmation();
@@ -96,17 +100,17 @@ function Chart() {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"socials button-add-container middle-button"}>
+            <div
+              className={
+                "socials button-add-container middle-button top-button"
+              }
+            >
               <AccessTimeIcon />
-              <select
-                onChange={handleChange}
-                className={"year-select-menu"}
-                defaultValue={year}
-              >
-                <option value={"2020"}>2020</option>
-                <option value={"2021"}>2021</option>
-                <option value={"2022"}>2022</option>
-              </select>
+              <YearSelect
+                arrayOfYears={arrayOfYears}
+                year={selectedYear}
+                handleChange={handleChange}
+              />
             </div>
             <div className={"taskList-container chart-container"}>
               {months.length > 0 ? (
@@ -128,7 +132,7 @@ function Chart() {
               )}
             </div>
             <div className={"socials button-add-container resized-container"}>
-              <ChartForm onMonthSubmit={onMonthSubmit} year={year} />
+              <ChartForm onMonthSubmit={onMonthSubmit} year={selectedYear} />
             </div>
             <AlertMessage
               mainText={"Data has been added!"}
