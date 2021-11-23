@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import "./AuthorizationPage.css";
 import { Button, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import AlertMessage from "../../shared/AlertMessage/AlertMessage";
+import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { DEFAULT_ERROR } from "../../constants";
-import { useAlert } from "../../shared/AlertMessage/hooks";
+import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
@@ -62,26 +62,36 @@ function AuthorizationPage(props) {
   });
   const history = useHistory();
   const { alertOpen, closeAlert, openAlert } = useAlert();
-  function onPasswordChange(e) {
-    if (error.password.status) {
-      setError({ ...error, password: DEFAULT_ERROR });
-      setPassword(e.target.value.trim());
-    } else {
-      setPassword(e.target.value.trim());
-    }
-  }
-  function onEmailChange(e) {
-    if (error.email) {
-      setError({ ...error, email: DEFAULT_ERROR });
-      setEmail(e.target.value.trim());
-    } else {
-      setEmail(e.target.value.trim());
-    }
-  }
-  function onSubmit(e) {
-    e.preventDefault();
-    signInWithEmailPassword();
-  }
+
+  const onPasswordChange = useCallback(
+    (e) => {
+      if (error.password.status) {
+        setError({ ...error, password: DEFAULT_ERROR });
+        setPassword(e.target.value.trim());
+      } else {
+        setPassword(e.target.value.trim());
+      }
+    },
+    [email, error]
+  );
+  const onEmailChange = useCallback(
+    (e) => {
+      if (error.email) {
+        setError({ ...error, email: DEFAULT_ERROR });
+        setEmail(e.target.value.trim());
+      } else {
+        setEmail(e.target.value.trim());
+      }
+    },
+    [email, error]
+  );
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      signInWithEmailPassword();
+    },
+    [email, password, error]
+  );
   function signInWithEmailPassword() {
     firebase
       .auth()

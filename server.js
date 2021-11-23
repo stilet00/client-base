@@ -213,7 +213,7 @@ app.post(translatorsURL + "add", function (req, res, next) {
       if (err) {
         return res.sendStatus(500);
       } else {
-        res.send("Переводчик загружен");
+        res.send(result?.insertedId);
       }
     });
   }

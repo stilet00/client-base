@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import moment from "moment";
 import "./SingleTask.css";
-import ColoredButton from "../../../shared/ColoredButton/ColoredButton";
+import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 function SingleTask({
   taskName,
   _id,
@@ -14,7 +14,7 @@ function SingleTask({
   onToggle,
   doneAt,
 }) {
-  function toggler() {
+  const toggler = () => {
     let item = {
       _id: _id,
       taskName: taskName,
@@ -23,7 +23,7 @@ function SingleTask({
       doneAt: moment().format("MMMM Do YYYY, h:mm:ss"),
     };
     onToggle(item);
-  }
+  };
   let done = doneAt ? (
     <p className={"task-date done-text"}>Done: {doneAt}</p>
   ) : null;

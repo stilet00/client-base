@@ -3,7 +3,7 @@ import "./GalleryItem.css";
 import onlyIcon from "../../../../images/onlyfans-icon.png";
 import instaIcon from "../../../../images/instagram-icon.png";
 import moment from "moment";
-import Loader from "../../../../shared/Loader/Loader";
+import Loader from "../../../../sharedComponents/Loader/Loader";
 function GalleryItem({ lady }) {
   const [imageLoaded, setImageLoaded] = useState("none");
   const fans = lady.onlyFans ? (

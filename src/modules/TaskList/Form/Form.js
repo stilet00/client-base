@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import "./Form.css";
+import useModal from "../../../sharedHooks/useModal";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -18,17 +19,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Form({ addTask }) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [taskName, setTaskName] = useState("");
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { open, handleOpen, handleClose } = useModal();
   function onInputChange(e) {
     setTaskName(e.target.value.trim());
+  }
+  function clearTaskName() {
+    setTaskName("");
   }
   return (
     <div className={"modal-wrapper down-add-button"}>
@@ -53,6 +50,7 @@ export default function Form({ addTask }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 addTask(taskName);
+                clearTaskName();
                 handleClose();
               }}
             >

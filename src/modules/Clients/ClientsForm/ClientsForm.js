@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -11,9 +11,10 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "./ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
 import { addClient } from "../../../services/clientsServices/services";
-import AlertMessage from "../../../shared/AlertMessage/AlertMessage";
-import { useAlert } from "../../../shared/AlertMessage/hooks";
+import AlertMessage from "../../../sharedComponents/AlertMessage/AlertMessage";
+import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";
 import StarsIcon from "@material-ui/icons/Stars";
+import useModal from "../../../sharedHooks/useModal";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -40,42 +41,28 @@ const CssTextField = withStyles({
 export default function ClientsForm({ editedClient }) {
   const classes = useStyles();
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
-  const [open, setOpen] = useState(false);
-  // const [preview, setPreview] = useState("");
   const { alertOpen, closeAlert, openAlert } = useAlert();
-  const handleChange = (e) => {
-    setClient({ ...client, [e.target.name]: e.target.value.trim() });
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  // const fileInput = createRef();
-
-  function formSubmit(e) {
-    e.preventDefault();
-    addClient(client).then((res) => {
-      if (res.status === 200) {
-        openAlert();
-        setTimeout(closeAlert, 1000);
-      } else {
-        console.log(res.data);
-      }
-    });
-  }
-  // const previewImage =
-  //   preview.length > 0 ? (
-  //     <img
-  //       src={preview}
-  //       width={"50px"}
-  //       height={"50px"}
-  //       alt={"preview"}
-  //       className={"preview-image"}
-  //     />
-  //   ) : null;
+  const { handleClose, handleOpen, open } = useModal();
+  const handleChange = useCallback(
+    (e) => {
+      setClient({ ...client, [e.target.name]: e.target.value.trim() });
+    },
+    [client]
+  );
+  const formSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      addClient(client).then((res) => {
+        if (res.status === 200) {
+          openAlert();
+          setTimeout(closeAlert, 1000);
+        } else {
+          console.log(res.data);
+        }
+      });
+    },
+    [client]
+  );
   return (
     <div className={"socials add-client-button middle-button"}>
       <StarsIcon />

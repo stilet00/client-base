@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   addTask,
   changeTodoStatus,
@@ -10,48 +10,63 @@ import SingleTask from "./SingleTask/SingleTask";
 import moment from "moment";
 import Form from "./Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import Header from "../../shared/Header/Header";
-import Loader from "../../shared/Loader/Loader";
-import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import Header from "../../sharedComponents/Header/Header";
+import Loader from "../../sharedComponents/Loader/Loader";
+import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-function TaskList(props) {
+import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
+import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
+function TaskList() {
   const [tasks, setTasks] = useState([]);
+  const { alertOpen, closeAlert, openAlert } = useAlert();
   useEffect(() => {
     getTasks().then((res) => setTasks(res.data));
   }, []);
-  function newTask(text) {
-    if (text) {
-      let task = {
-        taskName: text,
-        completed: false,
-        created: moment().format("MMMM Do YYYY, h:mm:ss"),
-      };
-      addTask(task).then((res) => {
-        let newTask = { ...task, _id: res.data };
+  const newTask = useCallback(
+    (text) => {
+      if (text) {
+        let task = {
+          taskName: text,
+          completed: false,
+          created: moment().format("MMMM Do YYYY, h:mm:ss"),
+        };
+        addTask(task).then((res) => {
+          let newTask = { ...task, _id: res.data };
+          if (res.status === 200) {
+            setTasks([...tasks, newTask]);
+          } else {
+            console.log("something went wrong");
+          }
+        });
+      } else {
+        openAlert();
+        setTimeout(closeAlert, 1500);
+      }
+    },
+    [tasks]
+  );
+  const deleteTask = useCallback(
+    (_id) => {
+      removeTask(_id).then((res) => {
         if (res.status === 200) {
-          setTasks([...tasks, newTask]);
+          setTasks(tasks.filter((item) => item._id !== _id));
         } else {
           console.log("something went wrong");
         }
       });
-    }
-  }
-  function deleteTask(_id) {
-    removeTask(_id).then((res) => {
-      if (res.status === 200) {
-        setTasks(tasks.filter((item) => item._id !== _id));
-      } else {
-        console.log("something went wrong");
-      }
-    });
-  }
-  function toggleTodo(task) {
-    changeTodoStatus(task).then((res) => {
-      if (res.status === 200) {
-        setTasks(tasks.map((item) => (item._id === task._id ? task : item)));
-      }
-    });
-  }
+    },
+    [tasks]
+  );
+  const toggleTodo = useCallback(
+    (task) => {
+      changeTodoStatus(task).then((res) => {
+        if (res.status === 200) {
+          setTasks(tasks.map((item) => (item._id === task._id ? task : item)));
+        }
+      });
+    },
+    [tasks]
+  );
   const page = !tasks.length ? (
     <Loader />
   ) : (
@@ -73,6 +88,13 @@ function TaskList(props) {
             <div className="socials button-add-container">
               <Form addTask={newTask} />
             </div>
+            <AlertMessage
+              mainText={"Empty task"}
+              open={alertOpen}
+              handleOpen={openAlert}
+              handleClose={closeAlert}
+              status={false}
+            />
           </>
         ) : (
           <Unauthorized />

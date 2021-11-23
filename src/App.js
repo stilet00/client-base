@@ -11,12 +11,12 @@ import Media from "react-media";
 import Gallery from "./modules/Clients/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import TaskList from "./modules/TaskList/TaskList";
-import Chart from "./modules/Chart/Chart";
+import ChartsContainer from "./modules/ChartsContainer/ChartsContainer";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { FirebaseAuthProvider } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
-import LogoHeader from "./shared/LogoHeader/LogoHeader";
+import LogoHeader from "./sharedComponents/LogoHeader/LogoHeader";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
 
@@ -47,7 +47,7 @@ function App() {
               </Route>
               <Redirect from="/chart/*" to="/chart" />
               <Route path="/chart">
-                <Chart />
+                <ChartsContainer />
               </Route>
               <Route path="/" exact>
                 <AuthorizationPage />

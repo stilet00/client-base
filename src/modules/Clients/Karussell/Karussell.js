@@ -3,9 +3,9 @@ import "./karusell.css";
 import { CLIENTS } from "../../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../../images/arrow.png";
-import Header from "../../../shared/Header/Header";
+import Header from "../../../sharedComponents/Header/Header";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import Unauthorized from "../../../shared/Unauthorized/Unauthorized";
+import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
 function Karussell(props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [animationClass, setAnimationClass] = useState("");

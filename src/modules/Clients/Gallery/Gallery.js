@@ -1,24 +1,23 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import "./Gallery.css";
 import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
-import DiscreteSlider from "../../../shared/Slider/Slider";
-import Unauthorized from "../../../shared/Unauthorized/Unauthorized";
+import DiscreteSlider from "../../../sharedComponents/Slider/Slider";
+import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
 import moment from "moment";
-import Header from "../../../shared/Header/Header";
-import NameFilter from "../../../shared/NameFilter/NameFilter";
+import Header from "../../../sharedComponents/Header/Header";
+import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
-function Gallery(props) {
+function Gallery() {
   const [ageFilter, setAgeFilter] = useState(18);
   const [nameFilter, setNameFilter] = useState("");
-
-  function valuetext(value) {
+  const valueText = useCallback((value) => {
     setAgeFilter(value);
-  }
-  function onNameFilter(text) {
+  }, []);
+  const onNameFilter = useCallback((text) => {
     setNameFilter(text);
-  }
+  }, []);
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -27,7 +26,7 @@ function Gallery(props) {
             <div className="control-gallery">
               <Header />
               <ClientsForm />
-              <DiscreteSlider valuetext={valuetext} />
+              <DiscreteSlider valuetext={valueText} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
             <div className={"inner-gallery-container"}>

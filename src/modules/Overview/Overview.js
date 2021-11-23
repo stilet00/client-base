@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import Header from "../../shared/Header/Header";
+import React, { useState, useEffect, useCallback } from "react";
+import Header from "../../sharedComponents/Header/Header";
 import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import moment from "moment";
 import "./Overview.css";
 import { getTranslators } from "../../services/translatorsServices/services";
-import SmallLoader from "../../shared/SmallLoader/SmallLoader";
-import Unauthorized from "../../shared/Unauthorized/Unauthorized";
+import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
+import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import YearSelect from "../../shared/YearSelect/YearSelect";
+import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 
 function Overview() {
   const [clients, setClients] = useState([]);
@@ -20,9 +20,10 @@ function Overview() {
   const [bestMonth, setBestMonth] = useState(null);
   const [arrayOfYears, setArrayOfYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
-  const handleChange = (event) => {
+
+  const handleChange = useCallback((event) => {
     setSelectedYear(event.target.value);
-  };
+  }, []);
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
