@@ -29,7 +29,7 @@ function Karussell(props) {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <div className={"karussell-container"}>
-            <Header />
+              <Header />
             <KarusellInner
               data={CLIENTS[currentStep]}
               animation={animationClass}

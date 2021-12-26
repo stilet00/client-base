@@ -199,7 +199,7 @@ function Translators(props) {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <div className={"main-gallery-container"}>
-            <div className="control-gallery">
+            <div className="control-container">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
               <div
                 className={
@@ -251,7 +251,7 @@ function Translators(props) {
               <ClientsForm />
               <TranslatorsForm onFormSubmit={formSubmit} />
             </div>
-            <div className={"inner-gallery-container  translators-container"}>
+            <div className={"inner-container"}>
               <h3>List of translators:</h3>
               {page}
             </div>

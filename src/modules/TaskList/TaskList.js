@@ -83,8 +83,10 @@ function TaskList() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <>
-            <Header />
-            <div className={"taskList-container"}>{page}</div>
+            <div className="control-container">
+              <Header />
+            </div>
+            <div className={"inner-container"}>{page}</div>
             <div className="socials button-add-container">
               <Form addTask={newTask} />
             </div>

@@ -5,20 +5,24 @@
   align-items: center
   height: 100%
   max-height: 80vh
-  overflow-y: scroll
 .clients-header
   color: white
-.inner-gallery-container
+.inner-container
   display: flex
   flex-wrap: wrap
   justify-content: space-evenly
   width: 885px
+  max-height: 70vh
   box-sizing: border-box
   min-height: 232px
-  overflow-x: scroll
+  overflow: scroll
   border: 2px solid $main_color
   border-radius: 10px
-.control-gallery
+  h3
+    background: transparent
+    border: none
+    height: 20px
+.control-container
   border: 2px solid $main_color
   border-bottom: none
   border-top-left-radius: 5px
@@ -31,6 +35,14 @@
   justify-content: center
   align-items: flex-start
 
-@media (max-width: 812px)
-  .inner-gallery-container
-    width: 800px
+@media (max-width: 900px)
+  .inner-container
+    max-width: 700px
+@media (max-width: 710px)
+  .inner-container
+    max-width: 500px
+@media (max-width: 500px)
+  .inner-container
+    max-width: 376px
+    border-top-left-radius: 0
+    border-top-right-radius: 0

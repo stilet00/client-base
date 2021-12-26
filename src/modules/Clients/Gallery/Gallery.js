@@ -23,13 +23,13 @@ function Gallery() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <div className={"main-gallery-container"}>
-            <div className="control-gallery">
+            <div className="control-container">
               <Header />
               <ClientsForm />
               <DiscreteSlider valuetext={valueText} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
-            <div className={"inner-gallery-container"}>
+            <div className={"inner-container"}>
               <h3 className={"clients-header"}>List of clients:</h3>
               {CLIENTS.filter(
                 (item) =>

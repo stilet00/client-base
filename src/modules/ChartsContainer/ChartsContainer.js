@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "./ChartsContainer.css";
 import Header from "../../sharedComponents/Header/Header";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -107,20 +106,22 @@ function ChartsContainer() {
       {({ isSignedIn }) => {
         return isSignedIn ? (
           <>
-            <Header />
-            <div
-              className={
-                "socials button-add-container middle-button top-button"
-              }
-            >
-              <AccessTimeIcon />
-              <YearSelect
-                arrayOfYears={arrayOfYears}
-                year={selectedYear}
-                handleChange={handleChange}
-              />
+            <div className="control-container">
+              <Header />
+              <div
+                className={
+                  "socials add-translator-button bottom-button"
+                }
+              >
+                <AccessTimeIcon />
+                <YearSelect
+                  arrayOfYears={arrayOfYears}
+                  year={selectedYear}
+                  handleChange={handleChange}
+                />
+              </div>
             </div>
-            <div className={"taskList-container chart-container"}>
+            <div className={"inner-container"}>
               {months.length > 0 ? (
                 <ul>
                   {months.map((month, index) => (

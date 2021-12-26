@@ -116,7 +116,7 @@ export default function Header() {
   );
 
   return (
-    <div className={"socials upper-menu resized-container"}>
+    <div className={"socials upper-menu"}>
       <MenuIcon />
       <Button onClick={toggleDrawer("top", true)} fullWidth>
         Menu

@@ -165,18 +165,18 @@ function Overview() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <>
-            <Header />
-            <div className={"socials button-add-container top-button"}>
-              <AccessTimeIcon />
-              <YearSelect
-                arrayOfYears={arrayOfYears}
-                year={selectedYear}
-                handleChange={handleChange}
-              />
+            <div className="control-container">
+              <Header />
+              <div className={"socials add-translator-button bottom-button"}>
+                <AccessTimeIcon />
+                <YearSelect
+                  arrayOfYears={arrayOfYears}
+                  year={selectedYear}
+                  handleChange={handleChange}
+                />
+              </div>
             </div>
-            <div
-              className={"taskList-container chart-container table-container"}
-            >
+            <div className={"inner-container"}>
               <h1>Agency statistics</h1>
               <table>
                 <thead>
