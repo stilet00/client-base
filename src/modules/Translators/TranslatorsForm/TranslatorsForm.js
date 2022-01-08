@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import "./TranslatorsForm.css";
+import "../../../styles/modules/TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
 import AlertMessage from "../../../sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";

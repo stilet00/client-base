@@ -1,0 +1,35 @@
+@import "../../variables"
+.table-container
+  overflow-y: initial
+table
+  margin: 10px auto
+  min-height: 200px
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif
+  font-size: 14px
+  text-align: center
+  width: 95%
+  background-color: #fcfcfc
+  border-radius: 5px
+  padding: 1px
+
+th, td:first-child
+  background: $main_color
+  color: white
+  padding: 10px 20px
+
+td
+  width: 50%
+  background: #D8E6F3
+
+th:first-child, td:first-child
+  text-align: left
+
+th:nth-child(2n), td:nth-child(2n)
+  text-align: right
+  padding: 10px 20px
+
+.green-text
+  color: #339966
+
+.red-text
+  color: red

@@ -1,0 +1,55 @@
+.form-container {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 10px;
+}
+
+.modal-wrapper {
+  width: 100%;
+}
+
+.chart-form {
+  width: 400px;
+  min-height: 320px;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 10px;
+}
+
+.chart-date-form {
+  height: 350px;
+}
+
+.year-select-menu {
+  width: 95%;
+  border: none;
+  height: 35px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background-color: transparent;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
+}
+.year-select-menu:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+option {
+  background-color: red;
+}
+
+@media (min-width: 900px) {
+  .chart-container {
+    max-width: 90vw;
+  }
+}
+
+/*# sourceMappingURL=Form.css.map */

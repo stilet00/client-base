@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./karusell.css";
+import "../../../styles/modules/karusell.css";
 import { CLIENTS } from "../../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../../images/arrow.png";

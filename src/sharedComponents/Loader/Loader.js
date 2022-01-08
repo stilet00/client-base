@@ -1,5 +1,5 @@
 import React from "react";
-import "./Loader.css";
+import "../../styles/sharedComponents/Loader.css";
 function Loader({ position }) {
   return (
     <div className="lds-facebook" style={{ top: position }}>

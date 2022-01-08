@@ -1,0 +1,122 @@
+@import "../../variables"
+
+.gallery-container
+  display: flex
+  flex-direction: column
+  align-items: center
+  height: 100%
+  max-height: 80vh
+
+  .gallery-menu
+    border: 2px solid $main_color
+    border-bottom: none
+    border-top-left-radius: 5px
+    border-top-right-radius: 5px
+    padding: 5px
+    width: 362px
+
+  .inner-gallery-container
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-evenly
+    padding: 10px
+    width: 885px
+    box-sizing: border-box
+    min-height: 232px
+    overflow-y: scroll
+    scroll-behavior: smooth
+    border: 2px solid $main_color
+    border-radius: 10px
+
+    &::-webkit-scrollbar-track
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3)
+      border-top-right-radius: 10px
+      border-bottom-right-radius: 10px
+      background-color: #F5F5F5
+
+    &::-webkit-scrollbar
+      width: 8px
+      border-top-right-radius: 10px
+      border-bottom-right-radius: 10px
+      background-color: #F5F5F5
+
+    &::-webkit-scrollbar-thumb
+      border-top-right-radius: 10px
+      border-bottom-right-radius: 10px
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3)
+      background-color: $main_color
+
+    @media (max-width: 812px)
+      width: 800px
+
+    .gallery-item
+      display: flex
+      flex-direction: column
+      align-items: center
+      margin: 5px
+      padding: 5px
+      border-radius: 5px
+      width: 120px
+      background: $main_color
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)
+
+      .lady-thumbnail
+        border-radius: 5px
+        margin-top: 10px
+        box-shadow: 1px 1px 1px lightblue
+
+      .gallery-socials
+        border: none
+        background: none
+
+    .translator-item
+      width: 200px
+      min-height: 200px
+      margin-bottom: 10px
+      box-shadow: 3px 3px 3px black
+
+      @media (max-width: 500px)
+        width: 90%
+
+      h4
+        margin: 10px
+
+      .clients-box
+        width: 100%
+        height: 100%
+        border-radius: 5px
+        margin-bottom: 5px
+        box-shadow: 0px 3px 1px black
+        border: 1px solid black
+
+      .clients-list
+        width: 100%
+        height: 100%
+
+        li
+          width: 100%
+          text-align: left
+          border-bottom: 1px dotted black
+
+          &:last-child
+            border-bottom: none
+
+      .name-table
+        display: grid
+        width: 100%
+        grid-template-columns: 1fr 1fr
+        text-align: left
+        background: rgba(128, 128, 128, 0.6)
+        border-radius: 5px
+
+      .value
+        color: white
+
+.clients-header
+  color: white
+
+.empty
+  width: 100%
+  display: flex
+  justify-content: center
+  align-items: flex-start

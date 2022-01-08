@@ -6,7 +6,7 @@ import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
-import "./Form.css";
+import "../../../styles/modules/Form.css";
 import useModal from "../../../sharedHooks/useModal";
 
 const useStyles = makeStyles((theme) => ({

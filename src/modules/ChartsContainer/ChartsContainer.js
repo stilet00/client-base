@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "./ChartsContainer.css";
 import Header from "../../sharedComponents/Header/Header";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -108,11 +107,7 @@ function ChartsContainer() {
         return isSignedIn ? (
           <>
             <Header />
-            <div
-              className={
-                "socials button-add-container middle-button top-button"
-              }
-            >
+            <div className={"socials button-add-container middle-button"}>
               <AccessTimeIcon />
               <YearSelect
                 arrayOfYears={arrayOfYears}

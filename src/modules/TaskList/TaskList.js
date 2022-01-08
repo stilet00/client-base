@@ -5,7 +5,7 @@ import {
   getTasks,
   removeTask,
 } from "../../services/taskListServices/services";
-import "./TaskList.css";
+import "../../styles/modules/TaskList.css";
 import SingleTask from "./SingleTask/SingleTask";
 import moment from "moment";
 import Form from "./Form/Form";
@@ -85,7 +85,7 @@ function TaskList() {
           <>
             <Header />
             <div className={"taskList-container"}>{page}</div>
-            <div className="socials button-add-container">
+            <div className="socials button-add-container middle-button">
               <Form addTask={newTask} />
             </div>
             <AlertMessage

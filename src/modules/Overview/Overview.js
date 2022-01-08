@@ -3,7 +3,7 @@ import Header from "../../sharedComponents/Header/Header";
 import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import moment from "moment";
-import "./Overview.css";
+import "../../styles/modules/Overview.css";
 import { getTranslators } from "../../services/translatorsServices/services";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
 import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
@@ -166,7 +166,7 @@ function Overview() {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"socials button-add-container top-button"}>
+            <div className={"socials button-add-container middle-button"}>
               <AccessTimeIcon />
               <YearSelect
                 arrayOfYears={arrayOfYears}

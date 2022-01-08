@@ -11,7 +11,6 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import CheckIcon from "@material-ui/icons/Check";
-import "./ChartDateForm.css";
 import moment from "moment";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 import InputAdornment from "@material-ui/core/InputAdornment";

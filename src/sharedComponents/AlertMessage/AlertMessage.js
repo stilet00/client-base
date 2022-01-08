@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import "./AlertMessage.css";
+import "../../styles/sharedComponents/AlertMessage.css";
 
 const useStyles = makeStyles((theme) => ({
   modal: {

@@ -1,9 +1,8 @@
-import React, { useCallback } from "react";
+import React from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import moment from "moment";
-import "./SingleTask.css";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 function SingleTask({
   taskName,
@@ -33,8 +32,8 @@ function SingleTask({
       id={_id}
       className={
         completed
-          ? "item-container gallery-item completed"
-          : "item-container gallery-item not-completed"
+          ? "task gallery-item completed"
+          : "task gallery-item not-completed"
       }
     >
       <p className={"task-name"}>

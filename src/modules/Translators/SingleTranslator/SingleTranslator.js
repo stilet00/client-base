@@ -1,5 +1,5 @@
 import React from "react";
-import "./SingleTranslator.css";
+import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 function SingleTranslator({

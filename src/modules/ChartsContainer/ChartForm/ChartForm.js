@@ -12,7 +12,6 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import moment from "moment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import "./ChartForm.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SumArray from "../../../sharedComponents/SumArray/SumArray";
 import useModal from "../../../sharedHooks/useModal";

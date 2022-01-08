@@ -20,7 +20,7 @@ import {
   updateTranslator,
 } from "../../services/translatorsServices/services";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
-import "./Translators.css";
+import "../../styles/modules/Translators.css";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
@@ -198,14 +198,10 @@ function Translators(props) {
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
-          <div className={"main-gallery-container"}>
-            <div className="control-gallery">
+          <div className={"gallery-container"}>
+            <div className="gallery-menu">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
-              <div
-                className={
-                  "socials button-add-container middle-button top-button"
-                }
-              >
+              <div className={"socials button-add-container middle-button"}>
                 <ListAltIcon />
                 <Button onClick={toggleDrawer("left", true)} fullWidth>
                   Show clients

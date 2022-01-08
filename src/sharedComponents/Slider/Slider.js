@@ -2,7 +2,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
-import "./Slider.css";
+import "../../styles/sharedComponents/Slider.css";
 
 const PrettoSlider = withStyles({
   root: {
@@ -38,7 +38,7 @@ const PrettoSlider = withStyles({
 
 export default function DiscreteSlider({ valuetext }) {
   return (
-    <div className={"filter-container"}>
+    <div className={"slider-container"}>
       <Typography id="discrete-slider" gutterBottom className={"filter-label"}>
         Filter by age
       </Typography>
@@ -49,7 +49,6 @@ export default function DiscreteSlider({ valuetext }) {
         getAriaValueText={valuetext}
         aria-labelledby="discrete-slider"
         step={1}
-        // marks
         min={18}
         max={50}
       />

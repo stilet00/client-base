@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import "./NameFilter.css";
+import "../../styles/sharedComponents/GalleryControls.css";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../../images/logo.png";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import "./LogoHeader.css";
+import "../../styles/sharedComponents/LogoHeader.css";
 function LogoHeader() {
   return (
     <FirebaseAuthConsumer>

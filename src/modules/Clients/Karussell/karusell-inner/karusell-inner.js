@@ -1,5 +1,4 @@
 import React from "react";
-import "./karusell-inner.css";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import instaIcon from "../../../../images/instagram-icon.png";
 import onlyIcon from "../../../../images/onlyfans-icon.png";

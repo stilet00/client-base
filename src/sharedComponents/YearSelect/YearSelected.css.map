@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,kCAAkC;EAChC,YAAY,EAAE,IAAI;;AAElB,2BAAS;EACP,aAAa,EAAE,eAAc",
-"sources": ["YearSelected.sass"],
-"names": [],
-"file": "YearSelected.css"
-}

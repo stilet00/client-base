@@ -1,5 +1,5 @@
 import { FormControl, MenuItem, Select } from "@material-ui/core";
-import "./YearSelected.css";
+import "../../styles/sharedComponents/YearSelected.css";
 function YearSelect({ year, handleChange, arrayOfYears }) {
   return (
     <FormControl style={{ width: "95%" }}>

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import "./Gallery.css";
+import "../../../styles/modules/Gallery.css";
 import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../../sharedComponents/Slider/Slider";
@@ -22,8 +22,8 @@ function Gallery() {
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
-          <div className={"main-gallery-container"}>
-            <div className="control-gallery">
+          <div className={"gallery-container"}>
+            <div className="gallery-menu">
               <Header />
               <ClientsForm />
               <DiscreteSlider valuetext={valueText} />

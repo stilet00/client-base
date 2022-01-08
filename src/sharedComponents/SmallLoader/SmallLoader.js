@@ -1,5 +1,5 @@
 import React from "react";
-import "./SmallLoader.css";
+import "../../styles/sharedComponents/SmallLoader.css";
 function SmallLoader() {
   return (
     <div className="lds-ring">

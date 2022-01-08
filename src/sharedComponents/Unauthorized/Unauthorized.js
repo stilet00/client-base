@@ -1,5 +1,5 @@
 import React from "react";
-import "./Unauthorized.css";
+import "../../styles/sharedComponents/Unauthorized.css";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";

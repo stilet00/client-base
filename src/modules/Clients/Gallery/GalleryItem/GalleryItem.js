@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./GalleryItem.css";
 import onlyIcon from "../../../../images/onlyfans-icon.png";
 import instaIcon from "../../../../images/instagram-icon.png";
 import moment from "moment";

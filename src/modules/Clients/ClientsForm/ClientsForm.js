@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import "./ClientsForm.css";
+import "../../../styles/modules/ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
 import { addClient } from "../../../services/clientsServices/services";
 import AlertMessage from "../../../sharedComponents/AlertMessage/AlertMessage";

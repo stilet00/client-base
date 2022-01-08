@@ -1,5 +1,5 @@
 import { Bar, Line } from "react-chartjs-2";
-import "./SingleChart.css";
+import "../../../styles/modules/SingleChart.css";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ChartDateForm from "../ChartDateForm/ChartDateForm";
 import moment from "moment";

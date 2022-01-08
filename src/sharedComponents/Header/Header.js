@@ -11,7 +11,7 @@ import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { useHistory } from "react-router-dom";
-import "./Header.css";
+import "../../styles/sharedComponents/Header.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
@@ -116,7 +116,7 @@ export default function Header() {
   );
 
   return (
-    <div className={"socials upper-menu resized-container"}>
+    <div className={"socials upper-menu"}>
       <MenuIcon />
       <Button onClick={toggleDrawer("top", true)} fullWidth>
         Menu

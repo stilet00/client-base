@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import "./AuthorizationPage.css";
+import "../../styles/modules/AuthorizationPage.css";
 import { Button, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
