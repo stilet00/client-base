@@ -136,7 +136,7 @@ function Translators(props) {
         });
       }
     },
-    [translators, currentClient]
+    [translators, currentClient, openAlert, closeAlert]
   );
   const deleteClient = useCallback(
     (id) => {

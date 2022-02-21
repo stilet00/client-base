@@ -1,22 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .logged-user {
   margin: 10px;
   font-weight: bold;
   font-size: 15px;
   max-width: 212px;
   color: #4ecdc4;
-  font-style: italic;
-}
+  font-style: italic; }
 
 .user-email {
-  color: orange;
+  display: block;
+  box-sizing: border-box;
+  margin-top: 5px;
+  padding: 5px;
+  border: 2px solid #4ecdc4;
+  border-radius: 5px;
+  color: #000000;
   font-style: normal;
-}
+  background: #D8E6F3; }
 
 .sunrise-header {
   display: flex;
   justify-content: center;
   width: 100%;
-  background: rgba(255, 255, 255, 0.8);
-}
+  background: rgba(255, 255, 255, 0.8); }
 
 /*# sourceMappingURL=LogoHeader.css.map */

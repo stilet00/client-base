@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -57,10 +57,12 @@ export default function ChartForm({ onMonthSubmit, year }) {
     }
     setMonths(monthsArray);
   }, [year]);
+
   const handleChange = useCallback((event) => {
     setSelectedMonth(event.target.value);
   }, []);
-  const getTotalDays = useCallback(() => {
+
+  const getTotalDays = useMemo(() => {
     const stringMonth = selectedMonth < 9 ? "0" + selectedMonth : selectedMonth;
     let totalDays = [];
     for (
@@ -72,6 +74,23 @@ export default function ChartForm({ onMonthSubmit, year }) {
     }
     return totalDays;
   }, [selectedMonth, year]);
+
+  const setDefault = useCallback(() => {
+    handleClose();
+    let monthsArray = [];
+    for (let i = 1; i < 13; i++) {
+      i < 10
+          ? monthsArray.push(
+              moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+          )
+          : monthsArray.push(
+              moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+          );
+    }
+    setMonths(monthsArray);
+    setSelectedMonth(1);
+    setValuesArray([]);
+  }, [year, handleClose]);
 
   const onFormSubmit = useCallback(
     (e) => {
@@ -85,25 +104,9 @@ export default function ChartForm({ onMonthSubmit, year }) {
       onMonthSubmit(submittedMonth);
       setDefault();
     },
-    [year, selectedMonth, valuesArray]
+    [year, selectedMonth, valuesArray, getTotalDays, onMonthSubmit, setDefault]
   );
 
-  const setDefault = useCallback(() => {
-    handleClose();
-    let monthsArray = [];
-    for (let i = 1; i < 13; i++) {
-      i < 10
-        ? monthsArray.push(
-            moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          )
-        : monthsArray.push(
-            moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          );
-    }
-    setMonths(monthsArray);
-    setSelectedMonth(1);
-    setValuesArray([]);
-  }, []);
   const onValuesSubmit = useCallback((newValuesArray) => {
     setValuesArray(newValuesArray);
   }, []);

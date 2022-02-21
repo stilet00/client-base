@@ -18,10 +18,13 @@ import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 function TaskList() {
   const [tasks, setTasks] = useState([]);
+
   const { alertOpen, closeAlert, openAlert } = useAlert();
+
   useEffect(() => {
     getTasks().then((res) => setTasks(res.data));
   }, []);
+
   const newTask = useCallback(
     (text) => {
       if (text) {
@@ -43,8 +46,9 @@ function TaskList() {
         setTimeout(closeAlert, 1500);
       }
     },
-    [tasks]
+    [tasks, openAlert, closeAlert]
   );
+
   const deleteTask = useCallback(
     (_id) => {
       removeTask(_id).then((res) => {
@@ -57,6 +61,7 @@ function TaskList() {
     },
     [tasks]
   );
+
   const toggleTodo = useCallback(
     (task) => {
       changeTodoStatus(task).then((res) => {
@@ -67,6 +72,7 @@ function TaskList() {
     },
     [tasks]
   );
+
   const page = !tasks.length ? (
     <Loader />
   ) : (
@@ -78,6 +84,7 @@ function TaskList() {
       ))}
     </TransitionGroup>
   );
+
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {

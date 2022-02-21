@@ -8,6 +8,7 @@ import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { DEFAULT_ERROR } from "../../constants";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
+
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
@@ -28,6 +29,7 @@ const StyledButton = withStyles({
     textTransform: "capitalize",
   },
 })(Button);
+
 const StyledInput = withStyles({
   root: {
     "& label.Mui-focused": {
@@ -53,14 +55,19 @@ const StyledInput = withStyles({
     },
   },
 })(TextField);
-function AuthorizationPage(props) {
+
+function AuthorizationPage() {
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState({
     email: DEFAULT_ERROR,
     password: DEFAULT_ERROR,
   });
+
   const history = useHistory();
+
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
   const onPasswordChange = useCallback(
@@ -72,8 +79,9 @@ function AuthorizationPage(props) {
         setPassword(e.target.value.trim());
       }
     },
-    [email, error]
+    [error]
   );
+
   const onEmailChange = useCallback(
     (e) => {
       if (error.email) {
@@ -83,46 +91,48 @@ function AuthorizationPage(props) {
         setEmail(e.target.value.trim());
       }
     },
-    [email, error]
+    [error]
   );
+
+  const signInWithEmailPassword = useCallback(() => {
+    firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        .then(() => {
+          return firebase.auth().signInWithEmailAndPassword(email, password);
+        })
+        .catch((errorFromServer) => {
+          const message = errorFromServer.message;
+          const code = errorFromServer.code;
+          console.log(errorFromServer);
+          if (code === "auth/user-not-found") {
+            setError({
+              ...error,
+              email: { ...error.email, text: message, status: true },
+              password: { status: true, text: "" },
+            });
+          } else if (code === "auth/wrong-password") {
+            setError({ ...error, password: { status: true, text: message } });
+          } else if (code === "auth/too-many-requests") {
+            setError({
+              ...error,
+              email: { ...error.email, text: message, status: true },
+              password: { status: true, text: "" },
+            });
+          }
+
+          openAlert();
+          setTimeout(closeAlert, 5000);
+        });
+  }, [email, password, error, openAlert, closeAlert]);
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
       signInWithEmailPassword();
     },
-    [email, password, error]
+    [signInWithEmailPassword]
   );
-  function signInWithEmailPassword() {
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        return firebase.auth().signInWithEmailAndPassword(email, password);
-      })
-      .catch((errorFromServer) => {
-        const message = errorFromServer.message;
-        const code = errorFromServer.code;
-        console.log(errorFromServer);
-        if (code === "auth/user-not-found") {
-          setError({
-            ...error,
-            email: { ...error.email, text: message, status: true },
-            password: { status: true, text: "" },
-          });
-        } else if (code === "auth/wrong-password") {
-          setError({ ...error, password: { status: true, text: message } });
-        } else if (code === "auth/too-many-requests") {
-          setError({
-            ...error,
-            email: { ...error.email, text: message, status: true },
-            password: { status: true, text: "" },
-          });
-        }
-
-        openAlert();
-        setTimeout(closeAlert, 5000);
-      });
-  }
 
   return (
     <FirebaseAuthConsumer>
