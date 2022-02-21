@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .unauthorized {
   display: flex;
   justify-content: center;
@@ -9,18 +10,14 @@
   border: 2px solid orange;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
-  margin-bottom: 10px;
-}
-.unauthorized h1 {
-  color: orange;
-  text-shadow: none;
-}
+  margin-bottom: 10px; }
+  .unauthorized h1 {
+    color: orange;
+    text-shadow: none; }
 
 a {
-  text-decoration: none;
-}
-a:visited {
-  color: #4ecdc4;
-}
+  text-decoration: none; }
+  a:visited {
+    color: #4ecdc4; }
 
 /*# sourceMappingURL=Unauthorized.css.map */

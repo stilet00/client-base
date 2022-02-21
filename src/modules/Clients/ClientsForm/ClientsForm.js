@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
 const CssTextField = withStyles({
   root: {
     "& .MuiInputBase-root:first-child": {
@@ -40,15 +41,20 @@ const CssTextField = withStyles({
 
 export default function ClientsForm({ editedClient }) {
   const classes = useStyles();
+
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
+
   const { alertOpen, closeAlert, openAlert } = useAlert();
+
   const { handleClose, handleOpen, open } = useModal();
+
   const handleChange = useCallback(
     (e) => {
       setClient({ ...client, [e.target.name]: e.target.value.trim() });
     },
     [client]
   );
+
   const formSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -61,8 +67,9 @@ export default function ClientsForm({ editedClient }) {
         }
       });
     },
-    [client]
+    [client, closeAlert, openAlert]
   );
+
   return (
     <div className={"socials add-client-button middle-button"}>
       <StarsIcon />

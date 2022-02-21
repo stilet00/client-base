@@ -20,17 +20,23 @@ import moment from "moment";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 function ChartsContainer() {
   const [months, setMonths] = useState([]);
+
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+
   const [deletedMonth, setDeletedMonth] = useState(null);
+
   const [emptyStatus, setEmptyStatus] = useState(false);
+
   const [arrayOfYears, setArrayOfYears] = useState([]);
+
   const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
+
   const {
     alertStatusConfirmation,
-    closeAlertConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
+
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
@@ -51,18 +57,21 @@ function ChartsContainer() {
   const handleChange = useCallback((e) => {
     setSelectedYear(e.target.value);
   }, []);
+
   function compareNumeric(a, b) {
     if (a.month > b.month) return 1;
     if (a.month === b.month) return 0;
     if (a.month < b.month) return -1;
   }
+
   const deleteGraph = useCallback(
     (id) => {
       setDeletedMonth(months.find((item) => item._id === id));
       openAlertConfirmation();
     },
-    [months]
+    [months, openAlertConfirmation]
   );
+
   const deleteGraphClicked = useCallback(() => {
     removeYear(deletedMonth._id).then((res) => {
       if (res.status === 200) {
@@ -71,11 +80,13 @@ function ChartsContainer() {
         closeAlertConfirmationNoReload();
       }
     });
-  }, [deletedMonth, months]);
+  }, [deletedMonth, months, closeAlertConfirmationNoReload]);
+
   const cancelDeleteGraphClicked = useCallback(() => {
     setDeletedMonth(null);
     closeAlertConfirmationNoReload();
-  }, []);
+  }, [closeAlertConfirmationNoReload]);
+
   const onMonthSubmit = useCallback(
     (date) => {
       addMonth(date).then((res) => {
@@ -90,8 +101,9 @@ function ChartsContainer() {
         }
       });
     },
-    [months]
+    [months, closeAlertNoReload, openAlert]
   );
+
   const onValueSubmit = useCallback((valueOfDay) => {
     changeChartValue(valueOfDay).then((res) => {
       if (res.status === 200) {
@@ -99,7 +111,7 @@ function ChartsContainer() {
         setTimeout(closeAlert, 1500);
       }
     });
-  }, []);
+  }, [openAlert, closeAlert]);
 
   return (
     <FirebaseAuthConsumer>
@@ -154,7 +166,7 @@ function ChartsContainer() {
                   : null
               }
               open={alertStatusConfirmation}
-              handleClose={closeAlertConfirmation}
+              handleClose={closeAlertConfirmationNoReload}
               handleOpen={openAlertConfirmation}
               status={false}
               onCancel={cancelDeleteGraphClicked}

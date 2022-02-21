@@ -13,17 +13,25 @@ import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 
 function Overview() {
   const [clients, setClients] = useState([]);
+
   const [translators, setTranslators] = useState([]);
+
   const [progressStatus, setProgressStatus] = useState(true);
+
   const [progressValue, setProgressValue] = useState(null);
+
   const [yearSum, setYearSum] = useState(null);
+
   const [bestMonth, setBestMonth] = useState(null);
+
   const [arrayOfYears, setArrayOfYears] = useState([]);
+
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
 
   const handleChange = useCallback((event) => {
     setSelectedYear(event.target.value);
   }, []);
+
   useEffect(() => {
     getBalance().then((res) => {
       if (res.status === 200) {
@@ -40,6 +48,7 @@ function Overview() {
       }
     });
   }, [selectedYear]);
+
   useEffect(() => {
     getClients().then((res) => {
       if (res.status === 200) {
@@ -47,6 +56,7 @@ function Overview() {
       }
     });
   }, []);
+
   useEffect(() => {
     getTranslators().then((res) => {
       if (res.status === 200) {
@@ -54,14 +64,17 @@ function Overview() {
       }
     });
   }, []);
+
   function getArrayWithSums(array) {
     return array.map((item) => {
       return { ...item, values: reduceArray(item.values) };
     });
   }
+
   function compareSums(a, b) {
     return a.values - b.values;
   }
+
   function reduceArray(array) {
     return array.length > 0
       ? array.reduce((sum, current) => {
@@ -94,8 +107,10 @@ function Overview() {
         }
       }
     }
+
     return sum;
   }
+
   function getYearSum(yearArray) {
     let arrayOfSums = [];
     yearArray.forEach((item) => {
@@ -103,11 +118,11 @@ function Overview() {
     });
     setYearSum(reduceArray(arrayOfSums));
   }
+
   function getMonthProgress(yearArray) {
     let currentMonth = yearArray.find(
       (item) => item.month === moment().format("MM")
     );
-
     let previousMonthNumber =
       Number(moment().format("MM")) - 1 < 10
         ? "0" + (Number(moment().format("MM")) - 1)
@@ -150,6 +165,7 @@ function Overview() {
       }
     }
   }
+
   let monthProgressPage =
     progressValue || progressValue === 0 ? (
       progressStatus ? (
@@ -160,6 +176,7 @@ function Overview() {
     ) : (
       <SmallLoader />
     );
+
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {

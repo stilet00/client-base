@@ -2,7 +2,13 @@ import React from "react";
 import logo from "../../images/logo.png";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import "../../styles/sharedComponents/LogoHeader.css";
+import Button from "@material-ui/core/Button";
+import firebase from "firebase";
+import { useHistory } from "react-router-dom";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 function LogoHeader() {
+  const history = useHistory();
+
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
@@ -18,6 +24,14 @@ function LogoHeader() {
                   <span className={"user-email"}>
                     {isSignedIn ? ` ${user.email}` : null}{" "}
                   </span>
+                  <Button variant="outlined"
+                          className={"logout_button-hover"}
+                          onClick={() => {
+                            firebase.auth().signOut();
+                            setTimeout(() => {
+                              history.push("/");
+                            }, 1000);
+                  }}><ExitToAppIcon /></Button>
                 </p>
               </>
             ) : null}

@@ -1,0 +1,56 @@
+@import "variables"
+
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap")
+
+body
+  font-family: $text-font-family
+
+.App
+  font-family: inherit
+  text-align: center
+  background: url("images/background-28.png")
+  background-size: cover
+  min-height: 100vh
+  height: 100%
+  box-sizing: border-box
+  display: flex
+  flex-direction: column
+
+ul
+  list-style-type: none
+
+.App-logo
+  height: 40px
+  padding: 10px
+  pointer-events: none
+
+@media (prefers-reduced-motion: no-preference)
+  .App-logo
+    animation: App-logo-spin infinite 5s linear
+
+@keyframes App-logo-spin
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(180deg)
+
+.App-header
+  display: flex
+  flex-direction: column
+  align-items: center
+  margin-top: 10px
+  margin-bottom: 10px
+  justify-content: center
+  font-size: calc(10px + 2vmin)
+  color: white
+
+main
+  display: flex
+  flex-direction: column
+  align-items: center
+  min-height: 520px
+  margin-bottom: 50px
+
+.App-link
+  color: #61dafb
+
