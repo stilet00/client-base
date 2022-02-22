@@ -19,12 +19,16 @@ import { firebaseConfig } from "./fireBaseConfig";
 import LogoHeader from "./sharedComponents/LogoHeader/LogoHeader";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
+import sun from "../src/images/sun_transparent.png";
 
 function App() {
   return (
     <Router>
       <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
         <div className="App">
+          <div className="sun">
+            <img src={sun} alt="Sun" width={"100px"} height={"100px"}/>
+          </div>
           <LogoHeader />
           <main>
             <Switch>

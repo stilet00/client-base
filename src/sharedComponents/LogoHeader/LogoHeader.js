@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "../../images/logo.png";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import "../../styles/sharedComponents/LogoHeader.css";
 import Button from "@material-ui/core/Button";
@@ -15,7 +14,7 @@ function LogoHeader() {
         return (
           <div className="App-header">
             <h2 className={"sunrise-header"}>
-              Sunrise <img src={logo} className="App-logo" alt="logo" /> models
+              Sunrise models
             </h2>
             {isSignedIn ? (
               <>

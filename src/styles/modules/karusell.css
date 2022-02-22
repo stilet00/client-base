@@ -72,13 +72,14 @@ h3 {
     letter-spacing: 1px; }
 
 .socials {
-  margin: 0 auto;
-  padding: 5px;
   display: flex;
-  width: 90%;
-  max-height: 30px;
   justify-content: space-evenly;
   align-items: center;
+  z-index: 1;
+  width: 90%;
+  max-height: 30px;
+  margin: 0 auto;
+  padding: 5px;
   border-radius: 5px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

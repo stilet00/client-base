@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .taskList-container {
   width: 90%;
+  z-index: 1;
   max-width: 500px;
   min-height: 528px;
   max-height: 70vh;
