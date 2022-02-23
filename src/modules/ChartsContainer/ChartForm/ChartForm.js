@@ -80,11 +80,11 @@ export default function ChartForm({ onMonthSubmit, year }) {
     let monthsArray = [];
     for (let i = 1; i < 13; i++) {
       i < 10
-          ? monthsArray.push(
-              moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+        ? monthsArray.push(
+            moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
           )
-          : monthsArray.push(
-              moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
+        : monthsArray.push(
+            moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
           );
     }
     setMonths(monthsArray);

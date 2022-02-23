@@ -190,17 +190,26 @@ function Translators() {
     (e, newTranslator) => {
       e.preventDefault();
 
-      if (translators.filter(existingTranslator => {
-        return existingTranslator.name.toLowerCase() === newTranslator.name.toLowerCase() &&
-            existingTranslator.surname.toLowerCase() === newTranslator.surname.toLowerCase()
-      }).length) {
+      if (
+        translators.filter((existingTranslator) => {
+          return (
+            existingTranslator.name.toLowerCase() ===
+              newTranslator.name.toLowerCase() &&
+            existingTranslator.surname.toLowerCase() ===
+              newTranslator.surname.toLowerCase()
+          );
+        }).length
+      ) {
         showAlertMessage(MESSAGES.translatorExist);
       } else {
         showAlertMessage(MESSAGES.addTranslator);
         addTranslator(newTranslator).then((res) => {
           if (res.status === 200) {
             console.log(res.data);
-            setTranslators([...translators, { ...newTranslator, _id: res.data }]);
+            setTranslators([
+              ...translators,
+              { ...newTranslator, _id: res.data },
+            ]);
           } else {
             console.log(res.status);
           }
@@ -210,22 +219,21 @@ function Translators() {
     [translators]
   );
 
-
   const clientsFormSubmit = useCallback(
-      (e, newClient) => {
-        e.preventDefault();
+    (e, newClient) => {
+      e.preventDefault();
 
-        addClient(newClient).then((res) => {
-          if (res.status === 200) {
-            showAlertMessage(MESSAGES.addClient);
-            setClients([...clients, { ...newClient, _id: res.data }]);
-          } else {
-            showAlertMessage(MESSAGES.somethingWrong);
-            console.log(res.data);
-          }
-        });
-      },
-      [clients]
+      addClient(newClient).then((res) => {
+        if (res.status === 200) {
+          showAlertMessage(MESSAGES.addClient);
+          setClients([...clients, { ...newClient, _id: res.data }]);
+        } else {
+          showAlertMessage(MESSAGES.somethingWrong);
+          console.log(res.data);
+        }
+      });
+    },
+    [clients]
   );
 
   function showAlertMessage(alertMessage) {

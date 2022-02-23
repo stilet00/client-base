@@ -52,9 +52,8 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
   );
 
   function clearClient() {
-      setClient(DEFAULT_CLIENT);
+    setClient(DEFAULT_CLIENT);
   }
-
 
   return (
     <div className={"socials add-client-button middle-button"}>
@@ -76,11 +75,13 @@ export default function ClientsForm({ onFormSubmit, editedClient }) {
       >
         <Fade in={open}>
           <div className={"form-container clients-form"}>
-            <form onSubmit={(e) => {
+            <form
+              onSubmit={(e) => {
                 onFormSubmit(e, client);
                 clearClient();
                 setTimeout(handleClose, 1100);
-            }}>
+              }}
+            >
               <h2 id="transition-modal-title">
                 Enter client's name and surname:
               </h2>

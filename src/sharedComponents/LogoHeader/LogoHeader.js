@@ -13,9 +13,7 @@ function LogoHeader() {
       {({ isSignedIn, user, providerId }) => {
         return (
           <div className="App-header">
-            <h2 className={"sunrise-header"}>
-              Sunrise models
-            </h2>
+            <h2 className={"sunrise-header"}>Sunrise models</h2>
             {isSignedIn ? (
               <>
                 <p className={"logged-user"}>
@@ -23,14 +21,18 @@ function LogoHeader() {
                   <span className={"user-email"}>
                     {isSignedIn ? ` ${user.email}` : null}{" "}
                   </span>
-                  <Button variant="outlined"
-                          className={"logout_button-hover"}
-                          onClick={() => {
-                            firebase.auth().signOut();
-                            setTimeout(() => {
-                              history.push("/");
-                            }, 1000);
-                  }}><ExitToAppIcon /></Button>
+                  <Button
+                    variant="outlined"
+                    className={"logout_button-hover"}
+                    onClick={() => {
+                      firebase.auth().signOut();
+                      setTimeout(() => {
+                        history.push("/");
+                      }, 1000);
+                    }}
+                  >
+                    <ExitToAppIcon />
+                  </Button>
                 </p>
               </>
             ) : null}

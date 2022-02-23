@@ -13,20 +13,27 @@
   background-color: white;
   border: 1px solid;
   border-radius: 10px;
-  text-align: center; }
-  .message-container h2 {
-    text-shadow: none; }
-  .message-container p {
-    color: #9E6700; }
+  text-align: center;
+}
+.message-container h2 {
+  text-shadow: none;
+}
+.message-container p {
+  color: #9e6700;
+}
 
 .green-box {
-  border-color: #4ecdc4; }
+  border-color: #4ecdc4;
+}
 
 .red-box {
-  border-color: red; }
-  .red-box .green-text {
-    color: #4ecdc4; }
-  .red-box .red-text {
-    color: red; }
+  border-color: red;
+}
+.red-box .green-text {
+  color: #4ecdc4;
+}
+.red-box .red-text {
+  color: red;
+}
 
 /*# sourceMappingURL=AlertMessage.css.map */

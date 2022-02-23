@@ -103,13 +103,16 @@ function ChartsContainer() {
     [months, openAlert]
   );
 
-  const onValueSubmit = useCallback((valueOfDay) => {
-    changeChartValue(valueOfDay).then((res) => {
-      if (res.status === 200) {
-        openAlert();
-      }
-    });
-  }, [openAlert]);
+  const onValueSubmit = useCallback(
+    (valueOfDay) => {
+      changeChartValue(valueOfDay).then((res) => {
+        if (res.status === 200) {
+          openAlert();
+        }
+      });
+    },
+    [openAlert]
+  );
 
   return (
     <FirebaseAuthConsumer>

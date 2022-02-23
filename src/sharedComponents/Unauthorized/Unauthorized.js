@@ -34,7 +34,7 @@ function Unauthorized() {
     if (time > 1) {
       setTime(time - 1);
     } else {
-      history.push('/');
+      history.push("/");
     }
   }
 
@@ -49,7 +49,6 @@ function Unauthorized() {
           <Link to={"/"}>Back</Link>
         </StyledButton>
       </div>
-
     </>
   );
 }

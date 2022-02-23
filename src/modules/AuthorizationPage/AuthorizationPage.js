@@ -98,33 +98,33 @@ function AuthorizationPage() {
 
   const signInWithEmailPassword = useCallback(() => {
     firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(() => {
-          return firebase.auth().signInWithEmailAndPassword(email, password);
-        })
-        .catch((errorFromServer) => {
-          const message = errorFromServer.message;
-          const code = errorFromServer.code;
-          console.log(errorFromServer);
-          if (code === "auth/user-not-found") {
-            setError({
-              ...error,
-              email: { ...error.email, text: message, status: true },
-              password: { status: true, text: "" },
-            });
-          } else if (code === "auth/wrong-password") {
-            setError({ ...error, password: { status: true, text: message } });
-          } else if (code === "auth/too-many-requests") {
-            setError({
-              ...error,
-              email: { ...error.email, text: message, status: true },
-              password: { status: true, text: "" },
-            });
-          }
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(() => {
+        return firebase.auth().signInWithEmailAndPassword(email, password);
+      })
+      .catch((errorFromServer) => {
+        const message = errorFromServer.message;
+        const code = errorFromServer.code;
+        console.log(errorFromServer);
+        if (code === "auth/user-not-found") {
+          setError({
+            ...error,
+            email: { ...error.email, text: message, status: true },
+            password: { status: true, text: "" },
+          });
+        } else if (code === "auth/wrong-password") {
+          setError({ ...error, password: { status: true, text: message } });
+        } else if (code === "auth/too-many-requests") {
+          setError({
+            ...error,
+            email: { ...error.email, text: message, status: true },
+            password: { status: true, text: "" },
+          });
+        }
 
-          openAlert(5000);
-        });
+        openAlert(5000);
+      });
   }, [email, password, error, openAlert, closeAlert]);
 
   const onSubmit = useCallback(
