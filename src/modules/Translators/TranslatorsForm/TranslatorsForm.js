@@ -10,7 +10,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
-import AlertMessage from "../../../sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";
 import AirlineSeatReclineNormalIcon from "@material-ui/icons/AirlineSeatReclineNormal";
 import useModal from "../../../sharedHooks/useModal";
@@ -39,20 +38,24 @@ const CssTextField = withStyles({
 
 export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   const classes = useStyles();
+
   const [translator, setTranslator] = useState(
     editedTranslator || DEFAULT_TRANSLATOR
   );
+
   const { open, handleOpen, handleClose } = useModal();
-  const { alertOpen, closeAlert, openAlert } = useAlert();
+
   const handleChange = useCallback(
     (e) => {
       setTranslator({ ...translator, [e.target.name]: e.target.value.trim() });
     },
     [translator]
   );
+
   function clearTranslator() {
     setTranslator(DEFAULT_TRANSLATOR);
   }
+
   return (
     <div className={"socials add-translator-button bottom-button"}>
       <AirlineSeatReclineNormalIcon />
@@ -75,7 +78,6 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
           <div className={"form-container clients-form"}>
             <form
               onSubmit={(e) => {
-                openAlert();
                 onFormSubmit(e, translator);
                 clearTranslator();
                 setTimeout(handleClose, 1100);
@@ -115,13 +117,6 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                     </InputAdornment>
                   ),
                 }}
-              />
-              <AlertMessage
-                mainText={"Translator has been added!"}
-                open={alertOpen}
-                handleOpen={openAlert}
-                handleClose={closeAlert}
-                status={true}
               />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add translator
