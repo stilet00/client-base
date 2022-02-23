@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/sharedComponents/Unauthorized.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
@@ -23,15 +24,32 @@ const StyledButton = withStyles({
     textTransform: "capitalize",
   },
 })(Button);
+
 function Unauthorized() {
+  const [time, setTime] = useState(3);
+
+  const history = useHistory();
+
+  function reduceTime() {
+    if (time > 1) {
+      setTime(time - 1);
+    } else {
+      history.push('/');
+    }
+  }
+
+  setTimeout(reduceTime, 1000);
+
   return (
     <>
       <div className={"unauthorized"}>
         <h1>You should log in before using this service...</h1>
+        <p>You will be redirected in ...{time}</p>
+        <StyledButton>
+          <Link to={"/"}>Back</Link>
+        </StyledButton>
       </div>
-      <StyledButton>
-        <Link to={"/"}>Back</Link>
-      </StyledButton>
+
     </>
   );
 }
