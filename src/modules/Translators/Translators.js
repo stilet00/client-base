@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import {
+  addClient,
   getClients,
   removeClient,
 } from "../../services/clientsServices/services";
@@ -27,18 +28,28 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-function Translators(props) {
+import { MESSAGES } from "../../constants/messages";
+
+function Translators() {
+  const [message, setMessage] = useState(MESSAGES.addTranslator);
+
   const [clients, setClients] = useState([]);
+
   const [translators, setTranslators] = useState([]);
+
   const [currentClient, setCurrentClient] = useState(null);
+
   const [state, setState] = useState({
     left: false,
   });
+
   const [loading, setLoading] = useState(false);
+
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
   useEffect(() => {
     setLoading(true);
+
     getTranslators().then((res) => {
       if (res.status === 200) {
         setLoading(false);
@@ -47,14 +58,17 @@ function Translators(props) {
         console.log("No translators");
       }
     });
+
     getClients().then((res) => {
       if (res.status === 200) {
         setClients(res.data);
+        console.log(res.data);
       } else {
         console.log("No clients");
       }
     });
   }, []);
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -83,6 +97,7 @@ function Translators(props) {
     },
     [state]
   );
+
   const dragEndHandler = useCallback((e) => {
     e.target.style.background = "none";
   }, []);
@@ -100,6 +115,7 @@ function Translators(props) {
     e.preventDefault();
     e.target.style.background = "none";
   }, []);
+
   const onBoardDrop = useCallback(
     (e, translatorID) => {
       e.preventDefault();
@@ -116,8 +132,7 @@ function Translators(props) {
           (item) => item._id === currentClient._id
         ).length > 0
       ) {
-        openAlert();
-        setTimeout(closeAlert, 1500);
+        showAlertMessage(MESSAGES.clientExist);
       } else {
         editedTranslator = {
           ...editedTranslator,
@@ -125,12 +140,14 @@ function Translators(props) {
         };
         updateTranslator(editedTranslator).then((res) => {
           if (res.status === 200) {
+            showAlertMessage(MESSAGES.translatorFilled);
             setTranslators(
               translators.map((item) => {
                 return item._id === translatorID ? editedTranslator : item;
               })
             );
           } else {
+            showAlertMessage(MESSAGES.somethingWrong);
             console.log(res.data);
           }
         });
@@ -138,44 +155,91 @@ function Translators(props) {
     },
     [translators, currentClient, openAlert, closeAlert]
   );
+
   const deleteClient = useCallback(
     (id) => {
       removeClient(id).then((res) => {
         if (res.status === 200) {
+          showAlertMessage(MESSAGES.clientDeleted);
           setClients(clients.filter((item) => item._id !== id));
         } else {
+          showAlertMessage(MESSAGES.somethingWrong);
           console.log(res.data);
         }
       });
     },
     [clients]
   );
+
   const onTranslatorDelete = useCallback(
     (id) => {
       removeTranslator(id).then((res) => {
         if (res.status === 200) {
+          showAlertMessage(MESSAGES.translatorDeleted);
           setTranslators(translators.filter((item) => item._id !== id));
         } else {
+          showAlertMessage(MESSAGES.somethingWrong);
           console.log(res.data);
         }
       });
     },
     [translators]
   );
-  const formSubmit = useCallback(
-    (e, translator) => {
+
+  const translatorsFormSubmit = useCallback(
+    (e, newTranslator) => {
       e.preventDefault();
-      addTranslator(translator).then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-          setTranslators([...translators, { ...translator, _id: res.data }]);
-        } else {
-          console.log(res.status);
-        }
-      });
+
+      if (
+        translators.filter((existingTranslator) => {
+          return (
+            existingTranslator.name.toLowerCase() ===
+              newTranslator.name.toLowerCase() &&
+            existingTranslator.surname.toLowerCase() ===
+              newTranslator.surname.toLowerCase()
+          );
+        }).length
+      ) {
+        showAlertMessage(MESSAGES.translatorExist);
+      } else {
+        showAlertMessage(MESSAGES.addTranslator);
+        addTranslator(newTranslator).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            setTranslators([
+              ...translators,
+              { ...newTranslator, _id: res.data },
+            ]);
+          } else {
+            console.log(res.status);
+          }
+        });
+      }
     },
     [translators]
   );
+
+  const clientsFormSubmit = useCallback(
+    (e, newClient) => {
+      e.preventDefault();
+
+      addClient(newClient).then((res) => {
+        if (res.status === 200) {
+          showAlertMessage(MESSAGES.addClient);
+          setClients([...clients, { ...newClient, _id: res.data }]);
+        } else {
+          showAlertMessage(MESSAGES.somethingWrong);
+          console.log(res.data);
+        }
+      });
+    },
+    [clients]
+  );
+
+  function showAlertMessage(alertMessage) {
+    setMessage(alertMessage);
+    openAlert();
+  }
 
   const page =
     translators.length > 0 ? (
@@ -244,19 +308,19 @@ function Translators(props) {
                   </div>
                 </Drawer>
               </div>
-              <ClientsForm />
-              <TranslatorsForm onFormSubmit={formSubmit} />
+              <ClientsForm onFormSubmit={clientsFormSubmit} />
+              <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
             </div>
             <div className={"inner-gallery-container  translators-container"}>
               <h3>List of translators:</h3>
               {page}
             </div>
             <AlertMessage
-              mainText={"Translator already has this client!"}
+              mainText={message.text}
               open={alertOpen}
               handleOpen={openAlert}
               handleClose={closeAlert}
-              status={false}
+              status={message.status}
             />
           </div>
         ) : (

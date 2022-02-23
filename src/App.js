@@ -27,7 +27,7 @@ function App() {
       <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
         <div className="App">
           <div className="sun">
-            <img src={sun} alt="Sun" width={"100px"} height={"100px"}/>
+            <img src={sun} alt="Sun" width={"100px"} height={"100px"} />
           </div>
           <LogoHeader />
           <main>

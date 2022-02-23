@@ -43,7 +43,6 @@ function TaskList() {
         });
       } else {
         openAlert();
-        setTimeout(closeAlert, 1500);
       }
     },
     [tasks, openAlert, closeAlert]

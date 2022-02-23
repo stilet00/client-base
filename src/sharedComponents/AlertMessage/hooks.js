@@ -2,13 +2,16 @@ import { useCallback, useState } from "react";
 
 export function useAlert() {
   const [alertOpen, setAlertOpen] = useState(false);
-  const openAlert = useCallback(() => {
-    setAlertOpen(true);
-  }, []);
 
   const closeAlert = useCallback(() => {
     setAlertOpen(false);
   }, []);
+
+  const openAlert = useCallback((duration = 1500) => {
+    setAlertOpen(true);
+    setTimeout(closeAlert, duration);
+  }, []);
+
   return {
     alertOpen,
     openAlert,

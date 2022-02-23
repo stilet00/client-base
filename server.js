@@ -183,7 +183,7 @@ app.post(clientsURL + "add", function (req, res, next) {
       if (err) {
         return res.sendStatus(500);
       }
-      res.sendStatus(200);
+      res.send(result?.insertedId);
     });
   }
 });

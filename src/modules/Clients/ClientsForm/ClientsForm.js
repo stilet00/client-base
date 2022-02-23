@@ -10,8 +10,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
-import { addClient } from "../../../services/clientsServices/services";
-import AlertMessage from "../../../sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";
 import StarsIcon from "@material-ui/icons/Stars";
 import useModal from "../../../sharedHooks/useModal";
@@ -39,12 +37,10 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ClientsForm({ editedClient }) {
+export default function ClientsForm({ onFormSubmit, editedClient }) {
   const classes = useStyles();
 
   const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
-
-  const { alertOpen, closeAlert, openAlert } = useAlert();
 
   const { handleClose, handleOpen, open } = useModal();
 
@@ -55,20 +51,9 @@ export default function ClientsForm({ editedClient }) {
     [client]
   );
 
-  const formSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      addClient(client).then((res) => {
-        if (res.status === 200) {
-          openAlert();
-          setTimeout(closeAlert, 1000);
-        } else {
-          console.log(res.data);
-        }
-      });
-    },
-    [client, closeAlert, openAlert]
-  );
+  function clearClient() {
+    setClient(DEFAULT_CLIENT);
+  }
 
   return (
     <div className={"socials add-client-button middle-button"}>
@@ -90,7 +75,13 @@ export default function ClientsForm({ editedClient }) {
       >
         <Fade in={open}>
           <div className={"form-container clients-form"}>
-            <form onSubmit={formSubmit}>
+            <form
+              onSubmit={(e) => {
+                onFormSubmit(e, client);
+                clearClient();
+                setTimeout(handleClose, 1100);
+              }}
+            >
               <h2 id="transition-modal-title">
                 Enter client's name and surname:
               </h2>
@@ -168,13 +159,6 @@ export default function ClientsForm({ editedClient }) {
               {/*  <ImageIcon fontSize={"large"} className={"photo-icon"} />*/}
               {/*</div>*/}
               {/*{previewImage}*/}
-              <AlertMessage
-                mainText={"Client has been added!"}
-                open={alertOpen}
-                handleOpen={openAlert}
-                handleClose={closeAlert}
-                status={true}
-              />
               <Button type={"submit"} fullWidth variant={"outlined"}>
                 Add client
               </Button>

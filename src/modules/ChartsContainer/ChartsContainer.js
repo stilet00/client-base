@@ -29,7 +29,7 @@ function ChartsContainer() {
 
   const [arrayOfYears, setArrayOfYears] = useState([]);
 
-  const { alertOpen, closeAlert, openAlert, closeAlertNoReload } = useAlert();
+  const { alertOpen, closeAlert, openAlert } = useAlert();
 
   const {
     alertStatusConfirmation,
@@ -97,21 +97,22 @@ function ChartsContainer() {
               .sort(compareNumeric)
               .reverse()
           );
-          setTimeout(closeAlertNoReload, 1500);
         }
       });
     },
-    [months, closeAlertNoReload, openAlert]
+    [months, openAlert]
   );
 
-  const onValueSubmit = useCallback((valueOfDay) => {
-    changeChartValue(valueOfDay).then((res) => {
-      if (res.status === 200) {
-        openAlert();
-        setTimeout(closeAlert, 1500);
-      }
-    });
-  }, [openAlert, closeAlert]);
+  const onValueSubmit = useCallback(
+    (valueOfDay) => {
+      changeChartValue(valueOfDay).then((res) => {
+        if (res.status === 200) {
+          openAlert();
+        }
+      });
+    },
+    [openAlert]
+  );
 
   return (
     <FirebaseAuthConsumer>
@@ -152,7 +153,6 @@ function ChartsContainer() {
             <AlertMessage
               mainText={"Data has been added!"}
               open={alertOpen}
-              handleOpen={openAlert}
               handleClose={closeAlert}
               status={true}
             />

@@ -7,17 +7,20 @@
   max-width: 212px;
   color: #4ecdc4;
   font-style: italic;
-  cursor: pointer; }
-  .logged-user:hover .logout_button-hover {
-    display: flex !important; }
-  .logged-user:after {
-    content: "";
-    position: absolute;
-    display: block;
-    bottom: 0;
-    right: -20px;
-    width: 20px;
-    height: 50%; }
+  cursor: pointer;
+}
+.logged-user:hover .logout_button-hover {
+  display: flex !important;
+}
+.logged-user:after {
+  content: "";
+  position: absolute;
+  display: block;
+  bottom: 0;
+  right: -20px;
+  width: 20px;
+  height: 50%;
+}
 
 .user-email {
   display: block;
@@ -28,19 +31,22 @@
   border-radius: 5px;
   color: #000000;
   font-style: normal;
-  background: #D8E6F3; }
+  background: #d8e6f3;
+}
 
 .logout_button-hover {
   position: absolute !important;
   display: none !important;
   height: 32px;
   bottom: 0;
-  right: -68px; }
+  right: -68px;
+}
 
 .sunrise-header {
   display: flex;
   justify-content: center;
   width: 100%;
-  background: rgba(255, 255, 255, 0.8); }
+  background: rgba(255, 255, 255, 0.8);
+}
 
 /*# sourceMappingURL=LogoHeader.css.map */
