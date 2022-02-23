@@ -77,7 +77,6 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
               onSubmit={(e) => {
                 openAlert();
                 onFormSubmit(e, translator);
-                setTimeout(closeAlert, 1000);
                 clearTranslator();
                 setTimeout(handleClose, 1100);
               }}

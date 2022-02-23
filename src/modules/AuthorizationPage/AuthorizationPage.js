@@ -123,8 +123,7 @@ function AuthorizationPage() {
             });
           }
 
-          openAlert();
-          setTimeout(closeAlert, 5000);
+          openAlert(5000);
         });
   }, [email, password, error, openAlert, closeAlert]);
 

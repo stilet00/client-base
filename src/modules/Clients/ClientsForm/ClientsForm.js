@@ -61,7 +61,6 @@ export default function ClientsForm({ editedClient }) {
       addClient(client).then((res) => {
         if (res.status === 200) {
           openAlert();
-          setTimeout(closeAlert, 1000);
         } else {
           console.log(res.data);
         }

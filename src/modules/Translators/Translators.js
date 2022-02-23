@@ -117,7 +117,6 @@ function Translators(props) {
         ).length > 0
       ) {
         openAlert();
-        setTimeout(closeAlert, 1500);
       } else {
         editedTranslator = {
           ...editedTranslator,
