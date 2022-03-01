@@ -125,7 +125,7 @@ function AuthorizationPage() {
 
         openAlert(5000);
       });
-  }, [email, password, error, openAlert, closeAlert]);
+  }, [email, password, error, openAlert]);
 
   const onSubmit = useCallback(
     (e) => {

@@ -10,7 +10,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/ClientsForm.css";
 import { DEFAULT_CLIENT } from "../../../constants/constants";
-import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";
 import StarsIcon from "@material-ui/icons/Stars";
 import useModal from "../../../sharedHooks/useModal";
 

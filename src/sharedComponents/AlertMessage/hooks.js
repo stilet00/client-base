@@ -10,7 +10,7 @@ export function useAlert() {
   const openAlert = useCallback((duration = 1500) => {
     setAlertOpen(true);
     setTimeout(closeAlert, duration);
-  }, []);
+  }, [closeAlert]);
 
   return {
     alertOpen,

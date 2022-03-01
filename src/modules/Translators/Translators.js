@@ -69,6 +69,11 @@ function Translators() {
     });
   }, []);
 
+  const showAlertMessage = useCallback((alertMessage) => {
+    setMessage(alertMessage);
+    openAlert();
+  }, [openAlert]);
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -153,7 +158,7 @@ function Translators() {
         });
       }
     },
-    [translators, currentClient, openAlert, closeAlert]
+    [translators, currentClient, showAlertMessage]
   );
 
   const deleteClient = useCallback(
@@ -168,7 +173,7 @@ function Translators() {
         }
       });
     },
-    [clients]
+    [clients, showAlertMessage]
   );
 
   const onTranslatorDelete = useCallback(
@@ -183,7 +188,7 @@ function Translators() {
         }
       });
     },
-    [translators]
+    [translators, showAlertMessage]
   );
 
   const translatorsFormSubmit = useCallback(
@@ -216,7 +221,7 @@ function Translators() {
         });
       }
     },
-    [translators]
+    [translators, showAlertMessage]
   );
 
   const clientsFormSubmit = useCallback(
@@ -233,13 +238,8 @@ function Translators() {
         }
       });
     },
-    [clients]
+    [clients, showAlertMessage]
   );
-
-  function showAlertMessage(alertMessage) {
-    setMessage(alertMessage);
-    openAlert();
-  }
 
   const page =
     translators.length > 0 ? (
