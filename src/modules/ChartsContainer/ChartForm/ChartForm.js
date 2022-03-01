@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -62,7 +62,7 @@ export default function ChartForm({ onMonthSubmit, year }) {
     setSelectedMonth(event.target.value);
   }, []);
 
-  const getTotalDays = useMemo(() => {
+  const getTotalDays = useCallback(() => {
     const stringMonth = selectedMonth < 9 ? "0" + selectedMonth : selectedMonth;
     let totalDays = [];
     for (
