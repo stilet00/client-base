@@ -10,7 +10,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
-import { useAlert } from "../../../sharedComponents/AlertMessage/hooks";
 import AirlineSeatReclineNormalIcon from "@material-ui/icons/AirlineSeatReclineNormal";
 import useModal from "../../../sharedHooks/useModal";
 
@@ -28,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
 const CssTextField = withStyles({
   root: {
     "& .MuiInputBase-root:first-child": {

@@ -45,7 +45,7 @@ function TaskList() {
         openAlert();
       }
     },
-    [tasks, openAlert, closeAlert]
+    [tasks, openAlert]
   );
 
   const deleteTask = useCallback(

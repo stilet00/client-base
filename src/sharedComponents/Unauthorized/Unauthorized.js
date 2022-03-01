@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../../styles/sharedComponents/Unauthorized.css";
 import { Link, useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
