@@ -15,8 +15,7 @@ table {
   padding: 1px;
 }
 
-th,
-td:first-child {
+th, td:first-child {
   background: #4ecdc4;
   color: white;
   padding: 10px 20px;
@@ -24,16 +23,14 @@ td:first-child {
 
 td {
   width: 50%;
-  background: #d8e6f3;
+  background: #D8E6F3;
 }
 
-th:first-child,
-td:first-child {
+th:first-child, td:first-child {
   text-align: left;
 }
 
-th:nth-child(2n),
-td:nth-child(2n) {
+th:nth-child(2n), td:nth-child(2n) {
   text-align: right;
   padding: 10px 20px;
 }

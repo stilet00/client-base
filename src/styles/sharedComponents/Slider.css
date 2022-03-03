@@ -13,8 +13,7 @@
   color: lightblue !important;
 }
 
-.MuiSlider-track,
-.MuiSlider-thumb {
+.MuiSlider-track, .MuiSlider-thumb {
   color: #4ecdc4;
 }
 

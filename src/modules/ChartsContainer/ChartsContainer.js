@@ -43,7 +43,7 @@ function ChartsContainer() {
                 handleChange={handleChange}
               />
             </div>
-            <div className={"taskList-container chart-container"}>
+            <div className={"taskList-container chart-container animated-box"}>
               {months.length > 0 ? (
                 <ul>
                   {months.map((month, index) => (
