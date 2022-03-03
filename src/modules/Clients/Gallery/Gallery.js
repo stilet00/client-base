@@ -29,7 +29,7 @@ function Gallery() {
               <DiscreteSlider valuetext={valueText} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />
             </div>
-            <div className={"inner-gallery-container"}>
+            <div className={"inner-gallery-container animated-box"}>
               <h3 className={"clients-header"}>List of clients:</h3>
               {CLIENTS.filter(
                 (item) =>

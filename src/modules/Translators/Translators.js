@@ -311,7 +311,7 @@ function Translators() {
               <ClientsForm onFormSubmit={clientsFormSubmit} />
               <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
             </div>
-            <div className={"inner-gallery-container  translators-container"}>
+            <div className={"inner-gallery-container translators-container animated-box"}>
               <h3>List of translators:</h3>
               {page}
             </div>

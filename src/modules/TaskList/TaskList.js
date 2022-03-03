@@ -90,7 +90,7 @@ function TaskList() {
         return isSignedIn ? (
           <>
             <Header />
-            <div className={"taskList-container"}>{page}</div>
+            <div className={"taskList-container animated-box"}>{page}</div>
             <div className="socials button-add-container middle-button">
               <Form addTask={newTask} />
             </div>

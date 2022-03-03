@@ -1,7 +1,1 @@
-{
-"version": 3,
-"mappings": "AAAQ,0FAAkF",
-"sources": ["../../variables.sass"],
-"names": [],
-"file": "SingleTranslator.css"
-}
+{"version":3,"sourceRoot":"","sources":["../../variables.sass"],"names":[],"mappings":"AAAQ","file":"SingleTranslator.css"}
