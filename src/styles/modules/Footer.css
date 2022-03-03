@@ -1,6 +1,8 @@
 .footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 7px;
   color: orange;
-  font-weight: bold;
   letter-spacing: 3px;
 }
 

@@ -3,12 +3,15 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import instaIcon from "../../../../images/instagram-icon.png";
 import onlyIcon from "../../../../images/onlyfans-icon.png";
 import Loader from "../../../../sharedComponents/Loader/Loader";
+
 function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
+
   const fans = data.onlyFans ? (
     <a href={data.onlyFans} target={"_blank"} rel="noreferrer">
       <img src={onlyIcon} width={"20px"} height={"20px"} alt={"onlyfans"}></img>
     </a>
   ) : null;
+
   const insta = data.instagram ? (
     <a href={data.instagram} target={"_blank"} rel="noreferrer">
       <img
@@ -16,10 +19,12 @@ function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
         width={"20px"}
         height={"20px"}
         alt={"instagram"}
-      ></img>
+      />
     </a>
   ) : null;
+
   const loader = imageLoaded === "none" ? <Loader /> : null;
+
   return (
     <SwitchTransition mode={"out-in"}>
       <CSSTransition
@@ -40,7 +45,6 @@ function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
               style={{ display: imageLoaded }}
             />
           </div>
-
           <div className="socials">
             {insta}
             {fans}

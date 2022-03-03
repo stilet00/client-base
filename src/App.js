@@ -20,6 +20,7 @@ import LogoHeader from "./sharedComponents/LogoHeader/LogoHeader";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
 import sun from "../src/images/sun_transparent.png";
+import Footer from "./modules/Footer/Footer";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
               <Redirect from="/*" to="/" />
             </Switch>
           </main>
+          <Footer />
         </div>
       </FirebaseAuthProvider>
     </Router>

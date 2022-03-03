@@ -4,6 +4,7 @@ import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import moment from "moment";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
+
 function SingleTask({
   taskName,
   _id,
@@ -23,10 +24,13 @@ function SingleTask({
     };
     onToggle(item);
   };
+
   let done = doneAt ? (
     <p className={"task-date done-text"}>Done: {doneAt}</p>
   ) : null;
+
   let toggleButton = !completed ? <DoneOutlineIcon /> : <DoneAllIcon />;
+
   return (
     <li
       id={_id}

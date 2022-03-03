@@ -1,4 +1,3 @@
-import React, { useCallback, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -9,9 +8,8 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/ClientsForm.css";
-import { DEFAULT_CLIENT } from "../../../constants/constants";
 import StarsIcon from "@material-ui/icons/Stars";
-import useModal from "../../../sharedHooks/useModal";
+import {useClientsForm} from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -36,23 +34,16 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ClientsForm({ onFormSubmit, editedClient }) {
+export default function ClientsForm(props) {
   const classes = useStyles();
 
-  const [client, setClient] = useState(editedClient || DEFAULT_CLIENT);
-
-  const { handleClose, handleOpen, open } = useModal();
-
-  const handleChange = useCallback(
-    (e) => {
-      setClient({ ...client, [e.target.name]: e.target.value.trim() });
-    },
-    [client]
-  );
-
-  function clearClient() {
-    setClient(DEFAULT_CLIENT);
-  }
+  const { handleClose,
+          open,
+          clearClient,
+          client,
+          handleOpen,
+          onFormSubmit,
+          handleChange } = useClientsForm(props);
 
   return (
     <div className={"socials add-client-button middle-button"}>

@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -10,11 +9,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import moment from "moment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SumArray from "../../../sharedComponents/SumArray/SumArray";
-import useModal from "../../../sharedHooks/useModal";
+import {useChartForm} from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -38,78 +36,21 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ChartForm({ onMonthSubmit, year }) {
+export default function ChartForm(props) {
+  const { handleOpen,
+          months,
+          handleChange,
+          getTotalDays,
+          handleClose,
+          onFormSubmit,
+          open,
+          onValuesSubmit,
+          selectedMonth,
+          valuesArray,
+          year } = useChartForm(props);
+
   const classes = useStyles();
-  const [months, setMonths] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(1);
-  const [valuesArray, setValuesArray] = useState([]);
-  const { handleClose, handleOpen, open } = useModal();
-  useEffect(() => {
-    let monthsArray = [];
-    for (let i = 1; i < 13; i++) {
-      i < 10
-        ? monthsArray.push(
-            moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          )
-        : monthsArray.push(
-            moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          );
-    }
-    setMonths(monthsArray);
-  }, [year]);
 
-  const handleChange = useCallback((event) => {
-    setSelectedMonth(event.target.value);
-  }, []);
-
-  const getTotalDays = useCallback(() => {
-    const stringMonth = selectedMonth < 9 ? "0" + selectedMonth : selectedMonth;
-    let totalDays = [];
-    for (
-      let i = 1;
-      i <= moment(year + "-" + stringMonth, "YYYY-MM").daysInMonth();
-      i++
-    ) {
-      totalDays.push(i);
-    }
-    return totalDays;
-  }, [selectedMonth, year]);
-
-  const setDefault = useCallback(() => {
-    handleClose();
-    let monthsArray = [];
-    for (let i = 1; i < 13; i++) {
-      i < 10
-        ? monthsArray.push(
-            moment("01-0" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          )
-        : monthsArray.push(
-            moment("01-" + i + "-" + year, "DD-MM-YYYY").format("MMMM")
-          );
-    }
-    setMonths(monthsArray);
-    setSelectedMonth(1);
-    setValuesArray([]);
-  }, [year, handleClose]);
-
-  const onFormSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      let submittedMonth = {
-        year: year,
-        month: selectedMonth < 10 ? "0" + selectedMonth : String(selectedMonth),
-        days: getTotalDays(),
-        values: valuesArray,
-      };
-      onMonthSubmit(submittedMonth);
-      setDefault();
-    },
-    [year, selectedMonth, valuesArray, getTotalDays, onMonthSubmit, setDefault]
-  );
-
-  const onValuesSubmit = useCallback((newValuesArray) => {
-    setValuesArray(newValuesArray);
-  }, []);
   return (
     <div className={"modal-wrapper"}>
       <Button type="button" onClick={handleOpen} fullWidth>

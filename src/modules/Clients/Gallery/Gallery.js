@@ -1,4 +1,3 @@
-import React, { useCallback, useState } from "react";
 import "../../../styles/modules/Gallery.css";
 import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
@@ -9,15 +8,11 @@ import Header from "../../../sharedComponents/Header/Header";
 import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
+import {useGallery} from "../businessLogic";
+
 function Gallery() {
-  const [ageFilter, setAgeFilter] = useState(18);
-  const [nameFilter, setNameFilter] = useState("");
-  const valueText = useCallback((value) => {
-    setAgeFilter(value);
-  }, []);
-  const onNameFilter = useCallback((text) => {
-    setNameFilter(text);
-  }, []);
+  const { valueText, ageFilter, nameFilter, onNameFilter } = useGallery();
+
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {
