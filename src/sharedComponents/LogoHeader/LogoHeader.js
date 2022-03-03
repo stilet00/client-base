@@ -13,7 +13,6 @@ function LogoHeader() {
       {({ isSignedIn, user, providerId }) => {
         return (
           <div className="App-header">
-            <h2 className={"sunrise-header"}>Sunrise models</h2>
             {isSignedIn ? (
               <>
                 <p className={"logged-user"}>
