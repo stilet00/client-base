@@ -1,118 +1,33 @@
-import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../sharedComponents/Header/Header";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import {
-  addMonth,
-  changeChartValue,
-  getBalance,
-  removeYear,
-} from "../../services/balanceServices/services";
 import ChartForm from "./ChartForm/ChartForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
-import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 import moment from "moment";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
+import {useChartsContainer} from "./businessLogic";
 function ChartsContainer() {
-  const [months, setMonths] = useState([]);
-
-  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
-
-  const [deletedMonth, setDeletedMonth] = useState(null);
-
-  const [emptyStatus, setEmptyStatus] = useState(false);
-
-  const [arrayOfYears, setArrayOfYears] = useState([]);
-
-  const { alertOpen, closeAlert, openAlert } = useAlert();
-
-  const {
-    alertStatusConfirmation,
-    openAlertConfirmation,
-    closeAlertConfirmationNoReload,
-  } = useAlertConfirmation();
-
-  useEffect(() => {
-    getBalance().then((res) => {
-      if (res.status === 200) {
-        const yearList = res.data.map((item) => item.year);
-        setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-        let filteredArray = res.data
-          .filter((item) => item.year === selectedYear)
-          .sort(compareNumeric)
-          .reverse();
-        setMonths(filteredArray);
-        setEmptyStatus(filteredArray.length <= 0);
-      } else {
-        console.log(res.status);
-      }
-    });
-  }, [selectedYear]);
-
-  const handleChange = useCallback((e) => {
-    setSelectedYear(e.target.value);
-  }, []);
-
-  function compareNumeric(a, b) {
-    if (a.month > b.month) return 1;
-    if (a.month === b.month) return 0;
-    if (a.month < b.month) return -1;
-  }
-
-  const deleteGraph = useCallback(
-    (id) => {
-      setDeletedMonth(months.find((item) => item._id === id));
-      openAlertConfirmation();
-    },
-    [months, openAlertConfirmation]
-  );
-
-  const deleteGraphClicked = useCallback(() => {
-    removeYear(deletedMonth._id).then((res) => {
-      if (res.status === 200) {
-        setMonths(months.filter((item) => item._id !== deletedMonth._id));
-        setDeletedMonth(null);
-        closeAlertConfirmationNoReload();
-      }
-    });
-  }, [deletedMonth, months, closeAlertConfirmationNoReload]);
-
-  const cancelDeleteGraphClicked = useCallback(() => {
-    setDeletedMonth(null);
-    closeAlertConfirmationNoReload();
-  }, [closeAlertConfirmationNoReload]);
-
-  const onMonthSubmit = useCallback(
-    (date) => {
-      addMonth(date).then((res) => {
-        if (res.status === 200) {
-          openAlert();
-          setMonths(
-            [...months, { ...date, _id: res.data }]
-              .sort(compareNumeric)
-              .reverse()
-          );
-        }
-      });
-    },
-    [months, openAlert]
-  );
-
-  const onValueSubmit = useCallback(
-    (valueOfDay) => {
-      changeChartValue(valueOfDay).then((res) => {
-        if (res.status === 200) {
-          openAlert();
-        }
-      });
-    },
-    [openAlert]
-  );
+  const { arrayOfYears,
+          closeAlert,
+          alertOpen,
+          alertStatusConfirmation,
+          cancelDeleteGraphClicked,
+          closeAlertConfirmationNoReload,
+          deletedMonth,
+          deleteGraph,
+          deleteGraphClicked,
+          emptyStatus,
+          handleChange,
+          months,
+          onMonthSubmit,
+          onValueSubmit,
+          openAlertConfirmation,
+          selectedYear
+          } = useChartsContainer();
 
   return (
     <FirebaseAuthConsumer>

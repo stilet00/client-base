@@ -1,4 +1,3 @@
-import React, { useCallback, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -11,12 +10,12 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import CheckIcon from "@material-ui/icons/Check";
-import moment from "moment";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import useModal from "../../../sharedHooks/useModal";
+import {useChartDateForm} from "../businessLogic";
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
 const CssTextField = withStyles({
   root: {
     "& .MuiInputBase-root:first-child": {
@@ -39,19 +39,19 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function ChartDateForm({ monthData, onValueSubmit }) {
+export default function ChartDateForm(props) {
   const classes = useStyles();
-  const [value, setValue] = useState("");
-  const [selectedDate, setSelectedDate] = useState(moment().format("D"));
-  const { handleClose, handleOpen, open } = useModal();
 
-  const handleChange = useCallback((event) => {
-    setSelectedDate(event.target.value);
-  }, []);
+  const { monthData,
+          handleOpen,
+          handleClose,
+          open,
+          handleChange,
+          onSubmit,
+          onInputChange,
+          selectedDate,
+          value } = useChartDateForm(props);
 
-  const onInputChange = useCallback((e) => {
-    setValue(e.target.value);
-  }, []);
   return (
     <div className={"date-wrapper"}>
       <ColoredButton type="button" onClick={handleOpen} variant={"outlined"}>
@@ -72,11 +72,7 @@ export default function ChartDateForm({ monthData, onValueSubmit }) {
         <Fade in={open}>
           <div className={"form-container chart-date-form"}>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                onValueSubmit({ selectedDate, value, id: monthData._id });
-                handleClose();
-              }}
+              onSubmit={onSubmit}
             >
               <h2 id="transition-modal-title">Enter parameters:</h2>
               <CssTextField

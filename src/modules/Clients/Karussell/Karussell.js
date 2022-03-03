@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "../../../styles/modules/karusell.css";
 import { CLIENTS } from "../../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
@@ -6,24 +5,16 @@ import arrow from "../../../images/arrow.png";
 import Header from "../../../sharedComponents/Header/Header";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
-function Karussell(props) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [animationClass, setAnimationClass] = useState("");
-  const [imageLoaded, setImageLoaded] = useState("none");
-  function goNext() {
-    setImageLoaded("none");
-    setAnimationClass("forward");
-    CLIENTS.length - 1 !== currentStep
-      ? setCurrentStep(currentStep + 1)
-      : setCurrentStep(0);
-  }
-  function goPrevious() {
-    setImageLoaded("none");
-    setAnimationClass("back");
-    currentStep === 0
-      ? setCurrentStep(CLIENTS.length - 1)
-      : setCurrentStep(currentStep - 1);
-  }
+import {useKarusell} from "../businessLogic";
+
+function Karussell() {
+  const { currentStep,
+          animationClass,
+          goNext,
+          goPrevious,
+          imageLoaded,
+          setImageLoaded } = useKarusell();
+
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user, providerId }) => {

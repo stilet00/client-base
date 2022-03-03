@@ -19,14 +19,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Form({ addTask }) {
   const classes = useStyles();
+
   const [taskName, setTaskName] = useState("");
+
   const { open, handleOpen, handleClose } = useModal();
+
   function onInputChange(e) {
     setTaskName(e.target.value.trim());
   }
+
   function clearTaskName() {
     setTaskName("");
   }
+
   return (
     <div className={"modal-wrapper down-add-button"}>
       <Button type="button" onClick={handleOpen} fullWidth>

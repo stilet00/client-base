@@ -22,6 +22,7 @@ function SingleTranslator({
     ) : (
       <p>Drag client here...</p>
     );
+
   return (
     <div className={"gallery-item translator-item"}>
       <div className={"name-table"}>
