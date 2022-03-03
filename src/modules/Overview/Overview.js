@@ -192,7 +192,7 @@ function Overview() {
               />
             </div>
             <div
-              className={"taskList-container chart-container table-container"}
+              className={"taskList-container chart-container table-container  animated-box"}
             >
               <h1>Agency statistics</h1>
               <table>

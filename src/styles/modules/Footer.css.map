@@ -1,7 +1,1 @@
-{
-"version": 3,
-"mappings": "AAAA,OAAO;EACL,KAAK,EAAE,MAAM;EACb,WAAW,EAAE,IAAI;EACjB,cAAc,EAAE,GAAG",
-"sources": ["Footer.sass"],
-"names": [],
-"file": "Footer.css"
-}
+{"version":3,"sourceRoot":"","sources":["Footer.sass"],"names":[],"mappings":"AAAA;EACE;EACA;EACA","file":"Footer.css"}
