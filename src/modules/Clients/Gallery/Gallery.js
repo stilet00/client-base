@@ -2,7 +2,7 @@ import "../../../styles/modules/Gallery.css";
 import { CLIENTS } from "../../../database/database";
 import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../../sharedComponents/Slider/Slider";
-import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../../AuthorizationPage/Unauthorized/Unauthorized";
 import moment from "moment";
 import Menu from "../../../sharedComponents/Menu/Menu";
 import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";

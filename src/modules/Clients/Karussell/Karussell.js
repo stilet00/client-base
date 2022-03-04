@@ -4,7 +4,7 @@ import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../../images/arrow.png";
 import Menu from "../../../sharedComponents/Menu/Menu";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../../AuthorizationPage/Unauthorized/Unauthorized";
 import {useKarusell} from "../businessLogic";
 
 function Karussell() {

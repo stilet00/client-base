@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/sharedComponents/Unauthorized.css";
+import "../../../styles/modules/Unauthorized.css";
 import { Link, useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";

@@ -1,5 +1,5 @@
 import Menu from "../../sharedComponents/Menu/Menu";
-import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
