@@ -117,8 +117,7 @@ export default function Header() {
 
   return (
     <div className={"socials upper-menu"}>
-      <MenuIcon />
-      <Button onClick={toggleDrawer("top", true)} fullWidth>
+      <Button onClick={toggleDrawer("top", true)} fullWidth startIcon={<MenuIcon />}>
         Menu
       </Button>
       <Drawer

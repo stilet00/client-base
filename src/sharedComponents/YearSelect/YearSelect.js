@@ -3,7 +3,7 @@ import "../../styles/sharedComponents/YearSelected.css";
 function YearSelect({ year, handleChange, arrayOfYears }) {
   return (
     <FormControl style={{ width: "95%" }}>
-      <Select value={year} onChange={handleChange}>
+      <Select value={year} onChange={handleChange} >
         {arrayOfYears?.map((item) => (
           <MenuItem key={item} value={item}>
             {item}

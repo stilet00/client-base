@@ -8,19 +8,19 @@ body {
   position: relative;
   font-family: inherit;
   text-align: center;
-  background: url("images/background-28.png");
-  background-size: cover;
+  background: url("images/main-background.png");
   min-height: 100vh;
   height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  animation: movingBackground infinite 600s linear;
 }
 
 .sun {
   position: absolute;
   top: 200px;
-  animation: sun-motion infinite 120s linear, sun-rotate infinite 25s linear;
+  animation: sun-motion infinite 120s linear, sun-rotate infinite 18s linear;
 }
 
 ul {
@@ -30,6 +30,9 @@ ul {
 @keyframes sun-rotate {
   0% {
     transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
   }
   100% {
     transform: rotate(360deg);
@@ -125,6 +128,14 @@ ul {
   }
   100% {
     opacity: 0;
+  }
+}
+@keyframes movingBackground {
+  0% {
+    background-position: top 50% left;
+  }
+  100% {
+    background-position: top 50% right;
   }
 }
 .App-header {

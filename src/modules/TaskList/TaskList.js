@@ -37,7 +37,7 @@ function TaskList() {
           <>
             <Header />
             <div className={"taskList-container animated-box"}>{page}</div>
-            <div className="socials button-add-container middle-button">
+            <div className="socials button-add-container bottom-button">
               <Form addTask={newTask} />
             </div>
             <AlertMessage
