@@ -58,8 +58,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
 
   return (
     <div className={"socials add-translator-button bottom-button"}>
-      <AirlineSeatReclineNormalIcon />
-      <Button type="button" onClick={handleOpen} fullWidth>
+      <Button type="button" onClick={handleOpen} fullWidth startIcon={<AirlineSeatReclineNormalIcon />}>
         Add translator
       </Button>
       <Modal

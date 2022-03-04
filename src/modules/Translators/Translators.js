@@ -63,8 +63,7 @@ function Translators() {
             <div className="gallery-menu">
               <Header pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
-                <ListAltIcon />
-                <Button onClick={toggleDrawer("left", true)} fullWidth>
+                <Button onClick={toggleDrawer("left", true)} fullWidth startIcon={<ListAltIcon />}>
                   Show clients
                 </Button>
                 <Drawer

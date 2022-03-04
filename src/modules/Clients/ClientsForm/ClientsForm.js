@@ -47,8 +47,7 @@ export default function ClientsForm(props) {
 
   return (
     <div className={"socials add-client-button middle-button"}>
-      <StarsIcon />
-      <Button type="button" onClick={handleOpen} fullWidth>
+      <Button type="button" onClick={handleOpen} fullWidth startIcon={<StarsIcon />}>
         Add client
       </Button>
       <Modal
