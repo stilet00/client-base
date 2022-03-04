@@ -8,17 +8,17 @@ import {useAuthorizationPage} from "./businessLogic";
 const StyledButton = withStyles({
   root: {
     borderRadius: 3,
-    border: 0,
+    border: "1px solid black",
     color: "black",
     height: 48,
     padding: "0 30px",
-    background:
-      "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(78, 205, 196, 1) 100%)",
+    background: "rgba(255,255,255,0.5)",
     boxShadow: "none",
     letterSpacing: "3px",
     fontWeight: "bold",
+    backdropFilter: "blur(10px)",
     "&:hover": {
-      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)",
+      background: "rgba(78, 205, 196, 1)",
     },
   },
   label: {
@@ -45,7 +45,7 @@ const StyledInput = withStyles({
       borderBottomColor: "black",
     },
     "& .MuiOutlinedInput-root": {
-      background: "#D8E6F3",
+      background: "rgba(255, 255, 255, 0.5)",
       boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
       "& fieldset": {
         borderColor: "black",

@@ -1,8 +1,9 @@
 .footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  margin-top: auto;
   font-size: 7px;
-  color: orange;
+  color: #ffffff;
   letter-spacing: 3px;
 }
 

@@ -95,13 +95,16 @@
   border: 1px solid black;
 }
 .gallery-container .inner-gallery-container .translator-item .clients-list {
-  width: 100%;
+  box-sizing: border-box;
   height: 100%;
+  padding: 5px;
 }
 .gallery-container .inner-gallery-container .translator-item .clients-list li {
   width: 100%;
   text-align: left;
-  border-bottom: 1px dotted black;
+}
+.gallery-container .inner-gallery-container .translator-item .clients-list li p {
+  font-family: sans-serif;
 }
 .gallery-container .inner-gallery-container .translator-item .clients-list li:last-child {
   border-bottom: none;

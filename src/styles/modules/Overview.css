@@ -23,7 +23,7 @@ th, td:first-child {
 
 td {
   width: 50%;
-  background: #D8E6F3;
+  background: rgba(183, 179, 179, 0.5);
 }
 
 th:first-child, td:first-child {
