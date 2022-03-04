@@ -9,7 +9,7 @@ import "../../styles/modules/TaskList.css";
 import SingleTask from "./SingleTask/SingleTask";
 import Form from "./Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import Header from "../../sharedComponents/Header/Header";
+import Menu from "../../sharedComponents/Menu/Menu";
 import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
@@ -35,7 +35,7 @@ function TaskList() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <>
-            <Header />
+            <Menu />
             <div className={"taskList-container animated-box"}>{page}</div>
             <div className="socials button-add-container bottom-button">
               <Form addTask={newTask} />

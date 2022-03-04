@@ -4,7 +4,7 @@ import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../../sharedComponents/Slider/Slider";
 import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
 import moment from "moment";
-import Header from "../../../sharedComponents/Header/Header";
+import Menu from "../../../sharedComponents/Menu/Menu";
 import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
@@ -19,7 +19,7 @@ function Gallery() {
         return isSignedIn ? (
           <div className={"gallery-container"}>
             <div className="gallery-menu">
-              <Header />
+              <Menu />
               <ClientsForm />
               <DiscreteSlider valuetext={valueText} />
               <NameFilter onChange={onNameFilter} nameFilter={nameFilter} />

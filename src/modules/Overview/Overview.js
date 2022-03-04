@@ -1,4 +1,4 @@
-import Header from "../../sharedComponents/Header/Header";
+import Menu from "../../sharedComponents/Menu/Menu";
 import moment from "moment";
 import "../../styles/modules/Overview.css";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
@@ -35,7 +35,7 @@ function Overview() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <>
-            <Header />
+            <Menu />
             <div className={"socials button-add-container middle-button"}>
               <AccessTimeIcon />
               <YearSelect

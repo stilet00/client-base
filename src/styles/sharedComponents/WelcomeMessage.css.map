@@ -1,0 +1,1 @@
+{"version":3,"sourceRoot":"","sources":["../../variables.sass","WelcomeMessage.sass"],"names":[],"mappings":"AAAQ;ACER;EACE;EACA;EACA;EACA;EACA;EACA,ODNW;ECOX;EACA;;AAGE;EACE;;AAEJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,OD1BiB;EC2BjB;;;AAEF;EACE;EACA;EACA;EACA;EACA;;;AAEF;EACE;EACA;EACA;EACA","file":"WelcomeMessage.css"}
