@@ -3,7 +3,7 @@ import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ChartForm from "./ChartForm/ChartForm";
 import Loader from "../../sharedComponents/Loader/Loader";
-import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";

@@ -11,7 +11,7 @@ import Form from "./Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Menu from "../../sharedComponents/Menu/Menu";
 import Loader from "../../sharedComponents/Loader/Loader";
-import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import {useTaskList} from "./businessLogic";

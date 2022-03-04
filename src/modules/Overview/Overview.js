@@ -2,7 +2,7 @@ import Menu from "../../sharedComponents/Menu/Menu";
 import moment from "moment";
 import "../../styles/modules/Overview.css";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
-import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
+import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";

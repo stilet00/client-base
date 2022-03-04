@@ -124,7 +124,7 @@ function AuthorizationPage() {
               open={alertOpen}
               handleOpen={openAlert}
               handleClose={closeAlert}
-              status={true}
+              status={false}
             />
           </div>
         );
