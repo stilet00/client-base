@@ -1,4 +1,4 @@
-import Header from "../../sharedComponents/Header/Header";
+import Menu from "../../sharedComponents/Menu/Menu";
 import Unauthorized from "../../sharedComponents/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Drawer from "@material-ui/core/Drawer";
@@ -61,7 +61,7 @@ function Translators() {
         return isSignedIn ? (
           <div className={"gallery-container"}>
             <div className="gallery-menu">
-              <Header pretty={{ borderBottom: "1px solid #50C878" }} />
+              <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
                 <Button onClick={toggleDrawer("left", true)} fullWidth startIcon={<ListAltIcon />}>
                   Show clients

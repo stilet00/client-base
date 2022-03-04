@@ -16,7 +16,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { FirebaseAuthProvider } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
-import LogoHeader from "./sharedComponents/LogoHeader/LogoHeader";
+import WelcomeMessage from "./sharedComponents/WelcomeMessage/WelcomeMessage";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
 import sun from "../src/images/sun_transparent.png";
@@ -30,7 +30,7 @@ function App() {
           <div className="sun">
             <img src={sun} alt="Sun" width={"150px"} height={"150px"} />
           </div>
-          <LogoHeader />
+          <WelcomeMessage />
           <main>
             <Switch>
               <Route path="/clients">

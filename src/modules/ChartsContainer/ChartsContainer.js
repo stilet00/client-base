@@ -1,4 +1,4 @@
-import Header from "../../sharedComponents/Header/Header";
+import Menu from "../../sharedComponents/Menu/Menu";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ChartForm from "./ChartForm/ChartForm";
@@ -34,7 +34,7 @@ function ChartsContainer() {
       {({ isSignedIn }) => {
         return isSignedIn ? (
           <>
-            <Header />
+            <Menu />
             <div className={"socials button-add-container middle-button"}>
               <AccessTimeIcon />
               <YearSelect

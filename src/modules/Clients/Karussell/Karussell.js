@@ -2,7 +2,7 @@ import "../../../styles/modules/karusell.css";
 import { CLIENTS } from "../../../database/database";
 import KarusellInner from "./karusell-inner/karusell-inner";
 import arrow from "../../../images/arrow.png";
-import Header from "../../../sharedComponents/Header/Header";
+import Menu from "../../../sharedComponents/Menu/Menu";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Unauthorized from "../../../sharedComponents/Unauthorized/Unauthorized";
 import {useKarusell} from "../businessLogic";
@@ -20,7 +20,7 @@ function Karussell() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <div className={"karussell-container"}>
-            <Header />
+            <Menu />
             <KarusellInner
               data={CLIENTS[currentStep]}
               animation={animationClass}

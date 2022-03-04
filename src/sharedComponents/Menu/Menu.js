@@ -11,7 +11,7 @@ import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { useHistory } from "react-router-dom";
-import "../../styles/sharedComponents/Header.css";
+import "../../styles/sharedComponents/Menu.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Header() {
+export default function Menu() {
   const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState({
