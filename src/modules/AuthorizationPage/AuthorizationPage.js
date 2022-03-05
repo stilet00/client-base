@@ -18,7 +18,7 @@ const StyledButton = withStyles({
     fontWeight: "bold",
     backdropFilter: "blur(10px)",
     "&:hover": {
-      background: "rgba(78, 205, 196, 1)",
+      background: "rgba(255,255,255,1)",
     },
   },
   label: {

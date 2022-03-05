@@ -4,7 +4,7 @@ h2 {
   display: flex;
   align-items: center;
   letter-spacing: 0.2rem;
-  color: #4ecdc4;
+  color: #797272;
 }
 
 h3 {
@@ -27,7 +27,7 @@ h3 {
   position: absolute;
   top: 39%;
   border: 1px solid lightblue;
-  background-color: #4ecdc4;
+  background-color: white;
   border-radius: 5px;
   outline: none;
   color: white;
@@ -77,8 +77,8 @@ h3 {
   padding: 5px;
   width: 90%;
   height: 30px;
-  border: 1px solid #4ecdc4;
-  background-color: rgba(78, 205, 196, 0.7);
+  border: 1px solid white;
+  background-color: rgba(255, 255, 255, 0.7);
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -98,7 +98,7 @@ h3 {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: none;
-  background-color: rgba(78, 205, 196, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .main-photo-container {
@@ -114,7 +114,7 @@ h3 {
   width: 100%;
   border-radius: 10px;
   margin-bottom: 0;
-  border: 2px solid #4ecdc4;
+  border: 2px solid white;
 }
 
 /*forward animation */

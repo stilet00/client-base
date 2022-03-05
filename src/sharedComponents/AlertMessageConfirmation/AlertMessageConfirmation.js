@@ -27,7 +27,7 @@ export default function AlertMessageConfirmation({
       <Modal open={open} onClose={handleClose} className={classes.modal}>
         <div
           className={
-            status ? "message-container green-box" : "message-container red-box"
+            status ? "message-container approve-box" : "message-container decline-box"
           }
         >
           <h2 className={status ? "green-text" : "red-text"}>{mainText}</h2>
@@ -40,7 +40,7 @@ export default function AlertMessageConfirmation({
             >
               DELETE
             </Button>
-            <Button variant={"outlined"} color={"primary"} onClick={onCancel}>
+            <Button variant={"outlined"} onClick={onCancel}>
               CANCEL
             </Button>
           </div>

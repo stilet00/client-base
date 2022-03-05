@@ -12,12 +12,12 @@
   max-height: 300px;
   margin: auto;
   padding: 20px;
-  border: 2px solid orange;
+  border: 2px solid white;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
 }
 .unauthorized h1 {
-  color: orange;
+  color: #000000;
   text-shadow: none;
 }
 .unauthorized p {
@@ -28,7 +28,7 @@ a {
   text-decoration: none;
 }
 a:visited {
-  color: #4ecdc4;
+  color: white;
 }
 
 /*# sourceMappingURL=Unauthorized.css.map */

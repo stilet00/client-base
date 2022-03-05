@@ -60,7 +60,7 @@ function Translators() {
       {({ isSignedIn, user, providerId }) => {
         return isSignedIn ? (
           <div className={"gallery-container"}>
-            <div className="gallery-menu">
+            <div className="gallery-menu gallery-menu_no-border">
               <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
                 <Button onClick={toggleDrawer("left", true)} fullWidth startIcon={<ListAltIcon />}>

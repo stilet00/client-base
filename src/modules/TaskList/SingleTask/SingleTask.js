@@ -49,7 +49,7 @@ function SingleTask({
         <ColoredButton
           variant={"outlined"}
           onClick={() => onDelete(_id)}
-          style={completed ? { backgroundColor: "rgb(255,145,0)" } : null}
+          style={completed ? { backgroundColor: "rgba(255,255,255,1)" } : null}
         >
           <DeleteForeverIcon />
         </ColoredButton>

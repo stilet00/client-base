@@ -9,9 +9,15 @@
   border: 1px solid white;
   border-radius: 10px;
 }
+.form-container_task-form {
+  height: 250px;
+}
 
 .modal-wrapper {
   width: 100%;
+}
+.modal-wrapper:hover {
+  background: #b2b2b2;
 }
 
 .chart-form {

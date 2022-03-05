@@ -23,17 +23,7 @@
 }
 
 .green-box {
-  border-color: #4ecdc4;
-}
-
-.red-box {
-  border-color: red;
-}
-.red-box .green-text {
-  color: #4ecdc4;
-}
-.red-box .red-text {
-  color: red;
+  border-color: white;
 }
 
 .confirmation-buttons {

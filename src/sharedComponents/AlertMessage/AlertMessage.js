@@ -24,10 +24,10 @@ export default function AlertMessage({
       <Modal open={open} onClose={handleClose} className={classes.modal}>
         <div
           className={
-            status ? "message-container green-box" : "message-container red-box"
+            status ? "message-container approve-box" : "message-container decline-box"
           }
         >
-          <h2 className={status ? "green-text" : "red-text"}>{mainText}</h2>
+          <h2>{mainText}</h2>
           {additionalText ? <p>{additionalText}</p> : null}
         </div>
       </Modal>

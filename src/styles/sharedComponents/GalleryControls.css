@@ -4,11 +4,11 @@
   width: 100%;
   box-sizing: border-box;
   padding: 5px;
-  border: 1px solid #4ecdc4;
+  border: 1px solid white;
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  background: rgba(78, 205, 196, 0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .filter-container {
@@ -16,11 +16,11 @@
   width: 100%;
   box-sizing: border-box;
   padding: 5px;
-  border: 1px solid #4ecdc4;
+  border: 1px solid white;
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  background: rgba(78, 205, 196, 0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /*# sourceMappingURL=GalleryControls.css.map */
