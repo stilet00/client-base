@@ -12,7 +12,7 @@ const StyledButton = withStyles({
     height: 48,
     padding: "0 30px",
     background:
-      "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(78, 205, 196, 1) 100%)",
+      "linear-gradient(90deg, rgba(121,114,114,1) 0%, rgba(0,0,0,1) 100%)",
     boxShadow: "none",
     letterSpacing: "3px",
     fontWeight: "bold",

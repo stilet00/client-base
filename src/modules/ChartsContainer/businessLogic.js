@@ -130,7 +130,7 @@ export const useSingleChart = ({ graph, index, deleteGraph, onValueSubmit }) => 
         datasets: [
             {
                 fill: true,
-                backgroundColor: ["rgba(78, 205, 196, 0.7)"],
+                backgroundColor: ["rgba(255,255,255,0.7)"],
                 borderColor: ["#ffffff"],
                 borderWidth: 0.5,
                 data: graph.values,

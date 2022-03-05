@@ -50,7 +50,7 @@ export default function Form({ addTask }) {
         }}
       >
         <Fade in={open}>
-          <div className={"form-container"}>
+          <div className={"form-container form-container_task-form"}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();

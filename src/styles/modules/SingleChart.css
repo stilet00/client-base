@@ -5,7 +5,7 @@ p {
 
 .green-line {
   width: 95%;
-  border-top: 2px solid #4ecdc4;
+  border-top: 2px solid white;
 }
 
 .total-text {
@@ -33,7 +33,7 @@ p {
   align-items: center;
   width: 62%;
   margin: 0 auto;
-  border: 2px solid #4ecdc4;
+  border: 2px solid white;
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
