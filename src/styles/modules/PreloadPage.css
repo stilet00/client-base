@@ -1,0 +1,20 @@
+.preload-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+}
+.preload-page::before {
+  content: "";
+  position: absolute;
+  width: 98%;
+  height: 98%;
+  border-radius: 10px;
+  filter: blur(10px);
+  background: blue;
+  opacity: 0.2;
+}
+
+/*# sourceMappingURL=PreloadPage.css.map */
