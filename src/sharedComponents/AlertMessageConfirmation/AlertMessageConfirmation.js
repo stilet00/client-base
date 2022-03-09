@@ -27,7 +27,9 @@ export default function AlertMessageConfirmation({
       <Modal open={open} onClose={handleClose} className={classes.modal}>
         <div
           className={
-            status ? "message-container approve-box" : "message-container decline-box"
+            status
+              ? "message-container approve-box"
+              : "message-container decline-box"
           }
         >
           <h2 className={status ? "green-text" : "red-text"}>{mainText}</h2>

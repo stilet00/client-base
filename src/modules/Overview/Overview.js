@@ -6,18 +6,20 @@ import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
-import {useOverview} from "./businessLogic";
+import { useOverview } from "./businessLogic";
 
 function Overview() {
-  const { progressStatus,
-          handleChange,
-          selectedYear,
-          arrayOfYears,
-          bestMonth,
-          clients,
-          progressValue,
-          translators,
-          yearSum } = useOverview();
+  const {
+    progressStatus,
+    handleChange,
+    selectedYear,
+    arrayOfYears,
+    bestMonth,
+    clients,
+    progressValue,
+    translators,
+    yearSum,
+  } = useOverview();
 
   let monthProgressPage =
     progressValue || progressValue === 0 ? (
@@ -45,7 +47,9 @@ function Overview() {
               />
             </div>
             <div
-              className={"taskList-container chart-container table-container  animated-box"}
+              className={
+                "taskList-container chart-container table-container  animated-box"
+              }
             >
               <table>
                 <thead>

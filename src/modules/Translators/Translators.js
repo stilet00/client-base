@@ -15,28 +15,30 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-import {useTranslators} from "./businessLogic";
+import { useTranslators } from "./businessLogic";
 
 function Translators() {
-  const { translators,
-          clients,
-          dragLeaveHandler,
-          dragOverHandler,
-          loading,
-          onBoardDrop,
-          onTranslatorDelete,
-          state,
-          toggleDrawer,
-          openAlert,
-          closeAlert,
-          alertOpen,
-          clientsFormSubmit,
-          deleteClient,
-          dragDropHandler,
-          dragEndHandler,
-          dragStartHandler,
-          message,
-          translatorsFormSubmit} = useTranslators();
+  const {
+    translators,
+    clients,
+    dragLeaveHandler,
+    dragOverHandler,
+    loading,
+    onBoardDrop,
+    onTranslatorDelete,
+    state,
+    toggleDrawer,
+    openAlert,
+    closeAlert,
+    alertOpen,
+    clientsFormSubmit,
+    deleteClient,
+    dragDropHandler,
+    dragEndHandler,
+    dragStartHandler,
+    message,
+    translatorsFormSubmit,
+  } = useTranslators();
 
   const page =
     translators.length > 0 ? (
@@ -63,7 +65,11 @@ function Translators() {
             <div className="gallery-menu gallery-menu_no-border">
               <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
               <div className={"socials button-add-container middle-button"}>
-                <Button onClick={toggleDrawer("left", true)} fullWidth startIcon={<ListAltIcon />}>
+                <Button
+                  onClick={toggleDrawer("left", true)}
+                  fullWidth
+                  startIcon={<ListAltIcon />}
+                >
                   Show clients
                 </Button>
                 <Drawer
@@ -107,7 +113,11 @@ function Translators() {
               <ClientsForm onFormSubmit={clientsFormSubmit} />
               <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
             </div>
-            <div className={"inner-gallery-container translators-container animated-box"}>
+            <div
+              className={
+                "inner-gallery-container translators-container animated-box"
+              }
+            >
               <h3>List of translators:</h3>
               {page}
             </div>

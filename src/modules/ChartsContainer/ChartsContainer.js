@@ -9,25 +9,26 @@ import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 import moment from "moment";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
-import {useChartsContainer} from "./businessLogic";
+import { useChartsContainer } from "./businessLogic";
 function ChartsContainer() {
-  const { arrayOfYears,
-          closeAlert,
-          alertOpen,
-          alertStatusConfirmation,
-          cancelDeleteGraphClicked,
-          closeAlertConfirmationNoReload,
-          deletedMonth,
-          deleteGraph,
-          deleteGraphClicked,
-          emptyStatus,
-          handleChange,
-          months,
-          onMonthSubmit,
-          onValueSubmit,
-          openAlertConfirmation,
-          selectedYear
-          } = useChartsContainer();
+  const {
+    arrayOfYears,
+    closeAlert,
+    alertOpen,
+    alertStatusConfirmation,
+    cancelDeleteGraphClicked,
+    closeAlertConfirmationNoReload,
+    deletedMonth,
+    deleteGraph,
+    deleteGraphClicked,
+    emptyStatus,
+    handleChange,
+    months,
+    onMonthSubmit,
+    onValueSubmit,
+    openAlertConfirmation,
+    selectedYear,
+  } = useChartsContainer();
 
   return (
     <FirebaseAuthConsumer>

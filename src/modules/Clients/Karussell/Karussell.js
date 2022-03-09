@@ -5,15 +5,17 @@ import arrow from "../../../images/arrow.png";
 import Menu from "../../../sharedComponents/Menu/Menu";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import Unauthorized from "../../AuthorizationPage/Unauthorized/Unauthorized";
-import {useKarusell} from "../businessLogic";
+import { useKarusell } from "../businessLogic";
 
 function Karussell() {
-  const { currentStep,
-          animationClass,
-          goNext,
-          goPrevious,
-          imageLoaded,
-          setImageLoaded } = useKarusell();
+  const {
+    currentStep,
+    animationClass,
+    goNext,
+    goPrevious,
+    imageLoaded,
+    setImageLoaded,
+  } = useKarusell();
 
   return (
     <FirebaseAuthConsumer>

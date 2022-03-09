@@ -5,7 +5,6 @@ import onlyIcon from "../../../../images/onlyfans-icon.png";
 import Loader from "../../../../sharedComponents/Loader/Loader";
 
 function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
-
   const fans = data.onlyFans ? (
     <a href={data.onlyFans} target={"_blank"} rel="noreferrer">
       <img src={onlyIcon} width={"20px"} height={"20px"} alt={"onlyfans"}></img>
@@ -14,12 +13,7 @@ function KarusellInner({ data, animation, setImageLoaded, imageLoaded }) {
 
   const insta = data.instagram ? (
     <a href={data.instagram} target={"_blank"} rel="noreferrer">
-      <img
-        src={instaIcon}
-        width={"20px"}
-        height={"20px"}
-        alt={"instagram"}
-      />
+      <img src={instaIcon} width={"20px"} height={"20px"} alt={"instagram"} />
     </a>
   ) : null;
 

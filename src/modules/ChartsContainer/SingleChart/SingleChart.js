@@ -3,15 +3,11 @@ import "../../../styles/modules/SingleChart.css";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ChartDateForm from "../ChartDateForm/ChartDateForm";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
-import {useSingleChart} from "../businessLogic";
+import { useSingleChart } from "../businessLogic";
 
 function SingleChart(props) {
-  const { onChartChange,
-          deleteGraph,
-          data,
-          graph,
-          index,
-          options } = useSingleChart(props);
+  const { onChartChange, deleteGraph, data, graph, index, options } =
+    useSingleChart(props);
 
   const chartStyle =
     index % 2 ? (

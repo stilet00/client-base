@@ -9,7 +9,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/ClientsForm.css";
 import StarsIcon from "@material-ui/icons/Stars";
-import {useClientsForm} from "../businessLogic";
+import { useClientsForm } from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -37,17 +37,24 @@ const CssTextField = withStyles({
 export default function ClientsForm(props) {
   const classes = useStyles();
 
-  const { handleClose,
-          open,
-          clearClient,
-          client,
-          handleOpen,
-          onFormSubmit,
-          handleChange } = useClientsForm(props);
+  const {
+    handleClose,
+    open,
+    clearClient,
+    client,
+    handleOpen,
+    onFormSubmit,
+    handleChange,
+  } = useClientsForm(props);
 
   return (
     <div className={"socials add-client-button middle-button"}>
-      <Button type="button" onClick={handleOpen} fullWidth startIcon={<StarsIcon />}>
+      <Button
+        type="button"
+        onClick={handleOpen}
+        fullWidth
+        startIcon={<StarsIcon />}
+      >
         Add client
       </Button>
       <Modal

@@ -8,7 +8,7 @@ import Menu from "../../../sharedComponents/Menu/Menu";
 import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import ClientsForm from "../ClientsForm/ClientsForm";
-import {useGallery} from "../businessLogic";
+import { useGallery } from "../businessLogic";
 
 function Gallery() {
   const { valueText, ageFilter, nameFilter, onNameFilter } = useGallery();
