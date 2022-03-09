@@ -14,7 +14,7 @@ import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import {useChartDateForm} from "../businessLogic";
+import { useChartDateForm } from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -42,15 +42,17 @@ const CssTextField = withStyles({
 export default function ChartDateForm(props) {
   const classes = useStyles();
 
-  const { monthData,
-          handleOpen,
-          handleClose,
-          open,
-          handleChange,
-          onSubmit,
-          onInputChange,
-          selectedDate,
-          value } = useChartDateForm(props);
+  const {
+    monthData,
+    handleOpen,
+    handleClose,
+    open,
+    handleChange,
+    onSubmit,
+    onInputChange,
+    selectedDate,
+    value,
+  } = useChartDateForm(props);
 
   return (
     <div className={"date-wrapper"}>
@@ -71,9 +73,7 @@ export default function ChartDateForm(props) {
       >
         <Fade in={open}>
           <div className={"form-container chart-date-form"}>
-            <form
-              onSubmit={onSubmit}
-            >
+            <form onSubmit={onSubmit}>
               <h2 id="transition-modal-title">Enter parameters:</h2>
               <CssTextField
                 value={monthData.title}

@@ -3,7 +3,7 @@ import { Button, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-import {useAuthorizationPage} from "./businessLogic";
+import { useAuthorizationPage } from "./businessLogic";
 
 const StyledButton = withStyles({
   root: {
@@ -39,7 +39,7 @@ const StyledInput = withStyles({
       border: "1px solid black",
       borderRadius: "5px",
       color: "black",
-      backgroundColor: "rgba(255, 255, 255, 1)"
+      backgroundColor: "rgba(255, 255, 255, 1)",
     },
     "& .MuiInput-underline:after": {
       borderBottomColor: "black",
@@ -62,16 +62,18 @@ const StyledInput = withStyles({
 })(TextField);
 
 function AuthorizationPage() {
-  const { history,
-          onPasswordChange,
-          alertOpen,
-          closeAlert,
-          email,
-          error,
-          onEmailChange,
-          onSubmit,
-          openAlert,
-          password } = useAuthorizationPage();
+  const {
+    history,
+    onPasswordChange,
+    alertOpen,
+    closeAlert,
+    email,
+    error,
+    onEmailChange,
+    onSubmit,
+    openAlert,
+    password,
+  } = useAuthorizationPage();
 
   return (
     <FirebaseAuthConsumer>

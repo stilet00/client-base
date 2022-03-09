@@ -12,7 +12,7 @@ import FormControl from "@material-ui/core/FormControl";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SumArray from "../../../sharedComponents/SumArray/SumArray";
-import {useChartForm} from "../businessLogic";
+import { useChartForm } from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -37,17 +37,19 @@ const CssTextField = withStyles({
 })(TextField);
 
 export default function ChartForm(props) {
-  const { handleOpen,
-          months,
-          handleChange,
-          getTotalDays,
-          handleClose,
-          onFormSubmit,
-          open,
-          onValuesSubmit,
-          selectedMonth,
-          valuesArray,
-          year } = useChartForm(props);
+  const {
+    handleOpen,
+    months,
+    handleChange,
+    getTotalDays,
+    handleClose,
+    onFormSubmit,
+    open,
+    onValuesSubmit,
+    selectedMonth,
+    valuesArray,
+    year,
+  } = useChartForm(props);
 
   const classes = useStyles();
 

@@ -1,10 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  addTask,
-  changeTodoStatus,
-  getTasks,
-  removeTask,
-} from "../../services/taskListServices/services";
+import React from "react";
 import "../../styles/modules/TaskList.css";
 import SingleTask from "./SingleTask/SingleTask";
 import Form from "./Form/Form";
@@ -14,9 +8,17 @@ import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-import {useTaskList} from "./businessLogic";
+import { useTaskList } from "./businessLogic";
 function TaskList() {
-  const { tasks, alertOpen, closeAlert, openAlert, deleteTask, newTask, toggleTodo } = useTaskList();
+  const {
+    tasks,
+    alertOpen,
+    closeAlert,
+    openAlert,
+    deleteTask,
+    newTask,
+    toggleTodo,
+  } = useTaskList();
 
   const page = !tasks.length ? (
     <Loader />

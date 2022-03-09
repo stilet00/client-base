@@ -8,7 +8,6 @@ body {
   position: relative;
   font-family: inherit;
   text-align: center;
-  background: url("images/main-background.png");
   background-size: cover;
   min-height: 100vh;
   height: 100%;

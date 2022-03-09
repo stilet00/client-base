@@ -117,7 +117,11 @@ export default function Menu() {
 
   return (
     <div className={"socials upper-menu"}>
-      <Button onClick={toggleDrawer("top", true)} fullWidth startIcon={<MenuIcon />}>
+      <Button
+        onClick={toggleDrawer("top", true)}
+        fullWidth
+        startIcon={<MenuIcon />}
+      >
         Menu
       </Button>
       <Drawer
