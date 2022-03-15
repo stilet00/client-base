@@ -14,7 +14,7 @@ import TaskList from "./modules/TaskList/TaskList";
 import ChartsContainer from "./modules/ChartsContainer/ChartsContainer";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { FirebaseAuthProvider } from "@react-firebase/auth";
+import { FirebaseAuthProvider, FirebaseAuthConsumer } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
 import WelcomeMessage from "./sharedComponents/WelcomeMessage/WelcomeMessage";
 import Translators from "./modules/Translators/Translators";
@@ -61,7 +61,13 @@ function App() {
               </Route>
               <Redirect from="/chart/*" to="/chart" />
               <Route path="/chart">
-                <ChartsContainer />
+                <FirebaseAuthConsumer>
+                  {
+                    ({ user  }) => {
+                      return <ChartsContainer user={user}/>
+                    }
+                  }
+                </FirebaseAuthConsumer>
               </Route>
               <Route path="/" exact>
                 <AuthorizationPage />
@@ -76,7 +82,7 @@ function App() {
           onLoadBg={() => {
             setIsLoaded(false);
           }}
-          onError={(err) => console.log("error", err)}
+            onError={(err) => console.log("error", err)}
         />
       </FirebaseAuthProvider>
     </Router>

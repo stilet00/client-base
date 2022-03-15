@@ -4,13 +4,12 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ChartForm from "./ChartForm/ChartForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
-import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 import moment from "moment";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 import { useChartsContainer } from "./businessLogic";
-function ChartsContainer() {
+function ChartsContainer({ user }) {
   const {
     arrayOfYears,
     closeAlert,
@@ -28,12 +27,9 @@ function ChartsContainer() {
     onValueSubmit,
     openAlertConfirmation,
     selectedYear,
-  } = useChartsContainer();
+  } = useChartsContainer(user);
 
-  return (
-    <FirebaseAuthConsumer>
-      {({ isSignedIn }) => {
-        return isSignedIn ? (
+  return user ? (
           <>
             <Menu />
             <div className={"socials button-add-container middle-button"}>
@@ -89,12 +85,7 @@ function ChartsContainer() {
               onConfirm={deleteGraphClicked}
             />
           </>
-        ) : (
-          <Unauthorized />
-        );
-      }}
-    </FirebaseAuthConsumer>
-  );
+  ) : <Unauthorized />
 }
 
 export default ChartsContainer;
