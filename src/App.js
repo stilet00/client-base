@@ -1,6 +1,6 @@
 import "./App.css";
 import Karussell from "./modules/Clients/Karussell/Karussell";
-import React, { useState } from "react";
+import React, {useCallback, useState} from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -30,6 +30,10 @@ import BackgroundImageOnLoad from "background-image-on-load";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(true);
+
+  const stopLoading = useCallback(() => {
+    setIsLoaded(false);
+  })
 
   return (
     <Router>
@@ -86,7 +90,7 @@ function App() {
         <BackgroundImageOnLoad
           src={background}
           onLoadBg={() => {
-            setIsLoaded(false);
+            setTimeout(stopLoading, 1000);
           }}
           onError={(err) => console.log("error", err)}
         />
