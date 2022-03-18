@@ -7,19 +7,16 @@
   border-radius: 0px;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-  max-width: 326px;
-}
+  max-width: 326px; }
 
 .fallDown-menu {
   background: url("/src/images/menu-background.png");
   background-size: cover;
   background-repeat: repeat;
-  will-change: auto;
-}
+  will-change: auto; }
 
 .MuiDrawer-paper {
   border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
+  border-bottom-left-radius: 10px; }
 
 /*# sourceMappingURL=Menu.css.map */

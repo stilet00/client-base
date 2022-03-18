@@ -13,23 +13,18 @@
   background-color: white;
   border: 1px solid;
   border-radius: 10px;
-  text-align: center;
-}
-.message-container h2 {
-  text-shadow: none;
-}
-.message-container p {
-  color: #000000;
-}
+  text-align: center; }
+  .message-container h2 {
+    text-shadow: none; }
+  .message-container p {
+    color: #000000; }
 
 .green-box {
-  border-color: white;
-}
+  border-color: white; }
 
 .confirmation-buttons {
   width: 90%;
   display: flex;
-  justify-content: space-between;
-}
+  justify-content: space-between; }
 
 /*# sourceMappingURL=AlertMessageConfirmation.css.map */
