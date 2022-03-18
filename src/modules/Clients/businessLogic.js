@@ -17,6 +17,7 @@ export const useKarusell = () => {
       ? setCurrentStep(currentStep + 1)
       : setCurrentStep(0);
   }
+
   function goPrevious() {
     setImageLoaded("none");
     setAnimationClass("back");

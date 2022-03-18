@@ -4,7 +4,7 @@ import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
 
-export const useOverview = () => {
+export const useOverview = (user) => {
   const [clients, setClients] = useState([]);
 
   const [translators, setTranslators] = useState([]);
@@ -26,37 +26,35 @@ export const useOverview = () => {
   }, []);
 
   useEffect(() => {
-    getBalance().then((res) => {
-      if (res.status === 200) {
-        const yearList = res.data.map((item) => item.year);
-        setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-        let byYearFilteredArray = res.data.filter(
-          (item) => item.year === selectedYear
-        );
-        let sumSortedArray =
-          getArrayWithSums(byYearFilteredArray).sort(compareSums);
-        setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-        getMonthProgress(byYearFilteredArray);
-        getYearSum(byYearFilteredArray);
-      }
-    });
+    if (user) {
+      getBalance().then((res) => {
+        if (res.status === 200) {
+          const yearList = res.data.map((item) => item.year);
+          setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
+          let byYearFilteredArray = res.data.filter(
+            (item) => item.year === selectedYear
+          );
+          let sumSortedArray =
+            getArrayWithSums(byYearFilteredArray).sort(compareSums);
+          setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
+          getMonthProgress(byYearFilteredArray);
+          getYearSum(byYearFilteredArray);
+        }
+      });
+
+      getClients().then((res) => {
+        if (res.status === 200) {
+          setClients(res.data);
+        }
+      });
+
+      getTranslators().then((res) => {
+        if (res.status === 200) {
+          setTranslators(res.data);
+        }
+      });
+    }
   }, [selectedYear]);
-
-  useEffect(() => {
-    getClients().then((res) => {
-      if (res.status === 200) {
-        setClients(res.data);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getTranslators().then((res) => {
-      if (res.status === 200) {
-        setTranslators(res.data);
-      }
-    });
-  }, []);
 
   function getArrayWithSums(array) {
     return array.map((item) => {

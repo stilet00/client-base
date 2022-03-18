@@ -10,7 +10,7 @@ import {
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import useModal from "../../sharedHooks/useModal";
 
-export const useChartsContainer = () => {
+export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);
 
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
@@ -30,20 +30,22 @@ export const useChartsContainer = () => {
   } = useAlertConfirmation();
 
   useEffect(() => {
-    getBalance().then((res) => {
-      if (res.status === 200) {
-        const yearList = res.data.map((item) => item.year);
-        setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-        let filteredArray = res.data
-          .filter((item) => item.year === selectedYear)
-          .sort(compareNumeric)
-          .reverse();
-        setMonths(filteredArray);
-        setEmptyStatus(filteredArray.length <= 0);
-      } else {
-        console.log(res.status);
-      }
-    });
+    if (user) {
+      getBalance().then((res) => {
+        if (res.status === 200) {
+          const yearList = res.data.map((item) => item.year);
+          setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
+          let filteredArray = res.data
+            .filter((item) => item.year === selectedYear)
+            .sort(compareNumeric)
+            .reverse();
+          setMonths(filteredArray);
+          setEmptyStatus(filteredArray.length <= 0);
+        } else {
+          console.log(res.status);
+        }
+      });
+    }
   }, [selectedYear]);
 
   const handleChange = useCallback((e) => {
