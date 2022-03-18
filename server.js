@@ -38,6 +38,7 @@ app.get(tasksURL + "get", (req, res) => {
     res.send(docs);
   });
 });
+
 app.delete(tasksURL + ":id", (req, res) => {
   collectionTasks.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
     if (err) {
@@ -47,6 +48,7 @@ app.delete(tasksURL + ":id", (req, res) => {
     res.sendStatus(200);
   });
 });
+
 app.post(tasksURL + "add", (req, res) => {
   if (req.body.taskName) {
     let task = { ...req.body };
@@ -60,6 +62,7 @@ app.post(tasksURL + "add", (req, res) => {
     });
   }
 });
+
 app.put(tasksURL + ":id", (req, res) => {
   collectionTasks.updateOne(
     { _id: ObjectId(req.params.id) },
@@ -89,6 +92,7 @@ app.get(balanceURL + "get", (req, res) => {
     res.send(docs);
   });
 });
+
 app.post(balanceURL + "add", (req, res) => {
   if (req.body) {
     let month = { ...req.body };
@@ -102,6 +106,7 @@ app.post(balanceURL + "add", (req, res) => {
     });
   }
 });
+
 app.delete(balanceURL + ":id", (req, res) => {
   collectionBalance.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
     if (err) {
@@ -111,6 +116,7 @@ app.delete(balanceURL + ":id", (req, res) => {
     res.sendStatus(200);
   });
 });
+
 app.put(balanceURL + ":id", (req, res) => {
   collectionBalance.updateOne(
     { _id: ObjectId(req.params.id) },

@@ -8,7 +8,7 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 import { useOverview } from "./businessLogic";
 
-function Overview() {
+function Overview({ user }) {
   const {
     progressStatus,
     handleChange,
@@ -19,7 +19,7 @@ function Overview() {
     progressValue,
     translators,
     yearSum,
-  } = useOverview();
+  } = useOverview(user);
 
   let monthProgressPage =
     progressValue || progressValue === 0 ? (

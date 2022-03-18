@@ -13,7 +13,7 @@ import {
   removeClient,
 } from "../../services/clientsServices/services";
 
-export const useTranslators = () => {
+export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
 
   const [clients, setClients] = useState([]);
@@ -33,23 +33,25 @@ export const useTranslators = () => {
   useEffect(() => {
     setLoading(true);
 
-    getTranslators().then((res) => {
-      if (res.status === 200) {
-        setLoading(false);
-        setTranslators(res.data);
-      } else {
-        console.log("No translators");
-      }
-    });
+    if (user) {
+      getTranslators().then((res) => {
+        if (res.status === 200) {
+          setLoading(false);
+          setTranslators(res.data);
+        } else {
+          console.log("No translators");
+        }
+      });
 
-    getClients().then((res) => {
-      if (res.status === 200) {
-        setClients(res.data);
-        console.log(res.data);
-      } else {
-        console.log("No clients");
-      }
-    });
+      getClients().then((res) => {
+        if (res.status === 200) {
+          setClients(res.data);
+          console.log(res.data);
+        } else {
+          console.log("No clients");
+        }
+      });
+    }
   }, []);
 
   const showAlertMessage = useCallback(

@@ -14,7 +14,10 @@ import TaskList from "./modules/TaskList/TaskList";
 import ChartsContainer from "./modules/ChartsContainer/ChartsContainer";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { FirebaseAuthProvider, FirebaseAuthConsumer } from "@react-firebase/auth";
+import {
+  FirebaseAuthProvider,
+  FirebaseAuthConsumer,
+} from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
 import WelcomeMessage from "./sharedComponents/WelcomeMessage/WelcomeMessage";
 import Translators from "./modules/Translators/Translators";
@@ -41,39 +44,42 @@ function App() {
           </div>
           <WelcomeMessage />
           <main>
-            <Switch>
-              <Route path="/clients">
-                <Media
-                  query="(max-width: 811px)"
-                  render={() => <Karussell />}
-                />
-                <Media query="(min-width: 812px)" render={() => <Gallery />} />
-              </Route>
-              <Redirect from="/overview/*" to="/overview" />
-              <Route path="/overview">
-                <Overview />
-              </Route>
-              <Route path="/tasks/">
-                <TaskList />
-              </Route>
-              <Route path="/translators/">
-                <Translators />
-              </Route>
-              <Redirect from="/chart/*" to="/chart" />
-              <Route path="/chart">
-                <FirebaseAuthConsumer>
-                  {
-                    ({ user  }) => {
-                      return <ChartsContainer user={user}/>
-                    }
-                  }
-                </FirebaseAuthConsumer>
-              </Route>
-              <Route path="/" exact>
-                <AuthorizationPage />
-              </Route>
-              <Redirect from="/*" to="/" />
-            </Switch>
+            <FirebaseAuthConsumer>
+              {({ user }) => {
+                return (
+                  <Switch>
+                    <Route path="/clients">
+                      <Media
+                        query="(max-width: 811px)"
+                        render={() => <Karussell user={user} />}
+                      />
+                      <Media
+                        query="(min-width: 812px)"
+                        render={() => <Gallery user={user} />}
+                      />
+                    </Route>
+                    <Redirect from="/overview/*" to="/overview" />
+                    <Route path="/overview">
+                      <Overview user={user} />
+                    </Route>
+                    <Route path="/tasks/">
+                      <TaskList user={user} />
+                    </Route>
+                    <Route path="/translators/">
+                      <Translators user={user} />
+                    </Route>
+                    <Redirect from="/chart/*" to="/chart" />
+                    <Route path="/chart">
+                      <ChartsContainer user={user} />
+                    </Route>
+                    <Route path="/" exact>
+                      <AuthorizationPage />
+                    </Route>
+                    <Redirect from="/*" to="/" />
+                  </Switch>
+                );
+              }}
+            </FirebaseAuthConsumer>
           </main>
           <Footer />
         </div>
@@ -82,7 +88,7 @@ function App() {
           onLoadBg={() => {
             setIsLoaded(false);
           }}
-            onError={(err) => console.log("error", err)}
+          onError={(err) => console.log("error", err)}
         />
       </FirebaseAuthProvider>
     </Router>

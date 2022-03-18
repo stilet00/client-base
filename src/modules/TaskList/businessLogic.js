@@ -8,13 +8,15 @@ import {
 } from "../../services/taskListServices/services";
 import moment from "moment";
 
-export const useTaskList = () => {
+export const useTaskList = (user) => {
   const [tasks, setTasks] = useState([]);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
   useEffect(() => {
-    getTasks().then((res) => setTasks(res.data));
+    if (user) {
+      getTasks().then((res) => setTasks(res.data));
+    }
   }, []);
 
   const newTask = useCallback(
@@ -25,6 +27,7 @@ export const useTaskList = () => {
           completed: false,
           created: moment().format("MMMM Do YYYY, h:mm:ss"),
         };
+
         addTask(task).then((res) => {
           let newTask = { ...task, _id: res.data };
           if (res.status === 200) {

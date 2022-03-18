@@ -36,9 +36,9 @@ export const useChartsContainer = (user) => {
           const yearList = res.data.map((item) => item.year);
           setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
           let filteredArray = res.data
-              .filter((item) => item.year === selectedYear)
-              .sort(compareNumeric)
-              .reverse();
+            .filter((item) => item.year === selectedYear)
+            .sort(compareNumeric)
+            .reverse();
           setMonths(filteredArray);
           setEmptyStatus(filteredArray.length <= 0);
         } else {
