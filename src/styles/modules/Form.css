@@ -7,18 +7,14 @@
   padding: 20px;
   background-color: white;
   border: 1px solid white;
-  border-radius: 10px;
-}
-.form-container_task-form {
-  height: 250px;
-}
+  border-radius: 10px; }
+  .form-container_task-form {
+    height: 250px; }
 
 .modal-wrapper {
-  width: 100%;
-}
-.modal-wrapper:hover {
-  background: #b2b2b2;
-}
+  width: 100%; }
+  .modal-wrapper:hover {
+    background: #b2b2b2; }
 
 .chart-form {
   width: 400px;
@@ -27,12 +23,10 @@
   padding: 20px;
   background-color: white;
   border: 1px solid white;
-  border-radius: 10px;
-}
+  border-radius: 10px; }
 
 .chart-date-form {
-  height: 350px;
-}
+  height: 350px; }
 
 .year-select-menu {
   width: 95%;
@@ -43,20 +37,15 @@
   background-color: transparent;
   outline: none;
   text-align: center;
-  cursor: pointer;
-}
-.year-select-menu:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
+  cursor: pointer; }
+  .year-select-menu:hover {
+    background-color: rgba(0, 0, 0, 0.04); }
 
 option {
-  background-color: red;
-}
+  background-color: red; }
 
 @media (min-width: 900px) {
   .chart-container {
-    max-width: 90vw;
-  }
-}
+    max-width: 90vw; } }
 
 /*# sourceMappingURL=Form.css.map */

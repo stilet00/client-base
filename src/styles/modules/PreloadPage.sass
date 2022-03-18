@@ -9,18 +9,22 @@
   &::before
     content: ''
     position: absolute
-    width: 98%
-    height: 98%
+    width: 98vw
+    height: 98vh
     border-radius: 20px
-    filter: blur(10px)
-    background: blue
+    filter: blur(5px)
+    background: linear-gradient(-45deg, #ffffff, #3c45e7, #23a6d5, #23d5ab)
+    background-size: 400% 400%
+    animation: gradient 5s ease infinite
     opacity: 0.2
-    animation: shake infinite 5s linear
 
-@keyframes shake
+@keyframes gradient
   0%
-    transform: scale(0.95)
+    background-position: 0% 50%
+
   50%
-    transform: scale(1)
+    background-position: 100% 50%
+
   100%
-    transform: scale(0.95)
+    background-position: 0% 50%
+
