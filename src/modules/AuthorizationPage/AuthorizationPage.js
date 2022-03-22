@@ -28,9 +28,9 @@ const StyledInput = withStyles({
     },
     "& label": {
       top: "-5px",
-      left: "-4px",
+      left: "-5px",
       boxSizing: "border box",
-      padding: "5px 7px",
+      padding: "5px 9px",
       color: "black",
     },
     "& .MuiInput-underline:after": {
