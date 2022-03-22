@@ -13,13 +13,8 @@ const StyledButton = withStyles({
     height: 48,
     padding: "0 30px",
     background: "rgba(255,255,255,0.5)",
-    boxShadow: "none",
-    letterSpacing: "3px",
-    fontWeight: "bold",
     backdropFilter: "blur(10px)",
-    "&:hover": {
-      background: "rgba(255,255,255,1)",
-    },
+    boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
   },
   label: {
     textTransform: "capitalize",
@@ -33,16 +28,18 @@ const StyledInput = withStyles({
     },
     "& label": {
       top: "-5px",
-      left: "-5px",
+      left: "-4px",
       boxSizing: "border box",
       padding: "5px 7px",
-      border: "1px solid black",
-      borderRadius: "5px",
       color: "black",
-      backgroundColor: "rgba(255, 255, 255, 1)",
     },
     "& .MuiInput-underline:after": {
       borderBottomColor: "black",
+    },
+    "& .MuiInputLabel-shrink": {
+      border: "1px solid black",
+      borderRadius: "5px",
+      backgroundColor: "rgba(255, 255, 255, 1)"
     },
     "& .MuiOutlinedInput-root": {
       background: "rgba(255, 255, 255, 0.5)",
@@ -57,6 +54,11 @@ const StyledInput = withStyles({
       "&.Mui-focused fieldset": {
         borderColor: "black",
       },
+    },
+    "& label.Mui-error": {
+      border: "1px solid red",
+      backgroundColor: "rgba(255, 255, 255, 0.8)",
+      backdropFilter: "blur(5px)"
     },
   },
 })(TextField);
