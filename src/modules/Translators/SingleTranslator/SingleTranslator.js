@@ -14,6 +14,7 @@ function SingleTranslator({
   onBoardDrop,
   dragLeaveHandler,
   deleteTranslator,
+  balanceDaySubmit
 }) {
 
   return (
@@ -45,7 +46,7 @@ function SingleTranslator({
                       <li key={client._id} className={"clients-list__name-container"}>
                           <p>{`${client.name} ${client.surname}`}</p>
                           <div className="clients-list__action-buttons">
-                              <EditBalanceForm {...client} />
+                              <EditBalanceForm client={client} balanceDaySubmit={balanceDaySubmit}/>
                               <Button variant={"outlined"} ><DeleteIcon /></Button>
                           </div>
                       </li>

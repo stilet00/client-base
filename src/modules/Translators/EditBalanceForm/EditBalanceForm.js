@@ -9,7 +9,7 @@ import ForumIcon from "@material-ui/icons/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
 import "../../../styles/modules/EditBalanceForm.css";
-import { DEFAULT_DAY_BALANCE, DEFAULT_TRANSLATOR } from "../../../constants/constants";
+import { DEFAULT_DAY_BALANCE } from "../../../constants/constants";
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import useModal from "../../../sharedHooks/useModal";
 import FormControl from "@material-ui/core/FormControl";
@@ -19,6 +19,7 @@ import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import moment from "moment";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -43,7 +44,7 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-export default function EditBalanceForm(client) {
+export default function EditBalanceForm({ client, balanceDaySubmit }) {
     const classes = useStyles();
 
     const { open, handleOpen, handleClose } = useModal();
@@ -55,8 +56,6 @@ export default function EditBalanceForm(client) {
     const [selectedDay, setSelectedDay] = useState(moment().format("D"));
 
     const [currentBalanceDay, setCurrentBalanceDay] = useState(findTodayBalance());
-
-    console.log(currentBalanceDay);
 
     function findYear() {
         return client.balanceByYears.find(item => item.year === selectedYear);
@@ -102,13 +101,17 @@ export default function EditBalanceForm(client) {
 
     const handleChange = useCallback(
         (e) => {
-            setTranslator({ ...translator, [e.target.name]: e.target.value.trim() });
+            setCurrentBalanceDay({ ...currentBalanceDay, [e.target.name]: Number(e.target.value.trim()) })
         },
-        [translator]
+        [currentBalanceDay]
     );
 
     function getDaySumm() {
         return currentBalanceDay.chats + currentBalanceDay.letters + currentBalanceDay.datingChats + currentBalanceDay.datingLetters + currentBalanceDay.virtualGifts + currentBalanceDay.photoAttachments - currentBalanceDay.penalties
+    }
+
+    function onSavePressed() {
+        balanceDaySubmit(currentBalanceDay);
     }
 
     return (
@@ -141,23 +144,52 @@ export default function EditBalanceForm(client) {
                             </h2>
                             <p>Date:</p>
                             <div className={"balance-form__date"}>
-                                <label htmlFor="Year">Year</label>
-                                <select value={selectedYear} onChange={handleYear} disabled id={"Year"}>
-                                    <option value="2021">2021</option>
-                                    <option value="2022">2022</option>
-                                </select>
-                                <label htmlFor="Month">Month</label>
-                                <select value={selectedMonth} onChange={handleMonth} id={"Month"}>
+                                <FormControl
+                                    variant="outlined"
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel>Year</InputLabel>
+                                    <Select
+                                        value={selectedYear}
+                                        onChange={handleYear}
+                                        label="Year"
+                                        disabled
+                                    >
+                                        <MenuItem value={selectedYear}>
+                                            {selectedYear}
+                                        </MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <FormControl
+                                    variant="outlined"
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel htmlFor={"Month"}>Month</InputLabel>
+                                    <Select
+                                        value={selectedMonth}
+                                        onChange={handleMonth}
+                                        label="Month"
+                                    >
+                                        {
+                                            findYear().months.map((item, index) => <MenuItem value={index+1} key={index}>{ moment(index+1, "M").format("MMMM") }</MenuItem>)
+                                        }
+                                    </Select>
+                                </FormControl>
+                                <FormControl
+                                    variant="outlined"
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel htmlFor={"Day"}>Day</InputLabel>
+                                    <Select
+                                        value={selectedDay}
+                                        onChange={handleDay}
+                                        label="Day"
+                                    >
                                     {
-                                        findYear().months.map((item, index) => <option value={index+1}>{ moment(index+1, "M").format("MMMM") }</option>)
+                                        findMonth().map((item, index) => <MenuItem value={index+1}>{ moment(index+1, "D").format("DD") }</MenuItem>)
                                     }
-                                </select>
-                                <label htmlFor="Day">Day</label>
-                                <select value={selectedDay} onChange={handleDay} id={"Day"}>
-                                    {
-                                        findMonth().map((item, index) => <option value={index+1}>{ moment(index+1, "D").format("DD") }</option>)
-                                    }
-                                </select>
+                                    </Select>
+                                </FormControl>
                             </div>
                             <p>Finances:</p>
                             <div className="balance-form__finances">
@@ -166,14 +198,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"chats"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.chats}
                                             variant="outlined"
                                             label={"Chats"}
                                             type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <ForumIcon />
                                                     </InputAdornment>
                                                 ),
@@ -184,13 +218,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"letters"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.letters}
                                             variant="outlined"
                                             label={"Letters"}
+                                            type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <DraftsIcon />
                                                     </InputAdornment>
                                                 ),
@@ -201,13 +238,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"virtualGifts"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.virtualGifts}
                                             variant="outlined"
                                             label={"Virtual gifts"}
+                                            type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <CardGiftcardIcon />
                                                     </InputAdornment>
                                                 ),
@@ -218,13 +258,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"photoAttachments"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.photoAttachments}
                                             variant="outlined"
                                             label={"Photo attachments"}
+                                            type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <CameraAltIcon />
                                                     </InputAdornment>
                                                 ),
@@ -238,13 +281,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"datingChats"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.datingChats}
                                             variant="outlined"
                                             label={"Dating chats"}
+                                            type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <ForumIcon /> Dating
                                                     </InputAdornment>
                                                 ),
@@ -255,13 +301,16 @@ export default function EditBalanceForm(client) {
                                         <CssTextField
                                             name={"datingLetters"}
                                             onChange={handleChange}
+                                            onClick={(e) => e.target.select()}
                                             value={currentBalanceDay.datingLetters}
                                             variant="outlined"
                                             label={"Dating letters"}
+                                            type={"number"}
+                                            step="0.01"
                                             required
                                             InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
                                                         <DraftsIcon /> Dating
                                                     </InputAdornment>
                                                 ),
@@ -273,26 +322,30 @@ export default function EditBalanceForm(client) {
                                     <CssTextField
                                         name={"penalties"}
                                         onChange={handleChange}
+                                        onClick={(e) => e.target.select()}
                                         value={currentBalanceDay.penalties}
                                         variant="outlined"
                                         label={"Penalties"}
+                                        type={"number"}
+                                        step="0.01"
                                         required
                                         InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
+                                            endAdornment: (
+                                                <InputAdornment position="end">
                                                     <MoneyOffIcon />
                                                 </InputAdornment>
                                             ),
                                         }}
                                     />
+
                                 </div>
                             </div>
-                            <p>Day balance:{ getDaySumm() }</p>
+                            <p>Day balance:{ getDaySumm().toFixed(2) }</p>
                             <div className="balance-form__balance">
                             </div>
-                            {/*<Button type={"submit"} fullWidth variant={"outlined"}>*/}
-                            {/*    Add translator*/}
-                            {/*</Button>*/}
+                            <Button type={"button"} variant={"outlined"} onClick={onSavePressed}>
+                                Save changes
+                            </Button>
                         </form>
                     </div>
                 </Fade>

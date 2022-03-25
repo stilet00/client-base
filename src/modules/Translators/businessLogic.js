@@ -233,6 +233,10 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
+  const balanceDaySubmit = (balanceDay) => {
+    console.log(balanceDay)
+  }
+
   return {
     translators,
     onTranslatorDelete,
@@ -253,5 +257,6 @@ export const useTranslators = (user) => {
     alertOpen,
     openAlert,
     closeAlert,
+    balanceDaySubmit
   };
 };

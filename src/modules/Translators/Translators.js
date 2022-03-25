@@ -37,6 +37,7 @@ function Translators({ user }) {
     dragStartHandler,
     message,
     translatorsFormSubmit,
+    balanceDaySubmit
   } = useTranslators(user);
 
   return user ? (
@@ -101,6 +102,7 @@ function Translators({ user }) {
                       dragOverHandler={dragOverHandler}
                       onBoardDrop={onBoardDrop}
                       dragLeaveHandler={dragLeaveHandler}
+                      balanceDaySubmit={balanceDaySubmit}
                   />
               ))
           ) : (
