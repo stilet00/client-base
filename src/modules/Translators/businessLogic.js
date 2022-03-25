@@ -7,6 +7,8 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
+import { DEFAULT_BALANCE_DATA } from "../../constants/constants"
+
 import {
   addClient,
   getClients,
@@ -46,7 +48,6 @@ export const useTranslators = (user) => {
       getClients().then((res) => {
         if (res.status === 200) {
           setClients(res.data);
-          console.log(res.data);
         } else {
           console.log("No clients");
         }
@@ -117,9 +118,11 @@ export const useTranslators = (user) => {
       } else if (e.target.tagName === "LI") {
         e.target.parentNode.style.background = "none";
       }
+
       let editedTranslator = translators.find(
         (item) => item._id === translatorID
       );
+
       if (
         editedTranslator.clients.filter(
           (item) => item._id === currentClient._id
@@ -129,8 +132,9 @@ export const useTranslators = (user) => {
       } else {
         editedTranslator = {
           ...editedTranslator,
-          clients: [...editedTranslator.clients, currentClient],
+          clients: [...editedTranslator.clients, { ...currentClient, balanceByYears: DEFAULT_BALANCE_DATA }],
         };
+
         updateTranslator(editedTranslator).then((res) => {
           if (res.status === 200) {
             showAlertMessage(MESSAGES.translatorFilled);

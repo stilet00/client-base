@@ -29,7 +29,7 @@ import PreloadPage from "./modules/PreloadPage/PreloadPage";
 import BackgroundImageOnLoad from "background-image-on-load";
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const stopLoading = useCallback(() => {
     setIsLoaded(false);

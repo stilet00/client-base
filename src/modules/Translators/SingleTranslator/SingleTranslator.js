@@ -2,6 +2,9 @@ import React from "react";
 import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 function SingleTranslator({
   name,
   surname,
@@ -12,16 +15,6 @@ function SingleTranslator({
   dragLeaveHandler,
   deleteTranslator,
 }) {
-  const clientsInner =
-    clients.length > 0 ? (
-      clients.map((client) => (
-        <li key={client._id}>
-          <p>{`${client.name} ${client.surname}`}</p>
-        </li>
-      ))
-    ) : (
-      <p>Drag client here...</p>
-    );
 
   return (
     <div className={"gallery-item translator-item"}>
@@ -46,7 +39,21 @@ function SingleTranslator({
           onDragLeave={dragLeaveHandler}
           onDrop={(e) => onBoardDrop(e, _id)}
         >
-          {clientsInner}
+          {
+              clients.length > 0 ? (
+                  clients.map((client) => (
+                      <li key={client._id} className={"clients-list__name-container"}>
+                          <p>{`${client.name} ${client.surname}`}</p>
+                          <div className="clients-list__action-buttons">
+                              <EditBalanceForm {...client} />
+                              <Button variant={"outlined"} ><DeleteIcon /></Button>
+                          </div>
+                      </li>
+                  ))
+              ) : (
+                  <p>Drag client here...</p>
+              )
+          }
         </ul>
       </div>
       <Button onClick={() => deleteTranslator(_id)}>

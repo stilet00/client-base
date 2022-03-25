@@ -102,16 +102,32 @@
       .clients-list
         box-sizing: border-box
         height: 100%
-        padding: 5px
+        padding: 0
 
-        li
+        &__name-container
+          display: flex
+          justify-content: space-between
+          box-sizing: border-box
           width: 100%
           text-align: left
+          border-bottom: 1px dotted black
+          padding: 5px
+
           p
             font-family: sans-serif
+            margin: auto 0
 
           &:last-child
             border-bottom: none
+
+        &__action-buttons
+          display: flex
+          flex-direction: column
+          justify-content: space-between
+
+          button
+            &:not(:first-child)
+              margin-top: 0.5rem
 
       .name-table
         display: grid
