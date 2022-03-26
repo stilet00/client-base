@@ -9,6 +9,13 @@ export const DEFAULT_CLIENT = {
 class DEFAULT_DAY_BALANCE {
   constructor(year, month, day) {
     this.id = moment(year + month + day, "YYYYMMDD").format("DD MM YYYY");
+    this.clients = [];
+  }
+}
+
+export class DEFAULT_DAY_CLIENT {
+  constructor(clientId) {
+    this.id = clientId;
     this.chats = 0;
     this.letters = 0;
     this.datingChats = 0;
@@ -30,6 +37,7 @@ export const DEFAULT_TRANSLATOR = {
   name: "",
   surname: "",
   clients: [],
+  statistics: DEFAULT_BALANCE_DATA,
 };
 
 function fillMonths(year) {

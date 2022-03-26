@@ -7,7 +7,10 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import { DEFAULT_BALANCE_DATA } from "../../constants/constants";
+import {
+  DEFAULT_BALANCE_DATA,
+  DEFAULT_DAY_CLIENT,
+} from "../../constants/constants";
 
 import {
   addClient,
@@ -15,6 +18,7 @@ import {
   removeClient,
 } from "../../services/clientsServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
+import moment from "moment";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -32,7 +36,7 @@ export const useTranslators = (user) => {
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
-
+  console.log(translators);
   const {
     alertStatusConfirmation,
     openAlertConfirmation,
@@ -117,7 +121,7 @@ export const useTranslators = (user) => {
     e.target.style.background = "none";
   }, []);
 
-  const translatorChanged = useCallback(
+  const saveChangedTranslator = useCallback(
     (editedTranslator) => {
       updateTranslator(editedTranslator).then((res) => {
         if (res.status === 200) {
@@ -140,7 +144,6 @@ export const useTranslators = (user) => {
 
   const onBoardDrop = useCallback(
     (e, translatorID) => {
-      console.log("dropped");
       e.preventDefault();
       if (e.target.tagName === "UL") {
         e.target.style.background = "none";
@@ -159,18 +162,40 @@ export const useTranslators = (user) => {
       ) {
         showAlertMessage(MESSAGES.clientExist);
       } else {
-        editedTranslator = {
-          ...editedTranslator,
-          clients: [
-            ...editedTranslator.clients,
-            { ...currentClient, balanceByYears: DEFAULT_BALANCE_DATA },
-          ],
-        };
-        translatorChanged(editedTranslator);
+        editedTranslator = insertClient(editedTranslator, currentClient);
+        saveChangedTranslator(editedTranslator);
       }
     },
     [translators, currentClient, showAlertMessage]
   );
+
+  const insertClient = useCallback((translator, client) => {
+    const clientBalanceDay = new DEFAULT_DAY_CLIENT(client._id);
+    const updatedStatistics = translator.statistics.map((item) => {
+      if (item.year === moment().format("YYYY")) {
+        const updatedMonths = item.months.map((month, index) => {
+          if (index + 1 >= Number(moment().format("M"))) {
+            return month.map((day) => {
+              return { ...day, clients: [...day.clients, clientBalanceDay] };
+            });
+          } else {
+            return month;
+          }
+        });
+        return { ...item, months: updatedMonths };
+      } else {
+        return item;
+      }
+    });
+
+    translator = {
+      ...translator,
+      statistics: updatedStatistics,
+      clients: [...translator.clients, client],
+    };
+
+    return translator;
+  }, []);
 
   const deleteClient = useCallback(
     (id) => {
@@ -189,6 +214,7 @@ export const useTranslators = (user) => {
 
   const onTranslatorDelete = useCallback(
     (id) => {
+      console.log(translators.find((item) => item._id === id));
       removeTranslator(id).then((res) => {
         if (res.status === 200) {
           showAlertMessage(MESSAGES.translatorDeleted);
@@ -205,7 +231,6 @@ export const useTranslators = (user) => {
   const translatorsFormSubmit = useCallback(
     (e, newTranslator) => {
       e.preventDefault();
-
       if (
         translators.filter((existingTranslator) => {
           return (
@@ -277,7 +302,7 @@ export const useTranslators = (user) => {
       return client._id === editedClient._id ? editedClient : client;
     });
 
-    translatorChanged(editedTranslator);
+    saveChangedTranslator(editedTranslator);
   };
 
   return {

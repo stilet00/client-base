@@ -47,12 +47,6 @@ function SingleTranslator({
               <li key={client._id} className={"clients-list__name-container"}>
                 <p>{`${client.name} ${client.surname}`}</p>
                 <div className="clients-list__action-buttons">
-                  <EditBalanceForm
-                    client={client}
-                    balanceDaySubmit={(currentBalanceDay, clientId) =>
-                      balanceDaySubmit(_id, currentBalanceDay, clientId)
-                    }
-                  />
                   <button type="button">
                     <DeleteIcon />
                   </button>

@@ -232,6 +232,7 @@ app.put(translatorsURL + ":id", (req, res) => {
         name: req.body.name,
         surname: req.body.surname,
         clients: req.body.clients,
+        statistics: req.body.statistics,
       },
     },
     (err) => {
