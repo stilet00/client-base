@@ -3,6 +3,7 @@ import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AlertMessageConfirmation from "../../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 
 function SingleTranslator({
   name,
@@ -14,6 +15,9 @@ function SingleTranslator({
   dragLeaveHandler,
   deleteTranslator,
   balanceDaySubmit,
+  alertStatusConfirmation,
+  closeAlertConfirmationNoReload,
+  openAlertConfirmation,
 }) {
   return (
     <div className={"gallery-item translator-item"}>
@@ -60,9 +64,24 @@ function SingleTranslator({
           )}
         </ul>
       </div>
-      <Button onClick={() => deleteTranslator(_id)} fullWidth>
+      <Button
+        onClick={() => {
+          openAlertConfirmation();
+        }}
+        fullWidth
+      >
         Delete translator
       </Button>
+      <AlertMessageConfirmation
+        mainText={"Please confirm deletion!"}
+        additionalText={`You are deleting: ${name} ${surname}`}
+        open={alertStatusConfirmation}
+        handleClose={closeAlertConfirmationNoReload}
+        handleOpen={openAlertConfirmation}
+        status={false}
+        onCancel={closeAlertConfirmationNoReload}
+        onConfirm={() => deleteTranslator(_id)}
+      />
     </div>
   );
 }

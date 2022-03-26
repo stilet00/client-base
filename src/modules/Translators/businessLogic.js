@@ -14,6 +14,7 @@ import {
   getClients,
   removeClient,
 } from "../../services/clientsServices/services";
+import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -31,6 +32,12 @@ export const useTranslators = (user) => {
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
+
+  const {
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
+  } = useAlertConfirmation();
 
   useEffect(() => {
     setLoading(true);
@@ -75,7 +82,7 @@ export const useTranslators = (user) => {
 
   const dragStartHandler = useCallback((e, client) => {
     setCurrentClient(client);
-    e.target.style.border = "2px solid orange";
+    e.target.style.border = "2px solid red";
   }, []);
 
   const dragLeaveHandler = useCallback(
@@ -99,9 +106,9 @@ export const useTranslators = (user) => {
   const dragOverHandler = useCallback((e) => {
     e.preventDefault();
     if (e.target.tagName === "UL") {
-      e.target.style.background = "rgba(200, 247, 197, 1)";
+      e.target.style.background = "rgba(255,255,255, 0.5)";
     } else if (e.target.tagName === "LI") {
-      e.target.parentNode.style.background = "rgba(200, 247, 197, 1)";
+      e.target.parentNode.style.background = "rgba(255,255,255, 0.5)";
     }
   }, []);
 
@@ -133,6 +140,7 @@ export const useTranslators = (user) => {
 
   const onBoardDrop = useCallback(
     (e, translatorID) => {
+      console.log("dropped");
       e.preventDefault();
       if (e.target.tagName === "UL") {
         e.target.style.background = "none";
@@ -293,5 +301,8 @@ export const useTranslators = (user) => {
     openAlert,
     closeAlert,
     balanceDaySubmit,
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
   };
 };

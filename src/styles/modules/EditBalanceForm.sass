@@ -2,8 +2,11 @@
   width: 90vw
   max-width: 500px
   height: 90vh
-  min-height: 500px
+  min-height: 820px
   overflow: scroll
+  background: url("/src/images/menu-background.png")
+  background-size: cover
+  background-repeat: repeat
 
   h2
     margin-left: auto
@@ -40,6 +43,7 @@
 
 @media only screen and (max-width: 900px)
   .balance-form
+    min-height: auto
     &__finances
       flex-direction: column
       &__dating, &__svadba

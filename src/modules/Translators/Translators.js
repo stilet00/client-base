@@ -15,6 +15,7 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
+import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 
 function Translators({ user }) {
   const {
@@ -38,6 +39,9 @@ function Translators({ user }) {
     message,
     translatorsFormSubmit,
     balanceDaySubmit,
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
   } = useTranslators(user);
 
   return user ? (
@@ -102,6 +106,9 @@ function Translators({ user }) {
               onBoardDrop={onBoardDrop}
               dragLeaveHandler={dragLeaveHandler}
               balanceDaySubmit={balanceDaySubmit}
+              alertStatusConfirmation={alertStatusConfirmation}
+              openAlertConfirmation={openAlertConfirmation}
+              closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
             />
           ))
         ) : (
@@ -110,6 +117,7 @@ function Translators({ user }) {
           </div>
         )}
       </div>
+
       <AlertMessage
         mainText={message.text}
         open={alertOpen}
