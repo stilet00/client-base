@@ -39,7 +39,7 @@ const StyledInput = withStyles({
     "& .MuiInputLabel-shrink": {
       border: "1px solid black",
       borderRadius: "5px",
-      backgroundColor: "rgba(255, 255, 255, 1)"
+      backgroundColor: "rgba(255, 255, 255, 1)",
     },
     "& .MuiOutlinedInput-root": {
       background: "rgba(255, 255, 255, 0.5)",
@@ -58,7 +58,7 @@ const StyledInput = withStyles({
     "& label.Mui-error": {
       border: "1px solid red",
       backgroundColor: "rgba(255, 255, 255, 0.8)",
-      backdropFilter: "blur(5px)"
+      backdropFilter: "blur(5px)",
     },
   },
 })(TextField);

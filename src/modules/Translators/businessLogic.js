@@ -7,11 +7,14 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
+import { DEFAULT_BALANCE_DATA } from "../../constants/constants";
+
 import {
   addClient,
   getClients,
   removeClient,
 } from "../../services/clientsServices/services";
+import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -30,6 +33,12 @@ export const useTranslators = (user) => {
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
+  const {
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
+  } = useAlertConfirmation();
+
   useEffect(() => {
     setLoading(true);
 
@@ -46,7 +55,6 @@ export const useTranslators = (user) => {
       getClients().then((res) => {
         if (res.status === 200) {
           setClients(res.data);
-          console.log(res.data);
         } else {
           console.log("No clients");
         }
@@ -74,7 +82,7 @@ export const useTranslators = (user) => {
 
   const dragStartHandler = useCallback((e, client) => {
     setCurrentClient(client);
-    e.target.style.border = "2px solid orange";
+    e.target.style.border = "2px solid red";
   }, []);
 
   const dragLeaveHandler = useCallback(
@@ -98,9 +106,9 @@ export const useTranslators = (user) => {
   const dragOverHandler = useCallback((e) => {
     e.preventDefault();
     if (e.target.tagName === "UL") {
-      e.target.style.background = "rgba(200, 247, 197, 1)";
+      e.target.style.background = "rgba(255,255,255, 0.5)";
     } else if (e.target.tagName === "LI") {
-      e.target.parentNode.style.background = "rgba(200, 247, 197, 1)";
+      e.target.parentNode.style.background = "rgba(255,255,255, 0.5)";
     }
   }, []);
 
@@ -109,17 +117,41 @@ export const useTranslators = (user) => {
     e.target.style.background = "none";
   }, []);
 
+  const translatorChanged = useCallback(
+    (editedTranslator) => {
+      updateTranslator(editedTranslator).then((res) => {
+        if (res.status === 200) {
+          showAlertMessage(MESSAGES.translatorFilled);
+          setTranslators(
+            translators.map((item) => {
+              return item._id === editedTranslator._id
+                ? editedTranslator
+                : item;
+            })
+          );
+        } else {
+          showAlertMessage(MESSAGES.somethingWrong);
+          console.log(res.data);
+        }
+      });
+    },
+    [translators]
+  );
+
   const onBoardDrop = useCallback(
     (e, translatorID) => {
+      console.log("dropped");
       e.preventDefault();
       if (e.target.tagName === "UL") {
         e.target.style.background = "none";
       } else if (e.target.tagName === "LI") {
         e.target.parentNode.style.background = "none";
       }
+
       let editedTranslator = translators.find(
         (item) => item._id === translatorID
       );
+
       if (
         editedTranslator.clients.filter(
           (item) => item._id === currentClient._id
@@ -129,21 +161,12 @@ export const useTranslators = (user) => {
       } else {
         editedTranslator = {
           ...editedTranslator,
-          clients: [...editedTranslator.clients, currentClient],
+          clients: [
+            ...editedTranslator.clients,
+            { ...currentClient, balanceByYears: DEFAULT_BALANCE_DATA },
+          ],
         };
-        updateTranslator(editedTranslator).then((res) => {
-          if (res.status === 200) {
-            showAlertMessage(MESSAGES.translatorFilled);
-            setTranslators(
-              translators.map((item) => {
-                return item._id === translatorID ? editedTranslator : item;
-              })
-            );
-          } else {
-            showAlertMessage(MESSAGES.somethingWrong);
-            console.log(res.data);
-          }
-        });
+        translatorChanged(editedTranslator);
       }
     },
     [translators, currentClient, showAlertMessage]
@@ -229,6 +252,34 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
+  const balanceDaySubmit = (translatorId, balanceDay, clientId) => {
+    let editedTranslator = translators.find(
+      (item) => item._id === translatorId
+    );
+
+    let editedClient = editedTranslator.clients.find(
+      (item) => item._id === clientId
+    );
+
+    editedClient.balanceByYears = editedClient.balanceByYears.map((year) => {
+      const editedListOfMonths = year.months.map((month) => {
+        const monthEdited = month.map((day) => {
+          return day.id === balanceDay.id ? balanceDay : day;
+        });
+
+        return monthEdited;
+      });
+
+      return { ...year, months: editedListOfMonths };
+    });
+
+    editedTranslator.clients = editedTranslator.clients.map((client) => {
+      return client._id === editedClient._id ? editedClient : client;
+    });
+
+    translatorChanged(editedTranslator);
+  };
+
   return {
     translators,
     onTranslatorDelete,
@@ -249,5 +300,9 @@ export const useTranslators = (user) => {
     alertOpen,
     openAlert,
     closeAlert,
+    balanceDaySubmit,
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
   };
 };

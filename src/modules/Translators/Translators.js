@@ -15,6 +15,7 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
+import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 
 function Translators({ user }) {
   const {
@@ -37,25 +38,12 @@ function Translators({ user }) {
     dragStartHandler,
     message,
     translatorsFormSubmit,
+    balanceDaySubmit,
+    alertStatusConfirmation,
+    openAlertConfirmation,
+    closeAlertConfirmationNoReload,
   } = useTranslators(user);
 
-  const page =
-    translators.length > 0 ? (
-      translators.map((item) => (
-        <SingleTranslator
-          deleteTranslator={onTranslatorDelete}
-          {...item}
-          key={item._id}
-          dragOverHandler={dragOverHandler}
-          onBoardDrop={onBoardDrop}
-          dragLeaveHandler={dragLeaveHandler}
-        />
-      ))
-    ) : (
-      <div className="empty">
-        {loading ? <Loader /> : <h1>No translators yet.</h1>}
-      </div>
-    );
   return user ? (
     <div className={"gallery-container"}>
       <div className="gallery-menu gallery-menu_no-border">
@@ -108,8 +96,28 @@ function Translators({ user }) {
       <div
         className={"inner-gallery-container translators-container animated-box"}
       >
-        {page}
+        {translators.length > 0 ? (
+          translators.map((item) => (
+            <SingleTranslator
+              deleteTranslator={onTranslatorDelete}
+              {...item}
+              key={item._id}
+              dragOverHandler={dragOverHandler}
+              onBoardDrop={onBoardDrop}
+              dragLeaveHandler={dragLeaveHandler}
+              balanceDaySubmit={balanceDaySubmit}
+              alertStatusConfirmation={alertStatusConfirmation}
+              openAlertConfirmation={openAlertConfirmation}
+              closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
+            />
+          ))
+        ) : (
+          <div className="empty">
+            {loading ? <Loader /> : <h1>No translators yet.</h1>}
+          </div>
+        )}
       </div>
+
       <AlertMessage
         mainText={message.text}
         open={alertOpen}

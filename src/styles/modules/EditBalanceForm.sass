@@ -1,0 +1,50 @@
+.balance-form
+  width: 90vw
+  max-width: 500px
+  height: 90vh
+  min-height: 820px
+  overflow: scroll
+  background: url("/src/images/menu-background.png")
+  background-size: cover
+  background-repeat: repeat
+
+  h2
+    margin-left: auto
+    margin-right: auto
+
+  p
+    margin: 8px
+
+  form
+    justify-content: flex-start
+    align-items: flex-start
+    text-align: left
+
+  &__date
+    display: flex
+    box-sizing: border-box
+    flex-direction: column
+    width: 100%
+
+  &__finances
+    display: flex
+    box-sizing: border-box
+    width: 100%
+
+    &-input
+      margin: 15px 5px
+
+  &__actions
+    box-sizing: border-box
+
+    &--button
+      margin: 15px 5px!important
+
+
+@media only screen and (max-width: 900px)
+  .balance-form
+    min-height: auto
+    &__finances
+      flex-direction: column
+      &__dating, &__svadba
+        width: 100%

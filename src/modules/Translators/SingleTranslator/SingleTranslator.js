@@ -1,7 +1,10 @@
 import React from "react";
 import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AlertMessageConfirmation from "../../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
+
 function SingleTranslator({
   name,
   surname,
@@ -11,18 +14,11 @@ function SingleTranslator({
   onBoardDrop,
   dragLeaveHandler,
   deleteTranslator,
+  balanceDaySubmit,
+  alertStatusConfirmation,
+  closeAlertConfirmationNoReload,
+  openAlertConfirmation,
 }) {
-  const clientsInner =
-    clients.length > 0 ? (
-      clients.map((client) => (
-        <li key={client._id}>
-          <p>{`${client.name} ${client.surname}`}</p>
-        </li>
-      ))
-    ) : (
-      <p>Drag client here...</p>
-    );
-
   return (
     <div className={"gallery-item translator-item"}>
       <div className={"name-table"}>
@@ -46,12 +42,46 @@ function SingleTranslator({
           onDragLeave={dragLeaveHandler}
           onDrop={(e) => onBoardDrop(e, _id)}
         >
-          {clientsInner}
+          {clients.length > 0 ? (
+            clients.map((client) => (
+              <li key={client._id} className={"clients-list__name-container"}>
+                <p>{`${client.name} ${client.surname}`}</p>
+                <div className="clients-list__action-buttons">
+                  <EditBalanceForm
+                    client={client}
+                    balanceDaySubmit={(currentBalanceDay, clientId) =>
+                      balanceDaySubmit(_id, currentBalanceDay, clientId)
+                    }
+                  />
+                  <button type="button">
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p>Drag client here...</p>
+          )}
         </ul>
       </div>
-      <Button onClick={() => deleteTranslator(_id)}>
-        <DeleteForeverIcon />
+      <Button
+        onClick={() => {
+          openAlertConfirmation();
+        }}
+        fullWidth
+      >
+        Delete translator
       </Button>
+      <AlertMessageConfirmation
+        mainText={"Please confirm deletion!"}
+        additionalText={`You are deleting: ${name} ${surname}`}
+        open={alertStatusConfirmation}
+        handleClose={closeAlertConfirmationNoReload}
+        handleOpen={openAlertConfirmation}
+        status={false}
+        onCancel={closeAlertConfirmationNoReload}
+        onConfirm={() => deleteTranslator(_id)}
+      />
     </div>
   );
 }
