@@ -7,7 +7,7 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import { DEFAULT_BALANCE_DATA } from "../../constants/constants"
+import { DEFAULT_BALANCE_DATA } from "../../constants/constants";
 
 import {
   addClient,
@@ -110,6 +110,27 @@ export const useTranslators = (user) => {
     e.target.style.background = "none";
   }, []);
 
+  const translatorChanged = useCallback(
+    (editedTranslator) => {
+      updateTranslator(editedTranslator).then((res) => {
+        if (res.status === 200) {
+          showAlertMessage(MESSAGES.translatorFilled);
+          setTranslators(
+            translators.map((item) => {
+              return item._id === editedTranslator._id
+                ? editedTranslator
+                : item;
+            })
+          );
+        } else {
+          showAlertMessage(MESSAGES.somethingWrong);
+          console.log(res.data);
+        }
+      });
+    },
+    [translators]
+  );
+
   const onBoardDrop = useCallback(
     (e, translatorID) => {
       e.preventDefault();
@@ -132,22 +153,12 @@ export const useTranslators = (user) => {
       } else {
         editedTranslator = {
           ...editedTranslator,
-          clients: [...editedTranslator.clients, { ...currentClient, balanceByYears: DEFAULT_BALANCE_DATA }],
+          clients: [
+            ...editedTranslator.clients,
+            { ...currentClient, balanceByYears: DEFAULT_BALANCE_DATA },
+          ],
         };
-
-        updateTranslator(editedTranslator).then((res) => {
-          if (res.status === 200) {
-            showAlertMessage(MESSAGES.translatorFilled);
-            setTranslators(
-              translators.map((item) => {
-                return item._id === translatorID ? editedTranslator : item;
-              })
-            );
-          } else {
-            showAlertMessage(MESSAGES.somethingWrong);
-            console.log(res.data);
-          }
-        });
+        translatorChanged(editedTranslator);
       }
     },
     [translators, currentClient, showAlertMessage]
@@ -233,9 +244,33 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const balanceDaySubmit = (balanceDay) => {
-    console.log(balanceDay)
-  }
+  const balanceDaySubmit = (translatorId, balanceDay, clientId) => {
+    let editedTranslator = translators.find(
+      (item) => item._id === translatorId
+    );
+
+    let editedClient = editedTranslator.clients.find(
+      (item) => item._id === clientId
+    );
+
+    editedClient.balanceByYears = editedClient.balanceByYears.map((year) => {
+      const editedListOfMonths = year.months.map((month) => {
+        const monthEdited = month.map((day) => {
+          return day.id === balanceDay.id ? balanceDay : day;
+        });
+
+        return monthEdited;
+      });
+
+      return { ...year, months: editedListOfMonths };
+    });
+
+    editedTranslator.clients = editedTranslator.clients.map((client) => {
+      return client._id === editedClient._id ? editedClient : client;
+    });
+
+    translatorChanged(editedTranslator);
+  };
 
   return {
     translators,
@@ -257,6 +292,6 @@ export const useTranslators = (user) => {
     alertOpen,
     openAlert,
     closeAlert,
-    balanceDaySubmit
+    balanceDaySubmit,
   };
 };

@@ -1,7 +1,6 @@
 import React from "react";
 import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -14,9 +13,8 @@ function SingleTranslator({
   onBoardDrop,
   dragLeaveHandler,
   deleteTranslator,
-  balanceDaySubmit
+  balanceDaySubmit,
 }) {
-
   return (
     <div className={"gallery-item translator-item"}>
       <div className={"name-table"}>
@@ -40,25 +38,30 @@ function SingleTranslator({
           onDragLeave={dragLeaveHandler}
           onDrop={(e) => onBoardDrop(e, _id)}
         >
-          {
-              clients.length > 0 ? (
-                  clients.map((client) => (
-                      <li key={client._id} className={"clients-list__name-container"}>
-                          <p>{`${client.name} ${client.surname}`}</p>
-                          <div className="clients-list__action-buttons">
-                              <EditBalanceForm client={client} balanceDaySubmit={balanceDaySubmit}/>
-                              <Button variant={"outlined"} ><DeleteIcon /></Button>
-                          </div>
-                      </li>
-                  ))
-              ) : (
-                  <p>Drag client here...</p>
-              )
-          }
+          {clients.length > 0 ? (
+            clients.map((client) => (
+              <li key={client._id} className={"clients-list__name-container"}>
+                <p>{`${client.name} ${client.surname}`}</p>
+                <div className="clients-list__action-buttons">
+                  <EditBalanceForm
+                    client={client}
+                    balanceDaySubmit={(currentBalanceDay, clientId) =>
+                      balanceDaySubmit(_id, currentBalanceDay, clientId)
+                    }
+                  />
+                  <button type="button">
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p>Drag client here...</p>
+          )}
         </ul>
       </div>
-      <Button onClick={() => deleteTranslator(_id)}>
-        <DeleteForeverIcon />
+      <Button onClick={() => deleteTranslator(_id)} fullWidth>
+        Delete translator
       </Button>
     </div>
   );

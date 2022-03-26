@@ -37,7 +37,7 @@ function Translators({ user }) {
     dragStartHandler,
     message,
     translatorsFormSubmit,
-    balanceDaySubmit
+    balanceDaySubmit,
   } = useTranslators(user);
 
   return user ? (
@@ -92,25 +92,23 @@ function Translators({ user }) {
       <div
         className={"inner-gallery-container translators-container animated-box"}
       >
-        {
-          translators.length > 0 ? (
-              translators.map((item) => (
-                  <SingleTranslator
-                      deleteTranslator={onTranslatorDelete}
-                      {...item}
-                      key={item._id}
-                      dragOverHandler={dragOverHandler}
-                      onBoardDrop={onBoardDrop}
-                      dragLeaveHandler={dragLeaveHandler}
-                      balanceDaySubmit={balanceDaySubmit}
-                  />
-              ))
-          ) : (
-              <div className="empty">
-                {loading ? <Loader /> : <h1>No translators yet.</h1>}
-              </div>
-          )
-        }
+        {translators.length > 0 ? (
+          translators.map((item) => (
+            <SingleTranslator
+              deleteTranslator={onTranslatorDelete}
+              {...item}
+              key={item._id}
+              dragOverHandler={dragOverHandler}
+              onBoardDrop={onBoardDrop}
+              dragLeaveHandler={dragLeaveHandler}
+              balanceDaySubmit={balanceDaySubmit}
+            />
+          ))
+        ) : (
+          <div className="empty">
+            {loading ? <Loader /> : <h1>No translators yet.</h1>}
+          </div>
+        )}
       </div>
       <AlertMessage
         mainText={message.text}

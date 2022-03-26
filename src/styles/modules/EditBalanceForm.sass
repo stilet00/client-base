@@ -1,12 +1,17 @@
 .balance-form
   width: 90vw
+  max-width: 500px
   height: 90vh
+  min-height: 500px
   overflow: scroll
+
   h2
     margin-left: auto
     margin-right: auto
+
   p
     margin: 8px
+
   form
     justify-content: flex-start
     align-items: flex-start
@@ -26,6 +31,16 @@
     &-input
       margin: 15px 5px
 
-  &__balance
+  &__actions
     box-sizing: border-box
-    border: 1px solid black
+
+    &--button
+      margin: 15px 5px!important
+
+
+@media only screen and (max-width: 900px)
+  .balance-form
+    &__finances
+      flex-direction: column
+      &__dating, &__svadba
+        width: 100%

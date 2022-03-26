@@ -1,6 +1,6 @@
 import "./App.css";
 import Karussell from "./modules/Clients/Karussell/Karussell";
-import React, {useCallback, useState} from "react";
+import React, { useCallback, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -33,7 +33,7 @@ function App() {
 
   const stopLoading = useCallback(() => {
     setIsLoaded(false);
-  })
+  });
 
   return (
     <Router>
