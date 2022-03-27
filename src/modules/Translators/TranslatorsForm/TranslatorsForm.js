@@ -10,7 +10,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import "../../../styles/modules/TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
-import AirlineSeatReclineNormalIcon from "@material-ui/icons/AirlineSeatReclineNormal";
+import WorkIcon from "@material-ui/icons/Work";
 import useModal from "../../../sharedHooks/useModal";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
         type="button"
         onClick={handleOpen}
         fullWidth
-        startIcon={<AirlineSeatReclineNormalIcon />}
+        startIcon={<WorkIcon />}
       >
         Add translator
       </Button>

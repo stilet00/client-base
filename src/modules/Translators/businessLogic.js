@@ -7,9 +7,7 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import {
-  DEFAULT_DAY_CLIENT,
-} from "../../constants/constants";
+import { DEFAULT_DAY_CLIENT } from "../../constants/constants";
 
 import {
   addClient,
@@ -35,13 +33,15 @@ export const useTranslators = (user) => {
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
+
+  const [deletedTranslator, setDeletedTranslator] = useState(null);
+
   const {
     alertStatusConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
 
-  console.log(translators)
   useEffect(() => {
     setLoading(true);
 
@@ -63,7 +63,7 @@ export const useTranslators = (user) => {
         }
       });
     }
-  }, []);
+  }, [user]);
 
   const showAlertMessage = useCallback(
     (alertMessage) => {
@@ -138,7 +138,7 @@ export const useTranslators = (user) => {
         }
       });
     },
-    [translators]
+    [translators, showAlertMessage]
   );
 
   const onBoardDrop = useCallback(
@@ -165,7 +165,7 @@ export const useTranslators = (user) => {
         saveChangedTranslator(editedTranslator);
       }
     },
-    [translators, currentClient, showAlertMessage]
+    [translators, currentClient, showAlertMessage, showAlertMessage]
   );
 
   const insertClient = useCallback((translator, client) => {
@@ -211,21 +211,41 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const onTranslatorDelete = useCallback(
+  const startTranslatorDelete = useCallback(
     (id) => {
-      console.log(translators.find((item) => item._id === id));
-      removeTranslator(id).then((res) => {
-        if (res.status === 200) {
-          showAlertMessage(MESSAGES.translatorDeleted);
-          setTranslators(translators.filter((item) => item._id !== id));
-        } else {
-          showAlertMessage(MESSAGES.somethingWrong);
-          console.log(res.data);
-        }
+      const translator = translators.find((item) => item._id === id);
+
+      setDeletedTranslator(translator);
+
+      setMessage({
+        text: `You are deleting ${translator.name} ${translator.surname}`,
+        status: false,
       });
+
+      openAlertConfirmation();
     },
-    [translators, showAlertMessage]
+    [translators, openAlertConfirmation]
   );
+
+  const finishTranslatorDelete = useCallback(() => {
+    removeTranslator(deletedTranslator._id).then((res) => {
+      if (res.status === 200) {
+        closeAlertConfirmationNoReload();
+        setTranslators(
+          translators.filter((item) => item._id !== deletedTranslator._id)
+        );
+        setMessage(MESSAGES.addTranslator);
+      } else {
+        showAlertMessage(MESSAGES.somethingWrong);
+        console.log(res.data);
+      }
+    });
+  }, [
+    translators,
+    showAlertMessage,
+    closeAlertConfirmationNoReload,
+    deletedTranslator,
+  ]);
 
   const translatorsFormSubmit = useCallback(
     (e, newTranslator) => {
@@ -280,30 +300,29 @@ export const useTranslators = (user) => {
     let editedTranslator = translators.find(
       (item) => item._id === translatorId
     );
-
-    const newStatistics = editedTranslator.statistics.map(year => {
-      const newMonths = year.months.map(month => {
-        return month.map(day => {
+    const newStatistics = editedTranslator.statistics.map((year) => {
+      const newMonths = year.months.map((month) => {
+        return month.map((day) => {
           if (day.id === dayId) {
             const newClients = day.clients.map((clientDay) => {
-              return clientDay.id === balanceDay.id ? balanceDay : clientDay
-            })
-            return { ...day, clients: newClients }
+              return clientDay.id === balanceDay.id ? balanceDay : clientDay;
+            });
+            return { ...day, clients: newClients };
           } else {
-            return day
+            return day;
           }
-        })
-      })
-      return { ...year, months: newMonths }
-    })
+        });
+      });
+      return { ...year, months: newMonths };
+    });
 
-    editedTranslator.statistics = newStatistics
+    editedTranslator.statistics = newStatistics;
     saveChangedTranslator(editedTranslator);
   };
 
   return {
     translators,
-    onTranslatorDelete,
+    startTranslatorDelete,
     dragOverHandler,
     onBoardDrop,
     dragLeaveHandler,
@@ -325,5 +344,6 @@ export const useTranslators = (user) => {
     alertStatusConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
+    finishTranslatorDelete,
   };
 };

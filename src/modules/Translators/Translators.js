@@ -15,6 +15,7 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
+import React from "react";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 
 function Translators({ user }) {
@@ -25,7 +26,7 @@ function Translators({ user }) {
     dragOverHandler,
     loading,
     onBoardDrop,
-    onTranslatorDelete,
+    startTranslatorDelete,
     state,
     toggleDrawer,
     openAlert,
@@ -42,6 +43,7 @@ function Translators({ user }) {
     alertStatusConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
+    finishTranslatorDelete,
   } = useTranslators(user);
 
   return user ? (
@@ -99,7 +101,7 @@ function Translators({ user }) {
         {translators.length > 0 ? (
           translators.map((item) => (
             <SingleTranslator
-              deleteTranslator={onTranslatorDelete}
+              deleteTranslator={startTranslatorDelete}
               {...item}
               key={item._id}
               dragOverHandler={dragOverHandler}
@@ -111,16 +113,33 @@ function Translators({ user }) {
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
             />
           ))
-        ) : loading ? <Loader /> : <h1>No translators yet.</h1>}
+        ) : loading ? (
+          <div className="empty">
+            <Loader />
+          </div>
+        ) : (
+          <div className="empty">
+            <h1>No translators yet.</h1>
+          </div>
+        )}
       </div>
-
-      {/*<AlertMessage*/}
-      {/*  mainText={message.text}*/}
-      {/*  open={alertOpen}*/}
-      {/*  handleOpen={openAlert}*/}
-      {/*  handleClose={closeAlert}*/}
-      {/*  status={message.status}*/}
-      {/*/>*/}
+      <AlertMessage
+        mainText={message.text}
+        open={alertOpen}
+        handleOpen={openAlert}
+        handleClose={closeAlert}
+        status={message.status}
+      />
+      <AlertMessageConfirmation
+        mainText={"Please confirm that you want to delete translator?"}
+        additionalText={message.text}
+        open={alertStatusConfirmation}
+        handleClose={closeAlertConfirmationNoReload}
+        handleOpen={openAlertConfirmation}
+        status={false}
+        onCancel={closeAlertConfirmationNoReload}
+        onConfirm={finishTranslatorDelete}
+      />
     </div>
   ) : (
     <Unauthorized />

@@ -54,7 +54,7 @@ export const useOverview = (user) => {
         }
       });
     }
-  }, [selectedYear]);
+  }, [selectedYear, user]);
 
   function getArrayWithSums(array) {
     return array.map((item) => {
