@@ -40,6 +40,8 @@ export const useTranslators = (user) => {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
+
+  console.log(translators)
   useEffect(() => {
     setLoading(true);
 
@@ -274,31 +276,28 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const balanceDaySubmit = (translatorId, balanceDay, clientId) => {
+  const balanceDaySubmit = (translatorId, balanceDay, dayId) => {
     let editedTranslator = translators.find(
       (item) => item._id === translatorId
     );
 
-    let editedClient = editedTranslator.clients.find(
-      (item) => item._id === clientId
-    );
+    const newStatistics = editedTranslator.statistics.map(year => {
+      const newMonths = year.months.map(month => {
+        return month.map(day => {
+          if (day.id === dayId) {
+            const newClients = day.clients.map((clientDay) => {
+              return clientDay.id === balanceDay.id ? balanceDay : clientDay
+            })
+            return { ...day, clients: newClients }
+          } else {
+            return day
+          }
+        })
+      })
+      return { ...year, months: newMonths }
+    })
 
-    editedClient.balanceByYears = editedClient.balanceByYears.map((year) => {
-      const editedListOfMonths = year.months.map((month) => {
-        const monthEdited = month.map((day) => {
-          return day.id === balanceDay.id ? balanceDay : day;
-        });
-
-        return monthEdited;
-      });
-
-      return { ...year, months: editedListOfMonths };
-    });
-
-    editedTranslator.clients = editedTranslator.clients.map((client) => {
-      return client._id === editedClient._id ? editedClient : client;
-    });
-
+    editedTranslator.statistics = newStatistics
     saveChangedTranslator(editedTranslator);
   };
 

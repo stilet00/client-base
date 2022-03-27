@@ -9,7 +9,7 @@ import ForumIcon from "@material-ui/icons/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
 import "../../../styles/modules/EditBalanceForm.css";
-import { DEFAULT_DAY_BALANCE, DEFAULT_DAY_CLIENT } from "../../../constants/constants";
+import { DEFAULT_DAY_BALANCE } from "../../../constants/constants";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import useModal from "../../../sharedHooks/useModal";
 import FormControl from "@material-ui/core/FormControl";
@@ -44,7 +44,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function EditBalanceForm({ balanceDaySubmit, id, statistics, name, surname, clients }) {
+export default function EditBalanceForm({ balanceDaySubmit, statistics, name, surname, clients }) {
   const classes = useStyles();
 
   const { open, handleOpen, handleClose } = useModal();
@@ -60,6 +60,10 @@ export default function EditBalanceForm({ balanceDaySubmit, id, statistics, name
   const [currentBalanceDay, setCurrentBalanceDay] = useState(
       findTodayBalance()
   );
+
+  useEffect(() => {
+    setCurrentBalanceDay(findTodayBalance())
+  }, [selectedClient, selectedYear, selectedMonth, selectedDay])
 
   function findYear() {
     return statistics.find((item) => item.year === selectedYear);
@@ -119,14 +123,15 @@ export default function EditBalanceForm({ balanceDaySubmit, id, statistics, name
   }
 
   function onSavePressed() {
-    // balanceDaySubmit(currentBalanceDay, client._id);
+    const dayId = findMonth().find((item, index) => index + 1 === Number(selectedDay)).id
+    balanceDaySubmit(currentBalanceDay, dayId);
   }
 
   return (
-    <div className={""}>
-      <button type="button" onClick={handleOpen}>
-        <AttachMoneyIcon />
-      </button>
+    <>
+      <Button type="button" onClick={handleOpen} fullWidth>
+        <AttachMoneyIcon />Edit balance
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -367,6 +372,6 @@ export default function EditBalanceForm({ balanceDaySubmit, id, statistics, name
           </div>
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 }

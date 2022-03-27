@@ -67,7 +67,7 @@ function SingleTranslator({
       >
         Delete translator
       </Button>
-        { clients.length ? <EditBalanceForm balanceDaySubmit={balanceDaySubmit} name={name} surname={surname} statistics={statistics} clients={clients} id={_id}/> : null }
+        { clients.length ? <EditBalanceForm balanceDaySubmit={(balanceDay, dayId) => balanceDaySubmit(_id, balanceDay, dayId)} name={name} surname={surname} statistics={statistics} clients={clients} id={_id}/> : null }
       <AlertMessageConfirmation
         mainText={"Please confirm deletion!"}
         additionalText={`You are deleting: ${name} ${surname}`}
