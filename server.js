@@ -19,8 +19,8 @@ const PORT = process.env.PORT || 80;
 let app = express();
 app.use(express.static(__dirname + "/build"));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extented: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extented: true }));
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "origin, content-type, accept");
@@ -232,6 +232,7 @@ app.put(translatorsURL + ":id", (req, res) => {
         name: req.body.name,
         surname: req.body.surname,
         clients: req.body.clients,
+        statistics: req.body.statistics,
       },
     },
     (err) => {

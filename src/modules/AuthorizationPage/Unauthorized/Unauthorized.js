@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../../styles/modules/Unauthorized.css";
 import { Link, useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
@@ -8,17 +8,12 @@ const StyledButton = withStyles({
   root: {
     borderRadius: 3,
     border: 0,
-    color: "black",
     height: 48,
     padding: "0 30px",
-    background:
-      "linear-gradient(90deg, rgba(121,114,114,1) 0%, rgba(0,0,0,1) 100%)",
-    boxShadow: "none",
+    boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
     letterSpacing: "3px",
     fontWeight: "bold",
-    "&:hover": {
-      boxShadow: "0 2px 2px rgba(41, 241, 195, 1)",
-    },
+    background: "black",
   },
   label: {
     textTransform: "capitalize",
@@ -38,7 +33,14 @@ function Unauthorized() {
     }
   }
 
-  setTimeout(reduceTime, 1000);
+  const timeCount = setTimeout(reduceTime, 1000);
+
+  useEffect(() => {
+    return () => {
+      // cancel the subscription
+      clearTimeout(timeCount);
+    };
+  }, [timeCount]);
 
   return (
     <>

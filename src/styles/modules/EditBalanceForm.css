@@ -35,6 +35,9 @@
   margin: 15px 5px;
 }
 .balance-form__actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   box-sizing: border-box;
 }
 .balance-form__actions--button {

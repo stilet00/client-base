@@ -1,6 +1,6 @@
 import "./App.css";
 import Karussell from "./modules/Clients/Karussell/Karussell";
-import React, { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,11 +29,11 @@ import PreloadPage from "./modules/PreloadPage/PreloadPage";
 import BackgroundImageOnLoad from "background-image-on-load";
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
-  const stopLoading = useCallback(() => {
+  const stopLoading = () => {
     setIsLoaded(false);
-  });
+  };
 
   return (
     <Router>

@@ -1,10 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+.empty {
+  position: absolute;
+  top: 35%;
+}
+
 .lds-facebook {
-  display: inline-block;
   position: relative;
+  display: inline-block;
   width: 80px;
   height: 80px;
-  top: 40%;
 }
 .lds-facebook div {
   display: inline-block;

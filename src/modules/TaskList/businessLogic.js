@@ -17,7 +17,7 @@ export const useTaskList = (user) => {
     if (user) {
       getTasks().then((res) => setTasks(res.data));
     }
-  }, []);
+  }, [user]);
 
   const newTask = useCallback(
     (text) => {

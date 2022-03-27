@@ -46,7 +46,7 @@ export const useChartsContainer = (user) => {
         }
       });
     }
-  }, [selectedYear]);
+  }, [selectedYear, user]);
 
   const handleChange = useCallback((e) => {
     setSelectedYear(e.target.value);

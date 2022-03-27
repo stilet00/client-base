@@ -3,21 +3,18 @@ import "../../../styles/modules/SingleTranslator.css";
 import { Button } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AlertMessageConfirmation from "../../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 
 function SingleTranslator({
   name,
   surname,
   clients,
   _id,
+  statistics,
   dragOverHandler,
   onBoardDrop,
   dragLeaveHandler,
   deleteTranslator,
   balanceDaySubmit,
-  alertStatusConfirmation,
-  closeAlertConfirmationNoReload,
-  openAlertConfirmation,
 }) {
   return (
     <div className={"gallery-item translator-item"}>
@@ -47,12 +44,6 @@ function SingleTranslator({
               <li key={client._id} className={"clients-list__name-container"}>
                 <p>{`${client.name} ${client.surname}`}</p>
                 <div className="clients-list__action-buttons">
-                  <EditBalanceForm
-                    client={client}
-                    balanceDaySubmit={(currentBalanceDay, clientId) =>
-                      balanceDaySubmit(_id, currentBalanceDay, clientId)
-                    }
-                  />
                   <button type="button">
                     <DeleteIcon />
                   </button>
@@ -64,24 +55,29 @@ function SingleTranslator({
           )}
         </ul>
       </div>
+      {clients.length ? (
+        <EditBalanceForm
+          balanceDaySubmit={(balanceDay, dayId) =>
+            balanceDaySubmit(_id, balanceDay, dayId)
+          }
+          name={name}
+          surname={surname}
+          statistics={statistics}
+          clients={clients}
+          id={_id}
+        />
+      ) : null}
       <Button
         onClick={() => {
-          openAlertConfirmation();
+          deleteTranslator(_id);
         }}
         fullWidth
+        style={{
+          color: "red",
+        }}
       >
         Delete translator
       </Button>
-      <AlertMessageConfirmation
-        mainText={"Please confirm deletion!"}
-        additionalText={`You are deleting: ${name} ${surname}`}
-        open={alertStatusConfirmation}
-        handleClose={closeAlertConfirmationNoReload}
-        handleOpen={openAlertConfirmation}
-        status={false}
-        onCancel={closeAlertConfirmationNoReload}
-        onConfirm={() => deleteTranslator(_id)}
-      />
     </div>
   );
 }
