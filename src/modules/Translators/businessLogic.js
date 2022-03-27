@@ -8,7 +8,6 @@ import {
   updateTranslator,
 } from "../../services/translatorsServices/services";
 import {
-  DEFAULT_BALANCE_DATA,
   DEFAULT_DAY_CLIENT,
 } from "../../constants/constants";
 
@@ -36,13 +35,11 @@ export const useTranslators = (user) => {
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
-  console.log(translators);
   const {
     alertStatusConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
-
   useEffect(() => {
     setLoading(true);
 

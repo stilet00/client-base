@@ -111,20 +111,16 @@ function Translators({ user }) {
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
             />
           ))
-        ) : (
-          <div className="empty">
-            {loading ? <Loader /> : <h1>No translators yet.</h1>}
-          </div>
-        )}
+        ) : loading ? <Loader /> : <h1>No translators yet.</h1>}
       </div>
 
-      <AlertMessage
-        mainText={message.text}
-        open={alertOpen}
-        handleOpen={openAlert}
-        handleClose={closeAlert}
-        status={message.status}
-      />
+      {/*<AlertMessage*/}
+      {/*  mainText={message.text}*/}
+      {/*  open={alertOpen}*/}
+      {/*  handleOpen={openAlert}*/}
+      {/*  handleClose={closeAlert}*/}
+      {/*  status={message.status}*/}
+      {/*/>*/}
     </div>
   ) : (
     <Unauthorized />

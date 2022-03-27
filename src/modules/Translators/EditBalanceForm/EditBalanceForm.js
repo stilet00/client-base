@@ -9,7 +9,7 @@ import ForumIcon from "@material-ui/icons/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
 import "../../../styles/modules/EditBalanceForm.css";
-import { DEFAULT_DAY_BALANCE } from "../../../constants/constants";
+import { DEFAULT_DAY_BALANCE, DEFAULT_DAY_CLIENT } from "../../../constants/constants";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import useModal from "../../../sharedHooks/useModal";
 import FormControl from "@material-ui/core/FormControl";
@@ -44,10 +44,12 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-export default function EditBalanceForm({ client, balanceDaySubmit }) {
+export default function EditBalanceForm({ balanceDaySubmit, id, statistics, name, surname, clients }) {
   const classes = useStyles();
 
   const { open, handleOpen, handleClose } = useModal();
+
+  const [selectedClient, setSelectedClient] = useState(clients[0]._id)
 
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
 
@@ -56,11 +58,11 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
   const [selectedDay, setSelectedDay] = useState(moment().format("D"));
 
   const [currentBalanceDay, setCurrentBalanceDay] = useState(
-    findTodayBalance()
+      findTodayBalance()
   );
 
   function findYear() {
-    return client.balanceByYears.find((item) => item.year === selectedYear);
+    return statistics.find((item) => item.year === selectedYear);
   }
 
   function findMonth() {
@@ -70,7 +72,7 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
   }
 
   function findTodayBalance() {
-    return findMonth().find((item, index) => index + 1 === Number(selectedDay));
+    return findMonth().find((item, index) => index + 1 === Number(selectedDay)).clients.find(item => item.id === selectedClient);
   }
 
   useEffect(() => {
@@ -87,6 +89,11 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
 
   const handleDay = (event) => {
     setSelectedDay(event.target.value);
+  };
+
+  const handleClient = (event) => {
+    console.log(event.target.value)
+    setSelectedClient(clients.find(item => item._id === event.target.value)._id)
   };
 
   const handleChange = useCallback(
@@ -112,7 +119,7 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
   }
 
   function onSavePressed() {
-    balanceDaySubmit(currentBalanceDay, client._id);
+    // balanceDaySubmit(currentBalanceDay, client._id);
   }
 
   return (
@@ -136,9 +143,9 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
           <div className={"form-container balance-form"}>
             <form>
               <h2 id="transition-modal-title">
-                Statistics on {client.name + " " + client.surname}
+                Statistics on {name + " " + surname}
               </h2>
-              <p>Date:</p>
+              <p>Filters:</p>
               <div className={"balance-form__date"}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel>Year</InputLabel>
@@ -173,6 +180,18 @@ export default function EditBalanceForm({ client, balanceDaySubmit }) {
                         {moment(index + 1, "D").format("DD")}
                       </MenuItem>
                     ))}
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel>Client</InputLabel>
+                  <Select
+                      value={selectedClient}
+                      onChange={handleClient}
+                      label="Client"
+                  >
+                    {
+                      clients.map((item) => <MenuItem value={item._id} key={item._id}> {`${item.name} ${item.surname}`} </MenuItem>)
+                    }
                   </Select>
                 </FormControl>
               </div>

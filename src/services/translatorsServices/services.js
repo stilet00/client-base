@@ -1,6 +1,6 @@
 import axios from "axios";
-// const translatorsURL = "http://localhost:80/translators/";
-const translatorsURL = "https://sunrise-agency.herokuapp.com/translators/";
+import { rootURL } from "../rootURL";
+const translatorsURL = rootURL + "translators/";
 
 export function getTranslators() {
   return axios.get(translatorsURL + "get/");
@@ -12,5 +12,6 @@ export function removeTranslator(id) {
   return axios.delete(translatorsURL + id);
 }
 export function updateTranslator(translator) {
+  console.log("yes");
   return axios.put(translatorsURL + translator._id, translator);
 }
