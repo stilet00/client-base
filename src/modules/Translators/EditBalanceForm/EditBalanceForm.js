@@ -15,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import useModal from "../../../sharedHooks/useModal";
 import FormControl from "@material-ui/core/FormControl";
 import DraftsIcon from "@material-ui/icons/Drafts";
+import PhoneCallbackIcon from "@material-ui/icons/PhoneCallback";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -70,7 +71,7 @@ export default function EditBalanceForm({
 
   useEffect(() => {
     setCurrentBalanceDay(findTodayBalance());
-  }, [selectedClient, selectedYear, selectedMonth, selectedDay]);
+  }, [selectedYear, selectedMonth, selectedDay]);
 
   function findYear() {
     return statistics.find((item) => item.year === selectedYear);
@@ -85,7 +86,7 @@ export default function EditBalanceForm({
   function findTodayBalance() {
     return findMonth()
       .find((item, index) => index + 1 === Number(selectedDay))
-      .clients.find((item) => item.id === selectedClient);
+      // .clients.find((item) => item.id === selectedClient);
   }
 
   const handleYear = (event) => {
@@ -100,39 +101,42 @@ export default function EditBalanceForm({
     setSelectedDay(event.target.value);
   };
 
-  const handleClient = (event) => {
-    setSelectedClient(
-      clients.find((item) => item._id === event.target.value)._id
-    );
+  const handleClient = (e) => {
+    setSelectedClient(e.target.value);
   };
 
   const handleChange = useCallback(
     (e) => {
+      const editedClientsBalance = currentBalanceDay.clients.map(client => {
+        if (client.id == selectedClient) {
+          return {...client, [e.target.name]: Number(e.target.value)}
+        } else {
+          return client
+        }
+      });
+
       setCurrentBalanceDay({
         ...currentBalanceDay,
-        [e.target.name]: Number(e.target.value.trim()),
+        clients: editedClientsBalance
       });
     },
-    [currentBalanceDay]
+    [selectedClient, currentBalanceDay]
   );
 
-  function getDaySumm() {
-    return (
-      currentBalanceDay.chats +
-      currentBalanceDay.letters +
-      currentBalanceDay.datingChats +
-      currentBalanceDay.datingLetters +
-      currentBalanceDay.virtualGifts +
-      currentBalanceDay.photoAttachments -
-      currentBalanceDay.penalties
-    );
+  function findClientById() {
+    return currentBalanceDay.clients.find(item => item.id === selectedClient)
+  }
+
+  function getDaySum() {
+    const arrayToSum = Object.values(findClientById())
+    const sumResult = arrayToSum.reduce((sum, current) => {
+      return typeof current === "number" ? sum + current : sum
+    }, 0)
+    return sumResult - findClientById().penalties * 2
   }
 
   function onSavePressed() {
-    const dayId = findMonth().find(
-      (item, index) => index + 1 === Number(selectedDay)
-    ).id;
-    balanceDaySubmit(currentBalanceDay, dayId);
+    balanceDaySubmit(currentBalanceDay);
   }
 
   return (
@@ -207,10 +211,15 @@ export default function EditBalanceForm({
                     onChange={handleClient}
                     label="Client"
                   >
+                    {/*<MenuItem value={0}>*/}
+                    {/* рудая*/}
+                    {/*</MenuItem>*/}
+                    {/*<MenuItem value={1}>*/}
+                    {/*  не рудая*/}
+                    {/*</MenuItem>*/}
                     {clients.map((item) => (
                       <MenuItem value={item._id} key={item._id}>
-                        {" "}
-                        {`${item.name} ${item.surname}`}{" "}
+                        {`${item.name} ${item.surname}`}
                       </MenuItem>
                     ))}
                   </Select>
@@ -224,7 +233,7 @@ export default function EditBalanceForm({
                       name={"chats"}
                       onChange={handleChange}
                       onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.chats}
+                      value={findClientById().chats}
                       variant="outlined"
                       label={"Chats"}
                       type={"number"}
@@ -245,7 +254,7 @@ export default function EditBalanceForm({
                       name={"letters"}
                       onChange={handleChange}
                       onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.letters}
+                      value={findClientById().letters}
                       variant="outlined"
                       label={"Letters"}
                       type={"number"}
@@ -263,10 +272,10 @@ export default function EditBalanceForm({
                   </div>
                   <div className="balance-form__finances-input">
                     <CssTextField
-                      name={"virtualGifts"}
+                      name={"virtualGiftsSvadba"}
                       onChange={handleChange}
                       onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.virtualGifts}
+                      value={findClientById().virtualGiftsSvadba}
                       variant="outlined"
                       label={"Virtual gifts"}
                       type={"number"}
@@ -284,31 +293,10 @@ export default function EditBalanceForm({
                   </div>
                   <div className="balance-form__finances-input">
                     <CssTextField
-                      name={"photoAttachments"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.photoAttachments}
-                      variant="outlined"
-                      label={"Photo attachments"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <CameraAltIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
                       name={"penalties"}
                       onChange={handleChange}
                       onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.penalties}
+                      value={findClientById().penalties}
                       variant="outlined"
                       label={"Penalties"}
                       type={"number"}
@@ -329,12 +317,12 @@ export default function EditBalanceForm({
                 <div className="balance-form__finances__dating">
                   <div className="balance-form__finances-input">
                     <CssTextField
-                      name={"datingChats"}
+                      name={"dating"}
                       onChange={handleChange}
                       onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.datingChats}
+                      value={findClientById().dating}
                       variant="outlined"
-                      label={"Dating chats"}
+                      label={"Dating"}
                       type={"number"}
                       step="0.01"
                       fullWidth
@@ -350,29 +338,50 @@ export default function EditBalanceForm({
                   </div>
                   <div className="balance-form__finances-input">
                     <CssTextField
-                      name={"datingLetters"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={currentBalanceDay.datingLetters}
-                      variant="outlined"
-                      label={"Dating letters"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <DraftsIcon /> Dating
-                          </InputAdornment>
-                        ),
-                      }}
+                        name={"phoneCalls"}
+                        onChange={handleChange}
+                        onClick={(e) => e.target.select()}
+                        value={findClientById().phoneCalls}
+                        variant="outlined"
+                        label={"Phone calls"}
+                        type={"number"}
+                        step="0.01"
+                        fullWidth
+                        required
+                        InputProps={{
+                          endAdornment: (
+                              <InputAdornment position="end">
+                                <PhoneCallbackIcon /> Phone
+                              </InputAdornment>
+                          ),
+                        }}
+                    />
+                  </div>
+                  <div className="balance-form__finances-input">
+                    <CssTextField
+                        name={"virtualGiftsDating"}
+                        onChange={handleChange}
+                        onClick={(e) => e.target.select()}
+                        value={findClientById().virtualGiftsDating}
+                        variant="outlined"
+                        label={"Virtual gifts dating"}
+                        type={"number"}
+                        step="0.01"
+                        fullWidth
+                        required
+                        InputProps={{
+                          endAdornment: (
+                              <InputAdornment position="end">
+                                <CardGiftcardIcon />
+                              </InputAdornment>
+                          ),
+                        }}
                     />
                   </div>
                 </div>
               </div>
               <p>
-                Day balance: <b>{getDaySumm().toFixed(2) + " $"}</b>
+                Day balance: <b>{getDaySum().toFixed(2) + " $"}</b>
               </p>
               <div className="balance-form__actions">
                 <Button

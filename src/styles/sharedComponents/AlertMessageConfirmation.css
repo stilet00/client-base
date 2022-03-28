@@ -16,23 +16,18 @@
   text-align: center;
   background: url("/src/images/menu-background.png");
   background-size: cover;
-  background-repeat: repeat;
-}
-.message-container h2 {
-  text-shadow: none;
-}
-.message-container p {
-  color: #000000;
-}
+  background-repeat: repeat; }
+  .message-container h2 {
+    text-shadow: none; }
+  .message-container p {
+    color: #000000; }
 
 .green-box {
-  border-color: white;
-}
+  border-color: white; }
 
 .confirmation-buttons {
   width: 90%;
   display: flex;
-  justify-content: space-between;
-}
+  justify-content: space-between; }
 
 /*# sourceMappingURL=AlertMessageConfirmation.css.map */

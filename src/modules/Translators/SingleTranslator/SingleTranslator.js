@@ -43,11 +43,11 @@ function SingleTranslator({
             clients.map((client) => (
               <li key={client._id} className={"clients-list__name-container"}>
                 <p>{`${client.name} ${client.surname}`}</p>
-                <div className="clients-list__action-buttons">
-                  <button type="button">
-                    <DeleteIcon />
-                  </button>
-                </div>
+                {/*<div className="clients-list__action-buttons">*/}
+                {/*  <button type="button">*/}
+                {/*    <DeleteIcon />*/}
+                {/*  </button>*/}
+                {/*</div>*/}
               </li>
             ))
           ) : (
@@ -57,8 +57,8 @@ function SingleTranslator({
       </div>
       {clients.length ? (
         <EditBalanceForm
-          balanceDaySubmit={(balanceDay, dayId) =>
-            balanceDaySubmit(_id, balanceDay, dayId)
+          balanceDaySubmit={(balanceDay) =>
+            balanceDaySubmit(_id, balanceDay)
           }
           name={name}
           surname={surname}
