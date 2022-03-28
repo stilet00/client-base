@@ -75,6 +75,7 @@ function AuthorizationPage() {
     onSubmit,
     openAlert,
     password,
+    buttonElement,
   } = useAuthorizationPage();
 
   return (
@@ -118,6 +119,7 @@ function AuthorizationPage() {
                 fullWidth
                 className={"enter-button"}
                 type={"submit"}
+                ref={buttonElement}
               >
                 Enter
               </StyledButton>

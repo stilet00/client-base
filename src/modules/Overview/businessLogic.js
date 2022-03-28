@@ -23,7 +23,7 @@ export const useOverview = (user) => {
 
   const handleChange = useCallback((event) => {
     setSelectedYear(event.target.value);
-  }, []);
+  }, [selectedYear]);
 
   useEffect(() => {
     if (user) {

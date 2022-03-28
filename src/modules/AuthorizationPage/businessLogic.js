@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { DEFAULT_ERROR } from "../../constants";
 import { useHistory } from "react-router-dom";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
@@ -15,6 +15,8 @@ export const useAuthorizationPage = () => {
   });
 
   const history = useHistory();
+
+  const buttonElement = useRef(null);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
@@ -76,6 +78,7 @@ export const useAuthorizationPage = () => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      buttonElement.current.focus();
       signInWithEmailPassword();
     },
     [signInWithEmailPassword]
@@ -92,5 +95,6 @@ export const useAuthorizationPage = () => {
     alertOpen,
     openAlert,
     closeAlert,
+    buttonElement,
   };
 };

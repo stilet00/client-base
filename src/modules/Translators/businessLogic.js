@@ -16,6 +16,7 @@ import {
 } from "../../services/clientsServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import moment from "moment";
+import useModal from "../../sharedHooks/useModal";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -303,7 +304,7 @@ export const useTranslators = (user) => {
     const newStatistics = editedTranslator.statistics.map((year) => {
       const newMonths = year.months.map((month) => {
         return month.map((day) => {
-          return day.id === balanceDay.id ? balanceDay : day
+          return day.id === balanceDay.id ? balanceDay : day;
         });
       });
       return { ...year, months: newMonths };
@@ -338,5 +339,110 @@ export const useTranslators = (user) => {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
+  };
+};
+
+export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
+  const { open, handleOpen, handleClose } = useModal();
+
+  const [selectedClient, setSelectedClient] = useState(clients[0]._id);
+
+  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+
+  const [selectedMonth, setSelectedMonth] = useState(moment().format("M"));
+
+  const [selectedDay, setSelectedDay] = useState(moment().format("D"));
+
+  const [currentBalanceDay, setCurrentBalanceDay] = useState(
+    findTodayBalance()
+  );
+
+  useEffect(() => {
+    setCurrentBalanceDay(findTodayBalance());
+  }, [selectedYear, selectedMonth, selectedDay]);
+
+  function findYear() {
+    return statistics.find((item) => item.year === selectedYear);
+  }
+
+  function findMonth() {
+    return findYear().months.find(
+      (item, index) => index + 1 === Number(selectedMonth)
+    );
+  }
+
+  function findTodayBalance() {
+    return findMonth().find((item, index) => index + 1 === Number(selectedDay));
+    // .clients.find((item) => item.id === selectedClient);
+  }
+
+  const handleYear = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+  const handleMonth = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const handleDay = (event) => {
+    setSelectedDay(event.target.value);
+  };
+
+  const handleClient = (e) => {
+    setSelectedClient(e.target.value);
+  };
+
+  const handleChange = useCallback(
+    (e) => {
+      const editedClientsBalance = currentBalanceDay.clients.map((client) => {
+        if (client.id === selectedClient) {
+          return { ...client, [e.target.name]: Number(e.target.value) };
+        } else {
+          return client;
+        }
+      });
+
+      setCurrentBalanceDay({
+        ...currentBalanceDay,
+        clients: editedClientsBalance,
+      });
+    },
+    [selectedClient, currentBalanceDay]
+  );
+
+  function findClientById() {
+    return currentBalanceDay.clients.find((item) => item.id === selectedClient);
+  }
+
+  function getDaySum() {
+    const arrayToSum = Object.values(findClientById());
+    const sumResult = arrayToSum.reduce((sum, current) => {
+      return typeof current === "number" ? sum + current : sum;
+    }, 0);
+    return sumResult - findClientById().penalties * 2;
+  }
+
+  function onSavePressed() {
+    balanceDaySubmit(currentBalanceDay);
+  }
+
+  return {
+    handleOpen,
+    open,
+    handleClose,
+    selectedYear,
+    handleYear,
+    selectedMonth,
+    handleMonth,
+    findYear,
+    selectedDay,
+    handleDay,
+    findMonth,
+    selectedClient,
+    handleClient,
+    handleChange,
+    findClientById,
+    getDaySum,
+    onSavePressed,
   };
 };
