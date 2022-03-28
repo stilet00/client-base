@@ -1,8 +1,10 @@
 import React from "react";
 import "../../../styles/modules/SingleTranslator.css";
-import { Button } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Button } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
-import DeleteIcon from "@material-ui/icons/Delete";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { Typography } from "@material-ui/core";
+
 
 function SingleTranslator({
   name,
@@ -16,7 +18,14 @@ function SingleTranslator({
   deleteTranslator,
   balanceDaySubmit,
 }) {
-  return (
+    const [expanded, setExpanded] = React.useState('panel1');
+    const handleChange =
+        (panel) => (event, newExpanded) => {
+            setExpanded(newExpanded ? panel : false);
+        };
+
+
+    return (
     <div className={"gallery-item translator-item"}>
       <div className={"name-table"}>
         <p>Name:</p>
@@ -32,33 +41,44 @@ function SingleTranslator({
         <b>Clients in work:</b>
       </p>
       <div className="clients-box">
-        <ul
-          className={"clients-list"}
-          id={_id}
-          onDragOver={dragOverHandler}
-          onDragLeave={dragLeaveHandler}
-          onDrop={(e) => onBoardDrop(e, _id)}
-        >
-          {clients.length > 0 ? (
-            clients.map((client) => (
-              <li key={client._id} className={"clients-list__name-container"}>
-                <p>{`${client.name} ${client.surname}`}</p>
-                <div className="clients-list__action-buttons">
-                  <button type="button">
-                    <DeleteIcon />
-                  </button>
-                </div>
-              </li>
-            ))
-          ) : (
-            <p>Drag client here...</p>
-          )}
-        </ul>
+          <Accordion>
+              <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+              >
+                  <Typography>Clients</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                  <ul
+                      className={"clients-list"}
+                      id={_id}
+                      onDragOver={dragOverHandler}
+                      onDragLeave={dragLeaveHandler}
+                      onDrop={(e) => onBoardDrop(e, _id)}
+                  >
+                      {clients.length > 0 ? (
+                          clients.map((client) => (
+                              <li key={client._id} className={"clients-list__name-container"}>
+                                  <p>{`${client.name} ${client.surname}`}</p>
+                                  {/*<div className="clients-list__action-buttons">*/}
+                                  {/*  <button type="button">*/}
+                                  {/*    <DeleteIcon />*/}
+                                  {/*  </button>*/}
+                                  {/*</div>*/}
+                              </li>
+                          ))
+                      ) : (
+                          <p>Drag client here...</p>
+                      )}
+                  </ul>
+              </AccordionDetails>
+          </Accordion>
       </div>
       {clients.length ? (
         <EditBalanceForm
-          balanceDaySubmit={(balanceDay, dayId) =>
-            balanceDaySubmit(_id, balanceDay, dayId)
+          balanceDaySubmit={(balanceDay) =>
+            balanceDaySubmit(_id, balanceDay)
           }
           name={name}
           surname={surname}

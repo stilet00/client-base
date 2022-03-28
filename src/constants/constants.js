@@ -18,10 +18,11 @@ export class DEFAULT_DAY_CLIENT {
     this.id = clientId;
     this.chats = 0;
     this.letters = 0;
-    this.datingChats = 0;
-    this.datingLetters = 0;
-    this.virtualGifts = 0;
+    this.dating = 0;
+    this.virtualGiftsSvadba = 0;
+    this.virtualGiftsDating = 0;
     this.photoAttachments = 0;
+    this.phoneCalls = 0;
     this.penalties = 0;
   }
 }

@@ -121,10 +121,10 @@ export const useTranslators = (user) => {
   }, []);
 
   const saveChangedTranslator = useCallback(
-    (editedTranslator) => {
+    (editedTranslator, message) => {
       updateTranslator(editedTranslator).then((res) => {
         if (res.status === 200) {
-          showAlertMessage(MESSAGES.translatorFilled);
+          showAlertMessage(message);
           setTranslators(
             translators.map((item) => {
               return item._id === editedTranslator._id
@@ -162,7 +162,7 @@ export const useTranslators = (user) => {
         showAlertMessage(MESSAGES.clientExist);
       } else {
         editedTranslator = insertClient(editedTranslator, currentClient);
-        saveChangedTranslator(editedTranslator);
+        saveChangedTranslator(editedTranslator, MESSAGES.translatorFilled);
       }
     },
     [translators, currentClient, showAlertMessage, showAlertMessage]
@@ -296,28 +296,21 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const balanceDaySubmit = (translatorId, balanceDay, dayId) => {
+  const balanceDaySubmit = (translatorId, balanceDay) => {
     let editedTranslator = translators.find(
       (item) => item._id === translatorId
     );
     const newStatistics = editedTranslator.statistics.map((year) => {
       const newMonths = year.months.map((month) => {
         return month.map((day) => {
-          if (day.id === dayId) {
-            const newClients = day.clients.map((clientDay) => {
-              return clientDay.id === balanceDay.id ? balanceDay : clientDay;
-            });
-            return { ...day, clients: newClients };
-          } else {
-            return day;
-          }
+          return day.id === balanceDay.id ? balanceDay : day
         });
       });
       return { ...year, months: newMonths };
     });
 
     editedTranslator.statistics = newStatistics;
-    saveChangedTranslator(editedTranslator);
+    saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
   };
 
   return {

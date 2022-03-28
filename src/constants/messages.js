@@ -38,4 +38,9 @@ export const MESSAGES = {
     text: "Something went wrong :(",
     status: false,
   },
+
+  changesSaved: {
+    text: "Changes have been saved",
+    status: true,
+  },
 };
