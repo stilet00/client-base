@@ -6,41 +6,55 @@
   overflow: scroll;
   background: url("/src/images/menu-background.png");
   background-size: cover;
-  background-repeat: repeat; }
-  .balance-form h2 {
-    margin-left: auto;
-    margin-right: auto; }
-  .balance-form p {
-    margin: 8px; }
-  .balance-form form {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left; }
-  .balance-form__date {
-    display: flex;
-    box-sizing: border-box;
-    flex-direction: column;
-    width: 100%; }
-  .balance-form__finances {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%; }
-    .balance-form__finances-input {
-      margin: 15px 5px; }
-  .balance-form__actions {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box; }
-    .balance-form__actions--button {
-      margin: 15px 5px !important; }
+  background-repeat: repeat;
+}
+.balance-form h2 {
+  margin-left: auto;
+  margin-right: auto;
+}
+.balance-form p {
+  margin: 8px;
+}
+.balance-form form {
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+}
+.balance-form__date {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  width: 100%;
+}
+.balance-form__finances {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+}
+.balance-form__finances-input {
+  margin: 15px 5px;
+}
+.balance-form__actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+.balance-form__actions--button {
+  margin: 15px 5px !important;
+}
 
 @media only screen and (max-width: 900px) {
   .balance-form {
-    min-height: auto; }
-    .balance-form__finances {
-      flex-direction: column; }
-      .balance-form__finances__dating, .balance-form__finances__svadba {
-        width: 100%; } }
+    min-height: auto;
+  }
+  .balance-form__finances {
+    flex-direction: column;
+  }
+  .balance-form__finances__dating,
+  .balance-form__finances__svadba {
+    width: 100%;
+  }
+}
 
 /*# sourceMappingURL=EditBalanceForm.css.map */

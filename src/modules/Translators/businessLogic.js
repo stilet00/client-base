@@ -16,6 +16,8 @@ import {
 } from "../../services/clientsServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import moment from "moment";
+import useModal from "../../sharedHooks/useModal";
+import { calculateBalanceDaySum } from "../../sharedFunctions/sharedFunctions";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -265,7 +267,6 @@ export const useTranslators = (user) => {
         showAlertMessage(MESSAGES.addTranslator);
         addTranslator(newTranslator).then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             setTranslators([
               ...translators,
               { ...newTranslator, _id: res.data },
@@ -303,7 +304,7 @@ export const useTranslators = (user) => {
     const newStatistics = editedTranslator.statistics.map((year) => {
       const newMonths = year.months.map((month) => {
         return month.map((day) => {
-          return day.id === balanceDay.id ? balanceDay : day
+          return day.id === balanceDay.id ? balanceDay : day;
         });
       });
       return { ...year, months: newMonths };
@@ -311,6 +312,18 @@ export const useTranslators = (user) => {
 
     editedTranslator.statistics = newStatistics;
     saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
+  };
+
+  const calculateTranslatorMonthTotal = (statistics, filter) => {
+    const month = statistics.find(year => year.year === moment().format("YYYY")
+    ).months.find((month, index) => index + 1 === Number(moment().format("M")));
+
+    const total = month.reduce((sum, current) => {
+      return sum + current.clients.reduce((sum, current) =>{
+        return sum + calculateBalanceDaySum(current);
+      }, 0)
+    }, 0)
+    return total.toFixed(2)
   };
 
   return {
@@ -338,5 +351,102 @@ export const useTranslators = (user) => {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
+    calculateTranslatorMonthTotal
+  };
+};
+
+export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
+  const { open, handleOpen, handleClose } = useModal();
+
+  const [selectedClient, setSelectedClient] = useState(clients[0]._id);
+
+  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+
+  const [selectedMonth, setSelectedMonth] = useState(moment().format("M"));
+
+  const [selectedDay, setSelectedDay] = useState(moment().format("D"));
+
+  const [currentBalanceDay, setCurrentBalanceDay] = useState(
+    findTodayBalance()
+  );
+
+  useEffect(() => {
+    setCurrentBalanceDay(findTodayBalance());
+  }, [selectedYear, selectedMonth, selectedDay]);
+
+  function findYear() {
+    return statistics.find((item) => item.year === selectedYear);
+  }
+
+  function findMonth() {
+    return findYear().months.find(
+      (item, index) => index + 1 === Number(selectedMonth)
+    );
+  }
+
+  function findTodayBalance() {
+    return findMonth().find((item, index) => index + 1 === Number(selectedDay));
+    // .clients.find((item) => item.id === selectedClient);
+  }
+
+  const handleYear = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+  const handleMonth = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const handleDay = (event) => {
+    setSelectedDay(event.target.value);
+  };
+
+  const handleClient = (e) => {
+    setSelectedClient(e.target.value);
+  };
+
+  const handleChange = useCallback(
+    (e) => {
+      const editedClientsBalance = currentBalanceDay.clients.map((client) => {
+        if (client.id === selectedClient) {
+          return { ...client, [e.target.name]: Number(e.target.value) };
+        } else {
+          return client;
+        }
+      });
+
+      setCurrentBalanceDay({
+        ...currentBalanceDay,
+        clients: editedClientsBalance,
+      });
+    },
+    [selectedClient, currentBalanceDay]
+  );
+
+  function findClientById() {
+    return currentBalanceDay.clients.find((item) => item.id === selectedClient);
+  }
+
+  function onSavePressed() {
+    balanceDaySubmit(currentBalanceDay);
+  }
+
+  return {
+    handleOpen,
+    open,
+    handleClose,
+    selectedYear,
+    handleYear,
+    selectedMonth,
+    handleMonth,
+    findYear,
+    selectedDay,
+    handleDay,
+    findMonth,
+    selectedClient,
+    handleClient,
+    handleChange,
+    findClientById,
+    onSavePressed,
   };
 };
