@@ -21,6 +21,7 @@ import Select from "@material-ui/core/Select";
 import moment from "moment";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useBalanceForm } from "../businessLogic";
+import { calculateBalanceDaySum } from "../../../sharedFunctions/sharedFunctions";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -68,7 +69,6 @@ export default function EditBalanceForm({
     handleClient,
     handleChange,
     findClientById,
-    getDaySum,
     onSavePressed,
   } = useBalanceForm({
     balanceDaySubmit,
@@ -320,7 +320,7 @@ export default function EditBalanceForm({
                 </div>
               </div>
               <p>
-                Day balance: <b>{getDaySum().toFixed(2) + " $"}</b>
+                Day balance: <b>{calculateBalanceDaySum(findClientById()).toFixed(2) + " $"}</b>
               </p>
               <div className="balance-form__actions">
                 <Button

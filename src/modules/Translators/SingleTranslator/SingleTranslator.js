@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import StarIcon from "@material-ui/icons/Star";
 import { Typography } from "@material-ui/core";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import moment from "moment";
 
 function SingleTranslator({
   name,
@@ -26,7 +27,9 @@ function SingleTranslator({
   dragLeaveHandler,
   deleteTranslator,
   balanceDaySubmit,
+  calculateTranslatorMonthTotal
 }) {
+  calculateTranslatorMonthTotal(statistics)
   return (
     <>
       <Card sx={{ minWidth: 275 }} className={"translator-item"}>
@@ -77,7 +80,7 @@ function SingleTranslator({
             </div>
           </div>
           <Typography variant="body2">
-            Balance will be here soon...
+            Balance for { `${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(statistics)}$` }
             {/*<br />*/}
             {/*{'"a benevolent smile"'}*/}
           </Typography>

@@ -12,6 +12,5 @@ export function removeTranslator(id) {
   return axios.delete(translatorsURL + id);
 }
 export function updateTranslator(translator) {
-  console.log("yes");
   return axios.put(translatorsURL + translator._id, translator);
 }

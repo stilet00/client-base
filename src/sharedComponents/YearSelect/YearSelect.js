@@ -1,7 +1,6 @@
 import { FormControl, MenuItem, Select } from "@material-ui/core";
 import "../../styles/sharedComponents/YearSelected.css";
 function YearSelect({ year, handleChange, arrayOfYears }) {
-    console.log(year)
   return (
     <FormControl style={{ width: "95%" }}>
       <Select value={year} onChange={handleChange}>

@@ -21,9 +21,9 @@ export const useOverview = (user) => {
 
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
 
-  const handleChange = useCallback((event) => {
+  const handleChange = (event) => {
     setSelectedYear(event.target.value);
-  }, [selectedYear]);
+  };
 
   useEffect(() => {
     if (user) {

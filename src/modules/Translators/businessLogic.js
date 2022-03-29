@@ -17,6 +17,7 @@ import {
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import moment from "moment";
 import useModal from "../../sharedHooks/useModal";
+import { calculateBalanceDaySum } from "../../sharedFunctions/sharedFunctions";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -266,7 +267,6 @@ export const useTranslators = (user) => {
         showAlertMessage(MESSAGES.addTranslator);
         addTranslator(newTranslator).then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             setTranslators([
               ...translators,
               { ...newTranslator, _id: res.data },
@@ -314,6 +314,18 @@ export const useTranslators = (user) => {
     saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
   };
 
+  const calculateTranslatorMonthTotal = (statistics, filter) => {
+    const month = statistics.find(year => year.year === moment().format("YYYY")
+    ).months.find((month, index) => index + 1 === Number(moment().format("M")));
+
+    const total = month.reduce((sum, current) => {
+      return sum + current.clients.reduce((sum, current) =>{
+        return sum + calculateBalanceDaySum(current);
+      }, 0)
+    }, 0)
+    return total.toFixed(2)
+  };
+
   return {
     translators,
     startTranslatorDelete,
@@ -339,6 +351,7 @@ export const useTranslators = (user) => {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
+    calculateTranslatorMonthTotal
   };
 };
 
@@ -414,14 +427,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     return currentBalanceDay.clients.find((item) => item.id === selectedClient);
   }
 
-  function getDaySum() {
-    const arrayToSum = Object.values(findClientById());
-    const sumResult = arrayToSum.reduce((sum, current) => {
-      return typeof current === "number" ? sum + current : sum;
-    }, 0);
-    return sumResult - findClientById().penalties * 2;
-  }
-
   function onSavePressed() {
     balanceDaySubmit(currentBalanceDay);
   }
@@ -442,7 +447,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     handleClient,
     handleChange,
     findClientById,
-    getDaySum,
     onSavePressed,
   };
 };

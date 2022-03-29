@@ -44,6 +44,7 @@ function Translators({ user }) {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
+    calculateTranslatorMonthTotal
   } = useTranslators(user);
 
   return user ? (
@@ -111,6 +112,7 @@ function Translators({ user }) {
               alertStatusConfirmation={alertStatusConfirmation}
               openAlertConfirmation={openAlertConfirmation}
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
+              calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
             />
           ))
         ) : loading ? (
