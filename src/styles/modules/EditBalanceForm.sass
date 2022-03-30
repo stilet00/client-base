@@ -1,8 +1,8 @@
+@import "../../variables"
 .balance-form
   width: 90vw
   max-width: 500px
-  height: 90vh
-  min-height: 820px
+  min-height: 700px
   overflow: scroll
   background: url("/src/images/menu-background.png")
   background-size: cover
@@ -26,6 +26,12 @@
     flex-direction: column
     width: 100%
 
+    &__accordion
+      background: transparent!important
+      margin: 10px
+      border-bottom-right-radius: 4px!important
+      border-bottom-left-radius: 4px!important
+
   &__finances
     display: flex
     box-sizing: border-box
@@ -46,7 +52,7 @@
 
 @media only screen and (max-width: 900px)
   .balance-form
-    min-height: auto
+    height: 90vh
     &__finances
       flex-direction: column
       &__dating, &__svadba

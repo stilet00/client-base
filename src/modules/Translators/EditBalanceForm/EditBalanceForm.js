@@ -22,6 +22,8 @@ import moment from "moment";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useBalanceForm } from "../businessLogic";
 import { calculateBalanceDaySum } from "../../../sharedFunctions/sharedFunctions";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -108,41 +110,52 @@ export default function EditBalanceForm({
               </h2>
               <p>Filters:</p>
               <div className={"balance-form__date"}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel>Year</InputLabel>
-                  <Select
-                    value={selectedYear}
-                    onChange={handleYear}
-                    label="Year"
-                    disabled
+                <Accordion className={"balance-form__date__accordion"}>
+                  <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
                   >
-                    <MenuItem value={selectedYear}>{selectedYear}</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor={"Month"}>Month</InputLabel>
-                  <Select
-                    value={selectedMonth}
-                    onChange={handleMonth}
-                    label="Month"
-                  >
-                    {findYear().months.map((item, index) => (
-                      <MenuItem value={index + 1} key={index}>
-                        {moment(index + 1, "M").format("MMMM")}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor={"Day"}>Day</InputLabel>
-                  <Select value={selectedDay} onChange={handleDay} label="Day">
-                    {findMonth().map((item, index) => (
-                      <MenuItem value={index + 1} key={index}>
-                        {moment(index + 1, "D").format("DD")}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <Typography>Date filter</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel>Year</InputLabel>
+                      <Select
+                          value={selectedYear}
+                          onChange={handleYear}
+                          label="Year"
+                          disabled
+                      >
+                        <MenuItem value={selectedYear}>{selectedYear}</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel htmlFor={"Month"}>Month</InputLabel>
+                      <Select
+                          value={selectedMonth}
+                          onChange={handleMonth}
+                          label="Month"
+                      >
+                        {findYear().months.map((item, index) => (
+                            <MenuItem value={index + 1} key={index}>
+                              {moment(index + 1, "M").format("MMMM")}
+                            </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel htmlFor={"Day"}>Day</InputLabel>
+                      <Select value={selectedDay} onChange={handleDay} label="Day">
+                        {findMonth().map((item, index) => (
+                            <MenuItem value={index + 1} key={index}>
+                              {moment(index + 1, "D").format("DD")}
+                            </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </AccordionDetails>
+                </Accordion>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel>Client</InputLabel>
                   <Select
@@ -150,12 +163,6 @@ export default function EditBalanceForm({
                     onChange={handleClient}
                     label="Client"
                   >
-                    {/*<MenuItem value={0}>*/}
-                    {/* рудая*/}
-                    {/*</MenuItem>*/}
-                    {/*<MenuItem value={1}>*/}
-                    {/*  не рудая*/}
-                    {/*</MenuItem>*/}
                     {clients.map((item) => (
                       <MenuItem value={item._id} key={item._id}>
                         {`${item.name} ${item.surname}`}
@@ -252,7 +259,6 @@ export default function EditBalanceForm({
                     />
                   </div>
                 </div>
-
                 <div className="balance-form__finances__dating">
                   <div className="balance-form__finances-input">
                     <CssTextField
