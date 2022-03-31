@@ -17,7 +17,7 @@ import {
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import moment from "moment";
 import useModal from "../../sharedHooks/useModal";
-import { calculateBalanceDaySum } from "../../sharedFunctions/sharedFunctions";
+import { calculateBalanceDaySum, findYesterday } from "../../sharedFunctions/sharedFunctions";
 
 export const useTranslators = (user) => {
   const [message, setMessage] = useState(MESSAGES.addTranslator);
@@ -32,6 +32,8 @@ export const useTranslators = (user) => {
     left: false,
   });
 
+  const [reload, setReload] = useState(true);
+
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
@@ -45,9 +47,14 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   useEffect(() => {
+    let interval = setInterval(() => setReload(true), (1000 * 60 * 3));
+    return () => clearInterval(interval)
+  })
+
+  useEffect(() => {
     setLoading(true);
 
-    if (user) {
+    if (user && reload) {
       getTranslators().then((res) => {
         if (res.status === 200) {
           setLoading(false);
@@ -64,8 +71,10 @@ export const useTranslators = (user) => {
           console.log("No clients");
         }
       });
+
+      setReload(false);
     }
-  }, [user]);
+  }, [user, reload]);
 
   const showAlertMessage = useCallback(
     (alertMessage) => {
@@ -364,7 +373,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
   const [selectedMonth, setSelectedMonth] = useState(moment().format("M"));
 
-  const [selectedDay, setSelectedDay] = useState(moment().format("D"));
+  const [selectedDay, setSelectedDay] = useState(findYesterday());
 
   const [currentBalanceDay, setCurrentBalanceDay] = useState(
     findTodayBalance()
