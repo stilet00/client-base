@@ -9,7 +9,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import BarChartIcon from "@material-ui/icons/BarChart";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { useHistory } from "react-router-dom";
 import "../../styles/sharedComponents/Menu.css";
 import firebase from "firebase";
@@ -94,12 +93,6 @@ export default function Menu() {
                   <FormatListNumberedIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Task List"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/clients")}>
-                <ListItemIcon>
-                  <SupervisorAccountIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Clients"} />
               </ListItem>
               <ListItem button onClick={() => history.push("/translators")}>
                 <ListItemIcon>

@@ -9,6 +9,7 @@ import {
 } from "../../services/balanceServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import useModal from "../../sharedHooks/useModal";
+import { findYesterday } from "../../sharedFunctions/sharedFunctions";
 
 export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);
@@ -296,7 +297,7 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
 
 export const useChartDateForm = ({ monthData, onValueSubmit }) => {
   const [value, setValue] = useState("");
-  const [selectedDate, setSelectedDate] = useState(moment().format("D"));
+  const [selectedDate, setSelectedDate] = useState(findYesterday());
   const { handleClose, handleOpen, open } = useModal();
 
   const handleChange = useCallback((event) => {

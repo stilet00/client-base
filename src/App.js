@@ -1,5 +1,7 @@
 import "./App.css";
-import Karussell from "./modules/Clients/Karussell/Karussell";
+import "./styles/modules/karusell.css";
+import "./styles/modules/Gallery.css";
+import "./styles/modules/ClientsForm.css";
 import { useState } from "react";
 import {
   BrowserRouter as Router,
@@ -7,8 +9,6 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import Media from "react-media";
-import Gallery from "./modules/Clients/Gallery/Gallery";
 import AuthorizationPage from "./modules/AuthorizationPage/AuthorizationPage";
 import TaskList from "./modules/TaskList/TaskList";
 import ChartsContainer from "./modules/ChartsContainer/ChartsContainer";
@@ -52,16 +52,6 @@ function App() {
               {({ user }) => {
                 return (
                   <Switch>
-                    <Route path="/clients">
-                      <Media
-                        query="(max-width: 811px)"
-                        render={() => <Karussell user={user} />}
-                      />
-                      <Media
-                        query="(min-width: 812px)"
-                        render={() => <Gallery user={user} />}
-                      />
-                    </Route>
                     <Redirect from="/overview/*" to="/overview" />
                     <Route path="/overview">
                       <Overview user={user} />
