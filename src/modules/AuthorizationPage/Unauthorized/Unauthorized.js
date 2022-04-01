@@ -33,15 +33,13 @@ function Unauthorized() {
     }
   }
 
-
-
   useEffect(() => {
     const timeCount = setTimeout(reduceTime, 1000);
     return () => {
       // cancel the subscription
       clearTimeout(timeCount);
     };
-  }, );
+  });
 
   return (
     <>

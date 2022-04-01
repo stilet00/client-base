@@ -28,15 +28,15 @@ function SingleTranslator({
   deleteTranslator,
   balanceDaySubmit,
   calculateTranslatorMonthTotal,
-  calculateTranslatorYesterdayTotal
+  calculateTranslatorYesterdayTotal,
 }) {
-
   return (
     <>
       <Card sx={{ minWidth: 275 }} className={"translator-item"}>
         <CardContent>
-          {clients.map((item) => (<StarIcon key={item._id} fontSize={"small"} color={"disabled"}/>
-            ))}
+          {clients.map((item) => (
+            <StarIcon key={item._id} fontSize={"small"} color={"disabled"} />
+          ))}
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
           </Typography>
@@ -84,12 +84,15 @@ function SingleTranslator({
             <b>Total:</b>
           </Typography>
           <Typography variant="body2" align={"left"}>
-            For { `${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(statistics)}$` }
+            For{" "}
+            {`${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(
+              statistics
+            )}$`}
             {/*<br />*/}
             {/*{'"a benevolent smile"'}*/}
           </Typography>
           <Typography variant="body2" align={"left"}>
-            For { `yesterday: ${calculateTranslatorYesterdayTotal(statistics)}$` }
+            For {`yesterday: ${calculateTranslatorYesterdayTotal(statistics)}$`}
             {/*<br />*/}
             {/*{'"a benevolent smile"'}*/}
           </Typography>
