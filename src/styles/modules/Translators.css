@@ -42,7 +42,7 @@
     border: none;
     height: 20px; }
 
-.MuiPopover-paper {
+.sum-popover .MuiPaper-root {
   display: flex;
   align-items: center;
   justify-content: center;
