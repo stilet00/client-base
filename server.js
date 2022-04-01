@@ -27,6 +27,31 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   next();
 });
+
+//routes
+
+app.get(rootURL + "chart/", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "chart?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "overview/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/true?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "tasks/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "translators/?", function (request, response, next) {
+  response.sendFile(__dirname + "/build/index.html");
+});
+
 // task list api
 
 app.get(tasksURL + "get", (req, res) => {
@@ -132,44 +157,6 @@ app.put(balanceURL + ":id", (req, res) => {
   );
 });
 
-// app.post(clientsURL + "add", (req, res) => {
-//   if (req.body) {
-//     let client = { ...req.body };
-//
-//     collectionClients.insertOne(client, (err, result) => {
-//       if (err) {
-//         return res.sendStatus(500);
-//       } else {
-//         res.send(result.ops[0]._id);
-//       }
-//     });
-//   }
-// });
-
-//routes
-
-app.get(rootURL + "chart/", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "chart?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "overview/?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "clients/true?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "clients/?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "tasks/?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "translators/?", function (request, response, next) {
-  response.sendFile(__dirname + "/build/index.html");
-});
-
 //clients api
 
 app.get(clientsURL + "get", (req, res) => {
@@ -201,6 +188,7 @@ app.delete(clientsURL + ":id", (req, res) => {
     res.sendStatus(200);
   });
 });
+
 // translators api
 
 app.get(translatorsURL + "get", (req, res) => {
@@ -211,6 +199,7 @@ app.get(translatorsURL + "get", (req, res) => {
     res.send(docs);
   });
 });
+
 app.post(translatorsURL + "add", function (req, res, next) {
   if (!req.body) {
     res.send("Ошибка при загрузке переводчика");
@@ -224,6 +213,7 @@ app.post(translatorsURL + "add", function (req, res, next) {
     });
   }
 });
+
 app.put(translatorsURL + ":id", (req, res) => {
   collectionTranslators.updateOne(
     { _id: ObjectId(req.params.id) },

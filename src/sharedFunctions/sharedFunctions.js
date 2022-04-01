@@ -11,3 +11,9 @@ export function calculateBalanceDaySum(targetObject) {
 export function findYesterday() {
     return moment().format("D") !== "1" ? moment(Number(moment().format("D")) - 1, "D").format('D') : moment().format("D")
 }
+
+export function calculateBalanceDayAllClients(day) {
+    return day.clients.reduce((sum, current) => {
+        return sum + calculateBalanceDaySum(current)
+    }, 0).toFixed(2)
+}
