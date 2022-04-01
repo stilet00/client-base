@@ -20,7 +20,7 @@ import useModal from "../../sharedHooks/useModal";
 import {
   calculateBalanceDayAllClients,
   calculateBalanceDaySum,
-  findYesterday
+  findYesterday,
 } from "../../sharedFunctions/sharedFunctions";
 
 export const useTranslators = (user) => {
@@ -51,10 +51,10 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   useEffect(() => {
-    let interval = setInterval(() => setReload(true), (1000 * 60 * 3));
+    let interval = setInterval(() => setReload(true), 1000 * 60 * 3);
 
-    return () => clearInterval(interval)
-  })
+    return () => clearInterval(interval);
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -330,31 +330,42 @@ export const useTranslators = (user) => {
 
   const calculateTotalBalanceDay = useCallback(() => {
     let sum = 0;
-    translators.forEach(translator => {
-      let translatorsStatistic = translator.statistics
+    translators.forEach((translator) => {
+      let translatorsStatistic = translator.statistics;
       sum = sum + Number(calculateTranslatorMonthTotal(translatorsStatistic));
-    })
+    });
     return sum;
-  }, [translators])
+  }, [translators]);
 
   const calculateTranslatorMonthTotal = (statistics, filter) => {
-    const month = statistics.find(year => year.year === moment().format("YYYY")
-    ).months.find((month, index) => index + 1 === Number(moment().format("M")));
+    const month = statistics
+      .find((year) => year.year === moment().format("YYYY"))
+      .months.find(
+        (month, index) => index + 1 === Number(moment().format("M"))
+      );
 
     const total = month.reduce((sum, current) => {
-      return sum + current.clients.reduce((sum, current) =>{
-        return sum + calculateBalanceDaySum(current);
-      }, 0)
+      return (
+        sum +
+        current.clients.reduce((sum, current) => {
+          return sum + calculateBalanceDaySum(current);
+        }, 0)
+      );
     }, 0);
 
-    return total.toFixed(2)
+    return total.toFixed(2);
   };
 
   const calculateTranslatorYesterdayTotal = (statistics, filter) => {
-    const day = statistics.find(year => year.year === currentYear
-    ).months.find((month, index) => index + 1 === Number(moment().format("M"))).find(day => {
-      return day.id === moment().subtract(1, 'day').format("DD MM YYYY") || day.id === moment().format("DD MM YYYY")
-    });
+    const day = statistics
+      .find((year) => year.year === currentYear)
+      .months.find((month, index) => index + 1 === Number(moment().format("M")))
+      .find((day) => {
+        return (
+          day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
+          day.id === moment().format("DD MM YYYY")
+        );
+      });
     return calculateBalanceDayAllClients(day);
   };
 
@@ -385,7 +396,7 @@ export const useTranslators = (user) => {
     finishTranslatorDelete,
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
-    calculateTotalBalanceDay
+    calculateTotalBalanceDay,
   };
 };
 
@@ -482,5 +493,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     handleChange,
     findClientById,
     onSavePressed,
+    currentBalanceDay,
   };
 };

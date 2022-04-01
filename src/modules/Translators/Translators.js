@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
@@ -49,8 +49,7 @@ function Translators({ user }) {
     finishTranslatorDelete,
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
-    calculateTotalBalanceDay
-
+    calculateTotalBalanceDay,
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -64,7 +63,7 @@ function Translators({ user }) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   return user ? (
     <div className={"gallery-container"}>
@@ -114,25 +113,31 @@ function Translators({ user }) {
         </div>
         <ClientsForm onFormSubmit={clientsFormSubmit} />
         <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-        <div  className={"socials add-translator-button middle-button"}>
-          <Button aria-describedby={id} onClick={handleClick} fullWidth startIcon={<MonetizationOnIcon />}>
+        <div className={"socials add-translator-button middle-button"}>
+          <Button
+            aria-describedby={id}
+            onClick={handleClick}
+            fullWidth
+            startIcon={<MonetizationOnIcon />}
+          >
             Show total
           </Button>
           <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              className={"sum-popover"}
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            className={"sum-popover"}
           >
-            <Typography sx={{ p: 2 }}>{`Total by ${moment().format("D MMMM")}: ${calculateTotalBalanceDay()}$`}</Typography>
+            <Typography sx={{ p: 2 }}>{`Total by ${moment().format(
+              "D MMMM"
+            )}: ${calculateTotalBalanceDay()}$`}</Typography>
           </Popover>
         </div>
-
       </div>
       <div
         className={"inner-gallery-container translators-container animated-box"}
@@ -151,7 +156,9 @@ function Translators({ user }) {
               openAlertConfirmation={openAlertConfirmation}
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
               calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
-              calculateTranslatorYesterdayTotal={calculateTranslatorYesterdayTotal}
+              calculateTranslatorYesterdayTotal={
+                calculateTranslatorYesterdayTotal
+              }
             />
           ))
         ) : loading ? (

@@ -22,7 +22,12 @@ import moment from "moment";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useBalanceForm } from "../businessLogic";
 import { calculateBalanceDaySum } from "../../../sharedFunctions/sharedFunctions";
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@material-ui/core";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +77,7 @@ export default function EditBalanceForm({
     handleChange,
     findClientById,
     onSavePressed,
+    currentBalanceDay,
   } = useBalanceForm({
     balanceDaySubmit,
     statistics,
@@ -112,45 +118,58 @@ export default function EditBalanceForm({
               <div className={"balance-form__date"}>
                 <Accordion className={"balance-form__date__accordion"}>
                   <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
                   >
                     <Typography>Date filter</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                    >
                       <InputLabel>Year</InputLabel>
                       <Select
-                          value={selectedYear}
-                          onChange={handleYear}
-                          label="Year"
-                          disabled
+                        value={selectedYear}
+                        onChange={handleYear}
+                        label="Year"
+                        disabled
                       >
                         <MenuItem value={selectedYear}>{selectedYear}</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                    >
                       <InputLabel htmlFor={"Month"}>Month</InputLabel>
                       <Select
-                          value={selectedMonth}
-                          onChange={handleMonth}
-                          label="Month"
+                        value={selectedMonth}
+                        onChange={handleMonth}
+                        label="Month"
                       >
                         {findYear().months.map((item, index) => (
-                            <MenuItem value={index + 1} key={index}>
-                              {moment(index + 1, "M").format("MMMM")}
-                            </MenuItem>
+                          <MenuItem value={index + 1} key={index}>
+                            {moment(index + 1, "M").format("MMMM")}
+                          </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                    >
                       <InputLabel htmlFor={"Day"}>Day</InputLabel>
-                      <Select value={selectedDay} onChange={handleDay} label="Day">
+                      <Select
+                        value={selectedDay}
+                        onChange={handleDay}
+                        label="Day"
+                      >
                         {findMonth().map((item, index) => (
-                            <MenuItem value={index + 1} key={index}>
-                              {moment(index + 1, "D").format("DD")}
-                            </MenuItem>
+                          <MenuItem value={index + 1} key={index}>
+                            {moment(index + 1, "D").format("DD")}
+                          </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
@@ -171,183 +190,199 @@ export default function EditBalanceForm({
                   </Select>
                 </FormControl>
               </div>
-              <p>Finances:</p>
-              <div className="balance-form__finances">
-                <div className="balance-form__finances__svadba">
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"chats"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().chats}
-                      variant="outlined"
-                      label={"Chats"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <ForumIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
+              {currentBalanceDay.clients.length ? (
+                <>
+                  <p>Finances:</p>
+                  <div className="balance-form__finances">
+                    <div className="balance-form__finances__svadba">
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"chats"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().chats}
+                          variant="outlined"
+                          label={"Chats"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <ForumIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"letters"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().letters}
+                          variant="outlined"
+                          label={"Letters"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <DraftsIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"virtualGiftsSvadba"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().virtualGiftsSvadba}
+                          variant="outlined"
+                          label={"Virtual gifts"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <CardGiftcardIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"penalties"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().penalties}
+                          variant="outlined"
+                          label={"Penalties"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <MoneyOffIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="balance-form__finances__dating">
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"dating"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().dating}
+                          variant="outlined"
+                          label={"Dating"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <ForumIcon /> Dating
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"phoneCalls"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().phoneCalls}
+                          variant="outlined"
+                          label={"Phone calls"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <PhoneCallbackIcon /> Phone
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="balance-form__finances-input">
+                        <CssTextField
+                          name={"virtualGiftsDating"}
+                          onChange={handleChange}
+                          onClick={(e) => e.target.select()}
+                          value={findClientById().virtualGiftsDating}
+                          variant="outlined"
+                          label={"Virtual gifts dating"}
+                          type={"number"}
+                          step="0.01"
+                          fullWidth
+                          required
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <CardGiftcardIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"letters"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().letters}
-                      variant="outlined"
-                      label={"Letters"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <DraftsIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
+                  <p>
+                    Day balance:{" "}
+                    <b>
+                      {calculateBalanceDaySum(findClientById()).toFixed(2) +
+                        " $"}
+                    </b>
+                  </p>
+                  <div className="balance-form__actions">
+                    <Button
+                      type={"button"}
+                      variant={"outlined"}
+                      onClick={onSavePressed}
+                      className={"balance-form__actions--button"}
+                      startIcon={<SaveAsIcon />}
+                    >
+                      Save changes
+                    </Button>
+                    <Button
+                      type={"button"}
+                      variant={"outlined"}
+                      onClick={handleClose}
+                      className={"balance-form__actions--button"}
+                      startIcon={<CloseIcon />}
+                    >
+                      Close window
+                    </Button>
                   </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"virtualGiftsSvadba"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().virtualGiftsSvadba}
-                      variant="outlined"
-                      label={"Virtual gifts"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <CardGiftcardIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"penalties"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().penalties}
-                      variant="outlined"
-                      label={"Penalties"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <MoneyOffIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="balance-form__finances__dating">
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"dating"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().dating}
-                      variant="outlined"
-                      label={"Dating"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <ForumIcon /> Dating
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"phoneCalls"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().phoneCalls}
-                      variant="outlined"
-                      label={"Phone calls"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <PhoneCallbackIcon /> Phone
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  <div className="balance-form__finances-input">
-                    <CssTextField
-                      name={"virtualGiftsDating"}
-                      onChange={handleChange}
-                      onClick={(e) => e.target.select()}
-                      value={findClientById().virtualGiftsDating}
-                      variant="outlined"
-                      label={"Virtual gifts dating"}
-                      type={"number"}
-                      step="0.01"
-                      fullWidth
-                      required
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <CardGiftcardIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <p>
-                Day balance: <b>{calculateBalanceDaySum(findClientById()).toFixed(2) + " $"}</b>
-              </p>
-              <div className="balance-form__actions">
-                <Button
-                  type={"button"}
-                  variant={"outlined"}
-                  onClick={onSavePressed}
-                  className={"balance-form__actions--button"}
-                  startIcon={<SaveAsIcon />}
+                </>
+              ) : (
+                <Typography
+                  className={"balance-form__no-data"}
+                  variant="h5"
+                  align={"center"}
                 >
-                  Save changes
-                </Button>
-                <Button
-                  type={"button"}
-                  variant={"outlined"}
-                  onClick={handleClose}
-                  className={"balance-form__actions--button"}
-                  startIcon={<CloseIcon />}
-                >
-                  Close window
-                </Button>
-              </div>
+                  No clients were assigned by this date.
+                </Typography>
+              )}
             </form>
           </div>
         </Fade>
