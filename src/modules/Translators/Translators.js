@@ -127,6 +127,7 @@ function Translators({ user }) {
                 vertical: 'top',
                 horizontal: 'left',
               }}
+              className={"sum-popover"}
           >
             <Typography sx={{ p: 2 }}>{`Total by ${moment().format("D MMMM")}: ${calculateTotalBalanceDay()}$`}</Typography>
           </Popover>
