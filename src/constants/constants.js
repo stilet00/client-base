@@ -63,3 +63,5 @@ function fillDays(month, year) {
   }
   return totalDays;
 }
+
+export const currentYear = moment().format("YYYY");

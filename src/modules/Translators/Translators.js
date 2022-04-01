@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonIcon from "@material-ui/icons/Person";
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
@@ -15,8 +16,10 @@ import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
-import React from "react";
+import React, { useState } from "react";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
+import { Popover, Typography } from "@material-ui/core";
+import moment from "moment/moment";
 
 function Translators({ user }) {
   const {
@@ -44,8 +47,24 @@ function Translators({ user }) {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
-    calculateTranslatorMonthTotal
+    calculateTranslatorMonthTotal,
+    calculateTranslatorYesterdayTotal,
+    calculateTotalBalanceDay
+
   } = useTranslators(user);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return user ? (
     <div className={"gallery-container"}>
@@ -95,6 +114,24 @@ function Translators({ user }) {
         </div>
         <ClientsForm onFormSubmit={clientsFormSubmit} />
         <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
+        <div  className={"socials add-translator-button middle-button"}>
+          <Button aria-describedby={id} onClick={handleClick} fullWidth startIcon={<MonetizationOnIcon />}>
+            Show total
+          </Button>
+          <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+          >
+            <Typography sx={{ p: 2 }}>{`Total by ${moment().format("D MMMM")}: ${calculateTotalBalanceDay()}$`}</Typography>
+          </Popover>
+        </div>
+
       </div>
       <div
         className={"inner-gallery-container translators-container animated-box"}
@@ -113,6 +150,7 @@ function Translators({ user }) {
               openAlertConfirmation={openAlertConfirmation}
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
               calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
+              calculateTranslatorYesterdayTotal={calculateTranslatorYesterdayTotal}
             />
           ))
         ) : loading ? (

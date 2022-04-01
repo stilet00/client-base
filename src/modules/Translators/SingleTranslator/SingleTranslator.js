@@ -27,9 +27,10 @@ function SingleTranslator({
   dragLeaveHandler,
   deleteTranslator,
   balanceDaySubmit,
-  calculateTranslatorMonthTotal
+  calculateTranslatorMonthTotal,
+  calculateTranslatorYesterdayTotal
 }) {
-  calculateTranslatorMonthTotal(statistics)
+
   return (
     <>
       <Card sx={{ minWidth: 275 }} className={"translator-item"}>
@@ -79,8 +80,16 @@ function SingleTranslator({
               </Accordion>
             </div>
           </div>
-          <Typography variant="body2">
-            Balance for { `${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(statistics)}$` }
+          <Typography variant="body1" align={"left"}>
+            <b>Total:</b>
+          </Typography>
+          <Typography variant="body2" align={"left"}>
+            For { `${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(statistics)}$` }
+            {/*<br />*/}
+            {/*{'"a benevolent smile"'}*/}
+          </Typography>
+          <Typography variant="body2" align={"left"}>
+            For { `yesterday: ${calculateTranslatorYesterdayTotal(statistics)}$` }
             {/*<br />*/}
             {/*{'"a benevolent smile"'}*/}
           </Typography>
