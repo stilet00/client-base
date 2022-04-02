@@ -135,7 +135,7 @@ function Translators({ user }) {
           >
             <Typography sx={{ p: 2 }}>{`Total by ${moment().format(
               "D MMMM"
-            )}: ${calculateTotalBalanceDay()}$`}</Typography>
+            )}: `} <b>{`${calculateTotalBalanceDay()} $`}</b></Typography>
           </Popover>
         </div>
       </div>
