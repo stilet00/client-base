@@ -35,7 +35,7 @@ function SingleTranslator({
       <Card sx={{ minWidth: 275 }} className={"translator-item"}>
         <CardContent>
           {clients.map((item) => (
-            <StarIcon key={item._id} fontSize={"small"} color={"disabled"} />
+            <StarIcon key={item._id} fontSize={"small"} color={"disabled"}  color={"primary"}/>
           ))}
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
@@ -81,20 +81,16 @@ function SingleTranslator({
             </div>
           </div>
           <Typography variant="body1" align={"left"}>
-            <b>Total:</b>
+            <i>Balance:</i>
           </Typography>
           <Typography variant="body2" align={"left"}>
             For{" "}
-            {`${moment().format("MMMM")}: ${calculateTranslatorMonthTotal(
+            {`${moment().format("MMMM")}: `}<b>{`${calculateTranslatorMonthTotal(
               statistics
-            )}$`}
-            {/*<br />*/}
-            {/*{'"a benevolent smile"'}*/}
+          )} $`}</b>
           </Typography>
           <Typography variant="body2" align={"left"}>
-            For {`yesterday: ${calculateTranslatorYesterdayTotal(statistics)}$`}
-            {/*<br />*/}
-            {/*{'"a benevolent smile"'}*/}
+            For {`yesterday: `}<b>{ `${calculateTranslatorYesterdayTotal(statistics)} $` }</b>
           </Typography>
         </CardContent>
         <CardActions>
