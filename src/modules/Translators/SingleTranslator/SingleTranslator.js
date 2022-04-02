@@ -93,7 +93,7 @@ function SingleTranslator({
                               {/*</div>*/}
                             </li>
                             <li className={"clients-list__finance-container"}>
-                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b>{ `${calculateSumByClient(client._id)} $` }</b>
+                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b>{ `${calculateSumByClient(client._id).toFixed(2)} $` }</b>
                             </li>
                           </React.Fragment>
                       ))
