@@ -36,8 +36,6 @@ export const useTranslators = (user) => {
     left: false,
   });
 
-  const [reload, setReload] = useState(true);
-
   const [loading, setLoading] = useState(false);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
@@ -51,15 +49,9 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   useEffect(() => {
-    let interval = setInterval(() => setReload(true), 1000 * 60 * 3);
-
-    return () => clearInterval(interval);
-  });
-
-  useEffect(() => {
     setLoading(true);
 
-    if (user && reload) {
+    if (user) {
       getTranslators().then((res) => {
         if (res.status === 200) {
           setLoading(false);
@@ -76,10 +68,8 @@ export const useTranslators = (user) => {
           console.log("No clients");
         }
       });
-
-      setReload(false);
     }
-  }, [user, reload]);
+  }, [user]);
 
   const showAlertMessage = useCallback(
     (alertMessage) => {
@@ -334,7 +324,7 @@ export const useTranslators = (user) => {
       let translatorsStatistic = translator.statistics;
       sum = sum + Number(calculateTranslatorMonthTotal(translatorsStatistic));
     });
-    return sum;
+    return Math.round(sum);
   }, [translators]);
 
   const calculateTranslatorMonthTotal = (statistics, filter) => {
