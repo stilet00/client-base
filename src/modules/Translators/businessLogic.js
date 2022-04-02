@@ -7,7 +7,7 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import { currentYear, DEFAULT_DAY_CLIENT } from "../../constants/constants";
+import { currentMonth, currentYear, DEFAULT_DAY_CLIENT, yesterday } from "../../constants/constants";
 
 import {
   addClient,
@@ -359,6 +359,7 @@ export const useTranslators = (user) => {
     return calculateBalanceDayAllClients(day);
   };
 
+
   return {
     translators,
     startTranslatorDelete,
@@ -421,7 +422,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
   function findTodayBalance() {
     return findMonth().find((item, index) => index + 1 === Number(selectedDay));
-    // .clients.find((item) => item.id === selectedClient);
   }
 
   const handleYear = (event) => {
@@ -458,8 +458,12 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     [selectedClient, currentBalanceDay]
   );
 
-  function findClientById() {
-    return currentBalanceDay.clients.find((item) => item.id === selectedClient);
+  function findClientById(id) {
+    if (id) {
+      return currentBalanceDay.clients.find((item) => item.id === id);
+    } else {
+      return currentBalanceDay.clients.find((item) => item.id === selectedClient);
+    }
   }
 
   function onSavePressed() {
@@ -486,3 +490,27 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     currentBalanceDay,
   };
 };
+
+export const useSingleTranslator = (statistics) => {
+  function findYear() {
+    return statistics.find((item) => item.year === currentYear);
+  }
+
+  function findMonth() {
+    return findYear().months.find(
+        (item, index) => index + 1 === Number(currentMonth));
+  }
+
+  function findTodayBalance() {
+    return findMonth().find((item, index) => index + 1 === Number(findYesterday()));
+  }
+
+  function calculateSumByClient(clientId) {
+    const clientObject = findTodayBalance().clients.find(item => item.id === clientId);
+    return clientObject ? calculateBalanceDaySum(clientObject) : null
+  }
+
+  return {
+    calculateSumByClient
+  }
+}

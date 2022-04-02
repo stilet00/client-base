@@ -1,4 +1,5 @@
 import moment from "moment";
+import { currentDay } from "../constants/constants";
 
 export function calculateBalanceDaySum(targetObject) {
   const arrayToSum = Object.values(targetObject);
@@ -9,9 +10,9 @@ export function calculateBalanceDaySum(targetObject) {
 }
 
 export function findYesterday() {
-  return moment().format("D") !== "1"
-    ? moment(Number(moment().format("D")) - 1, "D").format("D")
-    : moment().format("D");
+  return currentDay !== "1"
+    ? moment(Number(currentDay) - 1, "D").format("D")
+    : currentDay;
 }
 
 export function calculateBalanceDayAllClients(day) {
