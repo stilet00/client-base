@@ -18,8 +18,9 @@ import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
 import React, { useState } from "react";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
-import { Popover, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Popover, Typography } from "@material-ui/core";
 import moment from "moment/moment";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 function Translators({ user }) {
   const {
@@ -68,76 +69,89 @@ function Translators({ user }) {
   return user ? (
     <div className={"gallery-container"}>
       <div className="gallery-menu gallery-menu_no-border">
-        <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
-        <div className={"socials button-add-container middle-button"}>
-          <Button
-            onClick={toggleDrawer("left", true)}
-            fullWidth
-            startIcon={<ListAltIcon />}
+        <Accordion>
+          <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+
           >
-            Show clients
-          </Button>
-          <Drawer
-            anchor={"left"}
-            open={state["left"]}
-            onClose={toggleDrawer("left", false)}
-          >
-            <div className={"side-clients-menu fallDown-menu"}>
-              <h3>All clients:</h3>
-              <ul>
-                {clients.map((client, index) => (
-                  <li
-                    key={client._id}
-                    className={"left-menu-item"}
-                    draggable={true}
-                    onDragStart={(e) => dragStartHandler(e, client)}
-                    onDragOver={dragOverHandler}
-                    onDragLeave={dragLeaveHandler}
-                    onDragEnd={dragEndHandler}
-                    onDrop={(e) => dragDropHandler(e)}
-                  >
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={`${client.name} ${client.surname}`}
-                    />
-                    <Button onClick={() => deleteClient(client._id)}>
-                      <DeleteForeverIcon />
-                    </Button>
-                  </li>
-                ))}
-              </ul>
+            <Typography>Menu</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
+            <div className={"socials button-add-container middle-button"}>
+              <Button
+                  onClick={toggleDrawer("left", true)}
+                  fullWidth
+                  startIcon={<ListAltIcon />}
+              >
+                Show clients
+              </Button>
+              <Drawer
+                  anchor={"left"}
+                  open={state["left"]}
+                  onClose={toggleDrawer("left", false)}
+              >
+                <div className={"side-clients-menu fallDown-menu"}>
+                  <h3>All clients:</h3>
+                  <ul>
+                    {clients.map((client, index) => (
+                        <li
+                            key={client._id}
+                            className={"left-menu-item"}
+                            draggable={true}
+                            onDragStart={(e) => dragStartHandler(e, client)}
+                            onDragOver={dragOverHandler}
+                            onDragLeave={dragLeaveHandler}
+                            onDragEnd={dragEndHandler}
+                            onDrop={(e) => dragDropHandler(e)}
+                        >
+                          <ListItemIcon>
+                            {index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}
+                          </ListItemIcon>
+                          <ListItemText
+                              primary={`${client.name} ${client.surname}`}
+                          />
+                          <Button onClick={() => deleteClient(client._id)}>
+                            <DeleteForeverIcon />
+                          </Button>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+              </Drawer>
             </div>
-          </Drawer>
-        </div>
-        <ClientsForm onFormSubmit={clientsFormSubmit} />
-        <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-        <div className={"socials add-translator-button middle-button"}>
-          <Button
-            aria-describedby={id}
-            onClick={handleClick}
-            fullWidth
-            startIcon={<MonetizationOnIcon />}
-          >
-            Show total
-          </Button>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            className={"sum-popover"}
-          >
-            <Typography sx={{ p: 2 }}>{`Total by ${moment().format(
-              "D MMMM"
-            )}: `} <b>{`${calculateTotalBalanceDay()} $`}</b></Typography>
-          </Popover>
-        </div>
+            <ClientsForm onFormSubmit={clientsFormSubmit} />
+            <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
+            <div className={"socials add-translator-button middle-button"}>
+              <Button
+                  aria-describedby={id}
+                  onClick={handleClick}
+                  fullWidth
+                  startIcon={<MonetizationOnIcon />}
+              >
+                Show total
+              </Button>
+              <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  className={"sum-popover"}
+              >
+                <Typography sx={{ p: 2 }}>{`Total by ${moment().format(
+                    "D MMMM"
+                )}: `} <b>{`${calculateTotalBalanceDay()} $`}</b></Typography>
+              </Popover>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+
       </div>
       <div
         className={"inner-gallery-container translators-container animated-box"}

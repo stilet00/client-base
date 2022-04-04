@@ -16,6 +16,11 @@
     .gallery-container .gallery-menu_no-border {
       border: none;
       padding-bottom: 0; }
+    .gallery-container .gallery-menu .MuiAccordionDetails-root {
+      flex-direction: column; }
+    .gallery-container .gallery-menu .MuiAccordion-rounded {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0; }
   .gallery-container .inner-gallery-container {
     display: flex;
     flex-wrap: wrap;
