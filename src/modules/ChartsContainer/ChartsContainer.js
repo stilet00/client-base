@@ -25,7 +25,6 @@ function ChartsContainer({ user }) {
     handleChange,
     months,
     onMonthSubmit,
-    onValueSubmit,
     openAlertConfirmation,
     selectedYear,
   } = useChartsContainer(user);
@@ -46,10 +45,10 @@ function ChartsContainer({ user }) {
           <ul>
             {months.map((month, index) => (
               <SingleChart
-                onValueSubmit={onValueSubmit}
+                // onValueSubmit={onValueSubmit}
                 graph={month}
                 index={index}
-                key={month._id}
+                key={index}
                 deleteGraph={deleteGraph}
               />
             ))}

@@ -7,7 +7,7 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import { currentMonth, currentYear, DEFAULT_DAY_CLIENT, yesterday } from "../../constants/constants";
+import { currentMonth, currentYear, DEFAULT_DAY_CLIENT } from "../../constants/constants";
 
 import {
   addClient,
@@ -19,7 +19,7 @@ import moment from "moment";
 import useModal from "../../sharedHooks/useModal";
 import {
   calculateBalanceDayAllClients,
-  calculateBalanceDaySum,
+  calculateBalanceDaySum, calculateTranslatorMonthTotal,
   findYesterday,
 } from "../../sharedFunctions/sharedFunctions";
 
@@ -177,9 +177,9 @@ export const useTranslators = (user) => {
   const insertClient = useCallback((translator, client) => {
     const clientBalanceDay = new DEFAULT_DAY_CLIENT(client._id);
     const updatedStatistics = translator.statistics.map((item) => {
-      if (item.year === moment().format("YYYY")) {
+      if (item.year === currentYear) {
         const updatedMonths = item.months.map((month, index) => {
-          if (index + 1 >= Number(moment().format("M"))) {
+          if (index + 1 >= Number(currentMonth )) {
             return month.map((day) => {
               return { ...day, clients: [...day.clients, clientBalanceDay] };
             });
@@ -327,29 +327,10 @@ export const useTranslators = (user) => {
     return Math.round(sum);
   }, [translators]);
 
-  const calculateTranslatorMonthTotal = (statistics, filter) => {
-    const month = statistics
-      .find((year) => year.year === moment().format("YYYY"))
-      .months.find(
-        (month, index) => index + 1 === Number(moment().format("M"))
-      );
-
-    const total = month.reduce((sum, current) => {
-      return (
-        sum +
-        current.clients.reduce((sum, current) => {
-          return sum + calculateBalanceDaySum(current);
-        }, 0)
-      );
-    }, 0);
-
-    return total.toFixed(2);
-  };
-
   const calculateTranslatorYesterdayTotal = (statistics, filter) => {
     const day = statistics
       .find((year) => year.year === currentYear)
-      .months.find((month, index) => index + 1 === Number(moment().format("M")))
+      .months.find((month, index) => index + 1 === Number(currentMonth ))
       .find((day) => {
         return (
           day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
@@ -396,9 +377,9 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
   const [selectedClient, setSelectedClient] = useState(clients[0]._id);
 
-  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const [selectedMonth, setSelectedMonth] = useState(moment().format("M"));
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
   const [selectedDay, setSelectedDay] = useState(findYesterday());
 

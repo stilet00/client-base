@@ -4,17 +4,22 @@ import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 import {
   addMonth,
   changeChartValue,
-  getBalance,
   removeYear,
 } from "../../services/balanceServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import useModal from "../../sharedHooks/useModal";
-import { findYesterday } from "../../sharedFunctions/sharedFunctions";
+import {
+  calculateBalanceDayAllClients,
+  findYesterday,
+  getTotalDaysOfMonth
+} from "../../sharedFunctions/sharedFunctions";
+import { getTranslators } from "../../services/translatorsServices/services";
+import { currentYear } from "../../constants/constants";
 
 export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);
 
-  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const [deletedMonth, setDeletedMonth] = useState(null);
 
@@ -32,18 +37,68 @@ export const useChartsContainer = (user) => {
 
   useEffect(() => {
     if (user) {
-      getBalance().then((res) => {
+      // getBalance().then((res) => {
+      //   if (res.status === 200) {
+      //     const yearList = res.data.map((item) => item.year);
+      //     setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
+      //     let filteredArray = res.data
+      //       .filter((item) => item.year === selectedYear)
+      //       .sort(compareNumeric)
+      //       .reverse();
+      //     setMonths(filteredArray);
+      //     setEmptyStatus(filteredArray.length <= 0);
+      //   } else {
+      //     console.log(res.status);
+      //   }
+      // });
+
+      getTranslators().then((res) => {
         if (res.status === 200) {
-          const yearList = res.data.map((item) => item.year);
+          const statisticsYearsArray = res.data.map(item => item.statistics.find(item => item.year === selectedYear));
+
+          const yearList = res.data.reduce((result, item) => {
+            const newItem = item.statistics.map(item => item.year) ;
+            return [...result, ...newItem]
+          }, [])
           setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-          let filteredArray = res.data
-            .filter((item) => item.year === selectedYear)
-            .sort(compareNumeric)
-            .reverse();
-          setMonths(filteredArray);
-          setEmptyStatus(filteredArray.length <= 0);
+
+          for (let monthCount = 1; monthCount < 13; monthCount++) {
+
+            let defaultMonth = {
+              year: selectedYear,
+              month: monthCount < 10 ? "0" + monthCount : String(monthCount),
+              days: getTotalDaysOfMonth(selectedYear, monthCount),
+              values: [],
+            }
+
+
+
+            const stringMonth = monthCount < 9 ? "0" + monthCount : monthCount;
+
+            for (let dayCount = 1; dayCount <= moment(selectedYear + "-" + stringMonth, "YYYY-MM").daysInMonth(); dayCount++) {
+              const currentDayDate = moment(`${dayCount}-${monthCount}-${selectedYear}`, "D-M-YYYY").format("DD MM YYYY");
+              let daySum = 0;
+              statisticsYearsArray.forEach(translatorStatistics => {
+                translatorStatistics.months.forEach(month => {
+                  month.forEach(day => {
+                    if (day.id === currentDayDate) {
+                      daySum = daySum + Number(calculateBalanceDayAllClients(day));
+                    }
+                  })
+                })
+              })
+              if (daySum) {
+                defaultMonth.values[dayCount-1] = daySum.toFixed(2);
+              }
+            }
+            if (defaultMonth.values.reduce((sum, current) => {
+              return sum + Number(current)
+            }, 0)) {
+              setMonths([...months, defaultMonth]);
+            }
+          }
         } else {
-          console.log(res.status);
+          console.log("No translators");
         }
       });
     }
@@ -135,57 +190,7 @@ export const useSingleChart = ({
   deleteGraph,
   onValueSubmit,
 }) => {
-  const data = {
-    _id: graph._id,
-    labels: graph.days || [],
-    title: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
-    datasets: [
-      {
-        fill: true,
-        backgroundColor: ["rgba(255,255,255,0.7)"],
-        borderColor: ["#ffffff"],
-        borderWidth: 0.5,
-        data: graph.values,
-        tension: 0.4,
-        borderDash: [5, 2],
-        cubicInterpolationMode: "monotone",
-        borderRadius: 4,
-      },
-    ],
-  };
 
-  const options = {
-    scales: {
-      y: {
-        suggestedMin: 0,
-        ticks: {
-          color: "white",
-          beginAtZero: true,
-          callback: function (value, index, values) {
-            return value + " $.";
-          },
-        },
-      },
-      x: {
-        ticks: {
-          color: "white",
-          callback: function (value, index, values) {
-            return value + 1 + "." + graph.month;
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        color: "white",
-        display: true,
-        text: moment(`${graph.year}-${graph.month}`).format("MMMM-YYYY"),
-      },
-    },
-  };
 
   function onChartChange(data) {
     let newArray = graph.values;
@@ -197,8 +202,6 @@ export const useSingleChart = ({
   return {
     onChartChange,
     index,
-    data,
-    options,
     graph,
     deleteGraph,
   };
