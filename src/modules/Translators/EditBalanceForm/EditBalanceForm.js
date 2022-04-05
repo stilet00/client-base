@@ -190,7 +190,7 @@ export default function EditBalanceForm({
                   </Select>
                 </FormControl>
               </div>
-              {currentBalanceDay.clients.length ? (
+              {findClientById() ? (
                 <>
                   <p>Finances:</p>
                   <div className="balance-form__finances">
@@ -380,7 +380,7 @@ export default function EditBalanceForm({
                   variant="h5"
                   align={"center"}
                 >
-                  No clients were assigned by this date.
+                  Client wasn't assigned at this date.
                 </Typography>
               )}
             </form>
