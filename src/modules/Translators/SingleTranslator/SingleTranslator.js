@@ -38,10 +38,10 @@ function SingleTranslator({
 
   return (
     <>
-      <Card sx={{ minWidth: 275 }} className={"translator-item"}>
+      <Card sx={{ minWidth: 275 }} className={"translator-item"} id={_id}>
         <CardContent>
           {clients.map((item) => (
-            <StarIcon key={item._id} fontSize={"small"} color={"disabled"}  color={"primary"}/>
+            <StarIcon key={item._id} fontSize={"small"}  color={"primary"}/>
           ))}
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
@@ -93,7 +93,7 @@ function SingleTranslator({
                               {/*</div>*/}
                             </li>
                             <li className={"clients-list__finance-container"}>
-                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b>{ `${calculateSumByClient(client._id).toFixed(2)} $` }</b>
+                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b>{ calculateSumByClient(client._id) ? `${calculateSumByClient(client._id)} $` : "Wasn't assigned" }</b>
                             </li>
                           </React.Fragment>
                       ))

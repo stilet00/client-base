@@ -507,7 +507,7 @@ export const useSingleTranslator = (statistics) => {
 
   function calculateSumByClient(clientId) {
     const clientObject = findTodayBalance().clients.find(item => item.id === clientId);
-    return clientObject ? calculateBalanceDaySum(clientObject) : null
+    return clientObject ? calculateBalanceDaySum(clientObject).toFixed(2) : null
   }
 
   return {
