@@ -32,21 +32,24 @@
       border-bottom-right-radius: 4px!important
       border-bottom-left-radius: 4px!important
 
-      .MuiAccordionDetails-root
-        flex-wrap: wrap
-
   &__finances
     display: flex
     box-sizing: border-box
     width: 100%
+    padding: 8px
 
     &-input
       margin: 15px 5px
+
+    &--accordion
+      background: transparent!important
+      margin: 10px 5px
 
   &__actions
     display: flex
     justify-content: space-between
     width: 100%
+    padding: 8px
     box-sizing: border-box
 
     &--button
@@ -66,3 +69,10 @@
       flex-direction: column
       &__dating, &__svadba
         width: 100%
+
+@media only screen and (max-width: 600px)
+  .balance-form
+    &__date
+      &__accordion
+        .MuiAccordionDetails-root
+          flex-wrap: wrap

@@ -444,7 +444,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     (e) => {
       const editedClientsBalance = currentBalanceDay.clients.map((client) => {
         if (client.id === selectedClient) {
-          return { ...client, [e.target.name]: Number(e.target.value) };
+          return e.target.type === "textarea" ? { ...client, [e.target.name]: e.target.value } : { ...client, [e.target.name]: Number(e.target.value) };
         } else {
           return client;
         }
