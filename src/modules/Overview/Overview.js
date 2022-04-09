@@ -1,4 +1,4 @@
-import Menu from "../../sharedComponents/Menu/Menu";
+import Menu from "../../sharedComponents/Navigation/Navigation";
 import moment from "moment";
 import "../../styles/modules/Overview.css";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";

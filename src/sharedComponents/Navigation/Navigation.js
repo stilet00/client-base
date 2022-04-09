@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Menu() {
+export default function Navigation() {
   const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -115,7 +115,7 @@ export default function Menu() {
         fullWidth
         startIcon={<MenuIcon />}
       >
-        Menu
+        Navigation
       </Button>
       <Drawer
         anchor={"top"}

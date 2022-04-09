@@ -1,4 +1,4 @@
-import Menu from "../../sharedComponents/Menu/Menu";
+import Menu from "../../sharedComponents/Navigation/Navigation";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ChartForm from "./ChartForm/ChartForm";

@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import ForumIcon from "@material-ui/icons/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
+import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import "../../../styles/modules/EditBalanceForm.css";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import SaveAsIcon from "@material-ui/icons/Save";
@@ -77,7 +78,6 @@ export default function EditBalanceForm({
     handleChange,
     findClientById,
     onSavePressed,
-    currentBalanceDay,
   } = useBalanceForm({
     balanceDaySubmit,
     statistics,
@@ -344,15 +344,49 @@ export default function EditBalanceForm({
                           }}
                         />
                       </div>
+                        <Accordion className={"balance-form__finances--accordion"}>
+                          <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                          >
+                            <Typography>Comments</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label={"Edit here"}
+                                name={"comments"}
+                                type={"text"}
+                                multiline
+                                maxRows={4}
+                                value={findClientById().comments || ""}
+                                onChange={handleChange}
+                                InputProps={{
+                                  endAdornment: (
+                                      <InputAdornment position="end">
+                                        <ContactSupportIcon />
+                                      </InputAdornment>
+                                  ),
+                                }}
+                            />
+                          </AccordionDetails>
+                        </Accordion>
                     </div>
                   </div>
                   <p>
+                    <strong>
                     Day balance:{" "}
-                    <b>
+                    </strong>
                       {calculateBalanceDaySum(findClientById()).toFixed(2) +
                         " $"}
-                    </b>
                   </p>
+                    {
+                      findClientById().comments ? <p>
+                        <strong>Day comment:{" "}</strong>
+                        {` ${findClientById().comments}.`}
+                      </p> : null
+                    }
                   <div className="balance-form__actions">
                     <Button
                       type={"button"}
