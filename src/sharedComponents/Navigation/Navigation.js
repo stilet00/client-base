@@ -10,7 +10,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import { useHistory } from "react-router-dom";
-import "../../styles/sharedComponents/Menu.css";
+import "../../styles/sharedComponents/Navigation.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
