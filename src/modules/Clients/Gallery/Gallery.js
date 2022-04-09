@@ -4,7 +4,7 @@ import GalleryItem from "./GalleryItem/GalleryItem";
 import DiscreteSlider from "../../../sharedComponents/Slider/Slider";
 import Unauthorized from "../../AuthorizationPage/Unauthorized/Unauthorized";
 import moment from "moment";
-import Menu from "../../../sharedComponents/Menu/Menu";
+import Menu from "../../../sharedComponents/Navigation/Navigation";
 import NameFilter from "../../../sharedComponents/NameFilter/NameFilter";
 import ClientsForm from "../ClientsForm/ClientsForm";
 import { useGallery } from "../businessLogic";

@@ -3,7 +3,7 @@ import "../../styles/modules/TaskList.css";
 import SingleTask from "./SingleTask/SingleTask";
 import Form from "./Form/Form";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import Menu from "../../sharedComponents/Menu/Menu";
+import Menu from "../../sharedComponents/Navigation/Navigation";
 import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";

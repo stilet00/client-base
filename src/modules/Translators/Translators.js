@@ -1,4 +1,4 @@
-import Menu from "../../sharedComponents/Menu/Menu";
+import Menu from "../../sharedComponents/Navigation/Navigation";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
