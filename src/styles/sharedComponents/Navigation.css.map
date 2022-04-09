@@ -1,7 +1,7 @@
 {
 "version": 3,
 "mappings": "AAAQ,0FAAkF;ACE1F,WAAW;EACT,OAAO,EAAE,IAAI;EACb,eAAe,EAAE,UAAU;EAC3B,aAAa,EAAE,IAAI;EACnB,UAAU,EAAE,eAAqB;EACjC,aAAa,EAAE,GAAG;EAClB,uBAAuB,EAAE,GAAG;EAC5B,sBAAsB,EAAE,GAAG;EAC3B,SAAS,EAAE,KAAK;;AAElB,cAAc;EACZ,UAAU,EAAE,sCAAsC;EAClD,eAAe,EAAE,KAAK;EACtB,iBAAiB,EAAE,MAAM;EACzB,WAAW,EAAE,IAAI;;AAEnB,gBAAgB;EACd,0BAA0B,EAAE,IAAI;EAChC,yBAAyB,EAAE,IAAI",
-"sources": ["../../variables.sass","Menu.sass"],
+"sources": ["../../variables.sass","Navigation.sass"],
 "names": [],
-"file": "Menu.css"
+"file": "Navigation.css"
 }
