@@ -36,7 +36,7 @@ export const useTranslators = (user) => {
     left: false,
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { alertOpen, closeAlert, openAlert } = useAlert();
 
@@ -49,8 +49,6 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   useEffect(() => {
-    setLoading(true);
-
     if (user) {
       getTranslators().then((res) => {
         if (res.status === 200) {
@@ -491,7 +489,24 @@ export const useSingleTranslator = (statistics) => {
     return clientObject ? calculateBalanceDaySum(clientObject).toFixed(2) : null
   }
 
+  function specialColorNeeded(clientId) {
+    const clientObject = findTodayBalance().clients.find(item => item.id === clientId);
+
+    if (clientObject.virtualGiftsSvadba) {
+      return "clients-list__finance-container--pink_text"
+    } else if (clientObject.virtualGiftsDating) {
+      return "clients-list__finance-container--green_text"
+    } else if (clientObject.phoneCalls ) {
+      return "clients-list__finance-container--blue_text"
+    } else if (clientObject.penalties) {
+      return "clients-list__finance-container--red_text"
+    } else {
+      return ""
+    }
+  }
+
   return {
-    calculateSumByClient
+    calculateSumByClient,
+    specialColorNeeded
   }
 }

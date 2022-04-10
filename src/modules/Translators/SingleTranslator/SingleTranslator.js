@@ -34,7 +34,7 @@ function SingleTranslator({
   calculateTranslatorYesterdayTotal,
 }) {
 
-  const { calculateSumByClient } = useSingleTranslator(statistics);
+  const { calculateSumByClient, specialColorNeeded } = useSingleTranslator(statistics);
 
   return (
     <>
@@ -84,6 +84,7 @@ function SingleTranslator({
                               key={client._id}>
                             <li
                                 className={"clients-list__name-container"}
+                                id={client._id}
                             >
                               <p>{`${client.name} ${client.surname}`}</p>
                               {/*<div className="clients-list__action-buttons">*/}
@@ -93,7 +94,7 @@ function SingleTranslator({
                               {/*</div>*/}
                             </li>
                             <li className={"clients-list__finance-container"}>
-                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b>{ calculateSumByClient(client._id) ? `${calculateSumByClient(client._id)} $` : "Wasn't assigned" }</b>
+                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b className={specialColorNeeded(client._id)}>{ calculateSumByClient(client._id) ? `${calculateSumByClient(client._id)} $` : "Wasn't assigned" }</b>
                             </li>
                           </React.Fragment>
                       ))
