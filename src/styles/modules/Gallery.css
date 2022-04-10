@@ -118,6 +118,14 @@
           padding: 5px;
           font-weight: normal;
           font-size: 0.8rem; }
+          .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--pink_text {
+            color: #D30DA5; }
+          .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--green_text {
+            color: #008539; }
+          .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--blue_text {
+            color: #0074de; }
+          .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--red_text {
+            color: #E60B00; }
         .gallery-container .inner-gallery-container .translator-item .clients-list__action-buttons {
           display: flex;
           flex-direction: column;

@@ -156,7 +156,7 @@ function Translators({ user }) {
       <div
         className={"inner-gallery-container translators-container animated-box"}
       >
-        {translators.length > 0 ? (
+        {translators.length > 0 && !loading ? (
           translators.map((item) => (
             <SingleTranslator
               deleteTranslator={startTranslatorDelete}
