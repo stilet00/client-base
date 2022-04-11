@@ -33,15 +33,15 @@ function SingleTranslator({
   calculateTranslatorMonthTotal,
   calculateTranslatorYesterdayTotal,
 }) {
-
-  const { calculateSumByClient, specialColorNeeded } = useSingleTranslator(statistics);
+  const { calculateSumByClient, specialColorNeeded } =
+    useSingleTranslator(statistics);
 
   return (
     <>
       <Card sx={{ minWidth: 275 }} className={"translator-item"} id={_id}>
         <CardContent>
           {clients.map((item) => (
-            <StarIcon key={item._id} fontSize={"small"}  color={"primary"}/>
+            <StarIcon key={item._id} fontSize={"small"} color={"primary"} />
           ))}
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
@@ -50,56 +50,74 @@ function SingleTranslator({
             <i>Balance:</i>
           </Typography>
           <Typography variant="body2" align={"left"}>
-            For{" "}
-            {`${moment().format("MMMM")}: `}<b>{`${calculateTranslatorMonthTotal(
-              statistics
-          )} $`}</b>
+            For {`${moment().format("MMMM")}: `}
+            <b>{`${calculateTranslatorMonthTotal(statistics)} $`}</b>
           </Typography>
           <Typography variant="body2" align={"left"}>
             For {`yesterday: `}
-            {
-              calculateTranslatorYesterdayTotal(statistics)  ? <b>{ `${calculateTranslatorYesterdayTotal(statistics)} $` }</b> : "No data"
-            }
+            {calculateTranslatorYesterdayTotal(statistics) ? (
+              <b>{`${calculateTranslatorYesterdayTotal(statistics)} $`}</b>
+            ) : (
+              "No data"
+            )}
           </Typography>
           <div className="clients-box">
             <Accordion>
               <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
               >
                 <Typography>Clients</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <ul
-                    className={"clients-list"}
-                    id={_id}
-                    onDragOver={dragOverHandler}
-                    onDragLeave={dragLeaveHandler}
-                    onDrop={(e) => onBoardDrop(e, _id)}
+                  className={"clients-list"}
+                  id={_id}
+                  onDragOver={dragOverHandler}
+                  onDragLeave={dragLeaveHandler}
+                  onDrop={(e) => onBoardDrop(e, _id)}
                 >
                   {clients.length > 0 ? (
-                      clients.map((client) => (
-                          <React.Fragment
-                              key={client._id}>
-                            <li
-                                className={"clients-list__name-container"}
-                                id={client._id}
-                            >
-                              <p>{`${client.name} ${client.surname}`}</p>
-                              {/*<div className="clients-list__action-buttons">*/}
-                              {/*  <button type="button">*/}
-                              {/*    <DeleteIcon />*/}
-                              {/*  </button>*/}
-                              {/*</div>*/}
-                            </li>
+                    clients
+                      .sort((a, b) => {
+                        return (
+                          Number(calculateSumByClient(b._id)) -
+                          Number(calculateSumByClient(a._id))
+                        );
+                      })
+                      .map((client) => (
+                        <React.Fragment key={client._id}>
+                          <li
+                            className={"clients-list__name-container"}
+                            id={client._id}
+                          >
+                            <p>{`${client.name} ${client.surname}`}</p>
+                            {/*<div className="clients-list__action-buttons">*/}
+                            {/*  <button type="button">*/}
+                            {/*    <DeleteIcon />*/}
+                            {/*  </button>*/}
+                            {/*</div>*/}
+                          </li>
+                          {Number(calculateSumByClient(client._id)) ? (
                             <li className={"clients-list__finance-container"}>
-                              {`Balance for ${moment(`${findYesterday()}/${currentMonth}/${currentYear}`, "D/M/YYYY" ).format("DD MMMM")}:`} <b className={specialColorNeeded(client._id)}>{ calculateSumByClient(client._id) ? `${calculateSumByClient(client._id)} $` : "Wasn't assigned" }</b>
+                              {`Balance for ${moment(
+                                `${findYesterday()}/${currentMonth}/${currentYear}`,
+                                "D/M/YYYY"
+                              ).format("DD MMMM")}:`}{" "}
+                              <b
+                                className={specialColorNeeded(client._id)}
+                              >{`${calculateSumByClient(client._id)} $`}</b>
                             </li>
-                          </React.Fragment>
+                          ) : (
+                            <li className={"clients-list__finance-container"}>
+                              No balance for yesterday
+                            </li>
+                          )}
+                        </React.Fragment>
                       ))
                   ) : (
-                      <p>Drag client here...</p>
+                    <p>Drag client here...</p>
                   )}
                 </ul>
               </AccordionDetails>

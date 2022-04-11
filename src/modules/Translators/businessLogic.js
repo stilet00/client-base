@@ -387,7 +387,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
   useEffect(() => {
     setCurrentBalanceDay(findTodayBalance());
-  }, [selectedYear, selectedMonth, selectedDay]);
+  }, [selectedYear, selectedMonth, selectedDay, statistics]);
 
   function findYear() {
     return statistics.find((item) => item.year === selectedYear);
