@@ -58,7 +58,7 @@ export const useTranslators = (user) => {
       getTranslators().then((res) => {
         if (res.status === 200) {
           setLoading(false);
-          setTranslators(res.data);
+          setTranslators(res.data.sort(sortIfSuspended));
         } else {
           console.log("No translators");
         }
@@ -73,6 +73,14 @@ export const useTranslators = (user) => {
       });
     }
   }, [user]);
+
+  function sortIfSuspended(a) {
+    if (a.suspended.status) {
+      return 1
+    } else {
+      return -1
+    }
+  }
 
   const showAlertMessage = useCallback(
     (alertMessage) => {
@@ -139,7 +147,7 @@ export const useTranslators = (user) => {
               return item._id === editedTranslator._id
                 ? editedTranslator
                 : item;
-            })
+            }).sort(sortIfSuspended)
           );
         } else {
           showAlertMessage(MESSAGES.somethingWrong);
@@ -277,7 +285,7 @@ export const useTranslators = (user) => {
             setTranslators([
               ...translators,
               { ...newTranslator, _id: res.data },
-            ]);
+            ].sort(sortIfSuspended));
           } else {
             console.log(res.status);
           }

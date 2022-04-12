@@ -95,7 +95,7 @@ function SingleTranslator({
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
-                  <Typography>Clients</Typography>
+                  <Typography>Active clients</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <ul
@@ -114,29 +114,23 @@ function SingleTranslator({
                           );
                         })
                         .map((client) => (
-                          <React.Fragment key={client._id}>
-                            <li
-                              className={"clients-list__name-container"}
-                              id={client._id}
-                            >
-                              <p>{`${client.name} ${client.surname}`}</p>
-                            </li>
-                            {Number(calculateSumByClient(client._id)) ? (
+                            Number(calculateSumByClient(client._id)) ? <React.Fragment key={client._id}>
+                              <li
+                                  className={"clients-list__name-container"}
+                                  id={client._id}
+                              >
+                                <p>{`${client.name} ${client.surname}`}</p>
+                              </li>
                               <li className={"clients-list__finance-container"}>
                                 {`Balance for ${moment(
-                                  `${findYesterday()}/${currentMonth}/${currentYear}`,
-                                  "D/M/YYYY"
+                                    `${findYesterday()}/${currentMonth}/${currentYear}`,
+                                    "D/M/YYYY"
                                 ).format("DD MMMM")}:`}{" "}
                                 <b
-                                  className={specialColorNeeded(client._id)}
+                                    className={specialColorNeeded(client._id)}
                                 >{`${calculateSumByClient(client._id)} $`}</b>
                               </li>
-                            ) : (
-                              <li className={"clients-list__finance-container"}>
-                                No balance for yesterday
-                              </li>
-                            )}
-                          </React.Fragment>
+                            </React.Fragment> : null
                         ))
                     ) : (
                       <p>Drag client here...</p>

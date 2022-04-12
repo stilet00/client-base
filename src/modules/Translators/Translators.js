@@ -170,13 +170,6 @@ function Translators({ user }) {
       >
         {translators.length > 0 && !loading ? (
           translators
-            .sort((translator) => {
-              if (translator.suspended.status) {
-                return 1;
-              } else {
-                return -1;
-              }
-            })
             .map((item) => (
               <SingleTranslator
                 deleteTranslator={startTranslatorDelete}
