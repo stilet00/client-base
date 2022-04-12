@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import StarIcon from "@mui/icons-material/Star";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
@@ -20,6 +19,7 @@ import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import { findYesterday } from "../../../sharedFunctions/sharedFunctions";
 import { currentMonth, currentYear } from "../../../constants/constants";
+import { IconButton, Rating } from "@mui/material";
 
 function SingleTranslator({
   name,
@@ -51,19 +51,18 @@ function SingleTranslator({
         }
         id={_id}
       >
-        <Button
+        <IconButton
           className={"translator-item__suspend-button"}
           color={suspended.status ? "default" : "primary"}
           variant={"contained"}
           size={"small"}
           onClick={() => suspendTranslator(_id)}
+          component="span"
         >
           {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
-        </Button>
+        </IconButton>
         <CardContent>
-          {clients.map((item) => (
-            <StarIcon key={item._id} fontSize={"small"} color={"primary"} />
-          ))}
+          <Rating name="read-only" value={clients.length} readOnly size="small" max={6}/>
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
           </Typography>
@@ -121,11 +120,6 @@ function SingleTranslator({
                               id={client._id}
                             >
                               <p>{`${client.name} ${client.surname}`}</p>
-                              {/*<div className="clients-list__action-buttons">*/}
-                              {/*  <button type="button">*/}
-                              {/*    <DeleteIcon />*/}
-                              {/*  </button>*/}
-                              {/*</div>*/}
                             </li>
                             {Number(calculateSumByClient(client._id)) ? (
                               <li className={"clients-list__finance-container"}>
