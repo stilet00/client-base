@@ -6,12 +6,16 @@
   margin-bottom: 0;
   margin-top: 10px !important;
   color: black;
-  letter-spacing: 1px !important; }
+  letter-spacing: 1px !important;
+}
 
 .MuiSlider-root {
-  color: lightblue !important; }
+  color: lightblue !important;
+}
 
-.MuiSlider-track, .MuiSlider-thumb {
-  color: white; }
+.MuiSlider-track,
+.MuiSlider-thumb {
+  color: white;
+}
 
 /*# sourceMappingURL=Slider.css.map */

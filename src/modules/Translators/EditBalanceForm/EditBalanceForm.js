@@ -5,18 +5,18 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import ForumIcon from "@material-ui/icons/Forum";
+import ForumIcon from "@mui/icons-material/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import "../../../styles/modules/EditBalanceForm.css";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import SaveAsIcon from "@material-ui/icons/Save";
-import CloseIcon from "@material-ui/icons/Close";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import CloseIcon from "@mui/icons-material/Close";
 import FormControl from "@material-ui/core/FormControl";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import PhoneCallbackIcon from "@material-ui/icons/PhoneCallback";
-import MoneyOffIcon from "@material-ui/icons/MoneyOff";
+import DraftsIcon from "@mui/icons-material/Drafts";
+import PhoneCallbackIcon from "@mui/icons-material/PhoneCallback";
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import moment from "moment";
@@ -29,7 +29,7 @@ import {
   AccordionSummary,
   Typography,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -344,49 +344,49 @@ export default function EditBalanceForm({
                           }}
                         />
                       </div>
-                        <Accordion className={"balance-form__finances--accordion"}>
-                          <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                          >
-                            <Typography>Comments</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <TextField
-                                id="outlined-multiline-flexible"
-                                label={"Edit here"}
-                                name={"comments"}
-                                type={"text"}
-                                multiline
-                                maxRows={4}
-                                value={findClientById().comments || ""}
-                                onChange={handleChange}
-                                InputProps={{
-                                  endAdornment: (
-                                      <InputAdornment position="end">
-                                        <ContactSupportIcon />
-                                      </InputAdornment>
-                                  ),
-                                }}
-                            />
-                          </AccordionDetails>
-                        </Accordion>
+                      <Accordion
+                        className={"balance-form__finances--accordion"}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Typography>Comments</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <TextField
+                            id="outlined-multiline-flexible"
+                            label={"Edit here"}
+                            name={"comments"}
+                            type={"text"}
+                            multiline
+                            fullWidth
+                            maxRows={4}
+                            value={findClientById().comments || ""}
+                            onChange={handleChange}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <ContactSupportIcon />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        </AccordionDetails>
+                      </Accordion>
                     </div>
                   </div>
                   <p>
-                    <strong>
-                    Day balance:{" "}
-                    </strong>
-                      {calculateBalanceDaySum(findClientById()).toFixed(2) +
-                        " $"}
+                    <strong>Day balance: </strong>
+                    {calculateBalanceDaySum(findClientById()).toFixed(2) + " $"}
                   </p>
-                    {
-                      findClientById().comments ? <p>
-                        <strong>Day comment:{" "}</strong>
-                        {` ${findClientById().comments}.`}
-                      </p> : null
-                    }
+                  {findClientById().comments ? (
+                    <p>
+                      <strong>Day comment: </strong>
+                      {` ${findClientById().comments}.`}
+                    </p>
+                  ) : null}
                   <div className="balance-form__actions">
                     <Button
                       type={"button"}

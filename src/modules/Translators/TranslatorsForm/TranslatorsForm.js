@@ -5,12 +5,12 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import "../../../styles/modules/TranslatorsForm.css";
 import { DEFAULT_TRANSLATOR } from "../../../constants/constants";
-import WorkIcon from "@material-ui/icons/Work";
+import WorkIcon from "@mui/icons-material/Work";
 import useModal from "../../../sharedHooks/useModal";
 
 const useStyles = makeStyles((theme) => ({
@@ -101,7 +101,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AccountCircle />
+                      <AccountCircleIcon />
                     </InputAdornment>
                   ),
                 }}

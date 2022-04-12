@@ -1,5 +1,4 @@
 import moment from "moment";
-import { findYesterday } from "../sharedFunctions/sharedFunctions";
 
 export const DEFAULT_CLIENT = {
   name: "",
@@ -25,7 +24,7 @@ export class DEFAULT_DAY_CLIENT {
     this.photoAttachments = 0;
     this.phoneCalls = 0;
     this.penalties = 0;
-    this.comments = ''
+    this.comments = "";
   }
 }
 
@@ -41,6 +40,10 @@ export const DEFAULT_TRANSLATOR = {
   surname: "",
   clients: [],
   statistics: DEFAULT_BALANCE_DATA,
+  suspended: {
+    status: false,
+    time: null,
+  },
 };
 
 function fillMonths(year) {
@@ -69,4 +72,3 @@ function fillDays(month, year) {
 export const currentYear = moment().format("YYYY");
 export const currentMonth = moment().format("M");
 export const currentDay = moment().format("D");
-export const yesterday = moment().subtract(1, "day").format("D");

@@ -8,12 +8,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import CheckIcon from "@material-ui/icons/Check";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import CheckIcon from "@mui/icons-material/Check";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useChartDateForm } from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({

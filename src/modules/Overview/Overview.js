@@ -4,7 +4,7 @@ import "../../styles/modules/Overview.css";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 import { useOverview } from "./businessLogic";
 

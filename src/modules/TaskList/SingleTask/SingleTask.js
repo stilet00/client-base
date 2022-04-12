@@ -1,7 +1,7 @@
 import React from "react";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 import moment from "moment";
 import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 

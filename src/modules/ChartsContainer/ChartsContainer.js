@@ -1,7 +1,6 @@
 import Menu from "../../sharedComponents/Navigation/Navigation";
 import SingleChart from "./SingleChart/SingleChart";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import ChartForm from "./ChartForm/ChartForm";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Loader from "../../sharedComponents/Loader/Loader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
@@ -42,7 +41,7 @@ function ChartsContainer({ user }) {
       </div>
       <div className={"taskList-container chart-container animated-box"}>
         {months.length > 0 ? (
-          <ul>
+          <ul className={"scrolled-container"}>
             {months.map((month, index) => (
               <SingleChart
                 // onValueSubmit={onValueSubmit}
@@ -58,9 +57,6 @@ function ChartsContainer({ user }) {
         ) : (
           <Loader />
         )}
-      </div>
-      <div className={"socials button-add-container resized-container"}>
-        <ChartForm onMonthSubmit={onMonthSubmit} year={selectedYear} />
       </div>
       <AlertMessage
         mainText={"Data has been added!"}

@@ -19,6 +19,16 @@ export const MESSAGES = {
     status: true,
   },
 
+  translatorSuspended: {
+    text: "Translator has been suspended!",
+    status: false,
+  },
+
+  translatorActivated: {
+    text: "Translator has been activated!",
+    status: true,
+  },
+
   clientExist: {
     text: "Translator already has this client!",
     status: false,

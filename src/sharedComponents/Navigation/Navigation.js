@@ -7,16 +7,16 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import BarChartIcon from "@material-ui/icons/BarChart";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import { useHistory } from "react-router-dom";
 import "../../styles/sharedComponents/Navigation.css";
 import firebase from "firebase";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import MenuIcon from "@material-ui/icons/Menu";
-import WorkIcon from "@material-ui/icons/Work";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import MenuIcon from "@mui/icons-material/Menu";
+import WorkIcon from "@mui/icons-material/Work";
+import PageviewIcon from "@mui/icons-material/Pageview";
 
 const useStyles = makeStyles({
   list: {

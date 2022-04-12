@@ -7,7 +7,11 @@ import {
   removeTranslator,
   updateTranslator,
 } from "../../services/translatorsServices/services";
-import { currentMonth, currentYear, DEFAULT_DAY_CLIENT } from "../../constants/constants";
+import {
+  currentMonth,
+  currentYear,
+  DEFAULT_DAY_CLIENT,
+} from "../../constants/constants";
 
 import {
   addClient,
@@ -19,7 +23,8 @@ import moment from "moment";
 import useModal from "../../sharedHooks/useModal";
 import {
   calculateBalanceDayAllClients,
-  calculateBalanceDaySum, calculateTranslatorMonthTotal,
+  calculateBalanceDaySum,
+  calculateTranslatorMonthTotal,
   findYesterday,
 } from "../../sharedFunctions/sharedFunctions";
 
@@ -177,7 +182,7 @@ export const useTranslators = (user) => {
     const updatedStatistics = translator.statistics.map((item) => {
       if (item.year === currentYear) {
         const updatedMonths = item.months.map((month, index) => {
-          if (index + 1 >= Number(currentMonth )) {
+          if (index + 1 >= Number(currentMonth)) {
             return month.map((day) => {
               return { ...day, clients: [...day.clients, clientBalanceDay] };
             });
@@ -328,7 +333,7 @@ export const useTranslators = (user) => {
   const calculateTranslatorYesterdayTotal = (statistics, filter) => {
     const day = statistics
       .find((year) => year.year === currentYear)
-      .months.find((month, index) => index + 1 === Number(currentMonth ))
+      .months.find((month, index) => index + 1 === Number(currentMonth))
       .find((day) => {
         return (
           day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
@@ -338,6 +343,28 @@ export const useTranslators = (user) => {
     return calculateBalanceDayAllClients(day);
   };
 
+  const suspendTranslator = useCallback(
+    (translatorId) => {
+      let editedTranslator = translators.find(
+        (translator) => translator._id === translatorId
+      );
+
+      editedTranslator = {
+        ...editedTranslator,
+        suspended: {
+          status: !editedTranslator.suspended.status,
+          time: moment().format("DD MMMM YYYY"),
+        },
+      };
+
+      const message = editedTranslator.suspended.status
+        ? MESSAGES.translatorSuspended
+        : MESSAGES.translatorActivated;
+
+      saveChangedTranslator(editedTranslator, message);
+    },
+    [translators]
+  );
 
   return {
     translators,
@@ -367,6 +394,7 @@ export const useTranslators = (user) => {
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
     calculateTotalBalanceDay,
+    suspendTranslator,
   };
 };
 
@@ -423,7 +451,9 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     (e) => {
       const editedClientsBalance = currentBalanceDay.clients.map((client) => {
         if (client.id === selectedClient) {
-          return e.target.type === "textarea" ? { ...client, [e.target.name]: e.target.value } : { ...client, [e.target.name]: Number(e.target.value) };
+          return e.target.type === "textarea"
+            ? { ...client, [e.target.name]: e.target.value }
+            : { ...client, [e.target.name]: Number(e.target.value) };
         } else {
           return client;
         }
@@ -441,7 +471,9 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     if (id) {
       return currentBalanceDay.clients.find((item) => item.id === id);
     } else {
-      return currentBalanceDay.clients.find((item) => item.id === selectedClient);
+      return currentBalanceDay.clients.find(
+        (item) => item.id === selectedClient
+      );
     }
   }
 
@@ -477,36 +509,45 @@ export const useSingleTranslator = (statistics) => {
 
   function findMonth() {
     return findYear().months.find(
-        (item, index) => index + 1 === Number(currentMonth));
+      (item, index) => index + 1 === Number(currentMonth)
+    );
   }
 
   function findTodayBalance() {
-    return findMonth().find((item, index) => index + 1 === Number(findYesterday()));
+    return findMonth().find(
+      (item, index) => index + 1 === Number(findYesterday())
+    );
   }
 
   function calculateSumByClient(clientId) {
-    const clientObject = findTodayBalance().clients.find(item => item.id === clientId);
-    return clientObject ? calculateBalanceDaySum(clientObject).toFixed(2) : null
+    const clientObject = findTodayBalance().clients.find(
+      (item) => item.id === clientId
+    );
+    return clientObject
+      ? calculateBalanceDaySum(clientObject).toFixed(2)
+      : null;
   }
 
   function specialColorNeeded(clientId) {
-    const clientObject = findTodayBalance().clients.find(item => item.id === clientId);
+    const clientObject = findTodayBalance().clients.find(
+      (item) => item.id === clientId
+    );
 
     if (clientObject.virtualGiftsSvadba) {
-      return "clients-list__finance-container--pink_text"
+      return "clients-list__finance-container--pink_text";
     } else if (clientObject.virtualGiftsDating) {
-      return "clients-list__finance-container--green_text"
-    } else if (clientObject.phoneCalls ) {
-      return "clients-list__finance-container--blue_text"
+      return "clients-list__finance-container--green_text";
+    } else if (clientObject.phoneCalls) {
+      return "clients-list__finance-container--blue_text";
     } else if (clientObject.penalties) {
-      return "clients-list__finance-container--red_text"
+      return "clients-list__finance-container--red_text";
     } else {
-      return ""
+      return "";
     }
   }
 
   return {
     calculateSumByClient,
-    specialColorNeeded
-  }
-}
+    specialColorNeeded,
+  };
+};
