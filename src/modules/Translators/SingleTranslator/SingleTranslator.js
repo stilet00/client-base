@@ -10,12 +10,12 @@ import {
   CardContent,
 } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import StarIcon from "@material-ui/icons/Star";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import StarIcon from "@mui/icons-material/Star";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
-import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import { findYesterday } from "../../../sharedFunctions/sharedFunctions";
@@ -58,10 +58,7 @@ function SingleTranslator({
           size={"small"}
           onClick={() => suspendTranslator(_id)}
         >
-          {
-            suspended.status ? <PersonAddAlt1Icon /> :
-                <PersonRemoveIcon />
-          }
+          {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
         </Button>
         <CardContent>
           {clients.map((item) => (

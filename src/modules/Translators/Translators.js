@@ -4,14 +4,14 @@ import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import PersonIcon from "@material-ui/icons/Person";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
+import PersonIcon from "@mui/icons-material/Person";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
 import "../../styles/modules/Translators.css";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import ListAltIcon from "@material-ui/icons/ListAlt";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
@@ -26,7 +26,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import moment from "moment/moment";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function Translators({ user }) {
   const {
@@ -164,7 +164,9 @@ function Translators({ user }) {
         </Accordion>
       </div>
       <div
-        className={"inner-gallery-container translators-container animated-box scrolled-container"}
+        className={
+          "inner-gallery-container translators-container animated-box scrolled-container"
+        }
       >
         {translators.length > 0 && !loading ? (
           translators

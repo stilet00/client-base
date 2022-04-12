@@ -3,11 +3,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import "../../styles/sharedComponents/SumArray.css";
 import Button from "@material-ui/core/Button";
-import SaveIcon from "@material-ui/icons/Save";
+import SaveIcon from "@mui/icons-material/Save";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import moment from "moment";
 const CssTextField = withStyles({
   root: {

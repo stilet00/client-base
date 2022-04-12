@@ -4,7 +4,7 @@ import "../../styles/sharedComponents/WelcomeMessage.css";
 import Button from "@material-ui/core/Button";
 import firebase from "firebase";
 import { useHistory } from "react-router-dom";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 function WelcomeMessage() {
   const history = useHistory();

@@ -5,18 +5,18 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import ForumIcon from "@material-ui/icons/Forum";
+import ForumIcon from "@mui/icons-material/Forum";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import "../../../styles/modules/EditBalanceForm.css";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import SaveAsIcon from "@material-ui/icons/Save";
-import CloseIcon from "@material-ui/icons/Close";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import CloseIcon from "@mui/icons-material/Close";
 import FormControl from "@material-ui/core/FormControl";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import PhoneCallbackIcon from "@material-ui/icons/PhoneCallback";
-import MoneyOffIcon from "@material-ui/icons/MoneyOff";
+import DraftsIcon from "@mui/icons-material/Drafts";
+import PhoneCallbackIcon from "@mui/icons-material/PhoneCallback";
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import moment from "moment";
@@ -29,7 +29,7 @@ import {
   AccordionSummary,
   Typography,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -361,6 +361,7 @@ export default function EditBalanceForm({
                             name={"comments"}
                             type={"text"}
                             multiline
+                            fullWidth
                             maxRows={4}
                             value={findClientById().comments || ""}
                             onChange={handleChange}
