@@ -12,6 +12,7 @@ import {
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import StarIcon from "@material-ui/icons/Star";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { Typography } from "@material-ui/core";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import moment from "moment";
@@ -32,13 +33,32 @@ function SingleTranslator({
   balanceDaySubmit,
   calculateTranslatorMonthTotal,
   calculateTranslatorYesterdayTotal,
+  suspendTranslator,
+  suspended,
 }) {
   const { calculateSumByClient, specialColorNeeded } =
     useSingleTranslator(statistics);
 
   return (
     <>
-      <Card sx={{ minWidth: 275 }} className={"translator-item"} id={_id}>
+      <Card
+        sx={{ minWidth: 275 }}
+        className={
+          suspended.status
+            ? "translator-item translator-item--suspended"
+            : "translator-item"
+        }
+        id={_id}
+      >
+        <Button
+          className={"translator-item__suspend-button"}
+          color={suspended.status ? "" : "primary"}
+          variant={"contained"}
+          size={"small"}
+          onClick={() => suspendTranslator(_id)}
+        >
+          <PersonRemoveIcon />
+        </Button>
         <CardContent>
           {clients.map((item) => (
             <StarIcon key={item._id} fontSize={"small"} color={"primary"} />
@@ -61,68 +81,76 @@ function SingleTranslator({
               "No data"
             )}
           </Typography>
-          <div className="clients-box">
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>Clients</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ul
-                  className={"clients-list"}
-                  id={_id}
-                  onDragOver={dragOverHandler}
-                  onDragLeave={dragLeaveHandler}
-                  onDrop={(e) => onBoardDrop(e, _id)}
+          {suspended.time ? (
+            <Typography variant="body2" align={"left"}>
+              {suspended.status ? `Suspended since: ` : `Activated since: `}
+              <b>{suspended.time}</b>
+            </Typography>
+          ) : null}
+          {suspended.status ? null : (
+            <div className="clients-box">
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  {clients.length > 0 ? (
-                    clients
-                      .sort((a, b) => {
-                        return (
-                          Number(calculateSumByClient(b._id)) -
-                          Number(calculateSumByClient(a._id))
-                        );
-                      })
-                      .map((client) => (
-                        <React.Fragment key={client._id}>
-                          <li
-                            className={"clients-list__name-container"}
-                            id={client._id}
-                          >
-                            <p>{`${client.name} ${client.surname}`}</p>
-                            {/*<div className="clients-list__action-buttons">*/}
-                            {/*  <button type="button">*/}
-                            {/*    <DeleteIcon />*/}
-                            {/*  </button>*/}
-                            {/*</div>*/}
-                          </li>
-                          {Number(calculateSumByClient(client._id)) ? (
-                            <li className={"clients-list__finance-container"}>
-                              {`Balance for ${moment(
-                                `${findYesterday()}/${currentMonth}/${currentYear}`,
-                                "D/M/YYYY"
-                              ).format("DD MMMM")}:`}{" "}
-                              <b
-                                className={specialColorNeeded(client._id)}
-                              >{`${calculateSumByClient(client._id)} $`}</b>
+                  <Typography>Clients</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ul
+                    className={"clients-list"}
+                    id={_id}
+                    onDragOver={dragOverHandler}
+                    onDragLeave={dragLeaveHandler}
+                    onDrop={(e) => onBoardDrop(e, _id)}
+                  >
+                    {clients.length > 0 ? (
+                      clients
+                        .sort((a, b) => {
+                          return (
+                            Number(calculateSumByClient(b._id)) -
+                            Number(calculateSumByClient(a._id))
+                          );
+                        })
+                        .map((client) => (
+                          <React.Fragment key={client._id}>
+                            <li
+                              className={"clients-list__name-container"}
+                              id={client._id}
+                            >
+                              <p>{`${client.name} ${client.surname}`}</p>
+                              {/*<div className="clients-list__action-buttons">*/}
+                              {/*  <button type="button">*/}
+                              {/*    <DeleteIcon />*/}
+                              {/*  </button>*/}
+                              {/*</div>*/}
                             </li>
-                          ) : (
-                            <li className={"clients-list__finance-container"}>
-                              No balance for yesterday
-                            </li>
-                          )}
-                        </React.Fragment>
-                      ))
-                  ) : (
-                    <p>Drag client here...</p>
-                  )}
-                </ul>
-              </AccordionDetails>
-            </Accordion>
-          </div>
+                            {Number(calculateSumByClient(client._id)) ? (
+                              <li className={"clients-list__finance-container"}>
+                                {`Balance for ${moment(
+                                  `${findYesterday()}/${currentMonth}/${currentYear}`,
+                                  "D/M/YYYY"
+                                ).format("DD MMMM")}:`}{" "}
+                                <b
+                                  className={specialColorNeeded(client._id)}
+                                >{`${calculateSumByClient(client._id)} $`}</b>
+                              </li>
+                            ) : (
+                              <li className={"clients-list__finance-container"}>
+                                No balance for yesterday
+                              </li>
+                            )}
+                          </React.Fragment>
+                        ))
+                    ) : (
+                      <p>Drag client here...</p>
+                    )}
+                  </ul>
+                </AccordionDetails>
+              </Accordion>
+            </div>
+          )}
         </CardContent>
         <CardActions>
           {clients.length ? (
@@ -143,9 +171,15 @@ function SingleTranslator({
               deleteTranslator(_id);
             }}
             fullWidth
-            style={{
-              color: "red",
-            }}
+            style={
+              suspended.status
+                ? {
+                    color: "black",
+                  }
+                : {
+                    color: "red",
+                  }
+            }
             startIcon={<DeleteSweepIcon />}
           >
             Delete translator

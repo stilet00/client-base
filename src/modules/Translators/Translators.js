@@ -18,7 +18,13 @@ import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useTranslators } from "./businessLogic";
 import React, { useState } from "react";
 import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
-import { Accordion, AccordionDetails, AccordionSummary, Popover, Typography } from "@material-ui/core";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Popover,
+  Typography,
+} from "@material-ui/core";
 import moment from "moment/moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -51,6 +57,7 @@ function Translators({ user }) {
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
     calculateTotalBalanceDay,
+    suspendTranslator,
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,10 +78,9 @@ function Translators({ user }) {
       <div className="gallery-menu gallery-menu_no-border">
         <Accordion>
           <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
             <Typography>Menu</Typography>
           </AccordionSummary>
@@ -82,41 +88,45 @@ function Translators({ user }) {
             <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
             <div className={"socials button-add-container middle-button"}>
               <Button
-                  onClick={toggleDrawer("left", true)}
-                  fullWidth
-                  startIcon={<ListAltIcon />}
+                onClick={toggleDrawer("left", true)}
+                fullWidth
+                startIcon={<ListAltIcon />}
               >
                 Show clients
               </Button>
               <Drawer
-                  anchor={"left"}
-                  open={state["left"]}
-                  onClose={toggleDrawer("left", false)}
+                anchor={"left"}
+                open={state["left"]}
+                onClose={toggleDrawer("left", false)}
               >
                 <div className={"side-clients-menu fallDown-menu"}>
                   <h3>All clients:</h3>
                   <ul>
                     {clients.map((client, index) => (
-                        <li
-                            key={client._id}
-                            className={"left-menu-item"}
-                            draggable={true}
-                            onDragStart={(e) => dragStartHandler(e, client)}
-                            onDragOver={dragOverHandler}
-                            onDragLeave={dragLeaveHandler}
-                            onDragEnd={dragEndHandler}
-                            onDrop={(e) => dragDropHandler(e)}
-                        >
-                          <ListItemIcon>
-                            {index % 2 === 0 ? <PersonIcon /> : <PersonOutlineIcon />}
-                          </ListItemIcon>
-                          <ListItemText
-                              primary={`${client.name} ${client.surname}`}
-                          />
-                          <Button onClick={() => deleteClient(client._id)}>
-                            <DeleteForeverIcon />
-                          </Button>
-                        </li>
+                      <li
+                        key={client._id}
+                        className={"left-menu-item"}
+                        draggable={true}
+                        onDragStart={(e) => dragStartHandler(e, client)}
+                        onDragOver={dragOverHandler}
+                        onDragLeave={dragLeaveHandler}
+                        onDragEnd={dragEndHandler}
+                        onDrop={(e) => dragDropHandler(e)}
+                      >
+                        <ListItemIcon>
+                          {index % 2 === 0 ? (
+                            <PersonIcon />
+                          ) : (
+                            <PersonOutlineIcon />
+                          )}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={`${client.name} ${client.surname}`}
+                        />
+                        <Button onClick={() => deleteClient(client._id)}>
+                          <DeleteForeverIcon />
+                        </Button>
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -126,55 +136,64 @@ function Translators({ user }) {
             <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
             <div className={"socials add-translator-button middle-button"}>
               <Button
-                  aria-describedby={id}
-                  onClick={handleClick}
-                  fullWidth
-                  startIcon={<MonetizationOnIcon />}
+                aria-describedby={id}
+                onClick={handleClick}
+                fullWidth
+                startIcon={<MonetizationOnIcon />}
               >
                 Show total
               </Button>
               <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  className={"sum-popover"}
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                className={"sum-popover"}
               >
-                <Typography sx={{ p: 2 }}>{`Total by ${moment().format(
-                    "D MMMM"
-                )}: `} <b>{`${calculateTotalBalanceDay()} $`}</b></Typography>
+                <Typography sx={{ p: 2 }}>
+                  {`Total by ${moment().format("D MMMM")}: `}{" "}
+                  <b>{`${calculateTotalBalanceDay()} $`}</b>
+                </Typography>
               </Popover>
             </div>
           </AccordionDetails>
         </Accordion>
-
       </div>
       <div
         className={"inner-gallery-container translators-container animated-box"}
       >
         {translators.length > 0 && !loading ? (
-          translators.map((item) => (
-            <SingleTranslator
-              deleteTranslator={startTranslatorDelete}
-              {...item}
-              key={item._id}
-              dragOverHandler={dragOverHandler}
-              onBoardDrop={onBoardDrop}
-              dragLeaveHandler={dragLeaveHandler}
-              balanceDaySubmit={balanceDaySubmit}
-              alertStatusConfirmation={alertStatusConfirmation}
-              openAlertConfirmation={openAlertConfirmation}
-              closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
-              calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
-              calculateTranslatorYesterdayTotal={
-                calculateTranslatorYesterdayTotal
+          translators
+            .sort((translator) => {
+              if (translator.suspended.status) {
+                return 1;
+              } else {
+                return -1;
               }
-            />
-          ))
+            })
+            .map((item) => (
+              <SingleTranslator
+                deleteTranslator={startTranslatorDelete}
+                {...item}
+                key={item._id}
+                dragOverHandler={dragOverHandler}
+                onBoardDrop={onBoardDrop}
+                dragLeaveHandler={dragLeaveHandler}
+                balanceDaySubmit={balanceDaySubmit}
+                alertStatusConfirmation={alertStatusConfirmation}
+                openAlertConfirmation={openAlertConfirmation}
+                closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
+                calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
+                calculateTranslatorYesterdayTotal={
+                  calculateTranslatorYesterdayTotal
+                }
+                suspendTranslator={suspendTranslator}
+              />
+            ))
         ) : loading ? (
           <div className="empty">
             <Loader />

@@ -90,15 +90,24 @@
         background: none
 
     .translator-item
+      position: relative
       width: 270px
       margin: 10px 5px
       box-shadow: $material-box-shadow
+
+      &--suspended
+        background: $secondary_color_opacity
 
       @media (max-width: 700px)
         width: 90%
 
       h4
         margin: 10px
+
+      &__suspend-button
+        position: absolute
+        top: 5px
+        right: 5px
 
       .clients-box
         width: 100%

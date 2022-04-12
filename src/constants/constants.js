@@ -25,7 +25,7 @@ export class DEFAULT_DAY_CLIENT {
     this.photoAttachments = 0;
     this.phoneCalls = 0;
     this.penalties = 0;
-    this.comments = ''
+    this.comments = "";
   }
 }
 
@@ -41,6 +41,10 @@ export const DEFAULT_TRANSLATOR = {
   surname: "",
   clients: [],
   statistics: DEFAULT_BALANCE_DATA,
+  suspended: {
+    status: false,
+    time: null,
+  },
 };
 
 function fillMonths(year) {
