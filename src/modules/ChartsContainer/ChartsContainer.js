@@ -42,7 +42,7 @@ function ChartsContainer({ user }) {
       </div>
       <div className={"taskList-container chart-container animated-box"}>
         {months.length > 0 ? (
-          <ul>
+          <ul className={"scrolled-container"}>
             {months.map((month, index) => (
               <SingleChart
                 // onValueSubmit={onValueSubmit}
@@ -58,9 +58,6 @@ function ChartsContainer({ user }) {
         ) : (
           <Loader />
         )}
-      </div>
-      <div className={"socials button-add-container resized-container"}>
-        <ChartForm onMonthSubmit={onMonthSubmit} year={selectedYear} />
       </div>
       <AlertMessage
         mainText={"Data has been added!"}

@@ -13,6 +13,7 @@ import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import StarIcon from "@material-ui/icons/Star";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { Typography } from "@material-ui/core";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import moment from "moment";
@@ -52,12 +53,15 @@ function SingleTranslator({
       >
         <Button
           className={"translator-item__suspend-button"}
-          color={suspended.status ? "" : "primary"}
+          color={suspended.status ? "default" : "primary"}
           variant={"contained"}
           size={"small"}
           onClick={() => suspendTranslator(_id)}
         >
-          <PersonRemoveIcon />
+          {
+            suspended.status ? <PersonAddAlt1Icon /> :
+                <PersonRemoveIcon />
+          }
         </Button>
         <CardContent>
           {clients.map((item) => (
@@ -153,7 +157,7 @@ function SingleTranslator({
           )}
         </CardContent>
         <CardActions>
-          {clients.length ? (
+          {clients.length && !suspended.status ? (
             <EditBalanceForm
               balanceDaySubmit={(balanceDay) =>
                 balanceDaySubmit(_id, balanceDay)

@@ -164,7 +164,7 @@ function Translators({ user }) {
         </Accordion>
       </div>
       <div
-        className={"inner-gallery-container translators-container animated-box"}
+        className={"inner-gallery-container translators-container animated-box scrolled-container"}
       >
         {translators.length > 0 && !loading ? (
           translators

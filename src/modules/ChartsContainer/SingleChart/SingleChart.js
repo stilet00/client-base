@@ -1,13 +1,10 @@
 import { Bar, Line } from "react-chartjs-2";
 import "../../../styles/modules/SingleChart.css";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ChartDateForm from "../ChartDateForm/ChartDateForm";
-import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
 import { useSingleChart } from "../businessLogic";
 import moment from "moment";
 
 function SingleChart(props) {
-  const { onChartChange, deleteGraph, graph, index } = useSingleChart(props);
+  const { graph, index } = useSingleChart(props);
 
   const data = {
     _id: graph._id,

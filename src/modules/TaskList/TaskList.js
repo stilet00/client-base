@@ -34,7 +34,7 @@ function TaskList({ user }) {
   return user ? (
     <>
       <Menu />
-      <div className={"taskList-container animated-box"}>{page}</div>
+      <div className={"taskList-container animated-box scrolled-container"}>{page}</div>
       <div className="socials button-add-container bottom-button">
         <Form addTask={newTask} />
       </div>

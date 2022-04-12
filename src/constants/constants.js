@@ -1,5 +1,4 @@
 import moment from "moment";
-import { findYesterday } from "../sharedFunctions/sharedFunctions";
 
 export const DEFAULT_CLIENT = {
   name: "",
@@ -73,4 +72,3 @@ function fillDays(month, year) {
 export const currentYear = moment().format("YYYY");
 export const currentMonth = moment().format("M");
 export const currentDay = moment().format("D");
-export const yesterday = moment().subtract(1, "day").format("D");
