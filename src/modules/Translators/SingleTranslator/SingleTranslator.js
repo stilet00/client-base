@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import EditBalanceForm from "../EditBalanceForm/EditBalanceForm";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import StarIcon from "@mui/icons-material/Star";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
@@ -20,6 +19,9 @@ import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import { findYesterday } from "../../../sharedFunctions/sharedFunctions";
 import { currentMonth, currentYear } from "../../../constants/constants";
+import { IconButton, Rating } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 function SingleTranslator({
   name,
@@ -36,6 +38,7 @@ function SingleTranslator({
   calculateTranslatorYesterdayTotal,
   suspendTranslator,
   suspended,
+  suspendClient,
 }) {
   const { calculateSumByClient, specialColorNeeded } =
     useSingleTranslator(statistics);
@@ -51,19 +54,24 @@ function SingleTranslator({
         }
         id={_id}
       >
-        <Button
+        <IconButton
           className={"translator-item__suspend-button"}
           color={suspended.status ? "default" : "primary"}
           variant={"contained"}
           size={"small"}
           onClick={() => suspendTranslator(_id)}
+          component="span"
         >
           {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
-        </Button>
+        </IconButton>
         <CardContent>
-          {clients.map((item) => (
-            <StarIcon key={item._id} fontSize={"small"} color={"primary"} />
-          ))}
+          <Rating
+            name="read-only"
+            value={clients.length}
+            readOnly
+            size="small"
+            max={6}
+          />
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
           </Typography>
@@ -96,7 +104,7 @@ function SingleTranslator({
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
-                  <Typography>Clients</Typography>
+                  <Typography>Active clients</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <ul
@@ -106,8 +114,9 @@ function SingleTranslator({
                     onDragLeave={dragLeaveHandler}
                     onDrop={(e) => onBoardDrop(e, _id)}
                   >
-                    {clients.length > 0 ? (
+                    {clients.filter((client) => !client.suspended).length ? (
                       clients
+                        .filter((client) => !client.suspended)
                         .sort((a, b) => {
                           return (
                             Number(calculateSumByClient(b._id)) -
@@ -121,11 +130,15 @@ function SingleTranslator({
                               id={client._id}
                             >
                               <p>{`${client.name} ${client.surname}`}</p>
-                              {/*<div className="clients-list__action-buttons">*/}
-                              {/*  <button type="button">*/}
-                              {/*    <DeleteIcon />*/}
-                              {/*  </button>*/}
-                              {/*</div>*/}
+                              <IconButton
+                                color={"primary"}
+                                variant={"contained"}
+                                size={"small"}
+                                onClick={() => suspendClient(_id, client._id)}
+                                component="span"
+                              >
+                                <HighlightOffIcon />
+                              </IconButton>
                             </li>
                             {Number(calculateSumByClient(client._id)) ? (
                               <li className={"clients-list__finance-container"}>
@@ -150,6 +163,41 @@ function SingleTranslator({
                   </ul>
                 </AccordionDetails>
               </Accordion>
+              {clients.filter((client) => client.suspended).length ? (
+                <Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header-2"
+                  >
+                    <Typography>Suspended clients</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <ul className={"clients-list"} id={_id}>
+                      {clients
+                        .filter((client) => client.suspended)
+                        .map((client) => (
+                          <li
+                            className={"clients-list__name-container"}
+                            id={client._id}
+                            key={client._id}
+                          >
+                            <p>{`${client.name} ${client.surname}`}</p>
+                            <IconButton
+                              color={"success"}
+                              variant={"contained"}
+                              size={"small"}
+                              onClick={() => suspendClient(_id, client._id)}
+                              component="span"
+                            >
+                              <AddCircleOutlineIcon />
+                            </IconButton>
+                          </li>
+                        ))}
+                    </ul>
+                  </AccordionDetails>
+                </Accordion>
+              ) : null}
             </div>
           )}
         </CardContent>

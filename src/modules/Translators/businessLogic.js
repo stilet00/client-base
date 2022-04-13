@@ -366,6 +366,30 @@ export const useTranslators = (user) => {
     [translators]
   );
 
+  const suspendClient = useCallback(
+    (translatorId, clientId) => {
+      const editedTranslator = translators.find(
+        (item) => item._id === translatorId
+      );
+
+      let message;
+
+      editedTranslator.clients = editedTranslator.clients.map((client) => {
+        if (client._id === clientId) {
+          message = client.suspended
+            ? MESSAGES.clientActivated
+            : MESSAGES.clientSuspended;
+          return { ...client, suspended: !client.suspended };
+        } else {
+          return client;
+        }
+      });
+
+      saveChangedTranslator(editedTranslator, message);
+    },
+    [translators]
+  );
+
   return {
     translators,
     startTranslatorDelete,
@@ -395,6 +419,7 @@ export const useTranslators = (user) => {
     calculateTranslatorYesterdayTotal,
     calculateTotalBalanceDay,
     suspendTranslator,
+    suspendClient,
   };
 };
 

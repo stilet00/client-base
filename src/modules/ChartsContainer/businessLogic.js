@@ -23,7 +23,7 @@ export const useChartsContainer = (user) => {
 
   const [deletedMonth, setDeletedMonth] = useState(null);
 
-  const [emptyStatus, setEmptyStatus] = useState(false);
+  const [emptyStatus] = useState(false);
 
   const [arrayOfYears, setArrayOfYears] = useState([]);
 

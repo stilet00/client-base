@@ -44,6 +44,16 @@ export const MESSAGES = {
     status: true,
   },
 
+  clientSuspended: {
+    text: "Client has been suspended!",
+    status: false,
+  },
+
+  clientActivated: {
+    text: "Client has been activated!",
+    status: true,
+  },
+
   somethingWrong: {
     text: "Something went wrong :(",
     status: false,

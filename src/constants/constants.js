@@ -4,6 +4,7 @@ export const DEFAULT_CLIENT = {
   name: "",
   surname: "",
   translators: [],
+  suspended: false,
 };
 
 class DEFAULT_DAY_BALANCE {

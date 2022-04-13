@@ -23,7 +23,6 @@ function ChartsContainer({ user }) {
     emptyStatus,
     handleChange,
     months,
-    onMonthSubmit,
     openAlertConfirmation,
     selectedYear,
   } = useChartsContainer(user);
