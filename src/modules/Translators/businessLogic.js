@@ -304,9 +304,9 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const balanceDaySubmit = (translatorId, balanceDay) => {
+  const balanceDaySubmit = useCallback((translatorId, balanceDay) => {
     let editedTranslator = translators.find(
-      (item) => item._id === translatorId
+        (item) => item._id === translatorId
     );
     const newStatistics = editedTranslator.statistics.map((year) => {
       const newMonths = year.months.map((month) => {
@@ -319,9 +319,9 @@ export const useTranslators = (user) => {
 
     editedTranslator.statistics = newStatistics;
     saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
-  };
+  }, [translators]) ;
 
-  const calculateTotalBalanceDay = useCallback(() => {
+  const calculateMonthTotal = useCallback(() => {
     let sum = 0;
     translators.forEach((translator) => {
       let translatorsStatistic = translator.statistics;
@@ -417,7 +417,7 @@ export const useTranslators = (user) => {
     finishTranslatorDelete,
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
-    calculateTotalBalanceDay,
+    calculateMonthTotal,
     suspendTranslator,
     suspendClient,
   };

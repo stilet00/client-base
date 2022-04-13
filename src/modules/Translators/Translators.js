@@ -56,7 +56,7 @@ function Translators({ user }) {
     finishTranslatorDelete,
     calculateTranslatorMonthTotal,
     calculateTranslatorYesterdayTotal,
-    calculateTotalBalanceDay,
+    calculateMonthTotal,
     suspendTranslator,
     suspendClient,
   } = useTranslators(user);
@@ -157,7 +157,7 @@ function Translators({ user }) {
               >
                 <Typography sx={{ p: 2 }}>
                   {`Total by ${moment().format("D MMMM")}: `}{" "}
-                  <b>{`${calculateTotalBalanceDay()} $`}</b>
+                  <b>{`${calculateMonthTotal()} $`}</b>
                 </Typography>
               </Popover>
             </div>
