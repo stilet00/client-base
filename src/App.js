@@ -23,7 +23,7 @@ import WelcomeMessage from "./sharedComponents/WelcomeMessage/WelcomeMessage";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
 import sun from "../src/images/sun_transparent.png";
-import background from "../src/images/main-background.png";
+import background from "../src/images/main-background-2.png";
 import Footer from "./modules/Footer/Footer";
 import PreloadPage from "./modules/PreloadPage/PreloadPage";
 import BackgroundImageOnLoad from "background-image-on-load";

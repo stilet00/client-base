@@ -56,7 +56,12 @@ function Overview({ user }) {
                       <tr>
                         <td>Month balance</td>
                         <td>
-                          <b>{`${calculateMonthTotal()} $`}</b>
+                          <span className={"green-text"}>
+                            <b>{
+                              calculateYearTotal() ? `${calculateMonthTotal()} $` : <SmallLoader />
+                              }
+                            </b>
+                          </span>
                         </td>
                       </tr>
                       <tr>
