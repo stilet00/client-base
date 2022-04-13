@@ -4,33 +4,27 @@ import "../../styles/modules/Overview.css";
 import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import YearSelect from "../../sharedComponents/YearSelect/YearSelect";
 import { useOverview } from "./businessLogic";
 
 function Overview({ user }) {
   const {
-    progressStatus,
-    handleChange,
     selectedYear,
-    arrayOfYears,
-    bestMonth,
     clients,
-    progressValue,
     translators,
-    yearSum,
+    calculateMonthTotal,
+    calculateYearTotal
   } = useOverview(user);
 
-  let monthProgressPage =
-    progressValue || progressValue === 0 ? (
-      progressStatus ? (
-        <span className={"green-text"}> + {progressValue} %</span>
-      ) : (
-        <span className={"red-text"}> - {progressValue} %</span>
-      )
-    ) : (
-      <SmallLoader />
-    );
+  // let monthProgressPage =
+  //   progressValue || progressValue === 0 ? (
+  //     progressStatus ? (
+  //       <span className={"green-text"}> + {progressValue} %</span>
+  //     ) : (
+  //       <span className={"red-text"}> - {progressValue} %</span>
+  //     )
+  //   ) : (
+  //     <SmallLoader />
+  //   );
 
   return (
     <FirebaseAuthConsumer>
@@ -38,14 +32,6 @@ function Overview({ user }) {
         return isSignedIn ? (
           <>
             <Menu />
-            <div className={"socials button-add-container middle-button"}>
-              <AccessTimeIcon />
-              <YearSelect
-                arrayOfYears={arrayOfYears}
-                year={selectedYear}
-                handleChange={handleChange}
-              />
-            </div>
             <div
               className={
                 "taskList-container chart-container table-container  animated-box"
@@ -68,9 +54,9 @@ function Overview({ user }) {
                         </td>
                       </tr>
                       <tr>
-                        <td>Month progress</td>
+                        <td>Month balance</td>
                         <td>
-                          <b>{monthProgressPage}</b>
+                          <b>{`${calculateMonthTotal()} $`}</b>
                         </td>
                       </tr>
                       <tr>
@@ -96,40 +82,40 @@ function Overview({ user }) {
                     </>
                   ) : null}
 
-                  <tr>
-                    <td>Best month of {moment(selectedYear).format("YYYY")}</td>
-                    <td>
-                      <b>
-                        {bestMonth ? (
-                          <span>
-                            {`${moment(
-                              `${selectedYear}-${bestMonth.month}-01`
-                            ).format("MMM")} : `}
-                            <b className={"green-text"}>
-                              {bestMonth.values + " $"}
-                            </b>
-                          </span>
-                        ) : (
-                          <SmallLoader />
-                        )}
-                      </b>
-                    </td>
-                  </tr>
+                  {/*<tr>*/}
+                  {/*  <td>Best month of {moment(selectedYear).format("YYYY")}</td>*/}
+                  {/*  <td>*/}
+                  {/*    <b>*/}
+                  {/*      {bestMonth ? (*/}
+                  {/*        <span>*/}
+                  {/*          {`${moment(*/}
+                  {/*            `${selectedYear}-${bestMonth.month}-01`*/}
+                  {/*          ).format("MMM")} : `}*/}
+                  {/*          <b className={"green-text"}>*/}
+                  {/*            {bestMonth.values + " $"}*/}
+                  {/*          </b>*/}
+                  {/*        </span>*/}
+                  {/*      ) : (*/}
+                  {/*        <SmallLoader />*/}
+                  {/*      )}*/}
+                  {/*    </b>*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
 
                   <tr>
                     <td>Year's balance</td>
                     <td>
-                      <b>{yearSum ? yearSum + " $" : <SmallLoader />}</b>
+                      <b>{calculateYearTotal() ? calculateYearTotal() + " $" : <SmallLoader />}</b>
                     </td>
                   </tr>
                   <tr>
                     <td>Salary payed</td>
                     <td>
                       <b>
-                        {yearSum ? (
+                        {calculateYearTotal() ? (
                           <span style={{ color: "orange" }}>
                             {" "}
-                            {Math.floor(yearSum * 0.45) + " $"}{" "}
+                            {Math.floor(calculateYearTotal() * 0.45) + " $"}{" "}
                           </span>
                         ) : (
                           <SmallLoader />
@@ -141,10 +127,10 @@ function Overview({ user }) {
                     <td>Payments to clients</td>
                     <td>
                       <b>
-                        {yearSum ? (
+                        {calculateYearTotal() ? (
                           <span style={{ color: "orange" }}>
                             {" "}
-                            {Math.floor(yearSum * 0.1) + " $"}{" "}
+                            {Math.floor(calculateYearTotal() * 0.1) + " $"}{" "}
                           </span>
                         ) : (
                           <SmallLoader />
@@ -156,12 +142,12 @@ function Overview({ user }) {
                     <td>Total profit</td>
                     <td>
                       <b>
-                        {yearSum ? (
+                        {calculateYearTotal() ? (
                           <span className={"green-text"}>
                             {" "}
-                            {yearSum -
-                              Math.floor(yearSum * 0.4) -
-                              Math.floor(yearSum * 0.1) +
+                            {calculateYearTotal() -
+                              Math.floor(calculateYearTotal() * 0.4) -
+                              Math.floor(calculateYearTotal() * 0.1) +
                               " $"}{" "}
                           </span>
                         ) : (

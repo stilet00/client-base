@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
+import { calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
 
 export const useOverview = (user) => {
   const [clients, setClients] = useState([]);
@@ -13,11 +14,7 @@ export const useOverview = (user) => {
 
   const [progressValue, setProgressValue] = useState(null);
 
-  const [yearSum, setYearSum] = useState(null);
-
   const [bestMonth, setBestMonth] = useState(null);
-
-  const [arrayOfYears, setArrayOfYears] = useState([]);
 
   const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
 
@@ -29,8 +26,6 @@ export const useOverview = (user) => {
     if (user) {
       getBalance().then((res) => {
         if (res.status === 200) {
-          const yearList = res.data.map((item) => item.year);
-          setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
           let byYearFilteredArray = res.data.filter(
             (item) => item.year === selectedYear
           );
@@ -38,7 +33,6 @@ export const useOverview = (user) => {
             getArrayWithSums(byYearFilteredArray).sort(compareSums);
           setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
           getMonthProgress(byYearFilteredArray);
-          getYearSum(byYearFilteredArray);
         }
       });
 
@@ -74,6 +68,25 @@ export const useOverview = (user) => {
       : null;
   }
 
+  const calculateMonthTotal = useCallback((monthNumber) => {
+    let sum = 0;
+    translators.forEach((translator) => {
+      let translatorsStatistic = translator.statistics;
+      sum = sum + Number(calculateTranslatorMonthTotal(translatorsStatistic, monthNumber));
+    });
+    return Math.round(sum);
+  }, [translators]);
+
+  const calculateYearTotal = useCallback(() => {
+    let yearSum = 0;
+
+    for (let monthNumber = 1; monthNumber < 13; monthNumber++) {
+      yearSum = yearSum + calculateMonthTotal(monthNumber)
+    }
+
+    return yearSum
+  }, [translators])
+
   function getSumTillNow(array, forFullMonth = false) {
     let sum = 0;
     if (forFullMonth) {
@@ -100,14 +113,6 @@ export const useOverview = (user) => {
     }
 
     return sum;
-  }
-
-  function getYearSum(yearArray) {
-    let arrayOfSums = [];
-    yearArray.forEach((item) => {
-      arrayOfSums.push(reduceArray(item.values));
-    });
-    setYearSum(reduceArray(arrayOfSums));
   }
 
   function getMonthProgress(yearArray) {
@@ -160,12 +165,12 @@ export const useOverview = (user) => {
   return {
     progressValue,
     progressStatus,
-    arrayOfYears,
     selectedYear,
     handleChange,
     clients,
     translators,
     bestMonth,
-    yearSum,
+    calculateMonthTotal,
+    calculateYearTotal
   };
 };
