@@ -58,6 +58,7 @@ function Translators({ user }) {
     calculateTranslatorYesterdayTotal,
     calculateTotalBalanceDay,
     suspendTranslator,
+    suspendClient,
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -169,26 +170,26 @@ function Translators({ user }) {
         }
       >
         {translators.length > 0 && !loading ? (
-          translators
-            .map((item) => (
-              <SingleTranslator
-                deleteTranslator={startTranslatorDelete}
-                {...item}
-                key={item._id}
-                dragOverHandler={dragOverHandler}
-                onBoardDrop={onBoardDrop}
-                dragLeaveHandler={dragLeaveHandler}
-                balanceDaySubmit={balanceDaySubmit}
-                alertStatusConfirmation={alertStatusConfirmation}
-                openAlertConfirmation={openAlertConfirmation}
-                closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
-                calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
-                calculateTranslatorYesterdayTotal={
-                  calculateTranslatorYesterdayTotal
-                }
-                suspendTranslator={suspendTranslator}
-              />
-            ))
+          translators.map((item) => (
+            <SingleTranslator
+              deleteTranslator={startTranslatorDelete}
+              {...item}
+              key={item._id}
+              dragOverHandler={dragOverHandler}
+              onBoardDrop={onBoardDrop}
+              dragLeaveHandler={dragLeaveHandler}
+              balanceDaySubmit={balanceDaySubmit}
+              alertStatusConfirmation={alertStatusConfirmation}
+              openAlertConfirmation={openAlertConfirmation}
+              closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
+              calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
+              calculateTranslatorYesterdayTotal={
+                calculateTranslatorYesterdayTotal
+              }
+              suspendTranslator={suspendTranslator}
+              suspendClient={suspendClient}
+            />
+          ))
         ) : loading ? (
           <div className="empty">
             <Loader />

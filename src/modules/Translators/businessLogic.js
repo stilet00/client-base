@@ -58,7 +58,7 @@ export const useTranslators = (user) => {
       getTranslators().then((res) => {
         if (res.status === 200) {
           setLoading(false);
-          setTranslators(res.data.sort(sortIfSuspended));
+          setTranslators(res.data);
         } else {
           console.log("No translators");
         }
@@ -73,14 +73,6 @@ export const useTranslators = (user) => {
       });
     }
   }, [user]);
-
-  function sortIfSuspended(a) {
-    if (a.suspended.status) {
-      return 1
-    } else {
-      return -1
-    }
-  }
 
   const showAlertMessage = useCallback(
     (alertMessage) => {
@@ -147,7 +139,7 @@ export const useTranslators = (user) => {
               return item._id === editedTranslator._id
                 ? editedTranslator
                 : item;
-            }).sort(sortIfSuspended)
+            })
           );
         } else {
           showAlertMessage(MESSAGES.somethingWrong);
@@ -285,7 +277,7 @@ export const useTranslators = (user) => {
             setTranslators([
               ...translators,
               { ...newTranslator, _id: res.data },
-            ].sort(sortIfSuspended));
+            ]);
           } else {
             console.log(res.status);
           }
@@ -374,6 +366,30 @@ export const useTranslators = (user) => {
     [translators]
   );
 
+  const suspendClient = useCallback(
+    (translatorId, clientId) => {
+      const editedTranslator = translators.find(
+        (item) => item._id === translatorId
+      );
+
+      let message;
+
+      editedTranslator.clients = editedTranslator.clients.map((client) => {
+        if (client._id === clientId) {
+          message = client.suspended
+            ? MESSAGES.clientActivated
+            : MESSAGES.clientSuspended;
+          return { ...client, suspended: !client.suspended };
+        } else {
+          return client;
+        }
+      });
+
+      saveChangedTranslator(editedTranslator, message);
+    },
+    [translators]
+  );
+
   return {
     translators,
     startTranslatorDelete,
@@ -403,6 +419,7 @@ export const useTranslators = (user) => {
     calculateTranslatorYesterdayTotal,
     calculateTotalBalanceDay,
     suspendTranslator,
+    suspendClient,
   };
 };
 
