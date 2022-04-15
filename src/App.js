@@ -19,7 +19,6 @@ import {
   FirebaseAuthConsumer,
 } from "@react-firebase/auth";
 import { firebaseConfig } from "./fireBaseConfig";
-import WelcomeMessage from "./sharedComponents/WelcomeMessage/WelcomeMessage";
 import Translators from "./modules/Translators/Translators";
 import Overview from "./modules/Overview/Overview";
 import sun from "../src/images/sun_transparent.png";
@@ -27,6 +26,7 @@ import background from "../src/images/main-background-2.png";
 import Footer from "./modules/Footer/Footer";
 import PreloadPage from "./modules/PreloadPage/PreloadPage";
 import BackgroundImageOnLoad from "background-image-on-load";
+import Navigation from "./sharedComponents/Navigation/Navigation";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -46,7 +46,11 @@ function App() {
           <div className="sun">
             <img src={sun} alt="Sun" width={"150px"} height={"150px"} />
           </div>
-          <WelcomeMessage />
+          <FirebaseAuthConsumer>
+            {({ user }) => {
+              return <Navigation user={user} />;
+            }}
+          </FirebaseAuthConsumer>
           <main>
             <FirebaseAuthConsumer>
               {({ user }) => {

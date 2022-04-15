@@ -1,4 +1,3 @@
-import Menu from "../../sharedComponents/Navigation/Navigation";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -86,7 +85,6 @@ function Translators({ user }) {
             <Typography>Menu</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Menu pretty={{ borderBottom: "1px solid #50C878" }} />
             <div className={"socials button-add-container middle-button"}>
               <Button
                 onClick={toggleDrawer("left", true)}

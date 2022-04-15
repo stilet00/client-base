@@ -39,7 +39,7 @@ export function getTotalDaysOfMonth(year, monthNumber) {
 export const calculateTranslatorMonthTotal = (
   statistics,
   monthNumber = Number(currentMonth),
-  yearNumber = currentYear,
+  yearNumber = currentYear
 ) => {
   const month = statistics
     .find((year) => year.year === yearNumber)

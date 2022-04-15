@@ -68,24 +68,31 @@ export const useOverview = (user) => {
       : null;
   }
 
-  const calculateMonthTotal = useCallback((monthNumber) => {
-    let sum = 0;
-    translators.forEach((translator) => {
-      let translatorsStatistic = translator.statistics;
-      sum = sum + Number(calculateTranslatorMonthTotal(translatorsStatistic, monthNumber));
-    });
-    return Math.round(sum);
-  }, [translators]);
+  const calculateMonthTotal = useCallback(
+    (monthNumber) => {
+      let sum = 0;
+      translators.forEach((translator) => {
+        let translatorsStatistic = translator.statistics;
+        sum =
+          sum +
+          Number(
+            calculateTranslatorMonthTotal(translatorsStatistic, monthNumber)
+          );
+      });
+      return Math.round(sum);
+    },
+    [translators]
+  );
 
   const calculateYearTotal = useCallback(() => {
     let yearSum = 0;
 
     for (let monthNumber = 1; monthNumber < 13; monthNumber++) {
-      yearSum = yearSum + calculateMonthTotal(monthNumber)
+      yearSum = yearSum + calculateMonthTotal(monthNumber);
     }
 
-    return yearSum
-  }, [translators])
+    return yearSum;
+  }, [translators]);
 
   function getSumTillNow(array, forFullMonth = false) {
     let sum = 0;
@@ -171,6 +178,6 @@ export const useOverview = (user) => {
     translators,
     bestMonth,
     calculateMonthTotal,
-    calculateYearTotal
+    calculateYearTotal,
   };
 };
