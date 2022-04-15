@@ -2,30 +2,25 @@
 .top-button {
   border-radius: 0;
   border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
+  border-top-right-radius: 5px; }
 
 .middle-button {
-  border-radius: 0;
-}
+  border-radius: 0; }
 
 .bottom-button {
   border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
+  border-bottom-left-radius: 5px; }
 
 .side-clients-menu {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  min-width: 280px;
-}
-.side-clients-menu h3 {
-  width: 90%;
-  border-bottom: 2px solid black;
-  margin-bottom: 10px;
-}
+  min-width: 280px; }
+  .side-clients-menu h3 {
+    width: 90%;
+    border-bottom: 2px solid black;
+    margin-bottom: 10px; }
 
 .left-menu-item {
   width: 90%;
@@ -37,39 +32,30 @@
   margin-top: 10px;
   padding: 6px;
   cursor: grab;
-  background: rgba(255, 255, 255, 0.7);
-}
-.left-menu-item:hover {
-  background: white;
-}
+  background: rgba(255, 255, 255, 0.7); }
+  .left-menu-item:hover {
+    background: white; }
 
 .translators-container {
-  align-content: flex-start;
-}
-.translators-container h3 {
-  background: transparent;
-  border: none;
-  height: 20px;
-}
+  align-content: flex-start; }
+  .translators-container h3 {
+    background: transparent;
+    border: none;
+    height: 20px; }
 
 .sum-popover .MuiPaper-root {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 250px;
-  height: 70px;
-}
+  height: 70px; }
 
 @media (max-width: 900px) {
   .translators-container {
-    max-width: 90vw;
-  }
-}
+    max-width: 90vw; } }
 @media (max-width: 500px) {
   .translators-container {
     border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-}
+    border-top-right-radius: 0; } }
 
 /*# sourceMappingURL=Translators.css.map */
