@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .top-button {
+  border-radius: 0;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
@@ -68,12 +69,6 @@
   .translators-container {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-  }
-}
-@media (min-width: 900px) {
-  .top-button {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
   }
 }
 

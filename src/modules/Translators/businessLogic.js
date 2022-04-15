@@ -304,22 +304,25 @@ export const useTranslators = (user) => {
     [clients, showAlertMessage]
   );
 
-  const balanceDaySubmit = useCallback((translatorId, balanceDay) => {
-    let editedTranslator = translators.find(
+  const balanceDaySubmit = useCallback(
+    (translatorId, balanceDay) => {
+      let editedTranslator = translators.find(
         (item) => item._id === translatorId
-    );
-    const newStatistics = editedTranslator.statistics.map((year) => {
-      const newMonths = year.months.map((month) => {
-        return month.map((day) => {
-          return day.id === balanceDay.id ? balanceDay : day;
+      );
+      const newStatistics = editedTranslator.statistics.map((year) => {
+        const newMonths = year.months.map((month) => {
+          return month.map((day) => {
+            return day.id === balanceDay.id ? balanceDay : day;
+          });
         });
+        return { ...year, months: newMonths };
       });
-      return { ...year, months: newMonths };
-    });
 
-    editedTranslator.statistics = newStatistics;
-    saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
-  }, [translators]) ;
+      editedTranslator.statistics = newStatistics;
+      saveChangedTranslator(editedTranslator, MESSAGES.changesSaved);
+    },
+    [translators]
+  );
 
   const calculateMonthTotal = useCallback(() => {
     let sum = 0;

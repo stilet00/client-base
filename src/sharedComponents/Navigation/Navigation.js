@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import Button from "@material-ui/core/Button";
+import Media from "react-media";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -13,10 +13,10 @@ import { useHistory } from "react-router-dom";
 import "../../styles/sharedComponents/Navigation.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import MenuIcon from "@mui/icons-material/Menu";
 import WorkIcon from "@mui/icons-material/Work";
 import PageviewIcon from "@mui/icons-material/Pageview";
+import { IconButton } from "@mui/material";
 
 const useStyles = makeStyles({
   list: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Navigation() {
+export default function Navigation({ user }) {
   const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -64,66 +64,95 @@ export default function Navigation() {
   );
 
   const list = (anchor) => (
-    <FirebaseAuthConsumer>
-      {({ isSignedIn, user, providerId }) => {
-        return (
-          <div
-            className={clsx(classes.list, {
-              [classes.fullList]: anchor === "top" || anchor === "bottom",
-            })}
-            role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
-          >
-            <List className={"fallDown-menu"}>
-              <ListItem button onClick={() => history.push("/overview")}>
-                <ListItemIcon>
-                  <PageviewIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Overview"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/chart")}>
-                <ListItemIcon>
-                  <BarChartIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Balance chart"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/tasks")}>
-                <ListItemIcon>
-                  <FormatListNumberedIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Task List"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/translators")}>
-                <ListItemIcon>
-                  <WorkIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Translators"} />
-              </ListItem>
-              {isSignedIn ? logoutButton : null}
-            </List>
-          </div>
-        );
-      }}
-    </FirebaseAuthConsumer>
-  );
-
-  return (
-    <div className={"socials upper-menu"}>
-      <Button
-        onClick={toggleDrawer("top", true)}
-        fullWidth
-        startIcon={<MenuIcon />}
-      >
-        Navigation
-      </Button>
-      <Drawer
-        anchor={"top"}
-        open={state["top"]}
-        onClose={toggleDrawer("top", false)}
-      >
-        {list("top")}
-      </Drawer>
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === "top" || anchor === "bottom",
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List className={"fallDown-menu"}>
+        <ListItem button onClick={() => history.push("/overview")}>
+          <ListItemIcon>
+            <PageviewIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Overview"} />
+        </ListItem>
+        <ListItem button onClick={() => history.push("/translators")}>
+          <ListItemIcon>
+            <WorkIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Translators"} />
+        </ListItem>
+        <ListItem button onClick={() => history.push("/chart")}>
+          <ListItemIcon>
+            <BarChartIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Balance chart"} />
+        </ListItem>
+        <ListItem button onClick={() => history.push("/tasks")}>
+          <ListItemIcon>
+            <FormatListNumberedIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Task List"} />
+        </ListItem>
+        {user ? logoutButton : null}
+      </List>
     </div>
   );
+
+  return user ? (
+    <div className="App-header">
+      <Media
+        query="(min-width: 840px)"
+        render={() => (
+          <List className={"header_nav"}>
+            <ListItem button onClick={() => history.push("/overview")}>
+              <ListItemIcon>
+                <PageviewIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Overview"} />
+            </ListItem>
+            <ListItem button onClick={() => history.push("/translators")}>
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Translators"} />
+            </ListItem>
+            <ListItem button onClick={() => history.push("/chart")}>
+              <ListItemIcon>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Balance chart"} />
+            </ListItem>
+            <ListItem button onClick={() => history.push("/tasks")}>
+              <ListItemIcon>
+                <FormatListNumberedIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Task List"} />
+            </ListItem>
+            {user ? logoutButton : null}
+          </List>
+        )}
+      />
+      <Media
+        query="(max-width: 839px)"
+        render={() => (
+          <>
+            <IconButton onClick={toggleDrawer("top", true)} fullWidth>
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor={"top"}
+              open={state["top"]}
+              onClose={toggleDrawer("top", false)}
+            >
+              {list("top")}
+            </Drawer>
+          </>
+        )}
+      />
+    </div>
+  ) : null;
 }

@@ -1,4 +1,3 @@
-import Menu from "../../sharedComponents/Navigation/Navigation";
 import SingleChart from "./SingleChart/SingleChart";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Loader from "../../sharedComponents/Loader/Loader";
@@ -29,8 +28,7 @@ function ChartsContainer({ user }) {
 
   return user ? (
     <>
-      <Menu />
-      <div className={"socials button-add-container middle-button"}>
+      <div className={"socials button-add-container top-button"}>
         <AccessTimeIcon />
         <YearSelect
           arrayOfYears={arrayOfYears}
