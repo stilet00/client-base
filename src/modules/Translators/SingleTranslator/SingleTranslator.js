@@ -220,15 +220,7 @@ function SingleTranslator({
               deleteTranslator(_id);
             }}
             fullWidth
-            style={
-              suspended.status
-                ? {
-                    color: "black",
-                  }
-                : {
-                    color: "red",
-                  }
-            }
+            variant="contained" color={suspended.status ? "default" : "secondary"}
             startIcon={<DeleteSweepIcon />}
           >
             Delete translator

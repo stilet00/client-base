@@ -90,6 +90,7 @@ export default function EditBalanceForm({
       <Button
         type="button"
         size={"small"}
+        variant={"contained"}
         onClick={handleOpen}
         fullWidth
         startIcon={<AttachMoneyIcon />}
