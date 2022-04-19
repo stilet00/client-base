@@ -214,17 +214,17 @@ function SingleTranslator({
               id={_id}
             />
           ) : null}
-          <Button
+          <IconButton
             size={"small"}
             onClick={() => {
               deleteTranslator(_id);
             }}
             fullWidth
-            variant="contained" color={suspended.status ? "default" : "secondary"}
-            startIcon={<DeleteSweepIcon />}
+            variant="contained"
+            color={suspended.status ? "default" : "primary"}
           >
-            Delete translator
-          </Button>
+            <DeleteSweepIcon />
+          </IconButton>
         </CardActions>
       </Card>
     </>

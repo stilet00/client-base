@@ -46,22 +46,6 @@ export default function Navigation({ user }) {
     }
     setState({ ...state, [anchor]: open });
   };
-  const logoutButton = (
-    <ListItem
-      button
-      onClick={() => {
-        firebase.auth().signOut();
-        setTimeout(() => {
-          history.push("/");
-        }, 1000);
-      }}
-    >
-      <ListItemIcon>
-        <ExitToAppIcon />
-      </ListItemIcon>
-      <ListItemText primary={"Log out"} />
-    </ListItem>
-  );
 
   const list = (anchor) => (
     <div
@@ -83,13 +67,13 @@ export default function Navigation({ user }) {
           <ListItemIcon>
             <WorkIcon />
           </ListItemIcon>
-          <ListItemText primary={"Translators"} />
+          <ListItemText primary={"Translators & Balance"} />
         </ListItem>
         <ListItem button onClick={() => history.push("/chart")}>
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
-          <ListItemText primary={"Balance chart"} />
+          <ListItemText primary={"Charts"} />
         </ListItem>
         <ListItem button onClick={() => history.push("/tasks")}>
           <ListItemIcon>
@@ -118,13 +102,13 @@ export default function Navigation({ user }) {
               <ListItemIcon>
                 <WorkIcon />
               </ListItemIcon>
-              <ListItemText primary={"Translators"} />
+              <ListItemText primary={"Translators & Balance"} />
             </ListItem>
             <ListItem button onClick={() => history.push("/chart")}>
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
-              <ListItemText primary={"Balance chart"} />
+              <ListItemText primary={"Charts"} />
             </ListItem>
             <ListItem button onClick={() => history.push("/tasks")}>
               <ListItemIcon>
@@ -132,7 +116,19 @@ export default function Navigation({ user }) {
               </ListItemIcon>
               <ListItemText primary={"Task List"} />
             </ListItem>
-            {user ? logoutButton : null}
+            {user ? (
+              <ListItem
+                button
+                onClick={() => {
+                  firebase.auth().signOut();
+                }}
+              >
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Log out"} />
+              </ListItem>
+            ) : null}
           </List>
         )}
       />

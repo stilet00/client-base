@@ -4,6 +4,7 @@ import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
 import { calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
+import { currentYear } from "../../constants/constants";
 
 export const useOverview = (user) => {
   const [clients, setClients] = useState([]);
@@ -16,7 +17,7 @@ export const useOverview = (user) => {
 
   const [bestMonth, setBestMonth] = useState(null);
 
-  const [selectedYear, setSelectedYear] = useState(moment().format("YYYY"));
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const handleChange = (event) => {
     setSelectedYear(event.target.value);

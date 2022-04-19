@@ -8,7 +8,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import "../../../styles/modules/ClientsForm.css";
-import StarIcon from "@mui/icons-material/Star";
+import FemaleIcon from "@mui/icons-material/Female";
 import { useClientsForm } from "../businessLogic";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +53,7 @@ export default function ClientsForm(props) {
         type="button"
         onClick={handleOpen}
         fullWidth
-        startIcon={<StarIcon />}
+        startIcon={<FemaleIcon />}
       >
         Add client
       </Button>

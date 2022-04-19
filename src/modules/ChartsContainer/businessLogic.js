@@ -11,10 +11,9 @@ import useModal from "../../sharedHooks/useModal";
 import {
   calculateBalanceDayAllClients,
   findYesterday,
-  getTotalDaysOfMonth,
 } from "../../sharedFunctions/sharedFunctions";
 import { getTranslators } from "../../services/translatorsServices/services";
-import { currentYear } from "../../constants/constants";
+import { currentYear, DEFAULT_MONTH_CHART } from "../../constants/constants";
 
 export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);
@@ -65,14 +64,12 @@ export const useChartsContainer = (user) => {
           setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
 
           for (let monthCount = 1; monthCount < 13; monthCount++) {
-            let defaultMonth = {
-              year: selectedYear,
-              month: monthCount < 10 ? "0" + monthCount : String(monthCount),
-              days: getTotalDaysOfMonth(selectedYear, monthCount),
-              values: [],
-            };
+            let defaultMonth = new DEFAULT_MONTH_CHART(
+              selectedYear,
+              monthCount
+            );
 
-            const stringMonth = monthCount < 9 ? "0" + monthCount : monthCount;
+            const stringMonth = defaultMonth.month;
 
             for (
               let dayCount = 1;
@@ -96,7 +93,7 @@ export const useChartsContainer = (user) => {
                 });
               });
               if (daySum) {
-                defaultMonth.values[dayCount - 1] = daySum.toFixed(2);
+                defaultMonth.values[dayCount - 1] = Math.round(daySum);
               }
             }
             if (

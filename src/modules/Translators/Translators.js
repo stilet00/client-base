@@ -3,9 +3,8 @@ import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import PersonIcon from "@mui/icons-material/Person";
+import WomanIcon from "@mui/icons-material/Woman";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
 import "../../styles/modules/Translators.css";
@@ -113,11 +112,7 @@ function Translators({ user }) {
                         onDrop={(e) => dragDropHandler(e)}
                       >
                         <ListItemIcon>
-                          {index % 2 === 0 ? (
-                            <PersonIcon />
-                          ) : (
-                            <PersonOutlineIcon />
-                          )}
+                          <WomanIcon />
                         </ListItemIcon>
                         <ListItemText
                           primary={`${client.name} ${client.surname}`}
