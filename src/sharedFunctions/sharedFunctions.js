@@ -56,3 +56,7 @@ export const calculateTranslatorMonthTotal = (
 
   return total.toFixed(2);
 };
+
+export function getStringMonthNumber(monthNumber) {
+  return monthNumber < 10 ? "0" + monthNumber : String(monthNumber);
+}

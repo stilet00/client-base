@@ -41,7 +41,6 @@ function ChartsContainer({ user }) {
           <ul className={"scrolled-container"}>
             {months.map((month, index) => (
               <SingleChart
-                // onValueSubmit={onValueSubmit}
                 graph={month}
                 index={index}
                 key={index}

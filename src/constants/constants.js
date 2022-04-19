@@ -1,4 +1,12 @@
 import moment from "moment";
+import {
+  getStringMonthNumber,
+  getTotalDaysOfMonth,
+} from "../sharedFunctions/sharedFunctions";
+
+export const currentYear = moment().format("YYYY");
+export const currentMonth = moment().format("M");
+export const currentDay = moment().format("D");
 
 export const DEFAULT_CLIENT = {
   name: "",
@@ -11,6 +19,15 @@ class DEFAULT_DAY_BALANCE {
   constructor(year, month, day) {
     this.id = moment(year + month + day, "YYYYMMDD").format("DD MM YYYY");
     this.clients = [];
+  }
+}
+
+export class DEFAULT_MONTH_CHART {
+  constructor(year, month) {
+    this.year = year;
+    this.month = getStringMonthNumber(month);
+    this.days = getTotalDaysOfMonth(year, month);
+    this.values = [];
   }
 }
 
@@ -31,8 +48,8 @@ export class DEFAULT_DAY_CLIENT {
 
 export const DEFAULT_BALANCE_DATA = [
   {
-    year: moment().format("YYYY"),
-    months: fillMonths(moment().format("YYYY")),
+    year: currentYear,
+    months: fillMonths(currentYear),
   },
 ];
 
@@ -69,7 +86,3 @@ function fillDays(month, year) {
   }
   return totalDays;
 }
-
-export const currentYear = moment().format("YYYY");
-export const currentMonth = moment().format("M");
-export const currentDay = moment().format("D");
