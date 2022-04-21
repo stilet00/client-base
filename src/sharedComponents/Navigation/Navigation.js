@@ -81,7 +81,19 @@ export default function Navigation({ user }) {
           </ListItemIcon>
           <ListItemText primary={"Task List"} />
         </ListItem>
-        {user ? logoutButton : null}
+          {user ? (
+              <ListItem
+                  button
+                  onClick={() => {
+                      firebase.auth().signOut();
+                  }}
+              >
+                  <ListItemIcon>
+                      <ExitToAppIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"Log out"} />
+              </ListItem>
+          ) : null}
       </List>
     </div>
   );
