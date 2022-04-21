@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAQ,oFAA4E;ACA5E,0FAAkF;ADI1F,aAAa;EACX,WAAW,EAAE,qCAAoC;EACjD,WAAW,EAAE,eAAc;EAC3B,aAAa,EAAE,CAAC;EAChB,UAAU,EAAE,eAAc;EAC1B,KAAK,EAAE,KAAK;EACZ,cAAc,EAAE,cAAa;;AAE/B,eAAe;EACb,KAAK,EAAE,oBAAmB;;AAE5B,kCAAkC;EAChC,KAAK,ECdM,KAAmB",
+"sources": ["Slider.sass","../../variables.sass"],
+"names": [],
+"file": "Slider.css"
+}

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,sBAAsB;EACpB,aAAa,EAAE,GAAG;;AAEpB,cAAc;EACZ,sBAAsB,EAAE,CAAC;EACzB,uBAAuB,EAAE,CAAC",
+"sources": ["TranslatorsForm.sass"],
+"names": [],
+"file": "TranslatorsForm.css"
+}
