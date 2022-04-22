@@ -114,7 +114,19 @@ export const useClientsList = (translators) => {
     return Math.round(totalClientBalance);
   }
 
+  function sortBySum(clientOne, clientTwo) {
+    return clientMonthSum(clientOne._id) < clientMonthSum(clientTwo._id) ? 1 : -1
+  }
+
+  function calculateRating(clientId) {
+    const clientSum = clientMonthSum(clientId);
+
+    return clientSum > 3000 ? 5 : clientSum > 2000 ? 4 : clientSum > 1000 ? 3 : clientSum > 500 ? 2 : 1
+  }
+
   return {
     clientMonthSum,
+    sortBySum,
+    calculateRating
   };
 };

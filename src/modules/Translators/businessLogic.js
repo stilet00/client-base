@@ -94,7 +94,7 @@ export const useTranslators = (user) => {
 
   const dragStartHandler = useCallback((e, client) => {
     setCurrentClient(client);
-    e.target.style.border = "2px solid red";
+    e.target.style.border = "2px solid black";
   }, []);
 
   const dragLeaveHandler = useCallback(

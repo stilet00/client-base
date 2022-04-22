@@ -8,6 +8,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import "../../../styles/modules/Clients.css";
 import { useClientsList } from "../businessLogic";
 import moment from "moment";
+import { Rating } from "@mui/material";
 
 function ClientsList({
   translators,
@@ -20,8 +21,9 @@ function ClientsList({
   dragEndHandler,
   dragDropHandler,
   deleteClient,
+
 }) {
-  const { clientMonthSum } = useClientsList(translators);
+  const { clientMonthSum, sortBySum, calculateRating } = useClientsList(translators);
 
   return (
     <>
@@ -43,7 +45,7 @@ function ClientsList({
             All clients:
           </h3>
           <ul>
-            {clients.map((client) => (
+            {clients.sort(sortBySum).map((client) => (
               <li
                 key={client._id}
                 id={client._id}
@@ -56,9 +58,15 @@ function ClientsList({
                 onDrop={(e) => dragDropHandler(e)}
               >
                 <ListItemText primary={`${client.name} ${client.surname}`} />
-                <Button onClick={() => deleteClient(client._id)} disabled>
-                  <DeleteForeverIcon />
-                </Button>
+                  <Rating
+                      name="read-only"
+                      value={calculateRating(client._id)}
+                      readOnly
+                      size="small"
+                  />
+                {/*<Button onClick={() => deleteClient(client._id)} disabled>*/}
+                {/*  <DeleteForeverIcon />*/}
+                {/*</Button>*/}
                 <ListItemText
                   class={"side-clients-menu__client__balance-container"}
                   secondary={`Balance for ${moment().format(
