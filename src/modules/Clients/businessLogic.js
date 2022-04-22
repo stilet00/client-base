@@ -1,7 +1,12 @@
 import { useCallback, useState } from "react";
 import { CLIENTS } from "../../database/database";
-import { DEFAULT_CLIENT } from "../../constants/constants";
+import {
+  currentMonth,
+  currentYear,
+  DEFAULT_CLIENT,
+} from "../../constants/constants";
 import useModal from "../../sharedHooks/useModal";
+import { calculateBalanceDaySum } from "../../sharedFunctions/sharedFunctions";
 
 export const useKarusell = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -81,5 +86,35 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
     handleClose,
     onFormSubmit,
     handleChange,
+  };
+};
+
+export const useClientsList = (translators) => {
+  function clientMonthSum(clientId, monthNumber = currentMonth) {
+    let totalClientBalance = 0;
+
+    translators.forEach((translator) => {
+      const thisYearStat = translator.statistics.find(
+        (year) => year.year === currentYear
+      );
+
+      const thisMonthStat = thisYearStat.months[monthNumber - 1];
+
+      thisMonthStat.forEach((day) => {
+        const clientBalanceDay = day.clients.find(
+          (client) => client.id === clientId
+        );
+        if (clientBalanceDay) {
+          totalClientBalance =
+            totalClientBalance + calculateBalanceDaySum(clientBalanceDay);
+        }
+      });
+    });
+
+    return Math.round(totalClientBalance);
+  }
+
+  return {
+    clientMonthSum,
   };
 };

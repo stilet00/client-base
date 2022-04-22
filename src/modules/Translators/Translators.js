@@ -1,15 +1,9 @@
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
-import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import WomanIcon from "@mui/icons-material/Woman";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import TranslatorsForm from "./TranslatorsForm/TranslatorsForm";
 import SingleTranslator from "./SingleTranslator/SingleTranslator";
 import "../../styles/modules/Translators.css";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import ClientsForm from "../Clients/ClientsForm/ClientsForm";
 import Loader from "../../sharedComponents/Loader/Loader";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
@@ -25,6 +19,7 @@ import {
 } from "@material-ui/core";
 import moment from "moment/moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ClientsList from "../Clients/ClientsList/ClientsList";
 
 function Translators({ user }) {
   const {
@@ -85,46 +80,18 @@ function Translators({ user }) {
           </AccordionSummary>
           <AccordionDetails>
             <div className={"socials button-add-container middle-button"}>
-              <Button
-                onClick={toggleDrawer("left", true)}
-                fullWidth
-                startIcon={<ListAltIcon />}
-              >
-                Show clients
-              </Button>
-              <Drawer
-                anchor={"left"}
-                open={state["left"]}
-                onClose={toggleDrawer("left", false)}
-              >
-                <div className={"side-clients-menu fallDown-menu"}>
-                  <h3>All clients:</h3>
-                  <ul>
-                    {clients.map((client, index) => (
-                      <li
-                        key={client._id}
-                        className={"left-menu-item"}
-                        draggable={true}
-                        onDragStart={(e) => dragStartHandler(e, client)}
-                        onDragOver={dragOverHandler}
-                        onDragLeave={dragLeaveHandler}
-                        onDragEnd={dragEndHandler}
-                        onDrop={(e) => dragDropHandler(e)}
-                      >
-                        <ListItemIcon>
-                          <WomanIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={`${client.name} ${client.surname}`}
-                        />
-                        <Button onClick={() => deleteClient(client._id)}>
-                          <DeleteForeverIcon />
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Drawer>
+              <ClientsList
+                clients={clients}
+                toggleDrawer={toggleDrawer}
+                state={state}
+                dragStartHandler={dragStartHandler}
+                dragOverHandler={dragOverHandler}
+                dragLeaveHandler={dragLeaveHandler}
+                dragEndHandler={dragEndHandler}
+                dragDropHandler={dragDropHandler}
+                deleteClient={deleteClient}
+                translators={translators}
+              />
             </div>
             <ClientsForm onFormSubmit={clientsFormSubmit} />
             <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
