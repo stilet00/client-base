@@ -21,9 +21,9 @@ function ClientsList({
   dragEndHandler,
   dragDropHandler,
   deleteClient,
-
 }) {
-  const { clientMonthSum, sortBySum, calculateRating } = useClientsList(translators);
+  const { clientMonthSum, sortBySum, calculateRating } =
+    useClientsList(translators);
 
   return (
     <>
@@ -58,12 +58,12 @@ function ClientsList({
                 onDrop={(e) => dragDropHandler(e)}
               >
                 <ListItemText primary={`${client.name} ${client.surname}`} />
-                  <Rating
-                      name="read-only"
-                      value={calculateRating(client._id)}
-                      readOnly
-                      size="small"
-                  />
+                <Rating
+                  name="read-only"
+                  value={calculateRating(client._id)}
+                  readOnly
+                  size="small"
+                />
                 {/*<Button onClick={() => deleteClient(client._id)} disabled>*/}
                 {/*  <DeleteForeverIcon />*/}
                 {/*</Button>*/}

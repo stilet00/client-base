@@ -5,7 +5,7 @@ import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useAuthorizationPage } from "./businessLogic";
 import styled, { keyframes } from "styled-components";
-import { bounce, bounceIn } from "react-animations";
+import { bounceIn } from "react-animations";
 
 const Bounce = styled.div`
   animation: 2s ${keyframes`${bounceIn}`};

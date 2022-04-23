@@ -5,26 +5,32 @@
   align-items: center;
   padding: 10px;
   min-width: 280px;
-  max-width: 80vw; }
-  .side-clients-menu h3 {
-    border-bottom: 2px solid black;
-    margin-bottom: 10px; }
-  .side-clients-menu__client {
-    width: 90%;
-    min-height: 50px;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: grab;
-    background: rgba(255, 255, 255, 0.7); }
-    .side-clients-menu__client:not(:first-child) {
-      margin-top: 10px; }
-    .side-clients-menu__client:hover {
-      background: white; }
-    .side-clients-menu__client__balance-container {
-      width: 100%; }
+  max-width: 80vw;
+}
+.side-clients-menu h3 {
+  border-bottom: 2px solid black;
+  margin-bottom: 10px;
+}
+.side-clients-menu__client {
+  width: 90%;
+  min-height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: grab;
+  background: rgba(255, 255, 255, 0.7);
+}
+.side-clients-menu__client:not(:first-child) {
+  margin-top: 10px;
+}
+.side-clients-menu__client:hover {
+  background: white;
+}
+.side-clients-menu__client__balance-container {
+  width: 100%;
+}
 
 /*# sourceMappingURL=Clients.css.map */

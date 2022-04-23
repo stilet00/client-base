@@ -3,6 +3,14 @@ import "../../../styles/modules/Unauthorized.css";
 import { Link, useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import { fadeOut } from "react-animations";
+import styled, { keyframes } from "styled-components";
+
+const Animate = styled.div`
+  animation: 6s ${keyframes`${fadeOut}`};
+  width: 100%;
+  height: 100%;
+`;
 
 const StyledButton = withStyles({
   root: {
@@ -42,7 +50,7 @@ function Unauthorized() {
   });
 
   return (
-    <>
+    <Animate>
       <div className={"unauthorized"}>
         <h1>You should log in before using this service...</h1>
         <p>You will be redirected in ...{time}</p>
@@ -50,7 +58,7 @@ function Unauthorized() {
           <Link to={"/"}>Back</Link>
         </StyledButton>
       </div>
-    </>
+    </Animate>
   );
 }
 
