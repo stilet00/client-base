@@ -1,50 +1,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 p {
-  margin: 10px;
-}
+  margin: 10px; }
 
 .green-line {
   width: 95%;
-  border-top: 2px solid white;
-}
+  border-top: 2px solid white; }
 
 .total-text {
   font-weight: bold;
-  color: white;
-}
+  color: white; }
 
 .single-chart {
-  width: 90%;
-}
+  width: 100%; }
 
 .button-chart-edit {
   margin: 0 auto;
   width: 60%;
   display: flex;
-  justify-content: space-between;
-}
-.button-chart-edit button {
-  width: 50px;
-}
+  justify-content: space-between; }
+  .button-chart-edit button {
+    width: 50px; }
 
 .total-sum {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 62%;
-  margin: 0 auto;
+  margin: 0 auto 5px auto;
   border: 2px solid white;
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  padding: 10px;
-  margin-bottom: 5px;
-}
-
-@media (min-width: 900px) {
-  .single-chart {
-    width: 80%;
-  }
-}
+  padding: 10px; }
 
 /*# sourceMappingURL=SingleChart.css.map */
