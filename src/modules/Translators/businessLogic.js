@@ -556,6 +556,28 @@ export const useSingleTranslator = (statistics) => {
       : null;
   }
 
+  function calculateMiddleMonthSum() {
+    let sum = [];
+
+    findMonth().forEach((day, index) => {
+      if (index < moment().format("D")) {
+        sum.push(Number(calculateBalanceDayAllClients(day)))
+      }
+    })
+
+    let middle = sum.reduce((sum, current) => {
+      return sum + current
+    }, 0)
+
+    return middle / sum.length
+  }
+
+  function getTranslatorsRating() {
+    const middle = calculateMiddleMonthSum();
+
+    return middle>= 100 ? 5 : middle >= 75 ? 4 : middle >= 50 ? 3 : middle >= 30 ? 2 : 1
+  }
+
   function specialColorNeeded(clientId) {
     const clientObject = findTodayBalance().clients.find(
       (item) => item.id === clientId
@@ -577,5 +599,6 @@ export const useSingleTranslator = (statistics) => {
   return {
     calculateSumByClient,
     specialColorNeeded,
+    getTranslatorsRating
   };
 };

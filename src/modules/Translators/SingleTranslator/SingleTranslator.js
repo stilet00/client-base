@@ -39,7 +39,7 @@ function SingleTranslator({
   suspended,
   suspendClient,
 }) {
-  const { calculateSumByClient, specialColorNeeded } =
+  const { calculateSumByClient, specialColorNeeded, getTranslatorsRating } =
     useSingleTranslator(statistics);
 
   return (
@@ -66,10 +66,9 @@ function SingleTranslator({
         <CardContent>
           <Rating
             name="read-only"
-            value={clients.length}
+            value={getTranslatorsRating()}
             readOnly
             size="small"
-            max={6}
           />
           <Typography variant="h5" component="div">
             {`${name} ${surname}`}
