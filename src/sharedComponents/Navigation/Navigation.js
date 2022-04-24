@@ -17,6 +17,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import WorkIcon from "@mui/icons-material/Work";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import { IconButton } from "@mui/material";
+import styled, { keyframes } from "styled-components";
+import { fadeInRight } from "react-animations";
+
+const Animation = styled.div`
+  animation: 1s ${keyframes`${fadeInRight}`};
+  width: 100%;
+  height: 100%;
+`;
 
 const useStyles = makeStyles({
   list: {
@@ -103,45 +111,47 @@ export default function Navigation({ user }) {
       <Media
         query="(min-width: 840px)"
         render={() => (
-          <List className={"header_nav"}>
-            <ListItem button onClick={() => history.push("/overview")}>
-              <ListItemIcon>
-                <PageviewIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Overview"} />
-            </ListItem>
-            <ListItem button onClick={() => history.push("/translators")}>
-              <ListItemIcon>
-                <WorkIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Translators & Balance"} />
-            </ListItem>
-            <ListItem button onClick={() => history.push("/chart")}>
-              <ListItemIcon>
-                <BarChartIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Charts"} />
-            </ListItem>
-            <ListItem button onClick={() => history.push("/tasks")}>
-              <ListItemIcon>
-                <FormatListNumberedIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Task List"} />
-            </ListItem>
-            {user ? (
-              <ListItem
-                button
-                onClick={() => {
-                  firebase.auth().signOut();
-                }}
-              >
-                <ListItemIcon>
-                  <ExitToAppIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Log out"} />
-              </ListItem>
-            ) : null}
-          </List>
+            <Animation>
+                <List className={"header_nav"}>
+                    <ListItem button onClick={() => history.push("/overview")}>
+                        <ListItemIcon>
+                            <PageviewIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Overview"} />
+                    </ListItem>
+                    <ListItem button onClick={() => history.push("/translators")}>
+                        <ListItemIcon>
+                            <WorkIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Translators & Balance"} />
+                    </ListItem>
+                    <ListItem button onClick={() => history.push("/chart")}>
+                        <ListItemIcon>
+                            <BarChartIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Charts"} />
+                    </ListItem>
+                    <ListItem button onClick={() => history.push("/tasks")}>
+                        <ListItemIcon>
+                            <FormatListNumberedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Task List"} />
+                    </ListItem>
+                    {user ? (
+                        <ListItem
+                            button
+                            onClick={() => {
+                                firebase.auth().signOut();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <ExitToAppIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Log out"} />
+                        </ListItem>
+                    ) : null}
+                </List>
+            </Animation>
         )}
       />
       <Media

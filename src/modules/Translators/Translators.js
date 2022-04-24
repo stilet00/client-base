@@ -131,7 +131,7 @@ function Translators({ user }) {
         }
       >
         {translators.length && !loading ? (
-          <AnimatedList animation={"fade"} initialAnimationDuration={3000}>
+          <AnimatedList animation={"grow"} initialAnimationDuration={5000}>
             {translators.map((item) => (
               <SingleTranslator
                 deleteTranslator={startTranslatorDelete}

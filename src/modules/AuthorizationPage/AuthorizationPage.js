@@ -8,7 +8,7 @@ import styled, { keyframes } from "styled-components";
 import { bounceIn } from "react-animations";
 
 const Bounce = styled.div`
-  animation: 2s ${keyframes`${bounceIn}`};
+  animation: 1s ${keyframes`${bounceIn}`};
   width: 100%;
   height: 100%;
 `;
