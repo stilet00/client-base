@@ -22,8 +22,12 @@ function ClientsList({
   dragDropHandler,
   deleteClient,
 }) {
-  const { clientMonthSum, sortBySum, calculateRating } =
-    useClientsList(translators);
+  const {
+    clientMonthSum,
+    sortBySum,
+    getClientsRating,
+    calculateMiddleMonthSum,
+  } = useClientsList(translators);
 
   return (
     <>
@@ -60,7 +64,7 @@ function ClientsList({
                 <ListItemText primary={`${client.name} ${client.surname}`} />
                 <Rating
                   name="read-only"
-                  value={calculateRating(client._id)}
+                  value={getClientsRating(client._id)}
                   readOnly
                   size="small"
                 />
@@ -68,10 +72,16 @@ function ClientsList({
                 {/*  <DeleteForeverIcon />*/}
                 {/*</Button>*/}
                 <ListItemText
-                  class={"side-clients-menu__client__balance-container"}
+                  className={"side-clients-menu__client__balance-container"}
                   secondary={`Balance for ${moment().format(
                     "MMMM"
                   )}: ${clientMonthSum(client._id)} $`}
+                />
+                <ListItemText
+                  className={"side-clients-menu__client__balance-container"}
+                  secondary={`Middle for ${moment().format(
+                    "MMMM"
+                  )}: ${calculateMiddleMonthSum(client._id)} $`}
                 />
               </li>
             ))}

@@ -111,54 +111,54 @@ export default function Navigation({ user }) {
       <Media
         query="(min-width: 840px)"
         render={() => (
-            <Animation>
-                <List className={"header_nav"}>
-                    <ListItem button onClick={() => history.push("/overview")}>
-                        <ListItemIcon>
-                            <PageviewIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Overview"} />
-                    </ListItem>
-                    <ListItem button onClick={() => history.push("/translators")}>
-                        <ListItemIcon>
-                            <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Translators & Balance"} />
-                    </ListItem>
-                    <ListItem button onClick={() => history.push("/chart")}>
-                        <ListItemIcon>
-                            <BarChartIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Charts"} />
-                    </ListItem>
-                    <ListItem button onClick={() => history.push("/tasks")}>
-                        <ListItemIcon>
-                            <FormatListNumberedIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Task List"} />
-                    </ListItem>
-                    {user ? (
-                        <ListItem
-                            button
-                            onClick={() => {
-                                firebase.auth().signOut();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <ExitToAppIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Log out"} />
-                        </ListItem>
-                    ) : null}
-                </List>
-            </Animation>
+          <Animation>
+            <List className={"header_nav"}>
+              <ListItem button onClick={() => history.push("/overview")}>
+                <ListItemIcon>
+                  <PageviewIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Overview"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/translators")}>
+                <ListItemIcon>
+                  <WorkIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Translators & Balance"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/chart")}>
+                <ListItemIcon>
+                  <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Charts"} />
+              </ListItem>
+              <ListItem button onClick={() => history.push("/tasks")}>
+                <ListItemIcon>
+                  <FormatListNumberedIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Task List"} />
+              </ListItem>
+              {user ? (
+                <ListItem
+                  button
+                  onClick={() => {
+                    firebase.auth().signOut();
+                  }}
+                >
+                  <ListItemIcon>
+                    <ExitToAppIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={"Log out"} />
+                </ListItem>
+              ) : null}
+            </List>
+          </Animation>
         )}
       />
       <Media
         query="(max-width: 839px)"
         render={() => (
           <>
-            <IconButton onClick={toggleDrawer("top", true)} fullWidth>
+            <IconButton onClick={toggleDrawer("top", true)}>
               <MenuIcon />
             </IconButton>
             <Drawer

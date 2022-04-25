@@ -60,3 +60,13 @@ export const calculateTranslatorMonthTotal = (
 export function getStringMonthNumber(monthNumber) {
   return monthNumber < 10 ? "0" + monthNumber : String(monthNumber);
 }
+
+export function getSumFromArray(arrayOfNumbers) {
+  return arrayOfNumbers.reduce((sum, current) => sum + current, 0);
+}
+
+export function getMiddleValueFromArray(arrayOfNumbers) {
+  const sum = getSumFromArray(arrayOfNumbers);
+
+  return Math.round(sum / arrayOfNumbers.length);
+}

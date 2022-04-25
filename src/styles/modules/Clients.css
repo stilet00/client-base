@@ -32,5 +32,8 @@
 .side-clients-menu__client__balance-container {
   width: 100%;
 }
+.side-clients-menu__client .css-1lauo1g-MuiRating-root {
+  align-items: center;
+}
 
 /*# sourceMappingURL=Clients.css.map */

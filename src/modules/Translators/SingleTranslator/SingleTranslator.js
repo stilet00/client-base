@@ -39,8 +39,12 @@ function SingleTranslator({
   suspended,
   suspendClient,
 }) {
-  const { calculateSumByClient, specialColorNeeded, getTranslatorsRating } =
-    useSingleTranslator(statistics);
+  const {
+    calculateSumByClient,
+    specialColorNeeded,
+    getTranslatorsRating,
+    calculateMiddleMonthSum,
+  } = useSingleTranslator(statistics);
 
   return (
     <>
@@ -77,8 +81,12 @@ function SingleTranslator({
             <i>Balance:</i>
           </Typography>
           <Typography variant="body2" align={"left"}>
-            For {`${moment().format("MMMM")}: `}
+            Total for {`${moment().format("MMMM")}: `}
             <b>{`${calculateTranslatorMonthTotal(statistics)} $`}</b>
+          </Typography>
+          <Typography variant="body2" align={"left"}>
+            Middle for {`${moment().format("MMMM")}: `}
+            <b>{`${calculateMiddleMonthSum()} $`}</b>
           </Typography>
           <Typography variant="body2" align={"left"}>
             For {`yesterday: `}
@@ -217,7 +225,6 @@ function SingleTranslator({
             onClick={() => {
               deleteTranslator(_id);
             }}
-            fullWidth
             variant="contained"
             color={suspended.status ? "default" : "primary"}
           >

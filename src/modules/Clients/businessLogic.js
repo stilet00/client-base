@@ -6,7 +6,13 @@ import {
   DEFAULT_CLIENT,
 } from "../../constants/constants";
 import useModal from "../../sharedHooks/useModal";
-import { calculateBalanceDaySum } from "../../sharedFunctions/sharedFunctions";
+import {
+  calculateBalanceDayAllClients,
+  calculateBalanceDaySum,
+  getMiddleValueFromArray,
+  getSumFromArray,
+} from "../../sharedFunctions/sharedFunctions";
+import moment from "moment";
 
 export const useKarusell = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -114,29 +120,75 @@ export const useClientsList = (translators) => {
     return Math.round(totalClientBalance);
   }
 
+  function calculateMiddleMonthSum(clientId, monthNumber = currentMonth) {
+    let monthSumArray = [];
+
+    let totalClientBalance = 0;
+
+    translators.forEach((translator) => {
+      const thisYearStat = translator.statistics.find(
+        (year) => year.year === currentYear
+      );
+
+      const thisMonthStat = thisYearStat.months[monthNumber - 1];
+
+      thisMonthStat.forEach((day, index) => {
+        if (index === 0 || index < moment().format("D")) {
+          const clientBalanceDay = day.clients.find(
+            (client) => client.id === clientId
+          );
+
+          if (clientBalanceDay) {
+            if (typeof monthSumArray[index] === "undefined") {
+              const dayArray = [];
+              monthSumArray[index] = [
+                ...dayArray,
+                Math.round(calculateBalanceDaySum(clientBalanceDay)),
+              ];
+            } else {
+              monthSumArray[index] = [
+                ...monthSumArray[index],
+                Math.round(calculateBalanceDaySum(clientBalanceDay)),
+              ];
+            }
+            totalClientBalance =
+              totalClientBalance + calculateBalanceDaySum(clientBalanceDay);
+          }
+        }
+      });
+    });
+
+    monthSumArray = monthSumArray.map((day) => getSumFromArray(day));
+
+    return Math.round(getMiddleValueFromArray(monthSumArray));
+  }
+
   function sortBySum(clientOne, clientTwo) {
     return clientMonthSum(clientOne._id) < clientMonthSum(clientTwo._id)
       ? 1
       : -1;
   }
 
-  function calculateRating(clientId) {
-    const clientSum = clientMonthSum(clientId);
+  function getClientsRating(clientId) {
+    const rating = calculateMiddleMonthSum(clientId);
 
-    return clientSum > 3000
+    return rating > 100
       ? 5
-      : clientSum > 2000
+      : rating > 50
       ? 4
-      : clientSum > 1000
+      : rating > 30
       ? 3
-      : clientSum > 500
+      : rating > 20
       ? 2
-      : 1;
+      : rating > 10
+      ? 1
+      : 0;
   }
 
   return {
     clientMonthSum,
     sortBySum,
-    calculateRating,
+    getClientsRating,
+    calculateMiddleMonthSum,
   };
 };
