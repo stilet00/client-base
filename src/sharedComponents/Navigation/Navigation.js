@@ -15,7 +15,7 @@ import firebase from "firebase";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import MenuIcon from "@mui/icons-material/Menu";
 import WorkIcon from "@mui/icons-material/Work";
-import PageviewIcon from "@mui/icons-material/Pageview";
+import PageViewIcon from "@mui/icons-material/Pageview";
 import { IconButton } from "@mui/material";
 import styled, { keyframes } from "styled-components";
 import { fadeInRight } from "react-animations";
@@ -67,7 +67,7 @@ export default function Navigation({ user }) {
       <List className={"fallDown-menu"}>
         <ListItem button onClick={() => history.push("/overview")}>
           <ListItemIcon>
-            <PageviewIcon />
+            <PageViewIcon />
           </ListItemIcon>
           <ListItemText primary={"Overview"} />
         </ListItem>
@@ -115,7 +115,7 @@ export default function Navigation({ user }) {
             <List className={"header_nav"}>
               <ListItem button onClick={() => history.push("/overview")}>
                 <ListItemIcon>
-                  <PageviewIcon />
+                  <PageViewIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Overview"} />
               </ListItem>
