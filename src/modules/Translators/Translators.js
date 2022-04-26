@@ -129,7 +129,7 @@ function Translators({ user }) {
           "inner-gallery-container translators-container animated-box scrolled-container"
         }
       >
-        {translators.length && !loading ? (
+        {!loading ? (
           translators.map((item) => (
             <SingleTranslator
               deleteTranslator={startTranslatorDelete}
@@ -150,13 +150,10 @@ function Translators({ user }) {
               suspendClient={suspendClient}
             />
           ))
-        ) : loading ? (
-          <div className="empty">
-            <Loader />
-          </div>
         ) : (
           <div className="empty">
-            <h1>No translators yet.</h1>
+            {" "}
+            <Loader />{" "}
           </div>
         )}
       </div>
