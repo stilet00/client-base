@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -16,9 +16,12 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import MenuIcon from "@mui/icons-material/Menu";
 import WorkIcon from "@mui/icons-material/Work";
 import PageViewIcon from "@mui/icons-material/Pageview";
-import { IconButton } from "@mui/material";
+import { BottomNavigationAction, IconButton } from "@mui/material";
 import styled, { keyframes } from "styled-components";
 import { fadeInRight } from "react-animations";
+import Typography from "@material-ui/core/Typography";
+import { BottomNavigation } from "@material-ui/core";
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const Animation = styled.div`
   animation: 1s ${keyframes`${fadeInRight}`};
@@ -37,6 +40,7 @@ const useStyles = makeStyles({
 
 export default function Navigation({ user }) {
   const history = useHistory();
+  let { pathname } = useLocation();
   const classes = useStyles();
   const [state, setState] = React.useState({
     top: false,
@@ -44,6 +48,14 @@ export default function Navigation({ user }) {
     bottom: false,
     right: false,
   });
+
+  const [page, setPage] = React.useState(pathname);
+
+  useEffect(() => {
+    return () => {
+      setPage(pathname);
+    };
+  }, [user]);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -112,45 +124,86 @@ export default function Navigation({ user }) {
         query="(min-width: 840px)"
         render={() => (
           <Animation>
-            <List className={"header_nav"}>
-              <ListItem button onClick={() => history.push("/overview")}>
+            <BottomNavigation
+              showLabels
+              value={page}
+              onChange={(event, newValue) => {
+                history.push(newValue);
+                setPage(newValue);
+              }}
+              className={"header_nav"}
+            >
+              <BottomNavigationAction
+                label="Overview"
+                icon={<PageViewIcon />}
+                value={"/overview"}
+              />
+              <BottomNavigationAction
+                label="Translators & Balance"
+                icon={<WorkIcon />}
+                value={"/translators"}
+              />
+              <BottomNavigationAction
+                label="Charts"
+                icon={<BarChartIcon />}
+                value={"/chart"}
+              />
+              <BottomNavigationAction
+                label="Task List"
+                icon={<FormatListNumberedIcon />}
+                value={"/tasks"}
+              />
+              <ListItem
+                button
+                onClick={() => {
+                  firebase.auth().signOut();
+                }}
+              >
                 <ListItemIcon>
-                  <PageViewIcon />
+                  <ExitToAppIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Overview"} />
+                <ListItemText primary={"Log out"} />
               </ListItem>
-              <ListItem button onClick={() => history.push("/translators")}>
-                <ListItemIcon>
-                  <WorkIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Translators & Balance"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/chart")}>
-                <ListItemIcon>
-                  <BarChartIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Charts"} />
-              </ListItem>
-              <ListItem button onClick={() => history.push("/tasks")}>
-                <ListItemIcon>
-                  <FormatListNumberedIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Task List"} />
-              </ListItem>
-              {user ? (
-                <ListItem
-                  button
-                  onClick={() => {
-                    firebase.auth().signOut();
-                  }}
-                >
-                  <ListItemIcon>
-                    <ExitToAppIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={"Log out"} />
-                </ListItem>
-              ) : null}
-            </List>
+            </BottomNavigation>
+            {/*<List className={"header_nav"}>*/}
+            {/*  <ListItem button onClick={() => history.push("/overview")}>*/}
+            {/*    <ListItemIcon>*/}
+            {/*      <PageViewIcon />*/}
+            {/*    </ListItemIcon>*/}
+            {/*    <ListItemText primary={"Overview"} />*/}
+            {/*  </ListItem>*/}
+            {/*  <ListItem button onClick={() => history.push("/translators")}>*/}
+            {/*    <ListItemIcon>*/}
+            {/*      <WorkIcon />*/}
+            {/*    </ListItemIcon>*/}
+            {/*    <ListItemText primary={"Translators & Balance"} />*/}
+            {/*  </ListItem>*/}
+            {/*  <ListItem button onClick={() => history.push("/chart")}>*/}
+            {/*    <ListItemIcon>*/}
+            {/*      <BarChartIcon />*/}
+            {/*    </ListItemIcon>*/}
+            {/*    <ListItemText primary={"Charts"} />*/}
+            {/*  </ListItem>*/}
+            {/*  <ListItem button onClick={() => history.push("/tasks")}>*/}
+            {/*    <ListItemIcon>*/}
+            {/*      <FormatListNumberedIcon />*/}
+            {/*    </ListItemIcon>*/}
+            {/*    <ListItemText primary={"Task List"} />*/}
+            {/*  </ListItem>*/}
+            {/*  {user ? (*/}
+            {/*    <ListItem*/}
+            {/*      button*/}
+            {/*      onClick={() => {*/}
+            {/*        firebase.auth().signOut();*/}
+            {/*      }}*/}
+            {/*    >*/}
+            {/*      <ListItemIcon>*/}
+            {/*        <ExitToAppIcon />*/}
+            {/*      </ListItemIcon>*/}
+            {/*      <ListItemText primary={"Log out"} />*/}
+            {/*    </ListItem>*/}
+            {/*  ) : null}*/}
+            {/*</List>*/}
           </Animation>
         )}
       />
@@ -161,6 +214,9 @@ export default function Navigation({ user }) {
             <IconButton onClick={toggleDrawer("top", true)}>
               <MenuIcon />
             </IconButton>
+            <Typography variant="h5" component={"h5"}>
+              Navigation
+            </Typography>
             <Drawer
               anchor={"top"}
               open={state["top"]}

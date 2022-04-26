@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/modules/Unauthorized.css";
-import { Link, useHistory } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { fadeOut } from "react-animations";
 import styled, { keyframes } from "styled-components";
+import HomeIcon from "@mui/icons-material/Home";
 
 const Animate = styled.div`
   animation: 6s ${keyframes`${fadeOut}`};
   width: 100%;
   height: 100%;
 `;
-
-const StyledButton = withStyles({
-  root: {
-    borderRadius: 3,
-    border: 0,
-    height: 48,
-    padding: "0 30px",
-    boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-    letterSpacing: "3px",
-    fontWeight: "bold",
-    background: "black",
-  },
-  label: {
-    textTransform: "capitalize",
-  },
-})(Button);
 
 function Unauthorized() {
   const [time, setTime] = useState(3);
@@ -54,9 +38,13 @@ function Unauthorized() {
       <div className={"unauthorized"}>
         <h1>You should log in before using this service...</h1>
         <p>You will be redirected in ...{time}</p>
-        <StyledButton>
-          <Link to={"/"}>Back</Link>
-        </StyledButton>
+        <Button
+          onClick={() => history.push("/")}
+          variant={"outlined"}
+          startIcon={<HomeIcon />}
+        >
+          Back
+        </Button>
       </div>
     </Animate>
   );

@@ -7,7 +7,6 @@ import {
 } from "../../constants/constants";
 import useModal from "../../sharedHooks/useModal";
 import {
-  calculateBalanceDayAllClients,
   calculateBalanceDaySum,
   getMiddleValueFromArray,
   getSumFromArray,

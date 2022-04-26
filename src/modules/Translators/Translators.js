@@ -20,7 +20,6 @@ import {
 import moment from "moment/moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClientsList from "../Clients/ClientsList/ClientsList";
-import { AnimatedList } from "react-animated-list";
 
 function Translators({ user }) {
   const {
@@ -130,36 +129,31 @@ function Translators({ user }) {
           "inner-gallery-container translators-container animated-box scrolled-container"
         }
       >
-        {translators.length && !loading ? (
-          <AnimatedList animation={"grow"} initialAnimationDuration={5000}>
-            {translators.map((item) => (
-              <SingleTranslator
-                deleteTranslator={startTranslatorDelete}
-                {...item}
-                key={item._id}
-                dragOverHandler={dragOverHandler}
-                onBoardDrop={onBoardDrop}
-                dragLeaveHandler={dragLeaveHandler}
-                balanceDaySubmit={balanceDaySubmit}
-                alertStatusConfirmation={alertStatusConfirmation}
-                openAlertConfirmation={openAlertConfirmation}
-                closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
-                calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
-                calculateTranslatorYesterdayTotal={
-                  calculateTranslatorYesterdayTotal
-                }
-                suspendTranslator={suspendTranslator}
-                suspendClient={suspendClient}
-              />
-            ))}
-          </AnimatedList>
-        ) : loading ? (
-          <div className="empty">
-            <Loader />
-          </div>
+        {!loading ? (
+          translators.map((item) => (
+            <SingleTranslator
+              deleteTranslator={startTranslatorDelete}
+              {...item}
+              key={item._id}
+              dragOverHandler={dragOverHandler}
+              onBoardDrop={onBoardDrop}
+              dragLeaveHandler={dragLeaveHandler}
+              balanceDaySubmit={balanceDaySubmit}
+              alertStatusConfirmation={alertStatusConfirmation}
+              openAlertConfirmation={openAlertConfirmation}
+              closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
+              calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
+              calculateTranslatorYesterdayTotal={
+                calculateTranslatorYesterdayTotal
+              }
+              suspendTranslator={suspendTranslator}
+              suspendClient={suspendClient}
+            />
+          ))
         ) : (
           <div className="empty">
-            <h1>No translators yet.</h1>
+            {" "}
+            <Loader />{" "}
           </div>
         )}
       </div>
