@@ -52,10 +52,14 @@ export default function Navigation({ user }) {
   const [page, setPage] = React.useState(pathname);
 
   useEffect(() => {
+      setPage(pathname);
+  }, [user])
+
+  useEffect(() => {
     return () => {
       setPage(pathname);
     };
-  }, [user]);
+  });
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
