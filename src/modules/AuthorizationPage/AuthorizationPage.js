@@ -88,7 +88,7 @@ function AuthorizationPage() {
 
   return (
     <FirebaseAuthConsumer>
-      {({ isSignedIn, user, providerId }) => {
+      {({ isSignedIn }) => {
         if (isSignedIn) {
           history.push("/overview/");
         }

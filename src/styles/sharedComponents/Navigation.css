@@ -3,16 +3,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
   font-size: calc(10px + 2vmin);
   background: rgba(255, 255, 255, 0.7);
   background-size: cover;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px; }
   .App-header h5 {
     flex-grow: 2;
-    letter-spacing: 0.1rem; }
+    letter-spacing: 0.1rem;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 0 rgba(183, 179, 179, 0.5); }
   .App-header .MuiBottomNavigation-root {
     background: transparent; }
+    .App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {
+      text-decoration: none;
+      background-color: rgba(0, 0, 0, 0.04); }
   @media (max-width: 839px) {
     .App-header {
       justify-content: flex-start; } }

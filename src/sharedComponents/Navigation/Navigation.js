@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -9,7 +9,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import { useHistory, useParams, useRouteMatch} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "../../styles/sharedComponents/Navigation.css";
 import firebase from "firebase";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -21,6 +21,7 @@ import styled, { keyframes } from "styled-components";
 import { fadeInRight } from "react-animations";
 import Typography from "@material-ui/core/Typography";
 import { BottomNavigation } from "@material-ui/core";
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const Animation = styled.div`
   animation: 1s ${keyframes`${fadeInRight}`};
@@ -39,6 +40,7 @@ const useStyles = makeStyles({
 
 export default function Navigation({ user }) {
   const history = useHistory();
+  let { pathname } = useLocation();
   const classes = useStyles();
   const [state, setState] = React.useState({
     top: false,
@@ -46,6 +48,14 @@ export default function Navigation({ user }) {
     bottom: false,
     right: false,
   });
+
+  const [page, setPage] = React.useState(pathname);
+
+  useEffect(() => {
+    return () => {
+      setPage(pathname);
+    };
+  }, [user]);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -108,8 +118,6 @@ export default function Navigation({ user }) {
     </div>
   );
 
-  const [value, setValue] = React.useState("/overview");
-
   return user ? (
     <div className="App-header">
       <Media
@@ -117,19 +125,45 @@ export default function Navigation({ user }) {
         render={() => (
           <Animation>
             <BottomNavigation
-                showLabels
-                value={value}
-                onChange={(event, newValue) => {
-                  history.push(newValue);
-                  setValue(newValue);
-                }}
-                className={"header_nav"}
+              showLabels
+              value={page}
+              onChange={(event, newValue) => {
+                history.push(newValue);
+                setPage(newValue);
+              }}
+              className={"header_nav"}
             >
-              <BottomNavigationAction label="Overview" icon={<PageViewIcon />} value={"/overview"}/>
-              <BottomNavigationAction label="Translators & Balance" icon={<WorkIcon />} value={"/translators"}/>
-              <BottomNavigationAction label="Charts" icon={<BarChartIcon />} value={"/chart"}/>
-              <BottomNavigationAction label="Task List" icon={<FormatListNumberedIcon />} value={"/tasks"}/>
-              <BottomNavigationAction label="Log out" icon={<ExitToAppIcon />} onClick={() => firebase.auth().signOut()}/>
+              <BottomNavigationAction
+                label="Overview"
+                icon={<PageViewIcon />}
+                value={"/overview"}
+              />
+              <BottomNavigationAction
+                label="Translators & Balance"
+                icon={<WorkIcon />}
+                value={"/translators"}
+              />
+              <BottomNavigationAction
+                label="Charts"
+                icon={<BarChartIcon />}
+                value={"/chart"}
+              />
+              <BottomNavigationAction
+                label="Task List"
+                icon={<FormatListNumberedIcon />}
+                value={"/tasks"}
+              />
+              <ListItem
+                button
+                onClick={() => {
+                  firebase.auth().signOut();
+                }}
+              >
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Log out"} />
+              </ListItem>
             </BottomNavigation>
             {/*<List className={"header_nav"}>*/}
             {/*  <ListItem button onClick={() => history.push("/overview")}>*/}
