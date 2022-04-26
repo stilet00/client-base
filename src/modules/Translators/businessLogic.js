@@ -27,7 +27,6 @@ import {
   calculateTranslatorMonthTotal,
   findYesterday,
   getMiddleValueFromArray,
-  getSumFromArray,
 } from "../../sharedFunctions/sharedFunctions";
 
 export const useTranslators = (user) => {

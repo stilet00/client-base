@@ -5,10 +5,20 @@
   align-items: center
   padding: 10px
   font-size: calc(10px + 2vmin)
-  //background: url("/src/images/menu-background.png")
   background: $main-color_opacity
   background-size: cover
   margin-bottom: 20px
+
+  h5
+    flex-grow: 2
+    letter-spacing: 0.1rem
+
+  .MuiBottomNavigation-root
+    background: transparent
+
+  @media (max-width: 839px)
+    justify-content: flex-start
+
 
   .header_nav
     display: flex
