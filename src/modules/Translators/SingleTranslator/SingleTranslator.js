@@ -1,5 +1,4 @@
 import React from "react";
-import "../../../styles/modules/SingleTranslator.css";
 import {
   Accordion,
   AccordionDetails,
@@ -13,7 +12,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import { findYesterday } from "../../../sharedFunctions/sharedFunctions";
@@ -56,16 +54,6 @@ function SingleTranslator({
       }
       id={_id}
     >
-      <IconButton
-        className={"translator-item__suspend-button"}
-        color={suspended.status ? "default" : "primary"}
-        variant={"contained"}
-        size={"small"}
-        onClick={() => suspendTranslator(_id)}
-        component="span"
-      >
-        {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
-      </IconButton>
       <CardContent>
         <Rating
           name="read-only"
@@ -218,14 +206,13 @@ function SingleTranslator({
           />
         ) : null}
         <IconButton
-          size={"small"}
-          onClick={() => {
-            deleteTranslator(_id);
-          }}
-          variant="contained"
-          color={suspended.status ? "default" : "primary"}
+            color={suspended.status ? "default" : "primary"}
+            variant={"contained"}
+            size={"small"}
+            onClick={() => suspendTranslator(_id)}
+            component="span"
         >
-          <DeleteSweepIcon />
+          {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
         </IconButton>
       </CardActions>
     </Card>
