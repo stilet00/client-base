@@ -48,7 +48,7 @@ export default function ClientsForm(props) {
   } = useClientsForm(props);
 
   return (
-    <div className={"socials add-client-button middle-button"}>
+    <>
       <Button
         type="button"
         onClick={handleOpen}
@@ -162,6 +162,6 @@ export default function ClientsForm(props) {
           </div>
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 }

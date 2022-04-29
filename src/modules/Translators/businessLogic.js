@@ -48,11 +48,30 @@ export const useTranslators = (user) => {
 
   const [deletedTranslator, setDeletedTranslator] = useState(null);
 
+  const [translatorFilter, setTranslatorFilter] = useState({
+    suspended: true
+  });
+
   const {
     alertStatusConfirmation,
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
   } = useAlertConfirmation();
+
+  function changeFilter(e) {
+    const newFilter = {...translatorFilter, [e.target.name]: !translatorFilter[e.target.name]};
+    setTranslatorFilter(newFilter);
+  }
+
+
+  const filterTranslators = useCallback(() => {
+    if (translatorFilter.suspended) {
+      return translators.filter(translator => translator.suspended.status !== translatorFilter.suspended);
+    } else {
+      return translators
+    }
+
+  }, [translators, translatorFilter])
 
   useEffect(() => {
     if (user) {
@@ -424,6 +443,8 @@ export const useTranslators = (user) => {
     calculateMonthTotal,
     suspendTranslator,
     suspendClient,
+    changeFilter,
+    filterTranslators
   };
 };
 

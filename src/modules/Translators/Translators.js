@@ -20,6 +20,7 @@ import {
 import moment from "moment/moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClientsList from "../Clients/ClientsList/ClientsList";
+import { Checkbox } from "@mui/material";
 
 function Translators({ user }) {
   const {
@@ -52,6 +53,8 @@ function Translators({ user }) {
     calculateMonthTotal,
     suspendTranslator,
     suspendClient,
+    changeFilter,
+    filterTranslators
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -79,7 +82,6 @@ function Translators({ user }) {
             <Typography>Menu</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <div className={"socials button-add-container middle-button"}>
               <ClientsList
                 clients={clients}
                 toggleDrawer={toggleDrawer}
@@ -92,10 +94,8 @@ function Translators({ user }) {
                 deleteClient={deleteClient}
                 translators={translators}
               />
-            </div>
             <ClientsForm onFormSubmit={clientsFormSubmit} />
             <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-            <div className={"socials add-translator-button middle-button"}>
               <Button
                 aria-describedby={id}
                 onClick={handleClick}
@@ -120,7 +120,9 @@ function Translators({ user }) {
                   <b>{`${calculateMonthTotal()} $`}</b>
                 </Typography>
               </Popover>
-            </div>
+              <div className={"gallery-menu__checkbox-container"}>
+                <Checkbox defaultChecked name={"suspended"} onChange={changeFilter}/>Hide suspended
+              </div>
           </AccordionDetails>
         </Accordion>
       </div>
@@ -130,7 +132,7 @@ function Translators({ user }) {
         }
       >
         {!loading ? (
-          translators.map((item) => (
+            filterTranslators().map((item) => (
             <SingleTranslator
               deleteTranslator={startTranslatorDelete}
               {...item}

@@ -57,7 +57,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
   }
 
   return (
-    <div className={"socials add-translator-button middle-button"}>
+    <>
       <Button
         type="button"
         onClick={handleOpen}
@@ -129,6 +129,6 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
           </div>
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 }
