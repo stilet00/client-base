@@ -38,23 +38,38 @@ export function getTotalDaysOfMonth(year, monthNumber) {
 
 export const calculateTranslatorMonthTotal = (
   statistics,
-  monthNumber = Number(currentMonth),
-  yearNumber = currentYear
+  forFullMonth = true,
+  monthFilter = currentMonth,
+  yearFilter = currentYear,
 ) => {
   const month = statistics
-    .find((year) => year.year === yearNumber)
-    .months.find((month, index) => index + 1 === monthNumber);
+    .find((year) => year.year === yearFilter)
+    .months.find((month, index) => index + 1 === Number(monthFilter));
 
-  const total = month.reduce((sum, current) => {
-    return (
-      sum +
-      current.clients.reduce((sum, current) => {
-        return sum + calculateBalanceDaySum(current);
-      }, 0)
-    );
-  }, 0);
+  let total;
 
-  return total.toFixed(2);
+  if (forFullMonth) {
+    total = month.reduce((sum, current) => {
+      return (
+          sum +
+          current.clients.reduce((sum, current) => {
+            return sum + calculateBalanceDaySum(current);
+          }, 0)
+      );
+    }, 0);
+  } else {
+    total = month.reduce((sum, current, index) => {
+
+      return index+1 < Number(moment().format("D")) ? (
+          sum +
+          current.clients.reduce((sum, current) => {
+            return sum + calculateBalanceDaySum(current);
+          }, 0)
+      ) : sum;
+    }, 0);
+  }
+
+  return Number(total.toFixed(2));
 };
 
 export function getStringMonthNumber(monthNumber) {
@@ -69,4 +84,8 @@ export function getMiddleValueFromArray(arrayOfNumbers) {
   const sum = getSumFromArray(arrayOfNumbers);
 
   return Math.round(sum / arrayOfNumbers.length);
+}
+
+export function calculatePercentDifference(currentSum, previousSum) {
+  return currentSum > previousSum ? Math.round(((currentSum - previousSum) * 100) / currentSum) : Math.round(((previousSum - currentSum) * 100) / previousSum)
 }

@@ -3,7 +3,7 @@ import moment from "moment";
 import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
-import { calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
+import { calculatePercentDifference, calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
 import { currentYear } from "../../constants/constants";
 
 export const useOverview = (user) => {
@@ -142,12 +142,12 @@ export const useOverview = (user) => {
       if (currentSum > previousSum) {
         setProgressStatus(true);
         setProgressValue(
-          Math.round(((currentSum - previousSum) * 100) / currentSum)
+            calculatePercentDifference(currentSum, previousSum)
         );
       } else {
         setProgressStatus(false);
         setProgressValue(
-          Math.round(((previousSum - currentSum) * 100) / previousSum)
+            calculatePercentDifference(currentSum, previousSum)
         );
       }
     } else {
@@ -156,12 +156,12 @@ export const useOverview = (user) => {
       if (currentSum > previousSum) {
         setProgressStatus(true);
         setProgressValue(
-          Math.round(((currentSum - previousSum) * 100) / currentSum)
+            calculatePercentDifference(currentSum, previousSum)
         );
       } else if (currentSum !== 0 && previousSum !== 0) {
         setProgressStatus(false);
         setProgressValue(
-          Math.round(((previousSum - currentSum) * 100) / previousSum)
+            calculatePercentDifference(currentSum, previousSum)
         );
       } else {
         setProgressStatus(false);

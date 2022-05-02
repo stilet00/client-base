@@ -554,24 +554,24 @@ export const useSingleTranslator = (statistics) => {
     return calculateBalanceDayAllClients(day);
   };
 
-  function findYear() {
-    return statistics.find((item) => item.year === currentYear);
+  function findYear(yearFilter = currentYear) {
+    return statistics.find((item) => item.year === yearFilter);
   }
 
-  function findMonth() {
+  function findMonth(monthFilter = currentMonth) {
     return findYear().months.find(
-      (item, index) => index + 1 === Number(currentMonth)
+      (item, index) => index + 1 === Number(monthFilter)
     );
   }
 
-  function findTodayBalance() {
+  function findYesterdayBalance() {
     return findMonth().find(
       (item, index) => index + 1 === Number(findYesterday())
     );
   }
 
   function calculateSumByClient(clientId) {
-    const clientObject = findTodayBalance().clients.find(
+    const clientObject = findYesterdayBalance().clients.find(
       (item) => item.id === clientId
     );
     return clientObject
@@ -579,11 +579,11 @@ export const useSingleTranslator = (statistics) => {
       : null;
   }
 
-  function calculateMiddleMonthSum() {
+  function calculateMiddleMonthSum(monthFilter) {
     let sum = [];
 
-    findMonth().forEach((day, index) => {
-      if (index === 0 || index < moment().format("D")) {
+    findMonth(monthFilter).forEach((day, index) => {
+      if (index === 0 || index+1 < moment().format("D")) {
         sum.push(Number(calculateBalanceDayAllClients(day)));
       }
     });
@@ -606,7 +606,7 @@ export const useSingleTranslator = (statistics) => {
   }
 
   function specialColorNeeded(clientId) {
-    const clientObject = findTodayBalance().clients.find(
+    const clientObject = findYesterdayBalance().clients.find(
       (item) => item.id === clientId
     );
 

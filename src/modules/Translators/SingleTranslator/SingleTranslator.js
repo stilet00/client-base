@@ -14,7 +14,11 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
 import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
-import { calculateTranslatorMonthTotal, findYesterday } from "../../../sharedFunctions/sharedFunctions";
+import {
+  calculatePercentDifference,
+  calculateTranslatorMonthTotal,
+  findYesterday
+} from "../../../sharedFunctions/sharedFunctions";
 import { currentMonth, currentYear } from "../../../constants/constants";
 import { IconButton, Rating } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -42,6 +46,14 @@ function SingleTranslator({
     calculateTranslatorDayTotal
   } = useSingleTranslator(statistics);
 
+  const progressPage =
+      calculateTranslatorMonthTotal(statistics) >= calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")) ? <span className={"green-text"}>
+    {` +${calculatePercentDifference(calculateTranslatorMonthTotal(statistics), calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")))} %`}
+  </span> : <span className={"red-text"}>
+    {` -${calculatePercentDifference(calculateTranslatorMonthTotal(statistics), calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")))} %`}
+  </span>
+
+
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -68,10 +80,11 @@ function SingleTranslator({
         <Typography variant="body2" align={"left"}>
           Total for {`${moment().format("MMMM")}: `}
           <b>{`${calculateTranslatorMonthTotal(statistics)} $`}</b>
+          {progressPage}
         </Typography>
         <Typography variant="body2" align={"left"}>
           Middle for {`${moment().format("MMMM")}: `}
-          <b>{`${calculateMiddleMonthSum()} $`}</b>
+          <b>{`${calculateMiddleMonthSum()} $ `}</b>
         </Typography>
         <Typography variant="body2" align={"left"}>
           {`For yesterday: `}
