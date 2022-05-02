@@ -8,6 +8,7 @@ import {
   updateTranslator,
 } from "../../services/translatorsServices/services";
 import {
+  currentDay,
   currentMonth,
   currentYear,
   DEFAULT_DAY_CLIENT,
@@ -353,19 +354,6 @@ export const useTranslators = (user) => {
     return Math.round(sum);
   }, [translators]);
 
-  const calculateTranslatorYesterdayTotal = (statistics, filter) => {
-    const day = statistics
-      .find((year) => year.year === currentYear)
-      .months.find((month, index) => index + 1 === Number(currentMonth))
-      .find((day) => {
-        return (
-          day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
-          day.id === moment().format("DD MM YYYY")
-        );
-      });
-    return calculateBalanceDayAllClients(day);
-  };
-
   const suspendTranslator = useCallback(
     (translatorId) => {
       let editedTranslator = translators.find(
@@ -439,7 +427,6 @@ export const useTranslators = (user) => {
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
     calculateTranslatorMonthTotal,
-    calculateTranslatorYesterdayTotal,
     calculateMonthTotal,
     suspendTranslator,
     suspendClient,
@@ -553,6 +540,20 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 };
 
 export const useSingleTranslator = (statistics) => {
+
+  const calculateTranslatorDayTotal = (statistics, dayFilter = currentDay, monthFilter = currentMonth, yearFilter = currentYear) => {
+    const day = statistics
+        .find((year) => year.year === yearFilter)
+        .months.find((month, index) => index + 1 === Number(monthFilter))
+        .find((day) => {
+          return (
+              day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
+              day.id === moment().format("DD MM YYYY")
+          );
+        });
+    return calculateBalanceDayAllClients(day);
+  };
+
   function findYear() {
     return statistics.find((item) => item.year === currentYear);
   }
@@ -627,5 +628,6 @@ export const useSingleTranslator = (statistics) => {
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
+    calculateTranslatorDayTotal
   };
 };

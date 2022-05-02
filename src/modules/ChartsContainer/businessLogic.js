@@ -62,6 +62,7 @@ export const useChartsContainer = (user) => {
             return [...result, ...newItem];
           }, []);
           setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
+          let yearChartsArray = [];
 
           for (let monthCount = 1; monthCount < 13; monthCount++) {
             let defaultMonth = new DEFAULT_MONTH_CHART(
@@ -101,9 +102,10 @@ export const useChartsContainer = (user) => {
                 return sum + Number(current);
               }, 0)
             ) {
-              setMonths([...months, defaultMonth]);
+              yearChartsArray.unshift(defaultMonth);
             }
           }
+          setMonths(yearChartsArray);
         } else {
           console.log("No translators");
         }

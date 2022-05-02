@@ -48,8 +48,6 @@ function Translators({ user }) {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
-    calculateTranslatorMonthTotal,
-    calculateTranslatorYesterdayTotal,
     calculateMonthTotal,
     suspendTranslator,
     suspendClient,
@@ -131,7 +129,7 @@ function Translators({ user }) {
           "inner-gallery-container translators-container animated-box scrolled-container"
         }
       >
-        {!loading ? (
+        {translators.length && !loading ? (
             filterTranslators().map((item) => (
             <SingleTranslator
               deleteTranslator={startTranslatorDelete}
@@ -144,20 +142,19 @@ function Translators({ user }) {
               alertStatusConfirmation={alertStatusConfirmation}
               openAlertConfirmation={openAlertConfirmation}
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
-              calculateTranslatorMonthTotal={calculateTranslatorMonthTotal}
-              calculateTranslatorYesterdayTotal={
-                calculateTranslatorYesterdayTotal
-              }
               suspendTranslator={suspendTranslator}
               suspendClient={suspendClient}
             />
           ))
-        ) : (
+        ) : loading ?
           <div className="empty">
             {" "}
             <Loader />{" "}
           </div>
-        )}
+         : <div className="empty">
+              <h1>No translators yet.</h1>
+            </div>
+        }
       </div>
       <AlertMessage
         mainText={message.text}

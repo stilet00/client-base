@@ -14,7 +14,7 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { Typography } from "@material-ui/core";
 import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
-import { findYesterday } from "../../../sharedFunctions/sharedFunctions";
+import { calculateTranslatorMonthTotal, findYesterday } from "../../../sharedFunctions/sharedFunctions";
 import { currentMonth, currentYear } from "../../../constants/constants";
 import { IconButton, Rating } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -29,10 +29,7 @@ function SingleTranslator({
   dragOverHandler,
   onBoardDrop,
   dragLeaveHandler,
-  deleteTranslator,
   balanceDaySubmit,
-  calculateTranslatorMonthTotal,
-  calculateTranslatorYesterdayTotal,
   suspendTranslator,
   suspended,
   suspendClient,
@@ -42,6 +39,7 @@ function SingleTranslator({
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
+    calculateTranslatorDayTotal
   } = useSingleTranslator(statistics);
 
   return (
@@ -76,9 +74,9 @@ function SingleTranslator({
           <b>{`${calculateMiddleMonthSum()} $`}</b>
         </Typography>
         <Typography variant="body2" align={"left"}>
-          For {`yesterday: `}
-          {calculateTranslatorYesterdayTotal(statistics) ? (
-            <b>{`${calculateTranslatorYesterdayTotal(statistics)} $`}</b>
+          {`For yesterday: `}
+          {calculateTranslatorDayTotal(statistics) ? (
+            <b>{`${calculateTranslatorDayTotal(statistics)} $`}</b>
           ) : (
             "No data"
           )}
