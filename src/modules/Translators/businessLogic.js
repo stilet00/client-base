@@ -50,7 +50,7 @@ export const useTranslators = (user) => {
   const [deletedTranslator, setDeletedTranslator] = useState(null);
 
   const [translatorFilter, setTranslatorFilter] = useState({
-    suspended: true
+    suspended: true,
   });
 
   const {
@@ -60,19 +60,23 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   function changeFilter(e) {
-    const newFilter = {...translatorFilter, [e.target.name]: !translatorFilter[e.target.name]};
+    const newFilter = {
+      ...translatorFilter,
+      [e.target.name]: !translatorFilter[e.target.name],
+    };
     setTranslatorFilter(newFilter);
   }
 
-
   const filterTranslators = useCallback(() => {
     if (translatorFilter.suspended) {
-      return translators.filter(translator => translator.suspended.status !== translatorFilter.suspended);
+      return translators.filter(
+        (translator) =>
+          translator.suspended.status !== translatorFilter.suspended
+      );
     } else {
-      return translators
+      return translators;
     }
-
-  }, [translators, translatorFilter])
+  }, [translators, translatorFilter]);
 
   useEffect(() => {
     if (user) {
@@ -431,7 +435,7 @@ export const useTranslators = (user) => {
     suspendTranslator,
     suspendClient,
     changeFilter,
-    filterTranslators
+    filterTranslators,
   };
 };
 
@@ -540,17 +544,21 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 };
 
 export const useSingleTranslator = (statistics) => {
-
-  const calculateTranslatorDayTotal = (statistics, dayFilter = currentDay, monthFilter = currentMonth, yearFilter = currentYear) => {
+  const calculateTranslatorDayTotal = (
+    statistics,
+    dayFilter = currentDay,
+    monthFilter = currentMonth,
+    yearFilter = currentYear
+  ) => {
     const day = statistics
-        .find((year) => year.year === yearFilter)
-        .months.find((month, index) => index + 1 === Number(monthFilter))
-        .find((day) => {
-          return (
-              day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
-              day.id === moment().format("DD MM YYYY")
-          );
-        });
+      .find((year) => year.year === yearFilter)
+      .months.find((month, index) => index + 1 === Number(monthFilter))
+      .find((day) => {
+        return (
+          day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
+          day.id === moment().format("DD MM YYYY")
+        );
+      });
     return calculateBalanceDayAllClients(day);
   };
 
@@ -583,7 +591,7 @@ export const useSingleTranslator = (statistics) => {
     let sum = [];
 
     findMonth(monthFilter).forEach((day, index) => {
-      if (index === 0 || index+1 < moment().format("D")) {
+      if (index === 0 || index + 1 < moment().format("D")) {
         sum.push(Number(calculateBalanceDayAllClients(day)));
       }
     });
@@ -628,6 +636,6 @@ export const useSingleTranslator = (statistics) => {
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
-    calculateTranslatorDayTotal
+    calculateTranslatorDayTotal,
   };
 };

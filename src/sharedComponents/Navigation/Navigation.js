@@ -52,8 +52,8 @@ export default function Navigation({ user }) {
   const [page, setPage] = React.useState(pathname);
 
   useEffect(() => {
-      setPage(pathname);
-  }, [user])
+    setPage(pathname);
+  }, [user]);
 
   useEffect(() => {
     return () => {

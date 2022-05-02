@@ -40,7 +40,7 @@ export const calculateTranslatorMonthTotal = (
   statistics,
   forFullMonth = true,
   monthFilter = currentMonth,
-  yearFilter = currentYear,
+  yearFilter = currentYear
 ) => {
   const month = statistics
     .find((year) => year.year === yearFilter)
@@ -51,21 +51,20 @@ export const calculateTranslatorMonthTotal = (
   if (forFullMonth) {
     total = month.reduce((sum, current) => {
       return (
-          sum +
-          current.clients.reduce((sum, current) => {
-            return sum + calculateBalanceDaySum(current);
-          }, 0)
+        sum +
+        current.clients.reduce((sum, current) => {
+          return sum + calculateBalanceDaySum(current);
+        }, 0)
       );
     }, 0);
   } else {
     total = month.reduce((sum, current, index) => {
-
-      return index+1 < Number(moment().format("D")) ? (
-          sum +
-          current.clients.reduce((sum, current) => {
-            return sum + calculateBalanceDaySum(current);
-          }, 0)
-      ) : sum;
+      return index + 1 < Number(moment().format("D"))
+        ? sum +
+            current.clients.reduce((sum, current) => {
+              return sum + calculateBalanceDaySum(current);
+            }, 0)
+        : sum;
     }, 0);
   }
 
@@ -87,5 +86,7 @@ export function getMiddleValueFromArray(arrayOfNumbers) {
 }
 
 export function calculatePercentDifference(currentSum, previousSum) {
-  return currentSum > previousSum ? Math.round(((currentSum - previousSum) * 100) / currentSum) : Math.round(((previousSum - currentSum) * 100) / previousSum)
+  return currentSum > previousSum
+    ? Math.round(((currentSum - previousSum) * 100) / currentSum)
+    : Math.round(((previousSum - currentSum) * 100) / previousSum);
 }

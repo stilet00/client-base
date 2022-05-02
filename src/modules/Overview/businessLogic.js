@@ -1,19 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import moment from "moment";
-import { getBalance } from "../../services/balanceServices/services";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
-import { calculatePercentDifference, calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
-import { currentYear } from "../../constants/constants";
+import { calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
+import { currentMonth, currentYear } from "../../constants/constants";
 
 export const useOverview = (user) => {
   const [clients, setClients] = useState([]);
 
   const [translators, setTranslators] = useState([]);
-
-  const [progressStatus, setProgressStatus] = useState(true);
-
-  const [progressValue, setProgressValue] = useState(null);
 
   const [bestMonth, setBestMonth] = useState(null);
 
@@ -25,17 +20,16 @@ export const useOverview = (user) => {
 
   useEffect(() => {
     if (user) {
-      getBalance().then((res) => {
-        if (res.status === 200) {
-          let byYearFilteredArray = res.data.filter(
-            (item) => item.year === selectedYear
-          );
-          let sumSortedArray =
-            getArrayWithSums(byYearFilteredArray).sort(compareSums);
-          setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-          getMonthProgress(byYearFilteredArray);
-        }
-      });
+      // getBalance().then((res) => {
+      //   if (res.status === 200) {
+      //     let byYearFilteredArray = res.data.filter(
+      //       (item) => item.year === selectedYear
+      //     );
+      //     let sumSortedArray =
+      //       getArrayWithSums(byYearFilteredArray).sort(compareSums);
+      //     setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
+      //   }
+      // });
 
       getClients().then((res) => {
         if (res.status === 200) {
@@ -70,14 +64,16 @@ export const useOverview = (user) => {
   }
 
   const calculateMonthTotal = useCallback(
-    (monthNumber) => {
+    (monthNumber = currentMonth, forFullMonth = true) => {
       let sum = 0;
       translators.forEach((translator) => {
         let translatorsStatistic = translator.statistics;
         sum =
           sum +
-          Number(
-            calculateTranslatorMonthTotal(translatorsStatistic, monthNumber)
+          calculateTranslatorMonthTotal(
+            translatorsStatistic,
+            forFullMonth,
+            monthNumber
           );
       });
       return Math.round(sum);
@@ -95,84 +91,7 @@ export const useOverview = (user) => {
     return yearSum;
   }, [translators]);
 
-  function getSumTillNow(array, forFullMonth = false) {
-    let sum = 0;
-    if (forFullMonth) {
-      array?.values.forEach((item) => {
-        sum = item ? sum + Number(item) : sum;
-      });
-    } else {
-      if (array) {
-        const dayNumber = Number(moment().format("DD"));
-        if (dayNumber !== 1) {
-          array.values.forEach((item, index) => {
-            if (index < dayNumber - 1 && item) {
-              sum = sum + Number(item);
-            }
-          });
-        } else {
-          array.values.forEach((item, index) => {
-            if (index < dayNumber && item) {
-              sum = sum + Number(item);
-            }
-          });
-        }
-      }
-    }
-
-    return sum;
-  }
-
-  function getMonthProgress(yearArray) {
-    let currentMonth = yearArray.find(
-      (item) => item.month === moment().format("MM")
-    );
-    let previousMonthNumber =
-      Number(moment().format("MM")) - 1 < 10
-        ? "0" + (Number(moment().format("MM")) - 1)
-        : moment().format("MM") - 1 + "";
-    let previousMonth = yearArray.find(
-      (item) => item.month === previousMonthNumber
-    );
-    if (!currentMonth) {
-      currentMonth = yearArray[yearArray.length - 1];
-      previousMonth = yearArray[yearArray.length - 2];
-      let currentSum = getSumTillNow(currentMonth, true);
-      let previousSum = getSumTillNow(previousMonth, true);
-      if (currentSum > previousSum) {
-        setProgressStatus(true);
-        setProgressValue(
-            calculatePercentDifference(currentSum, previousSum)
-        );
-      } else {
-        setProgressStatus(false);
-        setProgressValue(
-            calculatePercentDifference(currentSum, previousSum)
-        );
-      }
-    } else {
-      let currentSum = getSumTillNow(currentMonth);
-      let previousSum = getSumTillNow(previousMonth);
-      if (currentSum > previousSum) {
-        setProgressStatus(true);
-        setProgressValue(
-            calculatePercentDifference(currentSum, previousSum)
-        );
-      } else if (currentSum !== 0 && previousSum !== 0) {
-        setProgressStatus(false);
-        setProgressValue(
-            calculatePercentDifference(currentSum, previousSum)
-        );
-      } else {
-        setProgressStatus(false);
-        setProgressValue(0);
-      }
-    }
-  }
-
   return {
-    progressValue,
-    progressStatus,
     selectedYear,
     handleChange,
     clients,

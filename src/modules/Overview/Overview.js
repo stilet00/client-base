@@ -4,6 +4,8 @@ import SmallLoader from "../../sharedComponents/SmallLoader/SmallLoader";
 import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import { useOverview } from "./businessLogic";
+import { calculatePercentDifference } from "../../sharedFunctions/sharedFunctions";
+import { previousMonth } from "../../constants/constants";
 
 function Overview({ user }) {
   const {
@@ -14,16 +16,18 @@ function Overview({ user }) {
     calculateYearTotal,
   } = useOverview(user);
 
-  // let monthProgressPage =
-  //   progressValue || progressValue === 0 ? (
-  //     progressStatus ? (
-  //       <span className={"green-text"}> + {progressValue} %</span>
-  //     ) : (
-  //       <span className={"red-text"}> - {progressValue} %</span>
-  //     )
-  //   ) : (
-  //     <SmallLoader />
-  //   );
+  const monthProgressPage =
+    calculateMonthTotal() > calculateMonthTotal(previousMonth, false) ? (
+      <span className={"green-text"}>{` + ${calculatePercentDifference(
+        calculateMonthTotal(),
+        calculateMonthTotal(previousMonth, false)
+      )} %`}</span>
+    ) : (
+      <span className={"red-text"}>{` - ${calculatePercentDifference(
+        calculateMonthTotal(),
+        calculateMonthTotal(previousMonth, false)
+      )} %`}</span>
+    );
 
   return (
     <FirebaseAuthConsumer>
@@ -62,6 +66,16 @@ function Overview({ user }) {
                             )}
                           </b>
                         </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Month progress</td>
+                      <td>
+                        {calculateMonthTotal() ? (
+                          monthProgressPage
+                        ) : (
+                          <SmallLoader />
+                        )}
                       </td>
                     </tr>
                     <tr>

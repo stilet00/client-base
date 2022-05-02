@@ -17,9 +17,13 @@ import { useSingleTranslator } from "../businessLogic";
 import {
   calculatePercentDifference,
   calculateTranslatorMonthTotal,
-  findYesterday
+  findYesterday,
 } from "../../../sharedFunctions/sharedFunctions";
-import { currentMonth, currentYear } from "../../../constants/constants";
+import {
+  currentMonth,
+  currentYear,
+  previousMonth,
+} from "../../../constants/constants";
 import { IconButton, Rating } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -43,16 +47,26 @@ function SingleTranslator({
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
-    calculateTranslatorDayTotal
+    calculateTranslatorDayTotal,
   } = useSingleTranslator(statistics);
 
   const progressPage =
-      calculateTranslatorMonthTotal(statistics) >= calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")) ? <span className={"green-text"}>
-    {` +${calculatePercentDifference(calculateTranslatorMonthTotal(statistics), calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")))} %`}
-  </span> : <span className={"red-text"}>
-    {` -${calculatePercentDifference(calculateTranslatorMonthTotal(statistics), calculateTranslatorMonthTotal(statistics, false, moment().subtract(1, "month").format("M")))} %`}
-  </span>
-
+    calculateTranslatorMonthTotal(statistics) >=
+    calculateTranslatorMonthTotal(statistics, false, previousMonth) ? (
+      <span className={"green-text"}>
+        {` +${calculatePercentDifference(
+          calculateTranslatorMonthTotal(statistics),
+          calculateTranslatorMonthTotal(statistics, false, previousMonth)
+        )} %`}
+      </span>
+    ) : (
+      <span className={"red-text"}>
+        {` -${calculatePercentDifference(
+          calculateTranslatorMonthTotal(statistics),
+          calculateTranslatorMonthTotal(statistics, false, previousMonth)
+        )} %`}
+      </span>
+    );
 
   return (
     <Card
@@ -217,11 +231,11 @@ function SingleTranslator({
           />
         ) : null}
         <IconButton
-            color={suspended.status ? "default" : "primary"}
-            variant={"contained"}
-            size={"small"}
-            onClick={() => suspendTranslator(_id)}
-            component="span"
+          color={suspended.status ? "default" : "primary"}
+          variant={"contained"}
+          size={"small"}
+          onClick={() => suspendTranslator(_id)}
+          component="span"
         >
           {suspended.status ? <PersonAddAlt1Icon /> : <PersonRemoveIcon />}
         </IconButton>

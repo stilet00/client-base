@@ -52,7 +52,7 @@ function Translators({ user }) {
     suspendTranslator,
     suspendClient,
     changeFilter,
-    filterTranslators
+    filterTranslators,
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -80,47 +80,52 @@ function Translators({ user }) {
             <Typography>Menu</Typography>
           </AccordionSummary>
           <AccordionDetails>
-              <ClientsList
-                clients={clients}
-                toggleDrawer={toggleDrawer}
-                state={state}
-                dragStartHandler={dragStartHandler}
-                dragOverHandler={dragOverHandler}
-                dragLeaveHandler={dragLeaveHandler}
-                dragEndHandler={dragEndHandler}
-                dragDropHandler={dragDropHandler}
-                deleteClient={deleteClient}
-                translators={translators}
-              />
+            <ClientsList
+              clients={clients}
+              toggleDrawer={toggleDrawer}
+              state={state}
+              dragStartHandler={dragStartHandler}
+              dragOverHandler={dragOverHandler}
+              dragLeaveHandler={dragLeaveHandler}
+              dragEndHandler={dragEndHandler}
+              dragDropHandler={dragDropHandler}
+              deleteClient={deleteClient}
+              translators={translators}
+            />
             <ClientsForm onFormSubmit={clientsFormSubmit} />
             <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-              <Button
-                aria-describedby={id}
-                onClick={handleClick}
-                fullWidth
-                startIcon={<MonetizationOnIcon />}
-              >
-                Show total
-              </Button>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                className={"sum-popover"}
-              >
-                <Typography sx={{ p: 2 }}>
-                  {`Total by ${moment().format("D MMMM")}: `}{" "}
-                  <b>{`${calculateMonthTotal()} $`}</b>
-                </Typography>
-              </Popover>
-              <div className={"gallery-menu__checkbox-container"}>
-                <Checkbox defaultChecked name={"suspended"} onChange={changeFilter}/>Hide suspended
-              </div>
+            <Button
+              aria-describedby={id}
+              onClick={handleClick}
+              fullWidth
+              startIcon={<MonetizationOnIcon />}
+            >
+              Show total
+            </Button>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              className={"sum-popover"}
+            >
+              <Typography sx={{ p: 2 }}>
+                {`Total by ${moment().format("D MMMM")}: `}{" "}
+                <b>{`${calculateMonthTotal()} $`}</b>
+              </Typography>
+            </Popover>
+            <div className={"gallery-menu__checkbox-container"}>
+              <Checkbox
+                defaultChecked
+                name={"suspended"}
+                onChange={changeFilter}
+              />
+              Hide suspended
+            </div>
           </AccordionDetails>
         </Accordion>
       </div>
@@ -130,7 +135,7 @@ function Translators({ user }) {
         }
       >
         {translators.length && !loading ? (
-            filterTranslators().map((item) => (
+          filterTranslators().map((item) => (
             <SingleTranslator
               deleteTranslator={startTranslatorDelete}
               {...item}
@@ -146,15 +151,16 @@ function Translators({ user }) {
               suspendClient={suspendClient}
             />
           ))
-        ) : loading ?
+        ) : loading ? (
           <div className="empty">
             {" "}
             <Loader />{" "}
           </div>
-         : <div className="empty">
-              <h1>No translators yet.</h1>
-            </div>
-        }
+        ) : (
+          <div className="empty">
+            <h1>No translators yet.</h1>
+          </div>
+        )}
       </div>
       <AlertMessage
         mainText={message.text}
