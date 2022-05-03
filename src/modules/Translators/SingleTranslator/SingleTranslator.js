@@ -116,7 +116,7 @@ function SingleTranslator({
             aria-controls="panel1a-content"
             id="panel1a-header-2"
           >
-            <Typography>Date balance</Typography>
+            <Typography>Filtered balance</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="body2">
