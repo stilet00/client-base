@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MESSAGES } from "../../constants/messages";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 import {
@@ -11,7 +11,8 @@ import {
   currentDay,
   currentMonth,
   currentYear,
-  DEFAULT_DAY_CLIENT, previousDay,
+  DEFAULT_DAY_CLIENT,
+  previousDay,
 } from "../../constants/constants";
 
 import {
@@ -50,6 +51,7 @@ export const useTranslators = (user) => {
 
   const [translatorFilter, setTranslatorFilter] = useState({
     suspended: true,
+    date: moment().subtract(1, "month"),
   });
 
   const {
@@ -59,11 +61,16 @@ export const useTranslators = (user) => {
   } = useAlertConfirmation();
 
   function changeFilter(e) {
-    const newFilter = {
-      ...translatorFilter,
-      [e.target.name]: !translatorFilter[e.target.name],
-    };
-    setTranslatorFilter(newFilter);
+    if (e.target) {
+      const newFilter = {
+        ...translatorFilter,
+        [e.target.name]: !translatorFilter[e.target.name],
+      };
+
+      setTranslatorFilter(newFilter);
+    } else {
+      setTranslatorFilter({ ...translatorFilter, date: e });
+    }
   }
 
   const filterTranslators = useCallback(() => {
@@ -429,12 +436,12 @@ export const useTranslators = (user) => {
     openAlertConfirmation,
     closeAlertConfirmationNoReload,
     finishTranslatorDelete,
-    calculateTranslatorMonthTotal,
     calculateMonthTotal,
     suspendTranslator,
     suspendClient,
     changeFilter,
     filterTranslators,
+    translatorFilter,
   };
 };
 
@@ -542,13 +549,14 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
   };
 };
 
-export const useSingleTranslator = (statistics) => {
-  const calculateTranslatorYesterdayTotal = (
-    statistics,
-  ) => {
+export const useSingleTranslator = (statistics, selectedDate) => {
+  const calculateTranslatorYesterdayTotal = (statistics) => {
     const day = statistics
       .find((year) => year.year === moment().subtract(1, "day").format("YYYY"))
-      .months.find((month, index) => index + 1 === Number(moment().subtract(1, "day").format("M")))
+      .months.find(
+        (month, index) =>
+          index + 1 === Number(moment().subtract(1, "day").format("M"))
+      )
       .find((day) => {
         return (
           day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
@@ -558,25 +566,17 @@ export const useSingleTranslator = (statistics) => {
     return calculateBalanceDayAllClients(day);
   };
 
-  const calculateTranslatorDayTotal = (
-      statistics,
-      dayFilter = currentDay,
-      monthFilter = currentMonth,
-      yearFilter = currentYear
-  ) => {
+  const calculateTranslatorDayTotal = (statistics) => {
     const day = statistics
-        .find((year) => year.year === yearFilter)
-        .months.find((month, index) => index + 1 === Number(currentMonth))
-        .find((day) => {
-          return (
-              day.id === moment(`${yearFilter}-${monthFilter}-${dayFilter}`, "YYYY-M-D").format("DD MM YYYY")
-          );
-        });
-    // return calculateBalanceDayAllClients(day);
-    console.log(day)
+      .find((year) => year.year === selectedDate.format("YYYY"))
+      .months.find(
+        (month, index) => index + 1 === Number(selectedDate.format("M"))
+      )
+      .find((day) => {
+        return day.id === selectedDate.format("DD MM YYYY");
+      });
+    return calculateBalanceDayAllClients(day);
   };
-
-  calculateTranslatorDayTotal(statistics)
 
   function findYear(yearFilter = currentYear) {
     return statistics.find((item) => item.year === yearFilter);
@@ -589,9 +589,7 @@ export const useSingleTranslator = (statistics) => {
   }
 
   function findYesterdayBalance() {
-    return findMonth().find(
-      (item, index) => index + 1 === Number(previousDay)
-    );
+    return findMonth().find((item, index) => index + 1 === Number(previousDay));
   }
 
   function calculateSumByClient(clientId) {
@@ -653,6 +651,6 @@ export const useSingleTranslator = (statistics) => {
     getTranslatorsRating,
     calculateMiddleMonthSum,
     calculateTranslatorYesterdayTotal,
-    calculateTranslatorDayTotal
+    calculateTranslatorDayTotal,
   };
 };

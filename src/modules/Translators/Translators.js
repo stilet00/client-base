@@ -20,7 +20,8 @@ import {
 import moment from "moment/moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClientsList from "../Clients/ClientsList/ClientsList";
-import { Checkbox } from "@mui/material";
+import { Checkbox, TextField } from "@mui/material";
+import { MobileDatePicker } from "@mui/x-date-pickers";
 
 function Translators({ user }) {
   const {
@@ -53,6 +54,7 @@ function Translators({ user }) {
     suspendClient,
     changeFilter,
     filterTranslators,
+    translatorFilter,
   } = useTranslators(user);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -118,13 +120,24 @@ function Translators({ user }) {
                 <b>{`${calculateMonthTotal()} $`}</b>
               </Typography>
             </Popover>
-            <div className={"gallery-menu__checkbox-container"}>
-              <Checkbox
-                defaultChecked
-                name={"suspended"}
-                onChange={changeFilter}
-              />
-              Hide suspended
+            <div className="gallery-menu__filters">
+              <div className={"gallery-menu__checkbox-container"}>
+                <Checkbox
+                  defaultChecked
+                  name={"suspended"}
+                  onChange={changeFilter}
+                />
+                Hide suspended
+              </div>
+              <div className="gallery-menu__date-container">
+                <MobileDatePicker
+                  label="Balance date"
+                  value={translatorFilter.date}
+                  name={"date"}
+                  onChange={changeFilter}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </div>
             </div>
           </AccordionDetails>
         </Accordion>
@@ -149,6 +162,7 @@ function Translators({ user }) {
               closeAlertConfirmationNoReload={closeAlertConfirmationNoReload}
               suspendTranslator={suspendTranslator}
               suspendClient={suspendClient}
+              selectedDate={translatorFilter.date}
             />
           ))
         ) : loading ? (

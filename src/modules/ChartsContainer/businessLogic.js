@@ -8,11 +8,13 @@ import {
 } from "../../services/balanceServices/services";
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import useModal from "../../sharedHooks/useModal";
-import {
-  calculateBalanceDayAllClients
-} from "../../sharedFunctions/sharedFunctions";
+import { calculateBalanceDayAllClients } from "../../sharedFunctions/sharedFunctions";
 import { getTranslators } from "../../services/translatorsServices/services";
-import { currentYear, DEFAULT_MONTH_CHART, previousDay } from "../../constants/constants";
+import {
+  currentYear,
+  DEFAULT_MONTH_CHART,
+  previousDay,
+} from "../../constants/constants";
 
 export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);

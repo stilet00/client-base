@@ -28,8 +28,17 @@
       border: none
       padding-bottom: 0
 
+    &__filters
+      display: flex
+      align-items: center
+      padding: 5px
+
     &__checkbox-container
+      display: flex
+      align-items: center
+      justify-content: space-evenly
       width: 100%
+      padding: 5px
       font-family: "Roboto", "Helvetica", "Arial", sans-serif
       font-weight: 500
       line-height: 1.75
@@ -113,8 +122,15 @@
         color: rgba(0,0,0,0.6)
         text-shadow: 2px 2px 3px rgba(255,255,255,0.1)
 
-        .MuiPaper-root:not(:first-child)
-          margin-top: 12px
+      .MuiAccordion-root
+        &::before
+          display: none
+
+      .MuiAccordionDetails-root
+        flex-wrap: wrap
+
+      .MuiPaper-root:not(:first-child)
+        margin-top: 12px
 
 
       .clients-list

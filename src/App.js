@@ -27,6 +27,8 @@ import Footer from "./modules/Footer/Footer";
 import PreloadPage from "./modules/PreloadPage/PreloadPage";
 import BackgroundImageOnLoad from "background-image-on-load";
 import Navigation from "./sharedComponents/Navigation/Navigation";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -37,58 +39,60 @@ function App() {
 
   return (
     <Router>
-      <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
-        <PreloadPage isLoaded={isLoaded} />
-        <div
-          className={isLoaded ? "App invisible" : "App"}
-          style={{ background: isLoaded ? "white" : `url(${background})` }}
-        >
-          <div className="sun">
-            <img src={sun} alt="Sun" width={"150px"} height={"150px"} />
-          </div>
-          <FirebaseAuthConsumer>
-            {({ user }) => {
-              return <Navigation user={user} />;
-            }}
-          </FirebaseAuthConsumer>
-          <main>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
+          <PreloadPage isLoaded={isLoaded} />
+          <div
+            className={isLoaded ? "App invisible" : "App"}
+            style={{ background: isLoaded ? "white" : `url(${background})` }}
+          >
+            <div className="sun">
+              <img src={sun} alt="Sun" width={"150px"} height={"150px"} />
+            </div>
             <FirebaseAuthConsumer>
               {({ user }) => {
-                return (
-                  <Switch>
-                    <Redirect from="/overview/*" to="/overview" />
-                    <Route path="/overview">
-                      <Overview user={user} />
-                    </Route>
-                    <Route path="/tasks/">
-                      <TaskList user={user} />
-                    </Route>
-                    <Route path="/translators/">
-                      <Translators user={user} />
-                    </Route>
-                    <Redirect from="/chart/*" to="/chart" />
-                    <Route path="/chart">
-                      <ChartsContainer user={user} />
-                    </Route>
-                    <Route path="/" exact>
-                      <AuthorizationPage />
-                    </Route>
-                    <Redirect from="/*" to="/" />
-                  </Switch>
-                );
+                return <Navigation user={user} />;
               }}
             </FirebaseAuthConsumer>
-          </main>
-          <Footer />
-        </div>
-        <BackgroundImageOnLoad
-          src={background}
-          onLoadBg={() => {
-            setTimeout(stopLoading, 1000);
-          }}
-          onError={(err) => console.log("error", err)}
-        />
-      </FirebaseAuthProvider>
+            <main>
+              <FirebaseAuthConsumer>
+                {({ user }) => {
+                  return (
+                    <Switch>
+                      <Redirect from="/overview/*" to="/overview" />
+                      <Route path="/overview">
+                        <Overview user={user} />
+                      </Route>
+                      <Route path="/tasks/">
+                        <TaskList user={user} />
+                      </Route>
+                      <Route path="/translators/">
+                        <Translators user={user} />
+                      </Route>
+                      <Redirect from="/chart/*" to="/chart" />
+                      <Route path="/chart">
+                        <ChartsContainer user={user} />
+                      </Route>
+                      <Route path="/" exact>
+                        <AuthorizationPage />
+                      </Route>
+                      <Redirect from="/*" to="/" />
+                    </Switch>
+                  );
+                }}
+              </FirebaseAuthConsumer>
+            </main>
+            <Footer />
+          </div>
+          <BackgroundImageOnLoad
+            src={background}
+            onLoadBg={() => {
+              setTimeout(stopLoading, 1000);
+            }}
+            onError={(err) => console.log("error", err)}
+          />
+        </FirebaseAuthProvider>
+      </LocalizationProvider>
     </Router>
   );
 }

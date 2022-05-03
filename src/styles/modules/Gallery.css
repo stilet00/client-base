@@ -20,8 +20,17 @@
   border: none;
   padding-bottom: 0;
 }
+.gallery-container .gallery-menu__filters {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
 .gallery-container .gallery-menu__checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
   width: 100%;
+  padding: 5px;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 500;
   line-height: 1.75;
@@ -112,7 +121,18 @@
 .gallery-container
   .inner-gallery-container
   .translator-item
-  .clients-box
+  .MuiAccordion-root::before {
+  display: none;
+}
+.gallery-container
+  .inner-gallery-container
+  .translator-item
+  .MuiAccordionDetails-root {
+  flex-wrap: wrap;
+}
+.gallery-container
+  .inner-gallery-container
+  .translator-item
   .MuiPaper-root:not(:first-child) {
   margin-top: 12px;
 }

@@ -1,5 +1,5 @@
 import moment from "moment";
-import {  currentMonth, currentYear } from "../constants/constants";
+import { currentMonth, currentYear } from "../constants/constants";
 
 export function calculateBalanceDaySum(targetObject) {
   const arrayToSum = Object.values(targetObject);

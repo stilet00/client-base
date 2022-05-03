@@ -16,11 +16,12 @@ import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import {
   calculatePercentDifference,
-  calculateTranslatorMonthTotal
+  calculateTranslatorMonthTotal,
 } from "../../../sharedFunctions/sharedFunctions";
 import {
   currentMonth,
-  currentYear, previousDay,
+  currentYear,
+  previousDay,
   previousMonth,
 } from "../../../constants/constants";
 import { IconButton, Rating } from "@mui/material";
@@ -40,6 +41,7 @@ function SingleTranslator({
   suspendTranslator,
   suspended,
   suspendClient,
+  selectedDate,
 }) {
   const {
     calculateSumByClient,
@@ -47,8 +49,8 @@ function SingleTranslator({
     getTranslatorsRating,
     calculateMiddleMonthSum,
     calculateTranslatorYesterdayTotal,
-    calculateTranslatorDayTotal
-  } = useSingleTranslator(statistics);
+    calculateTranslatorDayTotal,
+  } = useSingleTranslator(statistics, selectedDate);
 
   const progressPage =
     calculateTranslatorMonthTotal(statistics) >=
@@ -108,6 +110,29 @@ function SingleTranslator({
             "No data"
           )}
         </Typography>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header-2"
+          >
+            <Typography>Date balance</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2">
+              {`For ${selectedDate.format("DD MMMM")}: `}
+              <b>{`${calculateTranslatorDayTotal(statistics)} $`}</b>
+            </Typography>
+            <Typography variant="body2">
+              {`Total for ${selectedDate.format("MMMM")}: `}
+              <b>{`${calculateTranslatorMonthTotal(
+                statistics,
+                true,
+                selectedDate.format("M")
+              )} $`}</b>
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
         {suspended.time ? (
           <Typography variant="body2" align={"left"}>
             {suspended.status ? `Suspended since: ` : `Activated since: `}
