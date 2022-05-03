@@ -9,11 +9,10 @@ import {
 import { useAlertConfirmation } from "../../sharedComponents/AlertMessageConfirmation/hooks";
 import useModal from "../../sharedHooks/useModal";
 import {
-  calculateBalanceDayAllClients,
-  findYesterday,
+  calculateBalanceDayAllClients
 } from "../../sharedFunctions/sharedFunctions";
 import { getTranslators } from "../../services/translatorsServices/services";
-import { currentYear, DEFAULT_MONTH_CHART } from "../../constants/constants";
+import { currentYear, DEFAULT_MONTH_CHART, previousDay } from "../../constants/constants";
 
 export const useChartsContainer = (user) => {
   const [months, setMonths] = useState([]);
@@ -307,7 +306,7 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
 
 export const useChartDateForm = ({ monthData, onValueSubmit }) => {
   const [value, setValue] = useState("");
-  const [selectedDate, setSelectedDate] = useState(findYesterday());
+  const [selectedDate, setSelectedDate] = useState(previousDay);
   const { handleClose, handleOpen, open } = useModal();
 
   const handleChange = useCallback((event) => {

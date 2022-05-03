@@ -11,7 +11,7 @@ import {
   currentDay,
   currentMonth,
   currentYear,
-  DEFAULT_DAY_CLIENT,
+  DEFAULT_DAY_CLIENT, previousDay,
 } from "../../constants/constants";
 
 import {
@@ -26,7 +26,6 @@ import {
   calculateBalanceDayAllClients,
   calculateBalanceDaySum,
   calculateTranslatorMonthTotal,
-  findYesterday,
   getMiddleValueFromArray,
 } from "../../sharedFunctions/sharedFunctions";
 
@@ -448,7 +447,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
-  const [selectedDay, setSelectedDay] = useState(findYesterday());
+  const [selectedDay, setSelectedDay] = useState(previousDay);
 
   const [currentBalanceDay, setCurrentBalanceDay] = useState(
     findTodayBalance()
@@ -544,15 +543,12 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 };
 
 export const useSingleTranslator = (statistics) => {
-  const calculateTranslatorDayTotal = (
+  const calculateTranslatorYesterdayTotal = (
     statistics,
-    dayFilter = currentDay,
-    monthFilter = currentMonth,
-    yearFilter = currentYear
   ) => {
     const day = statistics
-      .find((year) => year.year === yearFilter)
-      .months.find((month, index) => index + 1 === Number(monthFilter))
+      .find((year) => year.year === moment().subtract(1, "day").format("YYYY"))
+      .months.find((month, index) => index + 1 === Number(moment().subtract(1, "day").format("M")))
       .find((day) => {
         return (
           day.id === moment().subtract(1, "day").format("DD MM YYYY") ||
@@ -561,6 +557,26 @@ export const useSingleTranslator = (statistics) => {
       });
     return calculateBalanceDayAllClients(day);
   };
+
+  const calculateTranslatorDayTotal = (
+      statistics,
+      dayFilter = currentDay,
+      monthFilter = currentMonth,
+      yearFilter = currentYear
+  ) => {
+    const day = statistics
+        .find((year) => year.year === yearFilter)
+        .months.find((month, index) => index + 1 === Number(currentMonth))
+        .find((day) => {
+          return (
+              day.id === moment(`${yearFilter}-${monthFilter}-${dayFilter}`, "YYYY-M-D").format("DD MM YYYY")
+          );
+        });
+    // return calculateBalanceDayAllClients(day);
+    console.log(day)
+  };
+
+  calculateTranslatorDayTotal(statistics)
 
   function findYear(yearFilter = currentYear) {
     return statistics.find((item) => item.year === yearFilter);
@@ -574,7 +590,7 @@ export const useSingleTranslator = (statistics) => {
 
   function findYesterdayBalance() {
     return findMonth().find(
-      (item, index) => index + 1 === Number(findYesterday())
+      (item, index) => index + 1 === Number(previousDay)
     );
   }
 
@@ -636,6 +652,7 @@ export const useSingleTranslator = (statistics) => {
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
-    calculateTranslatorDayTotal,
+    calculateTranslatorYesterdayTotal,
+    calculateTranslatorDayTotal
   };
 };

@@ -16,12 +16,11 @@ import moment from "moment";
 import { useSingleTranslator } from "../businessLogic";
 import {
   calculatePercentDifference,
-  calculateTranslatorMonthTotal,
-  findYesterday,
+  calculateTranslatorMonthTotal
 } from "../../../sharedFunctions/sharedFunctions";
 import {
   currentMonth,
-  currentYear,
+  currentYear, previousDay,
   previousMonth,
 } from "../../../constants/constants";
 import { IconButton, Rating } from "@mui/material";
@@ -47,7 +46,8 @@ function SingleTranslator({
     specialColorNeeded,
     getTranslatorsRating,
     calculateMiddleMonthSum,
-    calculateTranslatorDayTotal,
+    calculateTranslatorYesterdayTotal,
+    calculateTranslatorDayTotal
   } = useSingleTranslator(statistics);
 
   const progressPage =
@@ -102,8 +102,8 @@ function SingleTranslator({
         </Typography>
         <Typography variant="body2" align={"left"}>
           {`For yesterday: `}
-          {calculateTranslatorDayTotal(statistics) ? (
-            <b>{`${calculateTranslatorDayTotal(statistics)} $`}</b>
+          {calculateTranslatorYesterdayTotal(statistics) ? (
+            <b>{`${calculateTranslatorYesterdayTotal(statistics)} $`}</b>
           ) : (
             "No data"
           )}
@@ -161,7 +161,7 @@ function SingleTranslator({
                           {Number(calculateSumByClient(client._id)) ? (
                             <li className={"clients-list__finance-container"}>
                               {`Balance for ${moment(
-                                `${findYesterday()}/${currentMonth}/${currentYear}`,
+                                `${previousDay}/${currentMonth}/${currentYear}`,
                                 "D/M/YYYY"
                               ).format("DD MMMM")}:`}{" "}
                               <b
