@@ -90,6 +90,12 @@ function SingleTranslator({
         <Typography variant="h5" component="div">
           {`${name} ${surname}`}
         </Typography>
+        {suspended.time ? (
+            <Typography variant="caption" align={"left"}>
+              {suspended.status ? `Suspended since: ` : `Activated since: `}
+              <b>{suspended.time}</b>
+            </Typography>
+        ) : null}
         <Typography variant="body1" align={"left"}>
           <i>Balance:</i>
         </Typography>
@@ -110,37 +116,8 @@ function SingleTranslator({
             "No data"
           )}
         </Typography>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header-2"
-          >
-            <Typography>Filtered balance</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2">
-              {`For ${selectedDate.format("DD MMMM")}: `}
-              <b>{`${calculateTranslatorDayTotal(statistics)} $`}</b>
-            </Typography>
-            <Typography variant="body2">
-              {`Total for ${selectedDate.format("MMMM")}: `}
-              <b>{`${calculateTranslatorMonthTotal(
-                statistics,
-                true,
-                selectedDate.format("M")
-              )} $`}</b>
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        {suspended.time ? (
-          <Typography variant="body2" align={"left"}>
-            {suspended.status ? `Suspended since: ` : `Activated since: `}
-            <b>{suspended.time}</b>
-          </Typography>
-        ) : null}
         {suspended.status ? null : (
-          <div className="clients-box">
+          <>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -241,7 +218,30 @@ function SingleTranslator({
                 </AccordionDetails>
               </Accordion>
             ) : null}
-          </div>
+            <Accordion>
+              <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header-2"
+              >
+                <Typography>Filtered balance</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2">
+                  {`For ${selectedDate.format("DD MMMM")}: `}
+                  <b>{`${calculateTranslatorDayTotal(statistics)} $`}</b>
+                </Typography>
+                <Typography variant="body2">
+                  {`Total for ${selectedDate.format("MMMM")}: `}
+                  <b>{`${calculateTranslatorMonthTotal(
+                      statistics,
+                      true,
+                      selectedDate.format("M")
+                  )} $`}</b>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </>
         )}
       </CardContent>
       <CardActions>

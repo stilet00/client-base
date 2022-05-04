@@ -104,6 +104,8 @@
         display: none; }
       .gallery-container .inner-gallery-container .translator-item .MuiAccordionDetails-root {
         flex-wrap: wrap; }
+      .gallery-container .inner-gallery-container .translator-item .MuiPaper-root:first-child {
+        order: 3; }
       .gallery-container .inner-gallery-container .translator-item .MuiPaper-root:not(:first-child) {
         margin-top: 12px;
         background: #f5f5f5; }
