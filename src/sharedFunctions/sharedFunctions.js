@@ -1,12 +1,26 @@
 import moment from "moment";
 import { currentMonth, currentYear } from "../constants/constants";
 
-export function calculateBalanceDaySum(targetObject) {
-  const arrayToSum = Object.values(targetObject);
-  const sumResult = arrayToSum.reduce((sum, current) => {
-    return typeof current === "number" ? sum + current : sum;
-  }, 0);
-  return sumResult - targetObject.penalties * 2;
+export function calculateBalanceDaySum(targetObject, onlySvadba = false) {
+  if (onlySvadba) {
+    const svadbaObject = {
+      ...targetObject, dating: 0, virtualGiftsDating: 0
+    }
+
+    const svadbaSum = Object.values(svadbaObject).reduce((sum, current) => {
+      return typeof current === "number" ? sum + current : sum;
+    }, 0);
+
+    return svadbaSum - svadbaObject.penalties * 2;
+  } else {
+    const arrayToSum = Object.values(targetObject);
+
+    const sumResult = arrayToSum.reduce((sum, current) => {
+      return typeof current === "number" ? sum + current : sum;
+    }, 0);
+
+    return sumResult - targetObject.penalties * 2;
+  }
 }
 
 export function calculateBalanceDayAllClients(day) {
@@ -34,7 +48,8 @@ export const calculateTranslatorMonthTotal = (
   statistics,
   forFullMonth = true,
   monthFilter = currentMonth,
-  yearFilter = currentYear
+  yearFilter = currentYear,
+  onlySvadba = false
 ) => {
   const month = statistics
     .find((year) => year.year === yearFilter)
@@ -47,7 +62,7 @@ export const calculateTranslatorMonthTotal = (
       return (
         sum +
         current.clients.reduce((sum, current) => {
-          return sum + calculateBalanceDaySum(current);
+          return sum + calculateBalanceDaySum(current, onlySvadba);
         }, 0)
       );
     }, 0);
@@ -56,7 +71,7 @@ export const calculateTranslatorMonthTotal = (
       return index + 1 < Number(moment().format("D"))
         ? sum +
             current.clients.reduce((sum, current) => {
-              return sum + calculateBalanceDaySum(current);
+              return sum + calculateBalanceDaySum(current, onlySvadba);
             }, 0)
         : sum;
     }, 0);

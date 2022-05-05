@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import moment from "moment";
 import { getClients } from "../../services/clientsServices/services";
 import { getTranslators } from "../../services/translatorsServices/services";
 import { calculateTranslatorMonthTotal } from "../../sharedFunctions/sharedFunctions";
@@ -63,19 +62,36 @@ export const useOverview = (user) => {
       : null;
   }
 
+
   const calculateMonthTotal = useCallback(
-    (monthNumber = currentMonth, forFullMonth = true) => {
+    (monthNumber = currentMonth, forFullMonth = true, onlySvadba = false) => {
       let sum = 0;
-      translators.forEach((translator) => {
-        let translatorsStatistic = translator.statistics;
-        sum =
-          sum +
-          calculateTranslatorMonthTotal(
-            translatorsStatistic,
-            forFullMonth,
-            monthNumber
-          );
-      });
+
+      if (onlySvadba) {
+        translators.forEach((translator) => {
+          let translatorsStatistic = translator.statistics;
+          sum =
+              sum +
+              calculateTranslatorMonthTotal(
+                  translatorsStatistic,
+                  forFullMonth,
+                  monthNumber,
+                  currentYear,
+                  onlySvadba
+              );
+        });
+      } else {
+        translators.forEach((translator) => {
+          let translatorsStatistic = translator.statistics;
+          sum =
+              sum +
+              calculateTranslatorMonthTotal(
+                  translatorsStatistic,
+                  forFullMonth,
+                  monthNumber,
+              );
+        });
+      }
       return Math.round(sum);
     },
     [translators]

@@ -5,7 +5,7 @@ import Unauthorized from "../AuthorizationPage/Unauthorized/Unauthorized";
 import { FirebaseAuthConsumer } from "@react-firebase/auth";
 import { useOverview } from "./businessLogic";
 import { calculatePercentDifference } from "../../sharedFunctions/sharedFunctions";
-import { previousMonth } from "../../constants/constants";
+import { currentMonth, previousMonth } from "../../constants/constants";
 
 function Overview({ user }) {
   const {
@@ -65,6 +65,30 @@ function Overview({ user }) {
                               <SmallLoader />
                             )}
                           </b>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Svadba balance</td>
+                      <td>
+                        <span className={"blue-text"}>
+                            {calculateYearTotal() ? (
+                                `${calculateMonthTotal(currentMonth, true, true)} $`
+                            ) : (
+                                <SmallLoader />
+                            )}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Dating balance</td>
+                      <td>
+                        <span className={"blue-text"}>
+                            {calculateYearTotal() ? (
+                                `${calculateMonthTotal() - calculateMonthTotal(currentMonth, true, true)} $`
+                            ) : (
+                                <SmallLoader />
+                            )}
                         </span>
                       </td>
                     </tr>
