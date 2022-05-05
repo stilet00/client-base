@@ -111,11 +111,11 @@ function Overview({ user }) {
                       </td>
                     </tr>
                     <tr>
-                      <td>Total translators</td>
+                      <td>Active translators</td>
                       <td>
                         <b>
                           {translators.length ? (
-                            translators.length
+                            translators.filter(translator => !translator.suspended.status).length
                           ) : (
                             <SmallLoader />
                           )}
