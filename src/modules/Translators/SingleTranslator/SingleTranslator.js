@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
     Accordion,
     AccordionDetails,
@@ -337,4 +337,4 @@ function SingleTranslator({
     )
 }
 
-export default SingleTranslator
+export default memo(SingleTranslator)

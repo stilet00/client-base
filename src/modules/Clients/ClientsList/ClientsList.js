@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import Button from '@material-ui/core/Button'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import Drawer from '@material-ui/core/Drawer'
@@ -181,4 +181,4 @@ function ClientsList({
     )
 }
 
-export default ClientsList
+export default memo(ClientsList)

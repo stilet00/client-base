@@ -1,3 +1,4 @@
+import { Profiler } from 'react'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import Button from '@material-ui/core/Button'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
@@ -71,133 +72,150 @@ function Translators({ user }) {
     const id = open ? 'simple-popover' : undefined
 
     return user ? (
-        <div className={'gallery-container'}>
-            <div className="gallery-menu gallery-menu_no-border">
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Menu</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <ClientsList
-                            clients={clients}
-                            toggleDrawer={toggleDrawer}
-                            state={state}
-                            dragStartHandler={dragStartHandler}
-                            dragOverHandler={dragOverHandler}
-                            dragLeaveHandler={dragLeaveHandler}
-                            dragEndHandler={dragEndHandler}
-                            dragDropHandler={dragDropHandler}
-                            deleteClient={deleteClient}
-                            translators={translators}
-                        />
-                        <ClientsForm onFormSubmit={clientsFormSubmit} />
-                        <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-                        <Button
-                            aria-describedby={id}
-                            onClick={handleClick}
-                            fullWidth
-                            startIcon={<MonetizationOnIcon />}
+        <Profiler
+            id="translators"
+            onRender={(id, phase, actualDuration) => {
+                console.log({ id, phase, actualDuration })
+            }}
+        >
+            <div className={'gallery-container'}>
+                <div className="gallery-menu gallery-menu_no-border">
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
                         >
-                            Show total
-                        </Button>
-                        <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            className={'sum-popover'}
-                        >
-                            <Typography sx={{ p: 2 }}>
-                                {`Total by ${moment().format('D MMMM')}: `}{' '}
-                                <b>{`${calculateMonthTotal()} $`}</b>
-                            </Typography>
-                        </Popover>
-                        <div className="gallery-menu__filters">
-                            <div className={'gallery-menu__checkbox-container'}>
-                                <Checkbox
-                                    defaultChecked
-                                    name={'suspended'}
-                                    onChange={changeFilter}
-                                />
-                                Hide suspended
+                            <Typography>Menu</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <ClientsList
+                                clients={clients}
+                                toggleDrawer={toggleDrawer}
+                                state={state}
+                                dragStartHandler={dragStartHandler}
+                                dragOverHandler={dragOverHandler}
+                                dragLeaveHandler={dragLeaveHandler}
+                                dragEndHandler={dragEndHandler}
+                                dragDropHandler={dragDropHandler}
+                                deleteClient={deleteClient}
+                                translators={translators}
+                            />
+                            <ClientsForm onFormSubmit={clientsFormSubmit} />
+                            <TranslatorsForm
+                                onFormSubmit={translatorsFormSubmit}
+                            />
+                            <Button
+                                aria-describedby={id}
+                                onClick={handleClick}
+                                fullWidth
+                                startIcon={<MonetizationOnIcon />}
+                            >
+                                Show total
+                            </Button>
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                className={'sum-popover'}
+                            >
+                                <Typography sx={{ p: 2 }}>
+                                    {`Total by ${moment().format('D MMMM')}: `}{' '}
+                                    <b>{`${calculateMonthTotal()} $`}</b>
+                                </Typography>
+                            </Popover>
+                            <div className="gallery-menu__filters">
+                                <div
+                                    className={
+                                        'gallery-menu__checkbox-container'
+                                    }
+                                >
+                                    <Checkbox
+                                        defaultChecked
+                                        name={'suspended'}
+                                        onChange={changeFilter}
+                                    />
+                                    Hide suspended
+                                </div>
+                                <div className="gallery-menu__date-container">
+                                    <MobileDatePicker
+                                        label="Balance date"
+                                        value={translatorFilter.date}
+                                        name={'date'}
+                                        onChange={changeFilter}
+                                        renderInput={params => (
+                                            <TextField {...params} />
+                                        )}
+                                    />
+                                </div>
                             </div>
-                            <div className="gallery-menu__date-container">
-                                <MobileDatePicker
-                                    label="Balance date"
-                                    value={translatorFilter.date}
-                                    name={'date'}
-                                    onChange={changeFilter}
-                                    renderInput={params => (
-                                        <TextField {...params} />
-                                    )}
-                                />
-                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+                </div>
+                <div
+                    className={
+                        'inner-gallery-container translators-container animated-box scrolled-container'
+                    }
+                >
+                    {translators.length && !loading ? (
+                        filterTranslators().map(item => (
+                            <SingleTranslator
+                                deleteTranslator={startTranslatorDelete}
+                                {...item}
+                                key={item._id}
+                                dragOverHandler={dragOverHandler}
+                                onBoardDrop={onBoardDrop}
+                                dragLeaveHandler={dragLeaveHandler}
+                                balanceDaySubmit={balanceDaySubmit}
+                                alertStatusConfirmation={
+                                    alertStatusConfirmation
+                                }
+                                openAlertConfirmation={openAlertConfirmation}
+                                closeAlertConfirmationNoReload={
+                                    closeAlertConfirmationNoReload
+                                }
+                                suspendTranslator={suspendTranslator}
+                                suspendClient={suspendClient}
+                                selectedDate={translatorFilter.date}
+                            />
+                        ))
+                    ) : loading ? (
+                        <div className="empty">
+                            {' '}
+                            <Loader />{' '}
                         </div>
-                    </AccordionDetails>
-                </Accordion>
+                    ) : (
+                        <div className="empty">
+                            <h1>No translators yet.</h1>
+                        </div>
+                    )}
+                </div>
+                <AlertMessage
+                    mainText={message.text}
+                    open={alertOpen}
+                    handleOpen={openAlert}
+                    handleClose={closeAlert}
+                    status={message.status}
+                />
+                <AlertMessageConfirmation
+                    mainText={
+                        'Please confirm that you want to delete translator?'
+                    }
+                    additionalText={message.text}
+                    open={alertStatusConfirmation}
+                    handleClose={closeAlertConfirmationNoReload}
+                    handleOpen={openAlertConfirmation}
+                    status={false}
+                    onCancel={closeAlertConfirmationNoReload}
+                    onConfirm={finishTranslatorDelete}
+                />
             </div>
-            <div
-                className={
-                    'inner-gallery-container translators-container animated-box scrolled-container'
-                }
-            >
-                {translators.length && !loading ? (
-                    filterTranslators().map(item => (
-                        <SingleTranslator
-                            deleteTranslator={startTranslatorDelete}
-                            {...item}
-                            key={item._id}
-                            dragOverHandler={dragOverHandler}
-                            onBoardDrop={onBoardDrop}
-                            dragLeaveHandler={dragLeaveHandler}
-                            balanceDaySubmit={balanceDaySubmit}
-                            alertStatusConfirmation={alertStatusConfirmation}
-                            openAlertConfirmation={openAlertConfirmation}
-                            closeAlertConfirmationNoReload={
-                                closeAlertConfirmationNoReload
-                            }
-                            suspendTranslator={suspendTranslator}
-                            suspendClient={suspendClient}
-                            selectedDate={translatorFilter.date}
-                        />
-                    ))
-                ) : loading ? (
-                    <div className="empty">
-                        {' '}
-                        <Loader />{' '}
-                    </div>
-                ) : (
-                    <div className="empty">
-                        <h1>No translators yet.</h1>
-                    </div>
-                )}
-            </div>
-            <AlertMessage
-                mainText={message.text}
-                open={alertOpen}
-                handleOpen={openAlert}
-                handleClose={closeAlert}
-                status={message.status}
-            />
-            <AlertMessageConfirmation
-                mainText={'Please confirm that you want to delete translator?'}
-                additionalText={message.text}
-                open={alertStatusConfirmation}
-                handleClose={closeAlertConfirmationNoReload}
-                handleOpen={openAlertConfirmation}
-                status={false}
-                onCancel={closeAlertConfirmationNoReload}
-                onConfirm={finishTranslatorDelete}
-            />
-        </div>
+        </Profiler>
     ) : (
         <Unauthorized />
     )

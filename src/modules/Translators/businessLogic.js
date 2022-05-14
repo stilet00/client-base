@@ -83,9 +83,9 @@ export const useTranslators = user => {
         }
     }, [translators, translatorFilter])
 
-    useEffect(() => {
+    useEffect(async () => {
         if (user) {
-            getTranslators().then(res => {
+            await getTranslators().then(res => {
                 if (res.status === 200) {
                     setLoading(false)
                     setTranslators(res.data)
@@ -94,7 +94,7 @@ export const useTranslators = user => {
                 }
             })
 
-            getClients().then(res => {
+            await getClients().then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 } else {

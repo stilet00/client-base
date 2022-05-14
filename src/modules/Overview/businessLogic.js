@@ -5,11 +5,10 @@ import { calculateTranslatorMonthTotal } from '../../sharedFunctions/sharedFunct
 import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
-    const [clients, setClients] = useState([])
-
-    const [translators, setTranslators] = useState([])
-
-    const [bestMonth, ,] = useState(null)
+    const [globalState, setGlobalState] = useState({
+        clients: [],
+        translators: [],
+    })
 
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
@@ -17,7 +16,8 @@ export const useOverview = user => {
         setSelectedYear(event.target.value)
     }
 
-    useEffect(() => {
+    useEffect(async () => {
+        let newState = globalState
         if (user) {
             // getBalance().then((res) => {
             //   if (res.status === 200) {
@@ -30,17 +30,18 @@ export const useOverview = user => {
             //   }
             // });
 
-            getClients().then(res => {
+            await getClients().then(res => {
                 if (res.status === 200) {
-                    setClients(res.data)
+                    newState = { ...newState, clients: res.data }
                 }
             })
 
-            getTranslators().then(res => {
+            await getTranslators().then(res => {
                 if (res.status === 200) {
-                    setTranslators(res.data)
+                    newState = { ...newState, translators: res.data }
                 }
             })
+            setGlobalState(newState)
         }
     }, [selectedYear, user])
 
@@ -53,7 +54,7 @@ export const useOverview = user => {
             let sum = 0
 
             if (onlySvadba) {
-                translators.forEach(translator => {
+                globalState.translators.forEach(translator => {
                     let translatorsStatistic = translator.statistics
                     sum =
                         sum +
@@ -66,7 +67,7 @@ export const useOverview = user => {
                         )
                 })
             } else {
-                translators.forEach(translator => {
+                globalState.translators.forEach(translator => {
                     let translatorsStatistic = translator.statistics
                     sum =
                         sum +
@@ -79,7 +80,7 @@ export const useOverview = user => {
             }
             return Math.round(sum)
         },
-        [translators]
+        [globalState]
     )
 
     const calculateYearTotal = useCallback(() => {
@@ -90,14 +91,13 @@ export const useOverview = user => {
         }
 
         return yearSum
-    }, [translators])
+    }, [globalState])
 
     return {
         selectedYear,
         handleChange,
-        clients,
-        translators,
-        bestMonth,
+        clients: globalState.clients,
+        translators: globalState.translators,
         calculateMonthTotal,
         calculateYearTotal,
     }
