@@ -1,66 +1,66 @@
 export const MESSAGES = {
-  addTranslator: {
-    text: "Translator has been added!",
-    status: true,
-  },
+    addTranslator: {
+        text: 'Translator has been added!',
+        status: true,
+    },
 
-  translatorExist: {
-    text: "This translator already exists!",
-    status: false,
-  },
+    translatorExist: {
+        text: 'This translator already exists!',
+        status: false,
+    },
 
-  translatorFilled: {
-    text: "Client has been assigned!",
-    status: true,
-  },
+    translatorFilled: {
+        text: 'Client has been assigned!',
+        status: true,
+    },
 
-  translatorDeleted: {
-    text: "Translator has been deleted!",
-    status: true,
-  },
+    translatorDeleted: {
+        text: 'Translator has been deleted!',
+        status: true,
+    },
 
-  translatorSuspended: {
-    text: "Translator has been suspended!",
-    status: false,
-  },
+    translatorSuspended: {
+        text: 'Translator has been suspended!',
+        status: false,
+    },
 
-  translatorActivated: {
-    text: "Translator has been activated!",
-    status: true,
-  },
+    translatorActivated: {
+        text: 'Translator has been activated!',
+        status: true,
+    },
 
-  clientExist: {
-    text: "Translator already has this client!",
-    status: false,
-  },
+    clientExist: {
+        text: 'Translator already has this client!',
+        status: false,
+    },
 
-  addClient: {
-    text: "Client has been added!",
-    status: true,
-  },
+    addClient: {
+        text: 'Client has been added!',
+        status: true,
+    },
 
-  clientDeleted: {
-    text: "Client has been deleted!",
-    status: true,
-  },
+    clientDeleted: {
+        text: 'Client has been deleted!',
+        status: true,
+    },
 
-  clientSuspended: {
-    text: "Client has been suspended!",
-    status: false,
-  },
+    clientSuspended: {
+        text: 'Client has been suspended!',
+        status: false,
+    },
 
-  clientActivated: {
-    text: "Client has been activated!",
-    status: true,
-  },
+    clientActivated: {
+        text: 'Client has been activated!',
+        status: true,
+    },
 
-  somethingWrong: {
-    text: "Something went wrong :(",
-    status: false,
-  },
+    somethingWrong: {
+        text: 'Something went wrong :(',
+        status: false,
+    },
 
-  changesSaved: {
-    text: "Changes have been saved",
-    status: true,
-  },
-};
+    changesSaved: {
+        text: 'Changes have been saved',
+        status: true,
+    },
+}

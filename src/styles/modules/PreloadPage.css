@@ -1,34 +1,34 @@
 .preload-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: white;
 }
 .preload-page::before {
-  content: "";
-  position: absolute;
-  width: 98vw;
-  height: 98vh;
-  border-radius: 20px;
-  filter: blur(5px);
-  background: linear-gradient(-45deg, #ffffff, #3c45e7, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 5s ease infinite;
-  opacity: 0.2;
+    content: '';
+    position: absolute;
+    width: 98vw;
+    height: 98vh;
+    border-radius: 20px;
+    filter: blur(5px);
+    background: linear-gradient(-45deg, #ffffff, #3c45e7, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+    opacity: 0.2;
 }
 
 @keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /*# sourceMappingURL=PreloadPage.css.map */

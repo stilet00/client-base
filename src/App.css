@@ -1,171 +1,171 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
 body {
-  font-family: "Lato";
-  margin: 0;
+    font-family: 'Lato';
+    margin: 0;
 }
 
 .App {
-  position: relative;
-  font-family: inherit;
-  text-align: center;
-  background-size: cover !important;
-  min-height: 100vh;
-  height: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  animation: movingBackground infinite 300s linear;
+    position: relative;
+    font-family: inherit;
+    text-align: center;
+    background-size: cover !important;
+    min-height: 100vh;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    animation: movingBackground infinite 300s linear;
 }
 
 .invisible {
-  display: none !important;
+    display: none !important;
 }
 
 .sun {
-  position: absolute;
-  top: 200px;
-  animation: sun-motion infinite 120s linear, sun-rotate infinite 18s linear;
+    position: absolute;
+    top: 200px;
+    animation: sun-motion infinite 120s linear, sun-rotate infinite 18s linear;
 }
 
 ul {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 @keyframes sun-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 @keyframes sun-motion {
-  0% {
-    margin: 20px 0 0 -10vw;
-  }
-  10% {
-    margin: -20px 0 0 5vw;
-  }
-  20% {
-    margin: -60px 0 0 20vw;
-  }
-  30% {
-    margin: -100px 0 0 30vw;
-  }
-  40% {
-    margin: -140px 0 0 40vw;
-  }
-  50% {
-    margin: -180px 0 0 50vw;
-  }
-  60% {
-    margin: -140px 0 0 60vw;
-  }
-  70% {
-    margin: -100px 0 0 70vw;
-  }
-  80% {
-    margin: -60px 0 0 85vw;
-  }
-  90% {
-    margin: -20px 0 0 100vw;
-  }
-  100% {
-    margin: 20px 0 0 110vw;
-  }
+    0% {
+        margin: 20px 0 0 -10vw;
+    }
+    10% {
+        margin: -20px 0 0 5vw;
+    }
+    20% {
+        margin: -60px 0 0 20vw;
+    }
+    30% {
+        margin: -100px 0 0 30vw;
+    }
+    40% {
+        margin: -140px 0 0 40vw;
+    }
+    50% {
+        margin: -180px 0 0 50vw;
+    }
+    60% {
+        margin: -140px 0 0 60vw;
+    }
+    70% {
+        margin: -100px 0 0 70vw;
+    }
+    80% {
+        margin: -60px 0 0 85vw;
+    }
+    90% {
+        margin: -20px 0 0 100vw;
+    }
+    100% {
+        margin: 20px 0 0 110vw;
+    }
 }
 @keyframes sun-circle--1-motion {
-  10% {
-    transform: rotate(-60deg);
-  }
-  20% {
-    transform: rotate(-55deg);
-  }
-  30% {
-    transform: rotate(-35deg);
-  }
-  40% {
-    top: 320px;
-    left: 45vw;
-    transform: rotate(-10deg);
-  }
-  50% {
-    top: 330px;
-    left: 40vw;
-    transform: rotate(30deg);
-  }
-  60% {
-    top: 340px;
-    left: 35vw;
-    transform: rotate(50deg);
-  }
-  70% {
-    top: 330px;
-    left: 30vw;
-    transform: rotate(65deg);
-  }
-  80% {
-    top: 320px;
-    left: 25vw;
-    transform: rotate(75deg);
-  }
-  90% {
-    top: 310px;
-    left: 20vw;
-    transform: rotate(80deg);
-  }
-  100% {
-    top: 300px;
-    left: 15vw;
-    transform: rotate(85deg);
-  }
+    10% {
+        transform: rotate(-60deg);
+    }
+    20% {
+        transform: rotate(-55deg);
+    }
+    30% {
+        transform: rotate(-35deg);
+    }
+    40% {
+        top: 320px;
+        left: 45vw;
+        transform: rotate(-10deg);
+    }
+    50% {
+        top: 330px;
+        left: 40vw;
+        transform: rotate(30deg);
+    }
+    60% {
+        top: 340px;
+        left: 35vw;
+        transform: rotate(50deg);
+    }
+    70% {
+        top: 330px;
+        left: 30vw;
+        transform: rotate(65deg);
+    }
+    80% {
+        top: 320px;
+        left: 25vw;
+        transform: rotate(75deg);
+    }
+    90% {
+        top: 310px;
+        left: 20vw;
+        transform: rotate(80deg);
+    }
+    100% {
+        top: 300px;
+        left: 15vw;
+        transform: rotate(85deg);
+    }
 }
 @keyframes fade {
-  0% {
-    opacity: 0;
-  }
-  60% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% {
+        opacity: 0;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 @keyframes movingBackground {
-  0% {
-    background-position: top 50% left;
-  }
-  100% {
-    background-position: top 50% right;
-  }
+    0% {
+        background-position: top 50% left;
+    }
+    100% {
+        background-position: top 50% right;
+    }
 }
 main {
-  display: flex;
-  flex-direction: column;
-  margin-top: auto;
-  align-items: center;
-  margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    align-items: center;
+    margin-bottom: 50px;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 .animated-box {
-  animation: appear 0.5s linear;
+    animation: appear 0.5s linear;
 }
 
 @keyframes appear {
-  0% {
-    transform: scale(0.5);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(0.5);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /*# sourceMappingURL=App.css.map */
