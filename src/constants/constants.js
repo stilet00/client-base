@@ -7,7 +7,6 @@ import {
 export const currentYear = moment().format("YYYY");
 export const currentMonth = moment().format("M");
 export const previousMonth = moment().subtract(1, "month").format("M");
-export const currentDay = moment().format("D");
 export const previousDay = moment().subtract(1, "day").format("D");
 
 export const DEFAULT_CLIENT = {

@@ -4,8 +4,10 @@ import { currentMonth, currentYear } from "../constants/constants";
 export function calculateBalanceDaySum(targetObject, onlySvadba = false) {
   if (onlySvadba) {
     const svadbaObject = {
-      ...targetObject, dating: 0, virtualGiftsDating: 0
-    }
+      ...targetObject,
+      dating: 0,
+      virtualGiftsDating: 0,
+    };
 
     const svadbaSum = Object.values(svadbaObject).reduce((sum, current) => {
       return typeof current === "number" ? sum + current : sum;
@@ -95,7 +97,10 @@ export function getMiddleValueFromArray(arrayOfNumbers) {
 }
 
 export function calculatePercentDifference(currentSum, previousSum) {
-  return currentSum > previousSum
-    ? Math.round(((currentSum - previousSum) * 100) / currentSum)
-    : Math.round(((previousSum - currentSum) * 100) / previousSum);
+  const difference =
+    currentSum > previousSum
+      ? ((currentSum - previousSum) * 100) / currentSum
+      : ((previousSum - currentSum) * 100) / previousSum;
+
+  return difference.toString() === "NaN" ? 0 : Math.round(difference);
 }

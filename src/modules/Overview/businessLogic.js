@@ -62,7 +62,6 @@ export const useOverview = (user) => {
       : null;
   }
 
-
   const calculateMonthTotal = useCallback(
     (monthNumber = currentMonth, forFullMonth = true, onlySvadba = false) => {
       let sum = 0;
@@ -71,25 +70,25 @@ export const useOverview = (user) => {
         translators.forEach((translator) => {
           let translatorsStatistic = translator.statistics;
           sum =
-              sum +
-              calculateTranslatorMonthTotal(
-                  translatorsStatistic,
-                  forFullMonth,
-                  monthNumber,
-                  currentYear,
-                  onlySvadba
-              );
+            sum +
+            calculateTranslatorMonthTotal(
+              translatorsStatistic,
+              forFullMonth,
+              monthNumber,
+              currentYear,
+              onlySvadba
+            );
         });
       } else {
         translators.forEach((translator) => {
           let translatorsStatistic = translator.statistics;
           sum =
-              sum +
-              calculateTranslatorMonthTotal(
-                  translatorsStatistic,
-                  forFullMonth,
-                  monthNumber,
-              );
+            sum +
+            calculateTranslatorMonthTotal(
+              translatorsStatistic,
+              forFullMonth,
+              monthNumber
+            );
         });
       }
       return Math.round(sum);

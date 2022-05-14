@@ -183,11 +183,13 @@ export default function EditBalanceForm({
                     onChange={handleClient}
                     label="Client"
                   >
-                    {clients.map((item) => (
-                      <MenuItem value={item._id} key={item._id}>
-                        {`${item.name} ${item.surname}`}
-                      </MenuItem>
-                    ))}
+                    {clients
+                      .filter((client) => !client.suspended)
+                      .map((item) => (
+                        <MenuItem value={item._id} key={item._id}>
+                          {`${item.name} ${item.surname}`}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </div>

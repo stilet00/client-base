@@ -95,15 +95,15 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 };
 
 export const useClientsList = (translators) => {
-  function clientMonthSum(clientId, monthNumber = currentMonth) {
+  function clientMonthSum(clientId, date = moment()) {
     let totalClientBalance = 0;
 
     translators.forEach((translator) => {
       const thisYearStat = translator.statistics.find(
-        (year) => year.year === currentYear
+        (year) => year.year === date.format("YYYY")
       );
 
-      const thisMonthStat = thisYearStat.months[monthNumber - 1];
+      const thisMonthStat = thisYearStat.months[date.format("M") - 1];
 
       thisMonthStat.forEach((day) => {
         const clientBalanceDay = day.clients.find(
@@ -119,17 +119,17 @@ export const useClientsList = (translators) => {
     return Math.round(totalClientBalance);
   }
 
-  function calculateMiddleMonthSum(clientId, monthNumber = currentMonth) {
+  function calculateMiddleMonthSum(clientId, date = moment()) {
     let monthSumArray = [];
 
     let totalClientBalance = 0;
 
     translators.forEach((translator) => {
       const thisYearStat = translator.statistics.find(
-        (year) => year.year === currentYear
+        (year) => year.year === date.format("YYYY")
       );
 
-      const thisMonthStat = thisYearStat.months[monthNumber - 1];
+      const thisMonthStat = thisYearStat.months[date.format("M") - 1];
 
       thisMonthStat.forEach((day, index) => {
         if (index === 0 || index < moment().format("D")) {

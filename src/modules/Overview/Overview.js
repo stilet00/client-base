@@ -72,11 +72,11 @@ function Overview({ user }) {
                       <td>Svadba balance</td>
                       <td>
                         <span className={"blue-text"}>
-                            {calculateYearTotal() ? (
-                                `${calculateMonthTotal(currentMonth, true, true)} $`
-                            ) : (
-                                <SmallLoader />
-                            )}
+                          {calculateYearTotal() ? (
+                            `${calculateMonthTotal(currentMonth, true, true)} $`
+                          ) : (
+                            <SmallLoader />
+                          )}
                         </span>
                       </td>
                     </tr>
@@ -84,11 +84,14 @@ function Overview({ user }) {
                       <td>Dating balance</td>
                       <td>
                         <span className={"blue-text"}>
-                            {calculateYearTotal() ? (
-                                `${calculateMonthTotal() - calculateMonthTotal(currentMonth, true, true)} $`
-                            ) : (
-                                <SmallLoader />
-                            )}
+                          {calculateYearTotal() ? (
+                            `${
+                              calculateMonthTotal() -
+                              calculateMonthTotal(currentMonth, true, true)
+                            } $`
+                          ) : (
+                            <SmallLoader />
+                          )}
                         </span>
                       </td>
                     </tr>
@@ -115,7 +118,9 @@ function Overview({ user }) {
                       <td>
                         <b>
                           {translators.length ? (
-                            translators.filter(translator => !translator.suspended.status).length
+                            translators.filter(
+                              (translator) => !translator.suspended.status
+                            ).length
                           ) : (
                             <SmallLoader />
                           )}

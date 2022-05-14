@@ -8,7 +8,6 @@ import {
   updateTranslator,
 } from "../../services/translatorsServices/services";
 import {
-  currentDay,
   currentMonth,
   currentYear,
   DEFAULT_DAY_CLIENT,

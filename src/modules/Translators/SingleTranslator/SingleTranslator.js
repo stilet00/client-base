@@ -91,10 +91,10 @@ function SingleTranslator({
           {`${name} ${surname}`}
         </Typography>
         {suspended.time ? (
-            <Typography variant="caption" align={"left"}>
-              {suspended.status ? `Suspended since: ` : `Activated since: `}
-              <b>{suspended.time}</b>
-            </Typography>
+          <Typography variant="caption" align={"left"}>
+            {suspended.status ? `Suspended since: ` : `Activated since: `}
+            <b>{suspended.time}</b>
+          </Typography>
         ) : null}
         <Typography variant="body1" align={"left"}>
           <i>Balance:</i>
@@ -220,9 +220,9 @@ function SingleTranslator({
             ) : null}
             <Accordion>
               <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header-2"
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header-2"
               >
                 <Typography>Filtered balance</Typography>
               </AccordionSummary>
@@ -234,9 +234,9 @@ function SingleTranslator({
                 <Typography variant="body2">
                   {`Total for ${selectedDate.format("MMMM")}: `}
                   <b>{`${calculateTranslatorMonthTotal(
-                      statistics,
-                      true,
-                      selectedDate.format("M")
+                    statistics,
+                    true,
+                    selectedDate.format("M")
                   )} $`}</b>
                 </Typography>
               </AccordionDetails>
