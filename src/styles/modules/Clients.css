@@ -1,39 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .side-clients-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    min-width: 280px;
-    max-width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  min-width: 280px;
+  max-width: 80vw;
 }
 .side-clients-menu h3 {
-    border-bottom: 2px solid black;
-    margin-bottom: 10px;
+  border-bottom: 2px solid black;
+  margin-bottom: 10px;
 }
 .side-clients-menu__client {
-    width: 90%;
-    min-height: 50px;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: grab;
-    background: rgba(255, 255, 255, 0.7);
+  width: 90%;
+  min-height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: grab;
+  background: rgba(255, 255, 255, 0.7);
 }
 .side-clients-menu__client:not(:first-child) {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 .side-clients-menu__client:hover {
-    background: white;
+  background: white;
 }
 .side-clients-menu__client__balance-container {
-    width: 100%;
+  width: 100%;
 }
 .side-clients-menu__client .css-1lauo1g-MuiRating-root {
-    align-items: center;
+  align-items: center;
 }
 
 /*# sourceMappingURL=Clients.css.map */

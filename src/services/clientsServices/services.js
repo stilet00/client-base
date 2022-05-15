@@ -1,16 +1,16 @@
-import axios from 'axios'
-import { rootURL } from '../rootURL'
+import axios from "axios";
+import { rootURL } from "../rootURL";
 
-const clientsURL = rootURL + 'clients/'
+const clientsURL = rootURL + "clients/";
 
 export function getClients() {
-    return axios.get(clientsURL + 'get/')
+  return axios.get(clientsURL + "get/");
 }
 
 export function addClient(client) {
-    return axios.post(clientsURL + 'add/', client)
+  return axios.post(clientsURL + "add/", client);
 }
 
 export function removeClient(id) {
-    return axios.delete(clientsURL + id)
+  return axios.delete(clientsURL + id);
 }

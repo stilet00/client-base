@@ -1,9 +1,9 @@
 .MuiSelect-select.MuiSelect-select {
-    padding-left: 24px;
+  padding-left: 24px;
 }
 
 .MuiInput-underline::before {
-    border-bottom: none !important;
+  border-bottom: none !important;
 }
 
 /*# sourceMappingURL=YearSelected.css.map */
