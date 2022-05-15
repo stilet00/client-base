@@ -53,7 +53,7 @@ export default function Navigation({ user }) {
 
     useEffect(() => {
         setPage(pathname)
-    }, [user])
+    }, [user, pathname])
 
     useEffect(() => {
         return () => {
@@ -169,45 +169,6 @@ export default function Navigation({ user }) {
                                 <ListItemText primary={'Log out'} />
                             </ListItem>
                         </BottomNavigation>
-                        {/*<List className={"header_nav"}>*/}
-                        {/*  <ListItem button onClick={() => history.push("/overview")}>*/}
-                        {/*    <ListItemIcon>*/}
-                        {/*      <PageViewIcon />*/}
-                        {/*    </ListItemIcon>*/}
-                        {/*    <ListItemText primary={"Overview"} />*/}
-                        {/*  </ListItem>*/}
-                        {/*  <ListItem button onClick={() => history.push("/translators")}>*/}
-                        {/*    <ListItemIcon>*/}
-                        {/*      <WorkIcon />*/}
-                        {/*    </ListItemIcon>*/}
-                        {/*    <ListItemText primary={"Translators & Balance"} />*/}
-                        {/*  </ListItem>*/}
-                        {/*  <ListItem button onClick={() => history.push("/chart")}>*/}
-                        {/*    <ListItemIcon>*/}
-                        {/*      <BarChartIcon />*/}
-                        {/*    </ListItemIcon>*/}
-                        {/*    <ListItemText primary={"Charts"} />*/}
-                        {/*  </ListItem>*/}
-                        {/*  <ListItem button onClick={() => history.push("/tasks")}>*/}
-                        {/*    <ListItemIcon>*/}
-                        {/*      <FormatListNumberedIcon />*/}
-                        {/*    </ListItemIcon>*/}
-                        {/*    <ListItemText primary={"Task List"} />*/}
-                        {/*  </ListItem>*/}
-                        {/*  {user ? (*/}
-                        {/*    <ListItem*/}
-                        {/*      button*/}
-                        {/*      onClick={() => {*/}
-                        {/*        firebase.auth().signOut();*/}
-                        {/*      }}*/}
-                        {/*    >*/}
-                        {/*      <ListItemIcon>*/}
-                        {/*        <ExitToAppIcon />*/}
-                        {/*      </ListItemIcon>*/}
-                        {/*      <ListItemText primary={"Log out"} />*/}
-                        {/*    </ListItem>*/}
-                        {/*  ) : null}*/}
-                        {/*</List>*/}
                     </Animation>
                 )}
             />

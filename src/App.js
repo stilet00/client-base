@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 import AuthorizationPage from './modules/AuthorizationPage/AuthorizationPage'
 import TaskList from './modules/TaskList/TaskList'
-import ChartsContainer from './modules/ChartsContainer/ChartsContainer'
+import ChartsContainer from './modules/Charts/ChartsContainer'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import {

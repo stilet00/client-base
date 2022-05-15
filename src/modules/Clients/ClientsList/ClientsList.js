@@ -127,6 +127,7 @@ function ClientsList({
                                     </span>
                                 </span>
                             )
+
                             return (
                                 <li
                                     key={client._id}

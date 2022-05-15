@@ -30,28 +30,23 @@ import {
 } from '../../sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
-    const [message, setMessage] = useState(MESSAGES.addTranslator)
-
-    const [clients, setClients] = useState([])
-
-    const [translators, setTranslators] = useState([])
-
-    const [currentClient, setCurrentClient] = useState(null)
-
-    const [state, setState] = useState({
-        left: false,
+    const [globalState, setGlobalState] = useState({
+        message: MESSAGES.addTranslator,
+        clients: [],
+        translators: [],
+        currentClient: [null],
+        loading: true,
+        deletedTranslator: null,
+        translatorFilter: {
+            suspended: true,
+            date: moment().subtract(1, 'month'),
+        },
+        state: {
+            left: false,
+        },
     })
-
-    const [loading, setLoading] = useState(true)
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
-
-    const [deletedTranslator, setDeletedTranslator] = useState(null)
-
-    const [translatorFilter, setTranslatorFilter] = useState({
-        suspended: true,
-        date: moment().subtract(1, 'month'),
-    })
 
     const {
         alertStatusConfirmation,
@@ -59,78 +54,102 @@ export const useTranslators = user => {
         closeAlertConfirmationNoReload,
     } = useAlertConfirmation()
 
-    function changeFilter(e) {
-        if (e.target) {
-            const newFilter = {
-                ...translatorFilter,
-                [e.target.name]: !translatorFilter[e.target.name],
-            }
-
-            setTranslatorFilter(newFilter)
-        } else {
-            setTranslatorFilter({ ...translatorFilter, date: e })
-        }
-    }
-
-    const filterTranslators = useCallback(() => {
-        if (translatorFilter.suspended) {
-            return translators.filter(
-                translator =>
-                    translator.suspended.status !== translatorFilter.suspended
-            )
-        } else {
-            return translators
-        }
-    }, [translators, translatorFilter])
-
-    useEffect(async () => {
+    useEffect(() => {
         if (user) {
-            await getTranslators().then(res => {
-                if (res.status === 200) {
-                    setLoading(false)
-                    setTranslators(res.data)
-                } else {
-                    console.log('No translators')
-                }
-            })
+            async function fetchData() {
+                let newState = globalState
+                await getTranslators().then(res => {
+                    if (res.status === 200) {
+                        newState = {
+                            ...newState,
+                            loading: false,
+                            translators: res.data,
+                        }
+                    } else {
+                        console.log('No translators')
+                    }
+                })
 
-            await getClients().then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                } else {
-                    console.log('No clients')
-                }
-            })
+                await getClients().then(res => {
+                    if (res.status === 200) {
+                        newState = { ...newState, clients: res.data }
+                    } else {
+                        console.log('No clients')
+                    }
+                })
+                return newState
+            }
+            fetchData().then(data => setGlobalState(data))
         }
     }, [user])
 
+    const changeFilter = useCallback(
+        e => {
+            if (e.target) {
+                const newFilter = {
+                    ...globalState.translatorFilter,
+                    [e.target.name]:
+                        !globalState.translatorFilter[e.target.name],
+                }
+                setGlobalState({ ...globalState, translatorFilter: newFilter })
+            } else {
+                setGlobalState({
+                    ...globalState,
+                    translatorFilter: {
+                        ...globalState.translatorFilter,
+                        date: e,
+                    },
+                })
+            }
+        },
+        [globalState]
+    )
+
+    const filterTranslators = useCallback(() => {
+        if (globalState.translatorFilter.suspended) {
+            return globalState.translators.filter(
+                translator =>
+                    translator.suspended.status !==
+                    globalState.translatorFilter.suspended
+            )
+        } else {
+            return globalState.translators
+        }
+    }, [globalState])
+
     const showAlertMessage = useCallback(
         alertMessage => {
-            setMessage(alertMessage)
+            setGlobalState({ ...globalState, message: alertMessage })
             openAlert()
         },
         [openAlert]
     )
 
-    const toggleDrawer = (anchor, open) => event => {
-        if (
-            event.type === 'keydown' &&
-            (event.key === 'Tab' || event.key === 'Shift')
-        ) {
-            return
-        }
-        setState({ ...state, [anchor]: open })
-    }
+    const toggleDrawer = useCallback(
+        (anchor, open) => event => {
+            if (
+                event.type === 'keydown' &&
+                (event.key === 'Tab' || event.key === 'Shift')
+            ) {
+                return
+            }
+            setGlobalState({
+                ...globalState,
+                state: { ...globalState.state, [anchor]: open },
+            })
+        },
+        [globalState]
+    )
 
     const dragStartHandler = useCallback((e, client) => {
-        setCurrentClient(client)
+        setGlobalState({ ...globalState, currentClient: client })
         e.target.style.border = '2px solid black'
     }, [])
 
     const dragLeaveHandler = useCallback(
         e => {
-            if (state.left === true) {
-                setState({ left: false })
+            if (globalState.state.left === true) {
+                setGlobalState({ ...globalState, state: { left: false } })
             }
             if (e.target.tagName === 'UL') {
                 e.target.style.background = 'none'
@@ -138,7 +157,7 @@ export const useTranslators = user => {
                 e.target.parentNode.style.background = 'none'
             }
         },
-        [state]
+        [globalState]
     )
 
     const dragEndHandler = useCallback(e => {
@@ -164,20 +183,21 @@ export const useTranslators = user => {
             updateTranslator(editedTranslator).then(res => {
                 if (res.status === 200) {
                     showAlertMessage(message)
-                    setTranslators(
-                        translators.map(item => {
+                    setGlobalState({
+                        ...globalState,
+                        translators: globalState.translators.map(item => {
                             return item._id === editedTranslator._id
                                 ? editedTranslator
                                 : item
-                        })
-                    )
+                        }),
+                    })
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                     console.log(res.data)
                 }
             })
         },
-        [translators, showAlertMessage]
+        [globalState, showAlertMessage]
     )
 
     const onBoardDrop = useCallback(
@@ -189,25 +209,28 @@ export const useTranslators = user => {
                 e.target.parentNode.style.background = 'none'
             }
 
-            let editedTranslator = translators.find(
+            let editedTranslator = globalState.translators.find(
                 item => item._id === translatorID
             )
 
             if (
                 editedTranslator.clients.filter(
-                    item => item._id === currentClient._id
+                    item => item._id === globalState.currentClient._id
                 ).length > 0
             ) {
                 showAlertMessage(MESSAGES.clientExist)
             } else {
-                editedTranslator = insertClient(editedTranslator, currentClient)
+                editedTranslator = insertClient(
+                    editedTranslator,
+                    globalState.currentClient
+                )
                 saveChangedTranslator(
                     editedTranslator,
                     MESSAGES.translatorFilled
                 )
             }
         },
-        [translators, currentClient, showAlertMessage, showAlertMessage]
+        [globalState, showAlertMessage, showAlertMessage]
     )
 
     const insertClient = useCallback((translator, client) => {
@@ -246,59 +269,63 @@ export const useTranslators = user => {
             removeClient(id).then(res => {
                 if (res.status === 200) {
                     showAlertMessage(MESSAGES.clientDeleted)
-                    setClients(clients.filter(item => item._id !== id))
+                    setGlobalState({
+                        ...globalState,
+                        clients: globalState.clients.filter(
+                            item => item._id !== id
+                        ),
+                    })
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                     console.log(res.data)
                 }
             })
         },
-        [clients, showAlertMessage]
+        [globalState, showAlertMessage]
     )
 
     const startTranslatorDelete = useCallback(
         id => {
-            const translator = translators.find(item => item._id === id)
-
-            setDeletedTranslator(translator)
-
-            setMessage({
-                text: `You are deleting ${translator.name} ${translator.surname}`,
-                status: false,
+            const translator = globalState.translators.find(
+                item => item._id === id
+            )
+            setGlobalState({
+                ...globalState,
+                deletedTranslator: translator,
+                message: {
+                    text: `You are deleting ${translator.name} ${translator.surname}`,
+                    status: false,
+                },
             })
 
             openAlertConfirmation()
         },
-        [translators, openAlertConfirmation]
+        [globalState, openAlertConfirmation]
     )
 
     const finishTranslatorDelete = useCallback(() => {
-        removeTranslator(deletedTranslator._id).then(res => {
+        removeTranslator(globalState.deletedTranslator._id).then(res => {
             if (res.status === 200) {
                 closeAlertConfirmationNoReload()
-                setTranslators(
-                    translators.filter(
-                        item => item._id !== deletedTranslator._id
-                    )
-                )
-                setMessage(MESSAGES.addTranslator)
+                setGlobalState({
+                    ...globalState,
+                    translators: globalState.translators.filter(
+                        item => item._id !== globalState.deletedTranslator._id
+                    ),
+                    message: MESSAGES.addTranslator,
+                })
             } else {
                 showAlertMessage(MESSAGES.somethingWrong)
                 console.log(res.data)
             }
         })
-    }, [
-        translators,
-        showAlertMessage,
-        closeAlertConfirmationNoReload,
-        deletedTranslator,
-    ])
+    }, [globalState, showAlertMessage, closeAlertConfirmationNoReload])
 
     const translatorsFormSubmit = useCallback(
         (e, newTranslator) => {
             e.preventDefault()
             if (
-                translators.filter(existingTranslator => {
+                globalState.translators.filter(existingTranslator => {
                     return (
                         existingTranslator.name.toLowerCase() ===
                             newTranslator.name.toLowerCase() &&
@@ -312,17 +339,20 @@ export const useTranslators = user => {
                 showAlertMessage(MESSAGES.addTranslator)
                 addTranslator(newTranslator).then(res => {
                     if (res.status === 200) {
-                        setTranslators([
-                            ...translators,
-                            { ...newTranslator, _id: res.data },
-                        ])
+                        setGlobalState({
+                            ...globalState,
+                            translators: [
+                                ...globalState.translators,
+                                { ...newTranslator, _id: res.data },
+                            ],
+                        })
                     } else {
                         console.log(res.status)
                     }
                 })
             }
         },
-        [translators, showAlertMessage]
+        [globalState, showAlertMessage]
     )
 
     const clientsFormSubmit = useCallback(
@@ -332,19 +362,25 @@ export const useTranslators = user => {
             addClient(newClient).then(res => {
                 if (res.status === 200) {
                     showAlertMessage(MESSAGES.addClient)
-                    setClients([...clients, { ...newClient, _id: res.data }])
+                    setGlobalState({
+                        ...globalState,
+                        clients: [
+                            ...globalState.clients,
+                            { ...newClient, _id: res.data },
+                        ],
+                    })
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                     console.log(res.data)
                 }
             })
         },
-        [clients, showAlertMessage]
+        [globalState, showAlertMessage]
     )
 
     const balanceDaySubmit = useCallback(
         (translatorId, balanceDay) => {
-            let editedTranslator = translators.find(
+            let editedTranslator = globalState.translators.find(
                 item => item._id === translatorId
             )
             const newStatistics = editedTranslator.statistics.map(year => {
@@ -359,23 +395,23 @@ export const useTranslators = user => {
             editedTranslator.statistics = newStatistics
             saveChangedTranslator(editedTranslator, MESSAGES.changesSaved)
         },
-        [translators]
+        [globalState]
     )
 
     const calculateMonthTotal = useCallback(() => {
         let sum = 0
-        translators.forEach(translator => {
+        globalState.translators.forEach(translator => {
             let translatorsStatistic = translator.statistics
             sum =
                 sum +
                 Number(calculateTranslatorMonthTotal(translatorsStatistic))
         })
         return Math.round(sum)
-    }, [translators])
+    }, [globalState])
 
     const suspendTranslator = useCallback(
         translatorId => {
-            let editedTranslator = translators.find(
+            let editedTranslator = globalState.translators.find(
                 translator => translator._id === translatorId
             )
 
@@ -393,12 +429,12 @@ export const useTranslators = user => {
 
             saveChangedTranslator(editedTranslator, message)
         },
-        [translators]
+        [globalState]
     )
 
     const suspendClient = useCallback(
         (translatorId, clientId) => {
-            const editedTranslator = translators.find(
+            const editedTranslator = globalState.translators.find(
                 item => item._id === translatorId
             )
 
@@ -417,26 +453,27 @@ export const useTranslators = user => {
 
             saveChangedTranslator(editedTranslator, message)
         },
-        [translators]
+        [globalState]
     )
 
     return {
-        translators,
+        translators: globalState.translators,
+        loading: globalState.loading,
+        clients: globalState.clients,
+        message: globalState.message,
+        translatorFilter: globalState.translatorFilter,
+        state: globalState.state,
         startTranslatorDelete,
         dragOverHandler,
         onBoardDrop,
         dragLeaveHandler,
-        loading,
         toggleDrawer,
-        state,
-        clients,
         dragEndHandler,
         dragStartHandler,
         dragDropHandler,
         deleteClient,
         clientsFormSubmit,
         translatorsFormSubmit,
-        message,
         alertOpen,
         openAlert,
         closeAlert,
@@ -450,7 +487,6 @@ export const useTranslators = user => {
         suspendClient,
         changeFilter,
         filterTranslators,
-        translatorFilter,
     }
 }
 
@@ -465,45 +501,45 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
     const [selectedDay, setSelectedDay] = useState(previousDay)
 
-    const [currentBalanceDay, setCurrentBalanceDay] = useState(
-        findTodayBalance()
-    )
-
     useEffect(() => {
         setCurrentBalanceDay(findTodayBalance())
     }, [selectedYear, selectedMonth, selectedDay, statistics])
 
-    function findYear() {
+    const findYear = useCallback(() => {
         return statistics.find(item => item.year === selectedYear)
-    }
+    }, [statistics, selectedYear])
 
-    function findMonth() {
+    const findMonth = useCallback(() => {
         return findYear().months.find(
             (item, index) => index + 1 === Number(selectedMonth)
         )
-    }
+    }, [findYear, selectedMonth])
 
-    function findTodayBalance() {
+    const findTodayBalance = useCallback(() => {
         return findMonth().find(
             (item, index) => index + 1 === Number(selectedDay)
         )
-    }
+    }, [findMonth, selectedDay])
+
+    const [currentBalanceDay, setCurrentBalanceDay] = useState(
+        findTodayBalance()
+    )
 
     const handleYear = event => {
         setSelectedYear(event.target.value)
     }
 
-    const handleMonth = event => {
+    const handleMonth = useCallback(event => {
         setSelectedMonth(event.target.value)
-    }
+    }, [])
 
-    const handleDay = event => {
+    const handleDay = useCallback(event => {
         setSelectedDay(event.target.value)
-    }
+    }, [])
 
-    const handleClient = e => {
+    const handleClient = useCallback(e => {
         setSelectedClient(e.target.value)
-    }
+    }, [])
 
     const handleChange = useCallback(
         e => {
@@ -530,19 +566,22 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
         [selectedClient, currentBalanceDay]
     )
 
-    function findClientById(id) {
-        if (id) {
-            return currentBalanceDay.clients.find(item => item.id === id)
-        } else {
-            return currentBalanceDay.clients.find(
-                item => item.id === selectedClient
-            )
-        }
-    }
+    const findClientById = useCallback(
+        id => {
+            if (id) {
+                return currentBalanceDay.clients.find(item => item.id === id)
+            } else {
+                return currentBalanceDay.clients.find(
+                    item => item.id === selectedClient
+                )
+            }
+        },
+        [currentBalanceDay, selectedClient]
+    )
 
-    function onSavePressed() {
+    const onSavePressed = useCallback(() => {
         balanceDaySubmit(currentBalanceDay)
-    }
+    }, [])
 
     return {
         handleOpen,

@@ -16,32 +16,24 @@ export const useOverview = user => {
         setSelectedYear(event.target.value)
     }
 
-    useEffect(async () => {
-        let newState = globalState
+    useEffect(() => {
         if (user) {
-            // getBalance().then((res) => {
-            //   if (res.status === 200) {
-            //     let byYearFilteredArray = res.data.filter(
-            //       (item) => item.year === selectedYear
-            //     );
-            //     let sumSortedArray =
-            //       getArrayWithSums(byYearFilteredArray).sort(compareSums);
-            //     setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-            //   }
-            // });
+            async function fetchData() {
+                let newState = globalState
+                await getClients().then(res => {
+                    if (res.status === 200) {
+                        newState = { ...newState, clients: res.data }
+                    }
+                })
 
-            await getClients().then(res => {
-                if (res.status === 200) {
-                    newState = { ...newState, clients: res.data }
-                }
-            })
-
-            await getTranslators().then(res => {
-                if (res.status === 200) {
-                    newState = { ...newState, translators: res.data }
-                }
-            })
-            setGlobalState(newState)
+                await getTranslators().then(res => {
+                    if (res.status === 200) {
+                        newState = { ...newState, translators: res.data }
+                    }
+                })
+                return newState
+            }
+            fetchData().then(data => setGlobalState(data))
         }
     }, [selectedYear, user])
 

@@ -17,23 +17,31 @@ function TaskList({ user }) {
         deleteTask,
         newTask,
         toggleTodo,
+        loading,
     } = useTaskList(user)
 
-    const page = !tasks.length ? (
-        <Loader />
-    ) : (
-        <TransitionGroup className="todo-list" component={'ul'}>
-            {tasks.map(item => (
-                <CSSTransition key={item._id} timeout={500} classNames="item">
-                    <SingleTask
-                        {...item}
-                        onDelete={deleteTask}
-                        onToggle={toggleTodo}
-                    />
-                </CSSTransition>
-            ))}
-        </TransitionGroup>
-    )
+    const page =
+        tasks.length && !loading ? (
+            <TransitionGroup className="todo-list" component={'ul'}>
+                {tasks.map(item => (
+                    <CSSTransition
+                        key={item._id}
+                        timeout={500}
+                        classNames="item"
+                    >
+                        <SingleTask
+                            {...item}
+                            onDelete={deleteTask}
+                            onToggle={toggleTodo}
+                        />
+                    </CSSTransition>
+                ))}
+            </TransitionGroup>
+        ) : loading ? (
+            <Loader />
+        ) : (
+            <h1>No tasks yet.</h1>
+        )
     return user ? (
         <>
             <div

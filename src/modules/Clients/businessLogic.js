@@ -76,9 +76,9 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
         [client]
     )
 
-    function clearClient() {
+    const clearClient = useCallback(() => {
         setClient(DEFAULT_CLIENT)
-    }
+    }, [])
 
     return {
         handleOpen,
@@ -92,100 +92,112 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 }
 
 export const useClientsList = translators => {
-    function clientMonthSum(clientId, date = moment()) {
-        let totalClientBalance = 0
+    const clientMonthSum = useCallback(
+        (clientId, date = moment()) => {
+            let totalClientBalance = 0
 
-        translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
-                year => year.year === date.format('YYYY')
-            )
-
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
-
-            thisMonthStat.forEach(day => {
-                const clientBalanceDay = day.clients.find(
-                    client => client.id === clientId
+            translators.forEach(translator => {
+                const thisYearStat = translator.statistics.find(
+                    year => year.year === date.format('YYYY')
                 )
-                if (clientBalanceDay) {
-                    totalClientBalance =
-                        totalClientBalance +
-                        calculateBalanceDaySum(clientBalanceDay)
-                }
-            })
-        })
 
-        return Math.round(totalClientBalance)
-    }
+                const thisMonthStat = thisYearStat.months[date.format('M') - 1]
 
-    function calculateMiddleMonthSum(clientId, date = moment()) {
-        let monthSumArray = []
-
-        let totalClientBalance = 0
-
-        translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
-                year => year.year === date.format('YYYY')
-            )
-
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
-
-            thisMonthStat.forEach((day, index) => {
-                if (index === 0 || index < moment().format('D')) {
+                thisMonthStat.forEach(day => {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId
                     )
-
                     if (clientBalanceDay) {
-                        if (typeof monthSumArray[index] === 'undefined') {
-                            const dayArray = []
-                            monthSumArray[index] = [
-                                ...dayArray,
-                                Math.round(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        } else {
-                            monthSumArray[index] = [
-                                ...monthSumArray[index],
-                                Math.round(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        }
                         totalClientBalance =
                             totalClientBalance +
                             calculateBalanceDaySum(clientBalanceDay)
                     }
-                }
+                })
             })
-        })
 
-        monthSumArray = monthSumArray.map(day => getSumFromArray(day))
+            return Math.round(totalClientBalance)
+        },
+        [translators]
+    )
 
-        return Math.round(getMiddleValueFromArray(monthSumArray))
-    }
+    const calculateMiddleMonthSum = useCallback(
+        (clientId, date = moment()) => {
+            let monthSumArray = []
 
-    function sortBySum(clientOne, clientTwo) {
-        return clientMonthSum(clientOne._id) < clientMonthSum(clientTwo._id)
-            ? 1
-            : -1
-    }
+            let totalClientBalance = 0
 
-    function getClientsRating(clientId) {
-        const rating = calculateMiddleMonthSum(clientId)
+            translators.forEach(translator => {
+                const thisYearStat = translator.statistics.find(
+                    year => year.year === date.format('YYYY')
+                )
 
-        return rating > 100
-            ? 5
-            : rating > 50
-            ? 4
-            : rating > 30
-            ? 3
-            : rating > 20
-            ? 2
-            : rating > 10
-            ? 1
-            : 0
-    }
+                const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+
+                thisMonthStat.forEach((day, index) => {
+                    if (index === 0 || index < moment().format('D')) {
+                        const clientBalanceDay = day.clients.find(
+                            client => client.id === clientId
+                        )
+
+                        if (clientBalanceDay) {
+                            if (typeof monthSumArray[index] === 'undefined') {
+                                const dayArray = []
+                                monthSumArray[index] = [
+                                    ...dayArray,
+                                    Math.round(
+                                        calculateBalanceDaySum(clientBalanceDay)
+                                    ),
+                                ]
+                            } else {
+                                monthSumArray[index] = [
+                                    ...monthSumArray[index],
+                                    Math.round(
+                                        calculateBalanceDaySum(clientBalanceDay)
+                                    ),
+                                ]
+                            }
+                            totalClientBalance =
+                                totalClientBalance +
+                                calculateBalanceDaySum(clientBalanceDay)
+                        }
+                    }
+                })
+            })
+
+            monthSumArray = monthSumArray.map(day => getSumFromArray(day))
+
+            return Math.round(getMiddleValueFromArray(monthSumArray))
+        },
+        [translators]
+    )
+
+    const sortBySum = useCallback(
+        (clientOne, clientTwo) => {
+            return clientMonthSum(clientOne._id) < clientMonthSum(clientTwo._id)
+                ? 1
+                : -1
+        },
+        [clientMonthSum]
+    )
+
+    const getClientsRating = useCallback(
+        clientId => {
+            const rating = calculateMiddleMonthSum(clientId)
+
+            return rating > 100
+                ? 5
+                : rating > 50
+                ? 4
+                : rating > 30
+                ? 3
+                : rating > 20
+                ? 2
+                : rating > 10
+                ? 1
+                : 0
+        },
+        [calculateMiddleMonthSum]
+    )
 
     return {
         clientMonthSum,

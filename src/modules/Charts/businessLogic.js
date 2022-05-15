@@ -123,7 +123,7 @@ export const useChartsContainer = user => {
                     }
                     setMonths(yearChartsArray)
                 } else {
-                    console.log('No translators')
+                    console.log('No data')
                 }
             })
         }
