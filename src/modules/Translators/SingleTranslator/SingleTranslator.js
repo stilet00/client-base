@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
     Accordion,
     AccordionDetails,
@@ -336,4 +336,4 @@ function SingleTranslator({
         </Card>
     )
 }
-export default SingleTranslator
+export default memo(SingleTranslator)

@@ -9,7 +9,7 @@ export const useOverview = user => {
 
     const [translators, setTranslators] = useState([])
 
-    const [bestMonth, setBestMonth] = useState(null)
+    const [bestMonth] = useState(null)
 
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
@@ -43,24 +43,6 @@ export const useOverview = user => {
             })
         }
     }, [selectedYear, user])
-
-    function getArrayWithSums(array) {
-        return array.map(item => {
-            return { ...item, values: reduceArray(item.values) }
-        })
-    }
-
-    function compareSums(a, b) {
-        return a.values - b.values
-    }
-
-    function reduceArray(array) {
-        return array.length > 0
-            ? array.reduce((sum, current) => {
-                  return Number(sum) + Number(current)
-              })
-            : null
-    }
 
     const calculateMonthTotal = useCallback(
         (

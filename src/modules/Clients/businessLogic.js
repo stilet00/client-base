@@ -1,10 +1,6 @@
 import { useCallback, useState } from 'react'
 import { CLIENTS } from '../../database/database'
-import {
-    currentMonth,
-    currentYear,
-    DEFAULT_CLIENT,
-} from '../../constants/constants'
+import { DEFAULT_CLIENT } from '../../constants/constants'
 import useModal from '../../sharedHooks/useModal'
 import {
     calculateBalanceDaySum,

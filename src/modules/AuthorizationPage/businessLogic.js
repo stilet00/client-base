@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { DEFAULT_ERROR } from '../../constants'
 import { useHistory } from 'react-router-dom'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'

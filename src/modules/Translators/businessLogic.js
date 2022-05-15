@@ -112,15 +112,18 @@ export const useTranslators = user => {
         [openAlert]
     )
 
-    const toggleDrawer = (anchor, open) => event => {
-        if (
-            event.type === 'keydown' &&
-            (event.key === 'Tab' || event.key === 'Shift')
-        ) {
-            return
-        }
-        setState({ ...state, [anchor]: open })
-    }
+    const toggleDrawer = useCallback(
+        (anchor, open) => event => {
+            if (
+                event.type === 'keydown' &&
+                (event.key === 'Tab' || event.key === 'Shift')
+            ) {
+                return
+            }
+            setState({ ...state, [anchor]: open })
+        },
+        [state]
+    )
 
     const dragStartHandler = useCallback((e, client) => {
         setCurrentClient(client)
