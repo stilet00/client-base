@@ -11,11 +11,16 @@ import moment from 'moment'
 export const useTaskList = user => {
     const [tasks, setTasks] = useState([])
 
+    const [loading, setLoading] = useState(true)
+
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
         if (user) {
-            getTasks().then(res => setTasks(res.data))
+            getTasks().then(res => {
+                setTasks(res.data)
+                setLoading(false)
+            })
         }
     }, [user])
 
@@ -77,5 +82,6 @@ export const useTaskList = user => {
         alertOpen,
         openAlert,
         closeAlert,
+        loading,
     }
 }
