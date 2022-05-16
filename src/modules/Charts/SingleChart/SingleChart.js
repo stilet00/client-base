@@ -1,31 +1,66 @@
 import { Bar, Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
-import { useSingleChart } from '../businessLogic'
 import moment from 'moment'
 
-function SingleChart(props) {
-    const { graph, index } = useSingleChart(props)
+function SingleChart({ graph, index, previousMonth }) {
+    let dataSets = [
+        {
+            label: 'Current month',
+            fill: true,
+            backgroundColor: ['rgba(255,255,255,0.7)'],
+            borderColor: ['#ffffff'],
+            borderWidth: 0.5,
+            data: graph.values,
+            tension: 0.4,
+            borderDash: [5, 2],
+            cubicInterpolationMode: 'monotone',
+            borderRadius: 4,
+        },
+    ]
+    if (previousMonth) {
+        dataSets.push({
+            label: 'Previous month',
+            fill: true,
+            backgroundColor: ['rgba(25,118,210,0.5)'],
+            borderColor: ['#1976d2'],
+            borderWidth: 0.5,
+            data: previousMonth.values,
+            tension: 0.4,
+            borderDash: [5, 1],
+            cubicInterpolationMode: 'monotone',
+            borderRadius: 4,
+        })
+    }
 
     const data = {
         _id: graph._id,
         labels: graph.days || [],
         title: moment(`${graph.year}-${graph.month}`).format('MMMM-YYYY'),
-        datasets: [
-            {
-                fill: true,
-                backgroundColor: ['rgba(255,255,255,0.7)'],
-                borderColor: ['#ffffff'],
-                borderWidth: 0.5,
-                data: graph.values,
-                tension: 0.4,
-                borderDash: [5, 2],
-                cubicInterpolationMode: 'monotone',
-                borderRadius: 4,
-            },
-        ],
+        datasets: dataSets,
     }
 
+    let delayed
+
     const options = {
+        animation: {
+            onComplete: () => {
+                delayed = true
+            },
+            delay: context => {
+                let delay = 0
+                if (
+                    context.type === 'data' &&
+                    context.mode === 'default' &&
+                    !delayed
+                ) {
+                    delay = context.dataIndex * 300 + context.datasetIndex * 100
+                }
+                return delay
+            },
+        },
+        title: {
+            color: 'red',
+        },
         scales: {
             y: {
                 suggestedMin: 0,
@@ -48,7 +83,10 @@ function SingleChart(props) {
         },
         plugins: {
             legend: {
-                display: false,
+                display: Boolean(previousMonth),
+                labels: {
+                    color: 'white',
+                },
             },
             title: {
                 color: 'white',
@@ -56,6 +94,9 @@ function SingleChart(props) {
                 text: moment(`${graph.year}-${graph.month}`).format(
                     'MMMM-YYYY'
                 ),
+            },
+            labels: {
+                color: 'red',
             },
         },
     }

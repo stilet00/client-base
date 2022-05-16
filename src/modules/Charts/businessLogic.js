@@ -209,27 +209,6 @@ export const useChartsContainer = user => {
     }
 }
 
-export const useSingleChart = ({
-    graph,
-    index,
-    deleteGraph,
-    onValueSubmit,
-}) => {
-    function onChartChange(data) {
-        let newArray = graph.values
-        newArray[data.selectedDate - 1] = data.value
-        let newGraph = { ...graph, values: newArray }
-        onValueSubmit(newGraph)
-    }
-
-    return {
-        onChartChange,
-        index,
-        graph,
-        deleteGraph,
-    }
-}
-
 export const useChartForm = ({ onMonthSubmit, year }) => {
     const [months, setMonths] = useState([])
 

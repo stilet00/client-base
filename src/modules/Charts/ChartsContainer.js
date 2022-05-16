@@ -7,6 +7,7 @@ import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirm
 import moment from 'moment'
 import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
+import { currentMonth } from '../../constants/constants'
 
 function ChartsContainer({ user }) {
     const {
@@ -41,6 +42,11 @@ function ChartsContainer({ user }) {
                     <ul className={'scrolled-container'}>
                         {months.map((month, index) => (
                             <SingleChart
+                                previousMonth={
+                                    month.month === moment().format('MM')
+                                        ? months[index + 1]
+                                        : null
+                                }
                                 graph={month}
                                 index={index}
                                 key={index}
