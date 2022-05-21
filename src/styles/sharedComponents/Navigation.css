@@ -1,89 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .App-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: calc(10px + 2vmin);
-    background: rgba(255, 255, 255, 0.7);
-    background-size: cover;
-    margin-bottom: 20px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-.App-header h5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  background: rgba(255, 255, 255, 0.7);
+  background-size: cover;
+  margin-bottom: 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px; }
+  .App-header h5 {
     flex-grow: 2;
     letter-spacing: 0.1rem;
     font-weight: bold;
     color: rgba(0, 0, 0, 0.4);
-    text-shadow: 0 1px 0 rgba(183, 179, 179, 0.5);
-}
-.App-header .MuiBottomNavigation-root {
-    background: transparent;
-}
-.App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {
-    text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.04);
-}
-@media (max-width: 839px) {
+    text-shadow: 0 1px 0 rgba(183, 179, 179, 0.5); }
+  .App-header .MuiBottomNavigation-root {
+    background: transparent; }
+    .App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {
+      text-decoration: none;
+      background-color: rgba(0, 0, 0, 0.04); }
+  @media (max-width: 839px) {
     .App-header {
-        justify-content: flex-start;
-    }
-}
-.App-header .header_nav {
+      justify-content: flex-start; } }
+  .App-header .header_nav {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-}
-.App-header .header_nav .MuiListItem-root {
-    width: auto;
-}
+    justify-content: space-evenly; }
+    .App-header .header_nav .MuiListItem-root {
+      width: auto; }
 
 .fallDown-menu {
-    background: url('/src/images/menu-background.png');
-    background-size: cover;
-    background-repeat: repeat;
-    will-change: auto;
-}
+  background: url("/src/images/menu-background.png");
+  background-size: cover;
+  background-repeat: repeat;
+  will-change: auto; }
 
 .MuiDrawer-paper {
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px; }
 
 .logged-user {
-    position: relative;
-    margin: 0;
-    font-weight: bold;
-    font-size: 15px;
-    font-style: italic;
-}
-.logged-user:after {
-    content: '';
+  position: relative;
+  margin: 0;
+  font-weight: bold;
+  font-size: 15px;
+  font-style: italic; }
+  .logged-user:after {
+    content: "";
     position: absolute;
     display: block;
     bottom: 0;
     right: -20px;
     width: 20px;
-    height: 50%;
-}
+    height: 50%; }
 
 .user-email {
-    display: block;
-    box-sizing: border-box;
-    height: 32px;
-    margin-top: 5px;
-    padding: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.23);
-    border-radius: 5px;
-    color: #000000;
-    font-style: normal;
-}
+  display: block;
+  box-sizing: border-box;
+  height: 32px;
+  margin-top: 5px;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 5px;
+  color: #000000;
+  font-style: normal; }
 
 .sunrise-header {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.8);
-}
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8); }
 
 /*# sourceMappingURL=Navigation.css.map */

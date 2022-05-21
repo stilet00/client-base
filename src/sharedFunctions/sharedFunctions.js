@@ -103,6 +103,9 @@ export function calculatePercentDifference(currentSum, previousSum) {
         currentSum > previousSum
             ? ((currentSum - previousSum) * 100) / currentSum
             : ((previousSum - currentSum) * 100) / previousSum
-
-    return difference.toString() === 'NaN' ? 0 : Math.round(difference)
+    const result = difference.toString() === 'NaN' ? 0 : difference.toFixed(1)
+    if (result[result.length - 1] === '0') {
+        return result.slice(0, result.length - 2)
+    }
+    return result
 }
