@@ -365,16 +365,39 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const calculateMonthTotal = useCallback(() => {
-        let sum = 0
-        translators.forEach(translator => {
-            let translatorsStatistic = translator.statistics
-            sum =
-                sum +
-                Number(calculateTranslatorMonthTotal(translatorsStatistic))
-        })
-        return Math.round(sum)
-    }, [translators])
+    const calculateMonthTotal = useCallback(
+        (categoryName = null) => {
+            let sum = 0
+            if (categoryName) {
+                translators.forEach(translator => {
+                    let translatorsStatistic = translator.statistics
+                    sum =
+                        sum +
+                        Number(
+                            calculateTranslatorMonthTotal(
+                                translatorsStatistic,
+                                true,
+                                currentMonth,
+                                currentYear,
+                                false,
+                                categoryName
+                            )
+                        )
+                })
+            } else {
+                translators.forEach(translator => {
+                    let translatorsStatistic = translator.statistics
+                    sum =
+                        sum +
+                        Number(
+                            calculateTranslatorMonthTotal(translatorsStatistic)
+                        )
+                })
+            }
+            return Math.round(sum)
+        },
+        [translators]
+    )
 
     const suspendTranslator = useCallback(
         translatorId => {

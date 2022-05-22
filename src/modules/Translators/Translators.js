@@ -20,8 +20,9 @@ import {
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'
-import { Checkbox, TextField } from '@mui/material'
+import { Checkbox, Divider, TextField } from '@mui/material'
 import { MobileDatePicker } from '@mui/x-date-pickers'
+import { DEFAULT_CATEGORIES } from '../../constants/constants'
 
 function Translators({ user }) {
     const {
@@ -115,7 +116,50 @@ function Translators({ user }) {
                             }}
                             className={'sum-popover'}
                         >
-                            <Typography sx={{ p: 2 }}>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Dating total: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.dating
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Gifts svadba: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.virtualGiftsSvadba
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Gifts dating: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.virtualGiftsDating
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Phone calls: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.phoneCalls
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Chats total: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.chats
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Letters total: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.letters
+                                )} $`}</b>
+                            </Typography>
+                            <Typography sx={{ p: 2 }} align={'left'}>
+                                {`Penalties: `}
+                                <b>{`${calculateMonthTotal(
+                                    DEFAULT_CATEGORIES.penalties
+                                )} $`}</b>
+                            </Typography>
+                            <Divider />
+                            <Typography sx={{ p: 2 }} align={'left'}>
                                 {`Total by ${moment().format('D MMMM')}: `}{' '}
                                 <b>{`${calculateMonthTotal()} $`}</b>
                             </Typography>

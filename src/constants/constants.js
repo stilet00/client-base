@@ -65,6 +65,17 @@ export const DEFAULT_TRANSLATOR = {
     },
 }
 
+export const DEFAULT_CATEGORIES = {
+    chats: 'chats',
+    dating: 'dating',
+    letters: 'letters',
+    penalties: 'penalties',
+    virtualGiftsSvadba: 'virtualGiftsSvadba',
+    virtualGiftsDating: 'virtualGiftsDating',
+    photoAttachments: 'photoAttachments',
+    phoneCalls: 'phoneCalls',
+}
+
 function fillMonths(year) {
     let monthArray = []
     for (let i = 1; i < 13; i++) {
