@@ -1,10 +1,9 @@
 .add-translator-button {
-    border-radius: 5px;
+  border-radius: 5px;
 }
 
 .bottom-button {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
-
 /*# sourceMappingURL=TranslatorsForm.css.map */

@@ -132,5 +132,5 @@ export function calculatePercentDifference(currentSum, previousSum) {
     if (result[result.length - 1] === '0') {
         return result.slice(0, result.length - 2)
     }
-    return result
+    return Math.round(result)
 }

@@ -6,6 +6,11 @@ import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import { useOverview } from './businessLogic'
 import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, previousMonth } from '../../constants/constants'
+import {
+    faArrowAltCircleUp,
+    faArrowAltCircleDown,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Overview({ user }) {
     const {
@@ -16,50 +21,68 @@ function Overview({ user }) {
         calculateYearTotal,
     } = useOverview(user)
 
+    const yearTotalSum = calculateYearTotal()
+    const monthTotalSum = calculateMonthTotal()
+    const previousMonthTotal = calculateMonthTotal(previousMonth, false)
+    const svadbaMonthTotal = calculateMonthTotal(currentMonth, true, true)
+    const svadbaPreviousMonthTotal = calculateMonthTotal(
+        previousMonth,
+        false,
+        true
+    )
+
     const monthProgress =
-        calculateMonthTotal() > calculateMonthTotal(previousMonth, false) ? (
-            <span className={'green-text'}>{` + ${calculatePercentDifference(
-                calculateMonthTotal(),
-                calculateMonthTotal(previousMonth, false)
-            )} %`}</span>
-        ) : (
-            <span className={'red-text'}>{` - ${calculatePercentDifference(
-                calculateMonthTotal(),
-                calculateMonthTotal(previousMonth, false)
-            )} %`}</span>
-        )
-    const svadbaMonthProgress =
-        calculateMonthTotal(currentMonth, true, true) >
-        calculateMonthTotal(previousMonth, false, true) ? (
-            <span className={'green-text'}>{` + ${calculatePercentDifference(
-                calculateMonthTotal(currentMonth, true, true),
-                calculateMonthTotal(previousMonth, false, true)
-            )} %`}</span>
-        ) : (
-            <span className={'red-text'}>{` - ${calculatePercentDifference(
-                calculateMonthTotal(currentMonth, true, true),
-                calculateMonthTotal(previousMonth, false, true)
-            )} %`}</span>
-        )
-    const datingMonthProgress =
-        calculateMonthTotal() - calculateMonthTotal(currentMonth, true, true) >
-        calculateMonthTotal(previousMonth, false) -
-            calculateMonthTotal(previousMonth, false, true) ? (
+        monthTotalSum > previousMonthTotal ? (
             <span className={'green-text'}>
-                {` + ${calculatePercentDifference(
-                    calculateMonthTotal() -
-                        calculateMonthTotal(currentMonth, true, true),
-                    calculateMonthTotal(previousMonth, false) -
-                        calculateMonthTotal(previousMonth, false, true)
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${calculatePercentDifference(
+                    monthTotalSum,
+                    previousMonthTotal
                 )} %`}
             </span>
         ) : (
             <span className={'red-text'}>
-                {` - ${calculatePercentDifference(
-                    calculateMonthTotal() -
-                        calculateMonthTotal(currentMonth, true, true),
-                    calculateMonthTotal(previousMonth, false) -
-                        calculateMonthTotal(previousMonth, false, true)
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${calculatePercentDifference(
+                    monthTotalSum,
+                    previousMonthTotal
+                )} %`}
+            </span>
+        )
+    const svadbaMonthProgress =
+        svadbaMonthTotal > svadbaPreviousMonthTotal ? (
+            <span className={'green-text'}>
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${calculatePercentDifference(
+                    svadbaMonthTotal,
+                    svadbaPreviousMonthTotal
+                )} %`}
+            </span>
+        ) : (
+            <span className={'red-text'}>
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${calculatePercentDifference(
+                    svadbaMonthTotal,
+                    svadbaPreviousMonthTotal
+                )} %`}
+            </span>
+        )
+    const datingMonthProgress =
+        monthTotalSum - svadbaMonthTotal >
+        previousMonthTotal - svadbaPreviousMonthTotal ? (
+            <span className={'green-text'}>
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${calculatePercentDifference(
+                    monthTotalSum - svadbaMonthTotal,
+                    previousMonthTotal - svadbaPreviousMonthTotal
+                )} %`}
+            </span>
+        ) : (
+            <span className={'red-text'}>
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${calculatePercentDifference(
+                    monthTotalSum - svadbaMonthTotal,
+                    previousMonthTotal - svadbaPreviousMonthTotal
                 )} %`}
             </span>
         )
@@ -95,7 +118,7 @@ function Overview({ user }) {
                                         <tr>
                                             <td>Month balance</td>
                                             <td>
-                                                {calculateYearTotal() ? (
+                                                {yearTotalSum ? (
                                                     <>
                                                         <span
                                                             className={
@@ -103,7 +126,7 @@ function Overview({ user }) {
                                                             }
                                                         >
                                                             <b>
-                                                                {`${calculateMonthTotal()} $`}
+                                                                {`${monthTotalSum} $`}
                                                             </b>
                                                         </span>
                                                         {monthProgress}
@@ -116,18 +139,14 @@ function Overview({ user }) {
                                         <tr>
                                             <td>Svadba balance</td>
                                             <td>
-                                                {calculateYearTotal() ? (
+                                                {yearTotalSum ? (
                                                     <>
                                                         <span
                                                             className={
                                                                 'blue-text'
                                                             }
                                                         >
-                                                            {`${calculateMonthTotal(
-                                                                currentMonth,
-                                                                true,
-                                                                true
-                                                            )} $`}
+                                                            {`${svadbaMonthTotal} $`}
                                                         </span>
                                                         {svadbaMonthProgress}
                                                     </>
@@ -139,7 +158,7 @@ function Overview({ user }) {
                                         <tr>
                                             <td>Dating balance</td>
                                             <td>
-                                                {calculateYearTotal() ? (
+                                                {yearTotalSum ? (
                                                     <>
                                                         <span
                                                             className={
@@ -147,12 +166,8 @@ function Overview({ user }) {
                                                             }
                                                         >
                                                             {`${
-                                                                calculateMonthTotal() -
-                                                                calculateMonthTotal(
-                                                                    currentMonth,
-                                                                    true,
-                                                                    true
-                                                                )
+                                                                monthTotalSum -
+                                                                svadbaMonthTotal
                                                             } $`}
                                                         </span>
 
@@ -219,8 +234,8 @@ function Overview({ user }) {
                                     <td>Year's balance</td>
                                     <td>
                                         <b>
-                                            {calculateYearTotal() ? (
-                                                calculateYearTotal() + ' $'
+                                            {yearTotalSum ? (
+                                                yearTotalSum + ' $'
                                             ) : (
                                                 <SmallLoader />
                                             )}
@@ -231,12 +246,11 @@ function Overview({ user }) {
                                     <td>Salary payed</td>
                                     <td>
                                         <b>
-                                            {calculateYearTotal() ? (
+                                            {yearTotalSum ? (
                                                 <span className={'blue-text'}>
                                                     {' '}
                                                     {Math.floor(
-                                                        calculateYearTotal() *
-                                                            0.45
+                                                        yearTotalSum * 0.45
                                                     ) + ' $'}{' '}
                                                 </span>
                                             ) : (
@@ -249,12 +263,11 @@ function Overview({ user }) {
                                     <td>Payments to clients</td>
                                     <td>
                                         <b>
-                                            {calculateYearTotal() ? (
+                                            {yearTotalSum ? (
                                                 <span className={'blue-text'}>
                                                     {' '}
                                                     {Math.floor(
-                                                        calculateYearTotal() *
-                                                            0.1
+                                                        yearTotalSum * 0.1
                                                     ) + ' $'}{' '}
                                                 </span>
                                             ) : (
@@ -267,17 +280,15 @@ function Overview({ user }) {
                                     <td>Total profit</td>
                                     <td>
                                         <b>
-                                            {calculateYearTotal() ? (
+                                            {yearTotalSum ? (
                                                 <span className={'green-text'}>
                                                     {' '}
-                                                    {calculateYearTotal() -
+                                                    {yearTotalSum -
                                                         Math.floor(
-                                                            calculateYearTotal() *
-                                                                0.4
+                                                            yearTotalSum * 0.4
                                                         ) -
                                                         Math.floor(
-                                                            calculateYearTotal() *
-                                                                0.1
+                                                            yearTotalSum * 0.1
                                                         ) +
                                                         ' $'}{' '}
                                                 </span>

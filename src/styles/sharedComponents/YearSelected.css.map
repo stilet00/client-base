@@ -1,7 +1,9 @@
 {
-"version": 3,
-"mappings": "AAAA,kCAAkC;EAChC,YAAY,EAAE,IAAI;;AAGlB,2BAAS;EACP,aAAa,EAAE,eAAc",
-"sources": ["YearSelected.sass"],
-"names": [],
-"file": "YearSelected.css"
+    "version": 3,
+    "mappings": "AAAA,AAAA,iBAAiB,AAAA,iBAAiB,CAAC;EACjC,YAAY,EAAE,IAAI;CAAG;;AAEvB,AACE,mBADiB,AAChB,QAAQ,CAAC;EACR,aAAa,EAAE,IAAI,CAAA,UAAU;CAAG",
+    "sources": [
+        "YearSelected.sass"
+    ],
+    "names": [],
+    "file": "YearSelected.css"
 }

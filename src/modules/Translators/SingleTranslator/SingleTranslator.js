@@ -27,6 +27,11 @@ import {
 import { IconButton, Rating } from '@mui/material'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faArrowAltCircleUp,
+    faArrowAltCircleDown,
+} from '@fortawesome/free-solid-svg-icons'
 
 function SingleTranslator({
     name,
@@ -52,28 +57,28 @@ function SingleTranslator({
         calculateTranslatorDayTotal,
     } = useSingleTranslator(statistics, selectedDate)
 
+    const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
+    const translatorPreviousMonthTotalSum = calculateTranslatorMonthTotal(
+        statistics,
+        false,
+        previousMonth
+    )
+
     const progressPage =
-        calculateTranslatorMonthTotal(statistics) >=
-        calculateTranslatorMonthTotal(statistics, false, previousMonth) ? (
+        translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
             <span className={'green-text'}>
-                {` +${calculatePercentDifference(
-                    calculateTranslatorMonthTotal(statistics),
-                    calculateTranslatorMonthTotal(
-                        statistics,
-                        false,
-                        previousMonth
-                    )
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${calculatePercentDifference(
+                    translatorMonthTotalSum,
+                    translatorPreviousMonthTotalSum
                 )} %`}
             </span>
         ) : (
             <span className={'red-text'}>
-                {` -${calculatePercentDifference(
-                    calculateTranslatorMonthTotal(statistics),
-                    calculateTranslatorMonthTotal(
-                        statistics,
-                        false,
-                        previousMonth
-                    )
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${calculatePercentDifference(
+                    translatorMonthTotalSum,
+                    translatorPreviousMonthTotalSum
                 )} %`}
             </span>
         )
@@ -111,7 +116,7 @@ function SingleTranslator({
                 </Typography>
                 <Typography variant="body2" align={'left'}>
                     Total for {`${moment().format('MMMM')}: `}
-                    <b>{`${calculateTranslatorMonthTotal(statistics)} $`}</b>
+                    <b>{`${translatorMonthTotalSum} $`}</b>
                     {progressPage}
                 </Typography>
                 <Typography variant="body2" align={'left'}>
@@ -146,6 +151,12 @@ function SingleTranslator({
                                     onDragLeave={dragLeaveHandler}
                                     onDrop={e => onBoardDrop(e, _id)}
                                 >
+                                    <Typography variant="caption">
+                                        {`Balance for ${moment(
+                                            `${previousDay}/${currentMonth}/${currentYear}`,
+                                            'D/M/YYYY'
+                                        ).format('DD MMMM')}:`}{' '}
+                                    </Typography>
                                     {clients.filter(client => !client.suspended)
                                         .length ? (
                                         clients
@@ -174,7 +185,9 @@ function SingleTranslator({
                                                         }
                                                         id={client._id}
                                                     >
-                                                        <p>{`${client.name} ${client.surname}`}</p>
+                                                        <p>
+                                                            {`${client.name} ${client.surname}`}
+                                                        </p>
                                                         <IconButton
                                                             color={'primary'}
                                                             variant={
@@ -202,12 +215,6 @@ function SingleTranslator({
                                                                 'clients-list__finance-container'
                                                             }
                                                         >
-                                                            {`Balance for ${moment(
-                                                                `${previousDay}/${currentMonth}/${currentYear}`,
-                                                                'D/M/YYYY'
-                                                            ).format(
-                                                                'DD MMMM'
-                                                            )}:`}{' '}
                                                             <b
                                                                 className={specialColorNeeded(
                                                                     client._id
