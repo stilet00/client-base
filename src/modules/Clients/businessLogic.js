@@ -61,6 +61,26 @@ export const useClientsList = translators => {
         return Math.round(totalClientBalance)
     }
 
+    function getAllAsignedTranslators(clientId, date = moment()) {
+        let arrayOfTranslators = []
+
+        translators.forEach(({ name, surname, clients, suspended }) => {
+            const assignedClient = clients.find(
+                client => client._id === clientId
+            )
+            if (assignedClient && 'suspended' in assignedClient) {
+                if (!assignedClient.suspended && !suspended.status) {
+                    arrayOfTranslators.push(`${name} ${surname}`)
+                }
+            } else if (assignedClient && !('suspended' in assignedClient)) {
+                if (!suspended.status) {
+                    arrayOfTranslators.push(`${name} ${surname}`)
+                }
+            }
+        })
+        return arrayOfTranslators
+    }
+
     function calculateMiddleMonthSum(clientId, date = moment()) {
         let monthSumArray = []
 
@@ -136,5 +156,6 @@ export const useClientsList = translators => {
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
+        getAllAsignedTranslators,
     }
 }

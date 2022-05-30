@@ -90,7 +90,7 @@ export const useOverview = user => {
         }
 
         return yearSum
-    }, [translators])
+    }, [calculateMonthTotal])
 
     return {
         selectedYear,

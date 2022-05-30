@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import Button from '@material-ui/core/Button'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import Drawer from '@material-ui/core/Drawer'
@@ -32,6 +32,7 @@ function ClientsList({
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
+        getAllAsignedTranslators,
     } = useClientsList(translators)
 
     return (
@@ -77,9 +78,7 @@ function ClientsList({
                                         <span className={'blue-text'}>
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span
-                                            className={'green-text margin-left'}
-                                        >
+                                        <span className={'green-text'}>
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleUp}
                                             />
@@ -97,9 +96,7 @@ function ClientsList({
                                         <span className={'blue-text'}>
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span
-                                            className={'red-text margin-left'}
-                                        >
+                                        <span className={'red-text'}>
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleDown}
                                             />
@@ -172,6 +169,17 @@ function ClientsList({
                                             'side-clients-menu__client__balance-container'
                                         }
                                         secondary={previousTotalPage}
+                                    />
+                                    <ListItemText
+                                        className={
+                                            'side-clients-menu__client__balance-container'
+                                        }
+                                        secondary={`Assigned at ${
+                                            getAllAsignedTranslators(client._id)
+                                                .length
+                                        } translators: ${getAllAsignedTranslators(
+                                            client._id
+                                        ).join(', ')}`}
                                     />
                                 </li>
                             )
