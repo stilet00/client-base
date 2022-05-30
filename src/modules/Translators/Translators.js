@@ -1,6 +1,5 @@
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import Button from '@material-ui/core/Button'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
 import SingleTranslator from './SingleTranslator/SingleTranslator'
 import '../../styles/modules/Translators.css'
@@ -23,6 +22,8 @@ import ClientsList from '../Clients/ClientsList/ClientsList'
 import { Checkbox, Divider, TextField } from '@mui/material'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { DEFAULT_CATEGORIES } from '../../constants/constants'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
 
 function Translators({ user }) {
     const {
@@ -101,7 +102,7 @@ function Translators({ user }) {
                             aria-describedby={id}
                             onClick={handleClick}
                             fullWidth
-                            startIcon={<MonetizationOnIcon />}
+                            startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
                         >
                             Show total
                         </Button>

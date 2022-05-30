@@ -31,6 +31,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faArrowAltCircleUp,
     faArrowAltCircleDown,
+    faPersonCircleXmark,
+    faPersonCirclePlus,
 } from '@fortawesome/free-solid-svg-icons'
 
 function SingleTranslator({
@@ -334,9 +336,9 @@ function SingleTranslator({
                     component="span"
                 >
                     {suspended.status ? (
-                        <PersonAddAlt1Icon />
+                        <FontAwesomeIcon icon={faPersonCirclePlus} />
                     ) : (
-                        <PersonRemoveIcon />
+                        <FontAwesomeIcon icon={faPersonCircleXmark} />
                     )}
                 </IconButton>
             </CardActions>

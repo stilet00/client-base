@@ -12,6 +12,7 @@ import { calculatePercentDifference } from '../../../sharedFunctions/sharedFunct
 import {
     faArrowAltCircleUp,
     faArrowAltCircleDown,
+    faListAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -38,7 +39,7 @@ function ClientsList({
             <Button
                 onClick={toggleDrawer('left', true)}
                 fullWidth
-                startIcon={<ListAltIcon />}
+                startIcon={<FontAwesomeIcon icon={faListAlt} />}
             >
                 Show clients
             </Button>

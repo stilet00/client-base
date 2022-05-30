@@ -30,6 +30,8 @@ import {
     Typography,
 } from '@material-ui/core'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -93,7 +95,7 @@ export default function EditBalanceForm({
                 variant={'contained'}
                 onClick={handleOpen}
                 fullWidth
-                startIcon={<AttachMoneyIcon />}
+                startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
                 Edit balance
             </Button>

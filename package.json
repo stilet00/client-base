@@ -1,6 +1,6 @@
 {
-    "name": "Client-base",
-    "version": "2.2.2",
+    "name": "Sunrise agency - client base",
+    "version": "2.2.4",
     "private": true,
     "dependencies": {
         "@date-io/moment": "^1.3.13",

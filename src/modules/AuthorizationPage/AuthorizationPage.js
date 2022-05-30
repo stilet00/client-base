@@ -6,6 +6,8 @@ import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAuthorizationPage } from './businessLogic'
 import styled, { keyframes } from 'styled-components'
 import { bounceIn } from 'react-animations'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons'
 
 const Bounce = styled.div`
     animation: 1s ${keyframes`${bounceIn}`};
@@ -130,6 +132,11 @@ function AuthorizationPage() {
                                     className={'enter-button'}
                                     type={'submit'}
                                     ref={buttonElement}
+                                    startIcon={
+                                        <FontAwesomeIcon
+                                            icon={faRightToBracket}
+                                        />
+                                    }
                                 >
                                     Enter
                                 </StyledButton>

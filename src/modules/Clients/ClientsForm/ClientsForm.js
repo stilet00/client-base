@@ -8,8 +8,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import '../../../styles/modules/ClientsForm.css'
-import FemaleIcon from '@mui/icons-material/Female'
 import { useClientsForm } from '../businessLogic'
+import { faVenus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -53,7 +54,7 @@ export default function ClientsForm(props) {
                 type="button"
                 onClick={handleOpen}
                 fullWidth
-                startIcon={<FemaleIcon />}
+                startIcon={<FontAwesomeIcon icon={faVenus} />}
             >
                 Add client
             </Button>
