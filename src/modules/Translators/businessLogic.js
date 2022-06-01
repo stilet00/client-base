@@ -11,7 +11,8 @@ import {
     currentMonth,
     currentYear,
     DEFAULT_DAY_CLIENT,
-    previousDay,
+    previousMonth,
+    previousYear,
 } from '../../constants/constants'
 
 import {
@@ -485,11 +486,19 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
 
     const [selectedClient, setSelectedClient] = useState(clients[0]._id)
 
-    const [selectedYear, setSelectedYear] = useState(currentYear)
+    const [selectedYear, setSelectedYear] = useState(
+        currentMonth === '1' && moment().format('D') === '1'
+            ? previousYear
+            : currentYear
+    )
 
-    const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+    const [selectedMonth, setSelectedMonth] = useState(
+        moment().format('D') === '1' ? previousMonth : currentMonth
+    )
 
-    const [selectedDay, setSelectedDay] = useState(previousDay)
+    const [selectedDay, setSelectedDay] = useState(
+        moment().subtract(1, 'day').format('D')
+    )
 
     const [currentBalanceDay, setCurrentBalanceDay] = useState(
         findTodayBalance()
@@ -624,6 +633,20 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         return calculateBalanceDayAllClients(day)
     }
 
+    function findYesterdayStatisticObject() {
+        const yearStatistics = statistics.find(
+            item => item.year === moment().format('YYYY')
+        )
+        const monthStatistics = yearStatistics.months.find(
+            (item, index) =>
+                index + 1 === Number(moment().subtract(1, 'day').format('M'))
+        )
+        const yesterdayStatistics = monthStatistics.find(
+            item => item.id === moment().subtract(1, 'day').format('DD MM YYYY')
+        )
+        return yesterdayStatistics
+    }
+
     function findYear(yearFilter = currentYear) {
         return statistics.find(item => item.year === yearFilter)
     }
@@ -634,14 +657,8 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         )
     }
 
-    function findYesterdayBalance() {
-        return findMonth().find(
-            (item, index) => index + 1 === Number(previousDay)
-        )
-    }
-
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayBalance().clients.find(
+        const clientObject = findYesterdayStatisticObject().clients.find(
             item => item.id === clientId
         )
         return clientObject
@@ -676,7 +693,7 @@ export const useSingleTranslator = (statistics, selectedDate) => {
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayBalance().clients.find(
+        const clientObject = findYesterdayStatisticObject().clients.find(
             item => item.id === clientId
         )
 
