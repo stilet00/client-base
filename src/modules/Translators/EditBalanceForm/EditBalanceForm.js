@@ -185,17 +185,16 @@ export default function EditBalanceForm({
                                                 onChange={handleDay}
                                                 label="Day"
                                             >
-                                                {findMonth().map(item => (
-                                                    <MenuItem
-                                                        value={item.id.slice(
-                                                            0,
-                                                            2
-                                                        )}
-                                                        key={item.id}
-                                                    >
-                                                        {item.id.slice(0, 2)}
-                                                    </MenuItem>
-                                                ))}
+                                                {findMonth().map(
+                                                    (item, index) => (
+                                                        <MenuItem
+                                                            value={index + 1}
+                                                            key={item.id}
+                                                        >
+                                                            {index + 1}
+                                                        </MenuItem>
+                                                    )
+                                                )}
                                             </Select>
                                         </FormControl>
                                     </AccordionDetails>
