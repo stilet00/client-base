@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { MESSAGES } from '../../constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {

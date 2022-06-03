@@ -11,8 +11,13 @@
       -ms-flex-align: center;
           align-items: center;
   padding: 10px;
-  min-width: 280px;
-  max-width: 80vw;
+  max-width: 40vw;
+}
+
+@media (max-width: 500px) {
+  .side-clients-menu {
+    max-width: 70vw;
+  }
 }
 
 .side-clients-menu h3 {

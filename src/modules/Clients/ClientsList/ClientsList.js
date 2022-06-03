@@ -1,6 +1,5 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
-import ListAltIcon from '@mui/icons-material/ListAlt'
 import Drawer from '@material-ui/core/Drawer'
 import WomanIcon from '@mui/icons-material/Woman'
 import ListItemText from '@material-ui/core/ListItemText'

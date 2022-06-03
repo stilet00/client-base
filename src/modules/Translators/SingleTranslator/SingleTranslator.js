@@ -9,8 +9,6 @@ import {
 } from '@material-ui/core'
 import EditBalanceForm from '../EditBalanceForm/EditBalanceForm'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import { Typography } from '@material-ui/core'
 import moment from 'moment'
 import { useSingleTranslator } from '../businessLogic'
