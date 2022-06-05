@@ -511,9 +511,10 @@ export const useTranslators = user => {
 
 export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     const { open, handleOpen, handleClose } = useModal()
-    console.log(clients)
 
-    const [selectedClient, setSelectedClient] = useState(clients[0]._id)
+    const [selectedClient, setSelectedClient] = useState(
+        clients.filter(client => !client.suspended)[0]._id
+    )
 
     const [selectedYear, setSelectedYear] = useState(
         currentMonth === '1' && moment().format('D') === '1'
