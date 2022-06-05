@@ -18,6 +18,31 @@
   height: 250px;
 }
 
+.form-container_penalty-form {
+  height: 280px;
+  width: 300px;
+}
+
+.form-container_penalty-form form {
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.form-container_penalty-form .penalty-inputs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  width: 100%;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
 .modal-wrapper {
   width: 100%;
 }

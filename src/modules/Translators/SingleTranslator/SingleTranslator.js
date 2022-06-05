@@ -15,6 +15,7 @@ import { useSingleTranslator } from '../businessLogic'
 import {
     calculatePercentDifference,
     calculateTranslatorMonthTotal,
+    getSumFromArray,
 } from '../../../sharedFunctions/sharedFunctions'
 import {
     currentMonth,
@@ -32,6 +33,7 @@ import {
     faPersonCircleXmark,
     faPersonCirclePlus,
 } from '@fortawesome/free-solid-svg-icons'
+import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
 
 function SingleTranslator({
     name,
@@ -47,7 +49,8 @@ function SingleTranslator({
     suspended,
     suspendClient,
     selectedDate,
-    translatorOr,
+    addPersonalPenaltyToTranslator,
+    personalPenalties,
 }) {
     const {
         calculateSumByClient,
@@ -56,7 +59,8 @@ function SingleTranslator({
         calculateMiddleMonthSum,
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
-    } = useSingleTranslator(statistics, selectedDate)
+        calculatePersonalPenalties,
+    } = useSingleTranslator(statistics, selectedDate, personalPenalties)
 
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
     const translatorPreviousMonthTotalSum = calculateTranslatorMonthTotal(
@@ -135,6 +139,18 @@ function SingleTranslator({
                     ) : (
                         'No data'
                     )}
+                    {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
+                        .length ? (
+                        <Typography variant="body2" align={'left'}>
+                            Penalties for {`${moment().format('MMMM')}: `}
+                            <span className="red-text">
+                                {`${getSumFromArray(
+                                    calculatePersonalPenalties()
+                                        .thisMonthsPenaltiesArray
+                                )} $`}
+                            </span>
+                        </Typography>
+                    ) : null}
                 </Typography>
                 {suspended.status ? null : (
                     <>
@@ -311,6 +327,19 @@ function SingleTranslator({
                                         selectedDate.format('M')
                                     )} $`}</b>
                                 </Typography>
+                                {calculatePersonalPenalties()
+                                    ?.selectedDatePenaltiesArray.length ? (
+                                    <Typography variant="body2" align={'left'}>
+                                        Penalties for{' '}
+                                        {`${selectedDate.format('MMMM')}: `}
+                                        <span className="red-text">
+                                            {`${getSumFromArray(
+                                                calculatePersonalPenalties()
+                                                    .selectedDatePenaltiesArray
+                                            )} $`}
+                                        </span>
+                                    </Typography>
+                                ) : null}
                             </AccordionDetails>
                         </Accordion>
                     </>
@@ -342,6 +371,12 @@ function SingleTranslator({
                         <FontAwesomeIcon icon={faPersonCircleXmark} />
                     )}
                 </IconButton>
+                <PersonalPenaltyForm
+                    id={_id}
+                    addPersonalPenaltyToTranslator={
+                        addPersonalPenaltyToTranslator
+                    }
+                />
             </CardActions>
         </Card>
     )

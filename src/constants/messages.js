@@ -63,4 +63,9 @@ export const MESSAGES = {
         text: 'Changes have been saved',
         status: true,
     },
+
+    personalPenaltyApplied: {
+        text: 'Penalty has been applied',
+        status: true,
+    },
 }

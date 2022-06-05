@@ -17,6 +17,12 @@ export const DEFAULT_CLIENT = {
     suspended: false,
 }
 
+export const DEFAULT_PENALTY = {
+    id: moment().format('DD MM YYYY'),
+    amount: 0,
+    description: '',
+}
+
 class DEFAULT_DAY_BALANCE {
     constructor(year, month, day) {
         this.id = moment(year + month + day, 'YYYYMMDD').format('DD MM YYYY')
@@ -64,6 +70,7 @@ export const DEFAULT_TRANSLATOR = {
         status: false,
         time: null,
     },
+    personalPenalties: [],
 }
 
 export const DEFAULT_CATEGORIES = {

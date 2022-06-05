@@ -93,7 +93,6 @@ export default function EditBalanceForm({
                 size={'small'}
                 variant={'contained'}
                 onClick={handleOpen}
-                fullWidth
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
                 Edit balance

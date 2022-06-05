@@ -58,6 +58,7 @@ function Translators({ user }) {
         changeFilter,
         filterTranslators,
         translatorFilter,
+        addPersonalPenaltyToTranslator,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -220,6 +221,9 @@ function Translators({ user }) {
                             suspendTranslator={suspendTranslator}
                             suspendClient={suspendClient}
                             selectedDate={translatorFilter.date}
+                            addPersonalPenaltyToTranslator={
+                                addPersonalPenaltyToTranslator
+                            }
                         />
                     ))
                 ) : loading ? (
