@@ -34,6 +34,7 @@ import {
     faPersonCirclePlus,
 } from '@fortawesome/free-solid-svg-icons'
 import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
+import PenaltiesList from '../PenaltiesList/PenaltiesList'
 
 function SingleTranslator({
     name,
@@ -143,12 +144,19 @@ function SingleTranslator({
                         .length ? (
                         <Typography variant="body2" align={'left'}>
                             Penalties for {`${moment().format('MMMM')}: `}
-                            <span className="red-text">
+                            <PenaltiesList
+                                penaltiesArray={personalPenalties.filter(
+                                    penalty =>
+                                        penalty.date.slice(3) ===
+                                        moment().format('MM YYYY')
+                                )}
+                            />
+                            {/* <span className="red-text">
                                 {`${getSumFromArray(
                                     calculatePersonalPenalties()
                                         .thisMonthsPenaltiesArray
                                 )} $`}
-                            </span>
+                            </span> */}
                         </Typography>
                     ) : null}
                 </Typography>
@@ -332,6 +340,15 @@ function SingleTranslator({
                                     <Typography variant="body2" align={'left'}>
                                         Penalties for{' '}
                                         {`${selectedDate.format('MMMM')}: `}
+                                        <PenaltiesList
+                                            penaltiesArray={personalPenalties.filter(
+                                                penalty =>
+                                                    penalty.date.slice(3) ===
+                                                    moment(selectedDate).format(
+                                                        'MM YYYY'
+                                                    )
+                                            )}
+                                        />
                                         <span className="red-text">
                                             {`${getSumFromArray(
                                                 calculatePersonalPenalties()

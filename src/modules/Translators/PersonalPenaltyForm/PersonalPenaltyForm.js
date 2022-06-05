@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
 import {
-    faHandHoldingDollar,
     faCommentsDollar,
     faDollarSign,
 } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +15,7 @@ import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_PENALTY } from '../../../constants/constants'
 import { v4 as uuidv4 } from 'uuid'
+import GavelIcon from '@mui/icons-material/Gavel'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -54,7 +54,7 @@ export default function PersonalPenaltyForm({
                 size={'small'}
                 color="error"
             >
-                <FontAwesomeIcon icon={faHandHoldingDollar} />
+                <GavelIcon />
             </IconButton>
             <Modal
                 aria-labelledby="transition-modal-title"

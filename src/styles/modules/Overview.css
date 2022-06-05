@@ -3,7 +3,7 @@
   overflow-y: initial;
 }
 
-table {
+.table-container table {
   margin: 10px auto;
   min-height: 200px;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
@@ -15,22 +15,22 @@ table {
   padding: 1px;
 }
 
-th, td:first-child {
+.table-container th, .table-container td:first-child {
   background: #797272;
   color: white;
   padding: 10px 20px;
 }
 
-td {
+.table-container td {
   width: 50%;
   background: rgba(183, 179, 179, 0.5);
 }
 
-th:first-child, td:first-child {
+.table-container th:first-child, .table-container td:first-child {
   text-align: left;
 }
 
-th:nth-child(2n), td:nth-child(2n) {
+.table-container th:nth-child(2n), .table-container td:nth-child(2n) {
   padding: 10px 20px;
   text-align: right;
 }
