@@ -3,7 +3,7 @@ import '../../styles/modules/Footer.css'
 function Footer() {
     return (
         <div className={'footer'}>
-            <p>Made by Stilet 2021 - 2022. Version 2.2.4</p>
+            <p>Made by Stilet 2021 - 2022. Version 2.2.5</p>
         </div>
     )
 }
