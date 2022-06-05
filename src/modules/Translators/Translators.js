@@ -24,6 +24,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { DEFAULT_CATEGORIES } from '../../constants/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
+import CountUp from 'react-countup'
 
 function Translators({ user }) {
     const {
@@ -162,7 +163,14 @@ function Translators({ user }) {
                             <Divider />
                             <Typography sx={{ p: 2 }} align={'left'}>
                                 {`Total by ${moment().format('D MMMM')}: `}{' '}
-                                <b>{`${calculateMonthTotal()} $`}</b>
+                                <b>
+                                    <CountUp
+                                        duration={1.75}
+                                        end={calculateMonthTotal()}
+                                        separator=" "
+                                        prefix="$"
+                                    />
+                                </b>
                             </Typography>
                         </Popover>
                         <div className="gallery-menu__filters">

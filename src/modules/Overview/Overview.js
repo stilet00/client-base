@@ -11,6 +11,7 @@ import {
     faArrowAltCircleDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import CountUp from 'react-countup'
 
 function Overview({ user }) {
     const {
@@ -35,36 +36,60 @@ function Overview({ user }) {
         monthTotalSum > previousMonthTotal ? (
             <span className={'green-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum,
-                    previousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={2}
+                    end={calculatePercentDifference(
+                        monthTotalSum,
+                        previousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
             <span className={'red-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum,
-                    previousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={2}
+                    end={calculatePercentDifference(
+                        monthTotalSum,
+                        previousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     const svadbaMonthProgress =
         svadbaMonthTotal > svadbaPreviousMonthTotal ? (
             <span className={'green-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    svadbaMonthTotal,
-                    svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={1}
+                    end={calculatePercentDifference(
+                        svadbaMonthTotal,
+                        svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
             <span className={'red-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    svadbaMonthTotal,
-                    svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={1}
+                    end={calculatePercentDifference(
+                        svadbaMonthTotal,
+                        svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     const datingMonthProgress =
@@ -72,18 +97,28 @@ function Overview({ user }) {
         previousMonthTotal - svadbaPreviousMonthTotal ? (
             <span className={'green-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum - svadbaMonthTotal,
-                    previousMonthTotal - svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    end={calculatePercentDifference(
+                        monthTotalSum - svadbaMonthTotal,
+                        previousMonthTotal - svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
             <span className={'red-text'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum - svadbaMonthTotal,
-                    previousMonthTotal - svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    end={calculatePercentDifference(
+                        monthTotalSum - svadbaMonthTotal,
+                        previousMonthTotal - svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     return (
@@ -125,9 +160,15 @@ function Overview({ user }) {
                                                                 'blue-text'
                                                             }
                                                         >
-                                                            <b>
-                                                                {`${monthTotalSum} $`}
-                                                            </b>
+                                                            <CountUp
+                                                                duration={0.75}
+                                                                delay={2}
+                                                                end={
+                                                                    monthTotalSum
+                                                                }
+                                                                separator=" "
+                                                                prefix="$"
+                                                            />
                                                         </span>
                                                         {monthProgress}
                                                     </>
@@ -146,7 +187,15 @@ function Overview({ user }) {
                                                                 'blue-text'
                                                             }
                                                         >
-                                                            {`${svadbaMonthTotal} $`}
+                                                            <CountUp
+                                                                duration={0.75}
+                                                                delay={1}
+                                                                end={
+                                                                    svadbaMonthTotal
+                                                                }
+                                                                separator=" "
+                                                                prefix="$"
+                                                            />
                                                         </span>
                                                         {svadbaMonthProgress}
                                                     </>
@@ -165,10 +214,15 @@ function Overview({ user }) {
                                                                 'blue-text'
                                                             }
                                                         >
-                                                            {`${
-                                                                monthTotalSum -
-                                                                svadbaMonthTotal
-                                                            } $`}
+                                                            <CountUp
+                                                                duration={0.75}
+                                                                end={
+                                                                    monthTotalSum -
+                                                                    svadbaMonthTotal
+                                                                }
+                                                                separator=" "
+                                                                prefix="$"
+                                                            />
                                                         </span>
 
                                                         {datingMonthProgress}

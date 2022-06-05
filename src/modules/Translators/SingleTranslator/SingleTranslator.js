@@ -47,6 +47,7 @@ function SingleTranslator({
     suspended,
     suspendClient,
     selectedDate,
+    translatorOr,
 }) {
     const {
         calculateSumByClient,
@@ -126,9 +127,11 @@ function SingleTranslator({
                 <Typography variant="body2" align={'left'}>
                     {`For yesterday: `}
                     {calculateTranslatorYesterdayTotal(statistics) ? (
-                        <b>{`${calculateTranslatorYesterdayTotal(
-                            statistics
-                        )} $`}</b>
+                        <b>
+                            {`${calculateTranslatorYesterdayTotal(
+                                statistics
+                            )} $`}
+                        </b>
                     ) : (
                         'No data'
                     )}
