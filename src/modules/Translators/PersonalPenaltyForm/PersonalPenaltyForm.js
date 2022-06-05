@@ -15,6 +15,7 @@ import {
 import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_PENALTY } from '../../../constants/constants'
+import { v4 as uuidv4 } from 'uuid'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -74,7 +75,10 @@ export default function PersonalPenaltyForm({
                         <form
                             onSubmit={e => {
                                 e.preventDefault()
-                                addPersonalPenaltyToTranslator(id, penalty)
+                                addPersonalPenaltyToTranslator(id, {
+                                    ...penalty,
+                                    _id: uuidv4(),
+                                })
                                 handleClose()
                             }}
                         >

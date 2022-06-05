@@ -658,12 +658,11 @@ export const useSingleTranslator = (
     const calculatePersonalPenalties = () => {
         const thisMonthsPenaltiesArray = []
         const selectedDatePenaltiesArray = []
-
         personalPenalties?.forEach(penalty => {
-            if (moment().format('MM YYYY') === penalty.id.slice(3)) {
+            if (moment().format('MM YYYY') === penalty.date.slice(3)) {
                 thisMonthsPenaltiesArray.push(Number(penalty.amount))
             }
-            if (selectedDate.format('MM YYYY') === penalty.id.slice(3)) {
+            if (selectedDate.format('MM YYYY') === penalty.date.slice(3)) {
                 selectedDatePenaltiesArray.push(Number(penalty.amount))
             }
         })

@@ -18,7 +18,7 @@ export const DEFAULT_CLIENT = {
 }
 
 export const DEFAULT_PENALTY = {
-    id: moment().format('DD MM YYYY'),
+    date: moment().format('DD MM YYYY'),
     amount: 0,
     description: '',
 }
