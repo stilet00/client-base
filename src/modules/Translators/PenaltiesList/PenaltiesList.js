@@ -33,10 +33,12 @@ export default function PenaltiesList({ penaltiesArray }) {
                 aria-describedby={id}
                 onClick={handleClick}
                 color={'error'}
-                variant="outlined"
                 style={{
-                    padding: '2px',
+                    padding: '0 5px',
+                    minWidth: '0',
                 }}
+                size="small"
+                variant="contained"
             >
                 {`${sum} $`}
             </Button>
