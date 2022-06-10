@@ -34,8 +34,10 @@ export default function PenaltiesList({ penaltiesArray }) {
                 onClick={handleClick}
                 color={'error'}
                 style={{
-                    padding: '0 5px',
+                    border: '1px solid white',
+                    padding: '0 20px',
                     minWidth: '0',
+                    boxShadow: 'none',
                 }}
                 size="small"
                 variant="contained"

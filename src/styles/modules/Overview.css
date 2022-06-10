@@ -3,38 +3,6 @@
   overflow-y: initial;
 }
 
-.table-container table {
-  margin: 10px auto;
-  min-height: 200px;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-  font-size: 14px;
-  text-align: center;
-  width: 95%;
-  background-color: #fcfcfc;
-  border-radius: 5px;
-  padding: 1px;
-}
-
-.table-container th, .table-container td:first-child {
-  background: #797272;
-  color: white;
-  padding: 10px 20px;
-}
-
-.table-container td {
-  width: 50%;
-  background: rgba(183, 179, 179, 0.5);
-}
-
-.table-container th:first-child, .table-container td:first-child {
-  text-align: left;
-}
-
-.table-container th:nth-child(2n), .table-container td:nth-child(2n) {
-  padding: 10px 20px;
-  text-align: right;
-}
-
 .green-text {
   margin-left: 0.5rem;
   font-weight: bold;
@@ -50,5 +18,10 @@
 .blue-text {
   font-weight: bold;
   color: #1976d2;
+}
+
+.styled-text-numbers {
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 /*# sourceMappingURL=Overview.css.map */
