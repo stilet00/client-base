@@ -74,10 +74,18 @@ function ClientsList({
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'green-text'}>
+                                        <span
+                                            className={
+                                                'green-text styled-text-numbers'
+                                            }
+                                        >
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleUp}
                                             />
@@ -92,10 +100,18 @@ function ClientsList({
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'red-text'}>
+                                        <span
+                                            className={
+                                                'red-text styled-text-numbers'
+                                            }
+                                        >
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleDown}
                                             />
@@ -109,7 +125,11 @@ function ClientsList({
                             const totalPage = (
                                 <span>
                                     {`Balance for ${moment().format('MMMM')}: `}
-                                    <span className={'blue-text'}>
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
                                         {`${memoizedMonthSum} $`}
                                     </span>
                                 </span>
@@ -120,7 +140,11 @@ function ClientsList({
                                     {`Balance for ${moment()
                                         .subtract(1, 'month')
                                         .format('MMMM')}: `}
-                                    <span className={'blue-text'}>
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
                                         {`${memoizedPreviousMonthSum} $`}
                                     </span>
                                 </span>

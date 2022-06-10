@@ -27,10 +27,6 @@
   text-shadow: 0 1px 0 rgba(183, 179, 179, 0.5);
 }
 
-.App-header .MuiBottomNavigation-root {
-  background: transparent;
-}
-
 .App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {
   text-decoration: none;
   background-color: rgba(0, 0, 0, 0.04);

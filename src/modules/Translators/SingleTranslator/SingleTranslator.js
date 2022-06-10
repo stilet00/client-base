@@ -72,7 +72,7 @@ function SingleTranslator({
 
     const progressPage =
         translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
-            <span className={'green-text'}>
+            <span className={'green-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
                 {` ${calculatePercentDifference(
                     translatorMonthTotalSum,
@@ -80,7 +80,7 @@ function SingleTranslator({
                 )} %`}
             </span>
         ) : (
-            <span className={'red-text'}>
+            <span className={'red-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
                 {` ${calculatePercentDifference(
                     translatorMonthTotalSum,
@@ -110,29 +110,54 @@ function SingleTranslator({
                     {`${name} ${surname}`}
                 </Typography>
                 {suspended.time ? (
-                    <Typography variant="caption" align={'left'}>
+                    <Typography
+                        variant="caption"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
                         {suspended.status
                             ? `Suspended since: `
                             : `Activated since: `}
                         <b>{suspended.time}</b>
                     </Typography>
                 ) : null}
-                <Typography variant="body1" align={'left'}>
-                    <i>Balance:</i>
-                </Typography>
-                <Typography variant="body2" align={'left'}>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}
+                >
                     Total for {`${moment().format('MMMM')}: `}
-                    <b>{`${translatorMonthTotalSum} $`}</b>
                     {progressPage}
+                    <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
                 </Typography>
-                <Typography variant="body2" align={'left'}>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}
+                >
                     Middle for {`${moment().format('MMMM')}: `}
                     <b>{`${calculateMiddleMonthSum()} $ `}</b>
                 </Typography>
-                <Typography variant="body2" align={'left'}>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}
+                >
                     {`For yesterday: `}
                     {calculateTranslatorYesterdayTotal(statistics) ? (
-                        <b>
+                        <b className="styled-text-numbers">
                             {`${calculateTranslatorYesterdayTotal(
                                 statistics
                             )} $`}
@@ -140,26 +165,27 @@ function SingleTranslator({
                     ) : (
                         'No data'
                     )}
-                    {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
-                        .length ? (
-                        <Typography variant="body2" align={'left'}>
-                            Penalties for {`${moment().format('MMMM')}: `}
-                            <PenaltiesList
-                                penaltiesArray={personalPenalties.filter(
-                                    penalty =>
-                                        penalty.date.slice(3) ===
-                                        moment().format('MM YYYY')
-                                )}
-                            />
-                            {/* <span className="red-text">
-                                {`${getSumFromArray(
-                                    calculatePersonalPenalties()
-                                        .thisMonthsPenaltiesArray
-                                )} $`}
-                            </span> */}
-                        </Typography>
-                    ) : null}
                 </Typography>
+                {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
+                    .length ? (
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        Penalties for {`${moment().format('MMMM')}: `}
+                        <PenaltiesList
+                            penaltiesArray={personalPenalties.filter(
+                                penalty =>
+                                    penalty.date.slice(3) ===
+                                    moment().format('MM YYYY')
+                            )}
+                        />
+                    </Typography>
+                ) : null}
                 {suspended.status ? null : (
                     <>
                         <Accordion>
@@ -349,7 +375,7 @@ function SingleTranslator({
                                                     )
                                             )}
                                         />
-                                        <span className="red-text">
+                                        <span className="red-text styled-text-numbers">
                                             {`${getSumFromArray(
                                                 calculatePersonalPenalties()
                                                     .selectedDatePenaltiesArray

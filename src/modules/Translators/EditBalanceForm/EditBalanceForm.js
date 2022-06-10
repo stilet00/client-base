@@ -31,6 +31,8 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { styled } from '@mui/material/styles'
+import { purple, blue, blueGrey } from '@mui/material/colors'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -86,9 +88,17 @@ export default function EditBalanceForm({
     })
     const classes = useStyles()
 
+    const ColorButton = styled(Button)(({ theme }) => ({
+        color: theme.palette.getContrastText(purple[500]),
+        backgroundColor: blue[500],
+        '&:hover': {
+            backgroundColor: blue[700],
+        },
+    }))
+
     return (
         <>
-            <Button
+            <ColorButton
                 type="button"
                 size={'small'}
                 variant={'contained'}
@@ -96,7 +106,7 @@ export default function EditBalanceForm({
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
                 Edit balance
-            </Button>
+            </ColorButton>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
