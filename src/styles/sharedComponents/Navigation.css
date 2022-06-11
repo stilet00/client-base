@@ -24,7 +24,7 @@
   letter-spacing: 0.1rem;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.4);
-  text-shadow: 0 1px 0 rgba(183, 179, 179, 0.5);
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 .App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {

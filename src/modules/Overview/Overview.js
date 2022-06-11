@@ -307,18 +307,16 @@ function Overview({ user }) {
                                                     Active translators
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    <b>
-                                                        {translators.length ? (
-                                                            translators.filter(
-                                                                translator =>
-                                                                    !translator
-                                                                        .suspended
-                                                                        .status
-                                                            ).length
-                                                        ) : (
-                                                            <SmallLoader />
-                                                        )}
-                                                    </b>
+                                                    {translators.length ? (
+                                                        translators.filter(
+                                                            translator =>
+                                                                !translator
+                                                                    .suspended
+                                                                    .status
+                                                        ).length
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                         </>
@@ -329,13 +327,11 @@ function Overview({ user }) {
                                             Year's balance
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            <b>
-                                                {yearTotalSum ? (
-                                                    yearTotalSum + ' $'
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </b>
+                                            {yearTotalSum ? (
+                                                yearTotalSum + ' $'
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     <StyledTableRow>
@@ -343,22 +339,20 @@ function Overview({ user }) {
                                             Salary payed
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            <b>
-                                                {yearTotalSum ? (
-                                                    <span
-                                                        className={
-                                                            'blue-text styled-text-numbers'
-                                                        }
-                                                    >
-                                                        {' '}
-                                                        {Math.floor(
-                                                            yearTotalSum * 0.45
-                                                        ) + ' $'}{' '}
-                                                    </span>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </b>
+                                            {yearTotalSum ? (
+                                                <span
+                                                    className={
+                                                        'blue-text styled-text-numbers'
+                                                    }
+                                                >
+                                                    {' '}
+                                                    {Math.floor(
+                                                        yearTotalSum * 0.45
+                                                    ) + ' $'}{' '}
+                                                </span>
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     <StyledTableRow>
@@ -366,22 +360,20 @@ function Overview({ user }) {
                                             Payments to clients
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            <b>
-                                                {yearTotalSum ? (
-                                                    <span
-                                                        className={
-                                                            'blue-text styled-text-numbers'
-                                                        }
-                                                    >
-                                                        {' '}
-                                                        {Math.floor(
-                                                            yearTotalSum * 0.1
-                                                        ) + ' $'}{' '}
-                                                    </span>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </b>
+                                            {yearTotalSum ? (
+                                                <span
+                                                    className={
+                                                        'blue-text styled-text-numbers'
+                                                    }
+                                                >
+                                                    {' '}
+                                                    {Math.floor(
+                                                        yearTotalSum * 0.1
+                                                    ) + ' $'}{' '}
+                                                </span>
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     <StyledTableRow>
