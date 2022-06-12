@@ -2,14 +2,14 @@
 .balance-form {
   width: 90vw;
   max-width: 500px;
-  min-height: 700px;
-  background: url("/src/images/menu-background.png");
-  background-size: cover;
-  background-repeat: repeat;
+  min-height: 620px;
+  padding: 5px 10px;
+  background: white;
   overflow-y: scroll;
 }
 
 .balance-form h2 {
+  padding: 8px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -55,7 +55,6 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   width: 100%;
-  padding: 8px;
 }
 
 .balance-form__finances-input {
@@ -68,14 +67,7 @@
 }
 
 .balance-form__actions {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  width: 100%;
-  padding: 8px;
+  margin-top: auto;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
