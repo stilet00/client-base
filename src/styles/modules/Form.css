@@ -6,12 +6,9 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 20px;
-  background-color: white;
+  background-color: #ffffff;
   border: 1px solid white;
   border-radius: 10px;
-  background: url("/src/images/menu-background.png");
-  background-size: cover;
-  background-repeat: repeat;
 }
 
 .form-container_task-form {

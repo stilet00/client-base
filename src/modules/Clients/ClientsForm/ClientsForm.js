@@ -11,6 +11,7 @@ import '../../../styles/modules/ClientsForm.css'
 import { useClientsForm } from '../businessLogic'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -36,6 +37,7 @@ const CssTextField = withStyles({
 })(TextField)
 
 export default function ClientsForm(props) {
+    const { screenIsSmall } = useWindowDimensions()
     const classes = useStyles()
 
     const {
@@ -53,7 +55,7 @@ export default function ClientsForm(props) {
             <Button
                 type="button"
                 onClick={handleOpen}
-                fullWidth
+                fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faVenus} />}
             >
                 Add client

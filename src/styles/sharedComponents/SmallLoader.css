@@ -4,8 +4,8 @@
   position: relative;
   width: 30px;
   height: 30px;
-  -webkit-animation: lds-ring 2.4s linear infinite;
-          animation: lds-ring 2.4s linear infinite;
+  -webkit-animation: lds-ring 1s linear infinite;
+          animation: lds-ring 1s linear infinite;
 }
 
 .lds-ring div {

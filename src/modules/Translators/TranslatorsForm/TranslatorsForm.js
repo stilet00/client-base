@@ -12,6 +12,7 @@ import '../../../styles/modules/TranslatorsForm.css'
 import { DEFAULT_TRANSLATOR } from '../../../constants/constants'
 import WorkIcon from '@mui/icons-material/Work'
 import useModal from '../../../sharedHooks/useModal'
+import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -37,6 +38,7 @@ const CssTextField = withStyles({
 })(TextField)
 
 export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
+    const { screenIsSmall } = useWindowDimensions
     const classes = useStyles()
 
     const [translator, setTranslator] = useState(
@@ -64,7 +66,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
             <Button
                 type="button"
                 onClick={handleOpen}
-                fullWidth
+                fullWidth={screenIsSmall}
                 startIcon={<WorkIcon />}
             >
                 Add translator

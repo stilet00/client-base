@@ -14,6 +14,7 @@ import {
     faListAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
 function ClientsList({
     translators,
@@ -26,6 +27,7 @@ function ClientsList({
     dragEndHandler,
     dragDropHandler,
 }) {
+    const { screenIsSmall } = useWindowDimensions()
     const {
         clientMonthSum,
         sortBySum,
@@ -38,7 +40,7 @@ function ClientsList({
         <>
             <Button
                 onClick={toggleDrawer('left', true)}
-                fullWidth
+                fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faListAlt} />}
             >
                 Show clients
@@ -54,7 +56,7 @@ function ClientsList({
                         All clients:
                     </h3>
                     <ul>
-                        {clients.sort(sortBySum).map(client => {
+                        {clients.sort(sortBySum).map((client, index) => {
                             const memoizedMiddleMonthSum =
                                 calculateMiddleMonthSum(client._id)
                             const memoizedPreviousMiddleMonthSum =

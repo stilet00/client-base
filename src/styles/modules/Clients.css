@@ -12,6 +12,7 @@
           align-items: center;
   padding: 10px;
   max-width: 40vw;
+  background: rgba(192, 222, 229, 0.7);
 }
 
 @media (max-width: 500px) {
@@ -43,7 +44,7 @@
   padding: 10px;
   cursor: -webkit-grab;
   cursor: grab;
-  background: rgba(255, 255, 255, 0.7);
+  background: white;
 }
 
 .side-clients-menu__client:not(:first-child) {
