@@ -183,11 +183,9 @@ function Overview({ user }) {
                                                     Current month
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    <b>
-                                                        {moment().format(
-                                                            'MMMM YYYY'
-                                                        )}
-                                                    </b>
+                                                    {moment().format(
+                                                        'MMMM YYYY'
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -293,13 +291,11 @@ function Overview({ user }) {
                                                     Total clients
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    <b>
-                                                        {clients.length ? (
-                                                            clients.length
-                                                        ) : (
-                                                            <SmallLoader />
-                                                        )}
-                                                    </b>
+                                                    {clients.length ? (
+                                                        clients.length
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>

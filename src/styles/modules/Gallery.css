@@ -201,7 +201,7 @@
 
 .gallery-container .inner-gallery-container .translator-item .MuiPaper-root:not(:first-child) {
   margin-top: 12px;
-  background: #f5f5f5;
+  background: #ffffff;
 }
 
 .gallery-container .inner-gallery-container .translator-item .MuiCardActions-root {
@@ -264,7 +264,7 @@
 }
 
 .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--blue_text {
-  color: #0074de;
+  color: #2196f6;
 }
 
 .gallery-container .inner-gallery-container .translator-item .clients-list__finance-container--red_text {

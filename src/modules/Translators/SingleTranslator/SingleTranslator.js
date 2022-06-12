@@ -95,7 +95,7 @@ function SingleTranslator({
             className={
                 suspended.status
                     ? 'translator-item translator-item--suspended'
-                    : 'translator-item'
+                    : 'translator-item gradient-box'
             }
             id={_id}
         >
