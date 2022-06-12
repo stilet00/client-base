@@ -25,8 +25,10 @@ import { DEFAULT_CATEGORIES } from '../../constants/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
 import CountUp from 'react-countup'
+import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 
 function Translators({ user }) {
+    const { screenIsSmall } = useWindowDimensions()
     const {
         translators,
         clients,
@@ -76,128 +78,274 @@ function Translators({ user }) {
 
     return user ? (
         <div className={'gallery-container'}>
-            <div className="gallery-menu gallery-menu_no-border">
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Menu</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <ClientsList
-                            clients={clients}
-                            toggleDrawer={toggleDrawer}
-                            state={state}
-                            dragStartHandler={dragStartHandler}
-                            dragOverHandler={dragOverHandler}
-                            dragLeaveHandler={dragLeaveHandler}
-                            dragEndHandler={dragEndHandler}
-                            dragDropHandler={dragDropHandler}
-                            deleteClient={deleteClient}
-                            translators={translators}
-                        />
-                        <ClientsForm onFormSubmit={clientsFormSubmit} />
-                        <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
-                        <Button
-                            aria-describedby={id}
-                            onClick={handleClick}
-                            fullWidth
-                            startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
+            {screenIsSmall ? (
+                <div className="gallery-menu gallery-menu_no-border">
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
                         >
-                            Show total
-                        </Button>
-                        <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            className={'sum-popover'}
-                        >
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Dating total: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.dating
-                                )} $`}</b>
+                            <Typography>
+                                {!screenIsSmall ? 'Menu' : 'Filters'}
                             </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Gifts svadba: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.virtualGiftsSvadba
-                                )} $`}</b>
-                            </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Gifts dating: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.virtualGiftsDating
-                                )} $`}</b>
-                            </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Phone calls: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.phoneCalls
-                                )} $`}</b>
-                            </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Chats total: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.chats
-                                )} $`}</b>
-                            </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Letters total: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.letters
-                                )} $`}</b>
-                            </Typography>
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Penalties: `}
-                                <b>{`${calculateMonthTotal(
-                                    DEFAULT_CATEGORIES.penalties
-                                )} $`}</b>
-                            </Typography>
-                            <Divider />
-                            <Typography sx={{ p: 2 }} align={'left'}>
-                                {`Total by ${moment().format('D MMMM')}: `}{' '}
-                                <b>
-                                    <CountUp
-                                        duration={1.75}
-                                        end={calculateMonthTotal()}
-                                        separator=" "
-                                        prefix="$"
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <ClientsList
+                                clients={clients}
+                                toggleDrawer={toggleDrawer}
+                                state={state}
+                                dragStartHandler={dragStartHandler}
+                                dragOverHandler={dragOverHandler}
+                                dragLeaveHandler={dragLeaveHandler}
+                                dragEndHandler={dragEndHandler}
+                                dragDropHandler={dragDropHandler}
+                                deleteClient={deleteClient}
+                                translators={translators}
+                            />
+                            <ClientsForm onFormSubmit={clientsFormSubmit} />
+                            <TranslatorsForm
+                                onFormSubmit={translatorsFormSubmit}
+                            />
+                            <Button
+                                aria-describedby={id}
+                                onClick={handleClick}
+                                fullWidth={screenIsSmall}
+                                startIcon={
+                                    <FontAwesomeIcon icon={faPiggyBank} />
+                                }
+                            >
+                                Show total
+                            </Button>
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                className={'sum-popover'}
+                            >
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Dating total: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.dating
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Gifts svadba: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.virtualGiftsSvadba
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Gifts dating: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.virtualGiftsDating
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Phone calls: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.phoneCalls
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Chats total: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.chats
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Letters total: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.letters
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Penalties: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.penalties
+                                    )} $`}</b>
+                                </Typography>
+                                <Divider />
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Total by ${moment().format('D MMMM')}: `}{' '}
+                                    <b>
+                                        <CountUp
+                                            duration={1.75}
+                                            end={calculateMonthTotal()}
+                                            separator=" "
+                                            prefix="$"
+                                        />
+                                    </b>
+                                </Typography>
+                            </Popover>
+                            <div className="gallery-menu__filters">
+                                <div
+                                    className={
+                                        'gallery-menu__checkbox-container'
+                                    }
+                                >
+                                    <Checkbox
+                                        defaultChecked
+                                        name={'suspended'}
+                                        onChange={changeFilter}
                                     />
-                                </b>
-                            </Typography>
-                        </Popover>
-                        <div className="gallery-menu__filters">
-                            <div className={'gallery-menu__checkbox-container'}>
-                                <Checkbox
-                                    defaultChecked
-                                    name={'suspended'}
-                                    onChange={changeFilter}
-                                />
-                                Hide suspended
+                                    Hide suspended
+                                </div>
+                                <div className="gallery-menu__date-container">
+                                    <MobileDatePicker
+                                        label="Balance date"
+                                        value={translatorFilter.date}
+                                        name={'date'}
+                                        onChange={changeFilter}
+                                        renderInput={params => (
+                                            <TextField {...params} />
+                                        )}
+                                    />
+                                </div>
                             </div>
-                            <div className="gallery-menu__date-container">
-                                <MobileDatePicker
-                                    label="Balance date"
-                                    value={translatorFilter.date}
-                                    name={'date'}
-                                    onChange={changeFilter}
-                                    renderInput={params => (
-                                        <TextField {...params} />
-                                    )}
+                        </AccordionDetails>
+                    </Accordion>
+                </div>
+            ) : (
+                <div className="bigScreen-translator-menu">
+                    <ClientsList
+                        clients={clients}
+                        toggleDrawer={toggleDrawer}
+                        state={state}
+                        dragStartHandler={dragStartHandler}
+                        dragOverHandler={dragOverHandler}
+                        dragLeaveHandler={dragLeaveHandler}
+                        dragEndHandler={dragEndHandler}
+                        dragDropHandler={dragDropHandler}
+                        deleteClient={deleteClient}
+                        translators={translators}
+                    />
+                    <ClientsForm onFormSubmit={clientsFormSubmit} />
+                    <TranslatorsForm onFormSubmit={translatorsFormSubmit} />
+                    <Button
+                        aria-describedby={id}
+                        onClick={handleClick}
+                        startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
+                    >
+                        Show total
+                    </Button>
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        className={'sum-popover'}
+                    >
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Dating total: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.dating
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Gifts svadba: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.virtualGiftsSvadba
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Gifts dating: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.virtualGiftsDating
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Phone calls: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.phoneCalls
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Chats total: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.chats
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Letters total: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.letters
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Penalties: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.penalties
+                            )} $`}</b>
+                        </Typography>
+                        <Divider />
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Total by ${moment().format('D MMMM')}: `}{' '}
+                            <b>
+                                <CountUp
+                                    duration={1.75}
+                                    end={calculateMonthTotal()}
+                                    separator=" "
+                                    prefix="$"
                                 />
-                            </div>
+                            </b>
+                        </Typography>
+                    </Popover>
+                    <div class="gallery-menu__inline-filters">
+                        <div class="gallery-menu__filters-label">Filters</div>
+                        <div className={'gallery-menu__checkbox-container'}>
+                            <Checkbox
+                                defaultChecked
+                                name={'suspended'}
+                                onChange={changeFilter}
+                            />
+                            Hide suspended
                         </div>
-                    </AccordionDetails>
-                </Accordion>
-            </div>
+                        <div className="gallery-menu__date-container">
+                            <MobileDatePicker
+                                label="Balance date"
+                                value={translatorFilter.date}
+                                name={'date'}
+                                onChange={changeFilter}
+                                renderInput={params => (
+                                    <TextField {...params} />
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    {/* <div className="gallery-menu__filters">
+                        <div className={'gallery-menu__checkbox-container'}>
+                            <Checkbox
+                                defaultChecked
+                                name={'suspended'}
+                                onChange={changeFilter}
+                            />
+                            Hide suspended
+                        </div>
+                        <div className="gallery-menu__date-container">
+                            <MobileDatePicker
+                                label="Balance date"
+                                value={translatorFilter.date}
+                                name={'date'}
+                                onChange={changeFilter}
+                                renderInput={params => (
+                                    <TextField {...params} />
+                                )}
+                            />
+                        </div>
+                    </div> */}
+                </div>
+            )}
             <div
                 className={
                     'inner-gallery-container translators-container animated-box scrolled-container'

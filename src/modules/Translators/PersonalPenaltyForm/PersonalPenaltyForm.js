@@ -50,7 +50,6 @@ export default function PersonalPenaltyForm({
             <IconButton
                 type="button"
                 onClick={handleOpen}
-                variant={'contained'}
                 size={'small'}
                 color="error"
             >

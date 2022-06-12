@@ -58,7 +58,6 @@
 }
 
 .fallDown-menu {
-  background: url("/src/images/menu-background.png");
   background-size: cover;
   background-repeat: repeat;
   will-change: auto;

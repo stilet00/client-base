@@ -8,7 +8,8 @@ function SmallLoader() {
             style={{
                 backgroundImage: `url(${dollarLoader})`,
                 backgroundSize: 'cover',
-                animationDelay: `-${Math.random().toFixed(1)}s`,
+                animationDuration: `${(Math.random() * 10).toFixed(1)}s`,
+                animationDirection: Math.random() < 0.5 ? 'normal' : 'reverse',
             }}
         ></div>
     )
