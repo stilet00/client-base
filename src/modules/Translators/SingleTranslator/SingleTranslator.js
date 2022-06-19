@@ -402,7 +402,7 @@ function SingleTranslator({
                     />
                 ) : null}
                 <IconButton
-                    color={suspended.status ? 'default' : 'primary'}
+                    color={suspended.status ? 'primary' : 'error'}
                     variant={'contained'}
                     size={'small'}
                     onClick={() => suspendTranslator(_id)}
@@ -415,6 +415,7 @@ function SingleTranslator({
                     )}
                 </IconButton>
                 <PersonalPenaltyForm
+                    suspended={suspended.status}
                     id={_id}
                     addPersonalPenaltyToTranslator={
                         addPersonalPenaltyToTranslator

@@ -30,7 +30,29 @@ ul
   list-style-type: none
 
 .gradient-box
-  background: linear-gradient(180deg, rgba(2,0,36,0.2) 0%, rgba(255,255,255,0.2) 0%, rgba(0,212,255,0.2) 100%)
+  background: linear-gradient(0deg, rgba(2,0,36,0.2) 0%, rgba(255,255,255,0.2) 0%, rgba(0,212,255,0.2) 100%)
+
+  &::before
+    position: absolute
+    bottom: -20px
+    right: -10px
+    content: ('')
+    width: 120%
+    height: 80px
+    background: $secondary_color_opacity
+    transform: rotate(5deg)
+
+  &::after
+    position: absolute
+    bottom: 50px
+    right: -10px
+    content: ('')
+    width: 120%
+    height: 20px
+    border-radius: 50%
+    background: $main_color
+    transform: rotate(5deg)  
+    
   
   &--intense
     background: linear-gradient(180deg, rgba(2,0,36,0.5) 0%, rgba(255,255,255,0.5) 0%, rgba(0,212,255,0.5) 100%)

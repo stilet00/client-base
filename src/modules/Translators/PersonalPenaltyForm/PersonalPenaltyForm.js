@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 export default function PersonalPenaltyForm({
     id,
     addPersonalPenaltyToTranslator,
+    suspended,
 }) {
     const classes = useStyles()
 
@@ -44,17 +45,19 @@ export default function PersonalPenaltyForm({
     }
 
     useEffect(() => () => clear(), [])
-
     return (
         <>
-            <IconButton
-                type="button"
-                onClick={handleOpen}
-                size={'small'}
-                color="error"
-            >
-                <GavelIcon />
-            </IconButton>
+            {!suspended && (
+                <IconButton
+                    type="button"
+                    onClick={handleOpen}
+                    size={'small'}
+                    color="error"
+                >
+                    <GavelIcon />
+                </IconButton>
+            )}
+
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

@@ -41,8 +41,33 @@ ul {
 }
 
 .gradient-box {
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(2, 0, 36, 0.2)), color-stop(0%, rgba(255, 255, 255, 0.2)), to(rgba(0, 212, 255, 0.2)));
-  background: linear-gradient(180deg, rgba(2, 0, 36, 0.2) 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
+  background: -webkit-gradient(linear, left bottom, left top, from(rgba(2, 0, 36, 0.2)), color-stop(0%, rgba(255, 255, 255, 0.2)), to(rgba(0, 212, 255, 0.2)));
+  background: linear-gradient(0deg, rgba(2, 0, 36, 0.2) 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
+}
+
+.gradient-box::before {
+  position: absolute;
+  bottom: -20px;
+  right: -10px;
+  content: "";
+  width: 120%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-transform: rotate(5deg);
+          transform: rotate(5deg);
+}
+
+.gradient-box::after {
+  position: absolute;
+  bottom: 50px;
+  right: -10px;
+  content: "";
+  width: 120%;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  -webkit-transform: rotate(5deg);
+          transform: rotate(5deg);
 }
 
 .gradient-box--intense {
