@@ -1,5 +1,5 @@
 let express = require('express')
-const nodeMailer = require('nodemailer')
+const sendEmailTemplateToTranslators = require('./src/api/emailApi/emailApi')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -60,31 +60,20 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 
 //email api
 
-app.post(rootURL + 'send-mail', function (req, res) {
-    let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: 'xxx@xx.com',
-            pass: 'xxxx',
-        },
-    })
-    let mailOptions = {
-        from: '"Anton Stilet" <antonstilet@gmail.com>', // sender address
-        to: 'safroninanton@gmail.com',
-        subject: 'test-email',
-        text: 'from our server',
-        html: '<b>NodeJS Email Tutorial</b>',
-    }
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error)
+let timer = 0
+async function sendRegularEmails() {
+    timer += 1
+    if (timer % 30 === 0) {
+        console.log(timer)
+        const translatorsCollection = await collectionTranslators
+            .find()
+            .toArray()
+        if (translatorsCollection.length) {
+            sendEmailTemplateToTranslators(translatorsCollection)
         }
-        console.log('Message %s sent: %s', info.messageId, info.response)
-        res.render('index')
-    })
-})
+    }
+}
+setInterval(sendRegularEmails, 1000)
 
 // task list api
 

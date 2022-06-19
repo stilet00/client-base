@@ -33,6 +33,7 @@
         "express": "^4.18.1",
         "firebase": "^8.7.1",
         "global": "^4.4.0",
+        "googleapis": "^103.0.0",
         "install": "^0.13.0",
         "moment": "^2.29.1",
         "mongodb": "^3.6.9",
@@ -55,9 +56,9 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start": "node api/server.js",
+        "start": "node server.js",
         "build": "react-scripts build",
-        "serve": "nodemon api/server.js",
+        "serve": "nodemon server.js",
         "dev": "react-scripts start",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
