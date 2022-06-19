@@ -10,7 +10,7 @@
       -ms-flex-align: center;
           align-items: center;
   font-size: calc(10px + 2vmin);
-  background: rgba(255, 255, 255, 0.7);
+  background: white;
   background-size: cover;
   margin-bottom: 20px;
   border-bottom-left-radius: 5px;
