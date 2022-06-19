@@ -251,6 +251,16 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
+.gallery-container .inner-gallery-container .translator-item--suspended::before {
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-transform: rotate(-5deg);
+          transform: rotate(-5deg);
+}
+
+.gallery-container .inner-gallery-container .translator-item--suspended::after {
+  display: none;
+}
+
 .gallery-container .inner-gallery-container .translator-item--suspended .MuiRating-root {
   background: white;
   border-radius: 8px;

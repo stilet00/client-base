@@ -17,8 +17,8 @@
   max-height: 80vh
 
   .bigScreen-translator-menu
-    display: flex;
-    justify-content: space-evenly;
+    display: flex
+    justify-content: space-evenly
     padding: 10px
     background: $main_color
     border-top-left-radius: 10px
@@ -38,7 +38,6 @@
       border: none
       padding: 0
 
-      
     &__inline-filters
       display: flex
       flex: 1
@@ -47,7 +46,7 @@
 
     &__filters-label
       position: relative
-      transform: rotate(90deg)  
+      transform: rotate(90deg)
       margin-left: -40px
 
     &__filters
@@ -77,9 +76,6 @@
         //background-color: rgba(0, 0, 0, 0.04)
         border-color: rgba(0, 0, 0, 0.87)
 
-
-
-
     .MuiAccordionDetails-root
       flex-direction: column
       padding: 0
@@ -103,10 +99,10 @@
     backdrop-filter: blur(5px)
 
     @media (max-width: 1000px)
-      border-top-left-radius: 0 
+      border-top-left-radius: 0
 
     @media (max-width: 812)
-      border-top-left-radius: 10px 
+      border-top-left-radius: 10px
 
     .gallery-item
       display: flex
@@ -156,25 +152,31 @@
         height: 20px
         border-radius: 50%
         background: $main_color
-        transform: rotate(5deg)  
+        transform: rotate(5deg)
 
       @media (max-width: 650px)
         width: 90%
 
       .MuiCardContent-root
         margin-bottom: 15px
-        
+
         @media (max-width: 650px)
-            margin-bottom: 25px
+          margin-bottom: 25px
 
       &--suspended
         color: $main-color
         background: $secondary_color_opacity
 
+        &::before
+          background: $main_color_opacity
+          transform: rotate(-5deg)
+
+        &::after
+          display: none
+
         .MuiRating-root
           background: $main_color
           border-radius: 8px
-
 
       h4
         margin: 10px
@@ -203,7 +205,6 @@
 
       .MuiCardActions-root
         padding: 4px 16px 8px 16px
-
 
       .clients-list
         box-sizing: border-box
@@ -280,7 +281,6 @@
         color: rgba(0,0,0,0.6)
         letter-spacing: 1px
         text-shadow: 2px 2px 3px rgba(255,255,255,0.1)
-
 
     .MuiCardActions-root
       justify-content: flex-start

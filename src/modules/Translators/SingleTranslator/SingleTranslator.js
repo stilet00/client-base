@@ -106,68 +106,29 @@ function SingleTranslator({
                     readOnly
                     size="small"
                 />
-                <Typography variant="h5" component="div">
-                    {`${name} ${surname}`}
-                </Typography>
-                {suspended.time ? (
-                    <Typography
-                        variant="caption"
-                        align={'left'}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        {suspended.status
-                            ? `Suspended since: `
-                            : `Activated since: `}
-                        <b>{suspended.time}</b>
+                <div
+                    style={{
+                        minHeight: 135,
+                    }}
+                >
+                    <Typography variant="h5" component="div">
+                        {`${name} ${surname}`}
                     </Typography>
-                ) : null}
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    Total for {`${moment().format('MMMM')}: `}
-                    {progressPage}
-                    <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    Middle for {`${moment().format('MMMM')}: `}
-                    <b>{`${calculateMiddleMonthSum()} $ `}</b>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    {`For yesterday: `}
-                    {calculateTranslatorYesterdayTotal(statistics) ? (
-                        <b className="styled-text-numbers">
-                            {`${calculateTranslatorYesterdayTotal(
-                                statistics
-                            )} $`}
-                        </b>
-                    ) : (
-                        'No data'
-                    )}
-                </Typography>
-                {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
-                    .length ? (
+                    {suspended.time ? (
+                        <Typography
+                            variant="caption"
+                            align={'left'}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            {suspended.status
+                                ? `Suspended since: `
+                                : `Activated since: `}
+                            <b>{suspended.time}</b>
+                        </Typography>
+                    ) : null}
                     <Typography
                         variant="body2"
                         align={'left'}
@@ -176,16 +137,61 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        Penalties for {`${moment().format('MMMM')}: `}
-                        <PenaltiesList
-                            penaltiesArray={personalPenalties.filter(
-                                penalty =>
-                                    penalty.date.slice(3) ===
-                                    moment().format('MM YYYY')
-                            )}
-                        />
+                        Total for {`${moment().format('MMMM')}: `}
+                        {progressPage}
+                        <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
                     </Typography>
-                ) : null}
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        Middle for {`${moment().format('MMMM')}: `}
+                        <b>{`${calculateMiddleMonthSum()} $ `}</b>
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        {`For yesterday: `}
+                        {calculateTranslatorYesterdayTotal(statistics) ? (
+                            <b className="styled-text-numbers">
+                                {`${calculateTranslatorYesterdayTotal(
+                                    statistics
+                                )} $`}
+                            </b>
+                        ) : (
+                            'No data'
+                        )}
+                    </Typography>
+                    {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
+                        .length ? (
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            Penalties for {`${moment().format('MMMM')}: `}
+                            <PenaltiesList
+                                penaltiesArray={personalPenalties.filter(
+                                    penalty =>
+                                        penalty.date.slice(3) ===
+                                        moment().format('MM YYYY')
+                                )}
+                            />
+                        </Typography>
+                    ) : null}
+                </div>
                 {suspended.status ? null : (
                     <>
                         <Accordion>
