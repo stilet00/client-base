@@ -4,6 +4,9 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import DoneAllIcon from '@mui/icons-material/DoneAll'
 import moment from 'moment'
 import ColoredButton from '../../../sharedComponents/ColoredButton/ColoredButton'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
 
 function SingleTask({
     taskName,
@@ -37,15 +40,25 @@ function SingleTask({
             className={
                 completed
                     ? 'task gallery-item completed'
-                    : 'task gallery-item not-completed'
+                    : 'task gallery-item gradient-box'
             }
         >
-            <p className={'task-name'}>
-                <b>{taskName}</b>
-            </p>
-            <p className={'task-date'}>Created: {created}</p>
-            {done}
-            <div className="button-container">
+            <CardContent>
+                <Typography variant="h5" component="div">
+                    {taskName}
+                </Typography>
+
+                <Typography variant="body2" style={{ marginTop: '10px' }}>
+                    Created: {created}
+                </Typography>
+                <Typography
+                    style={{ marginTop: '10px' }}
+                    color="text.secondary"
+                >
+                    {done}
+                </Typography>
+            </CardContent>
+            <CardActions>
                 <ColoredButton
                     variant={'outlined'}
                     onClick={() => onDelete(_id)}
@@ -64,7 +77,7 @@ function SingleTask({
                 >
                     {toggleButton}
                 </ColoredButton>
-            </div>
+            </CardActions>
         </li>
     )
 }

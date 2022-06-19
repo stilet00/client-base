@@ -137,11 +137,35 @@
       width: 270px
       box-shadow: $material-box-shadow
 
+      &::before
+        position: absolute
+        bottom: -20px
+        right: -10px
+        content: ('')
+        width: 120%
+        height: 80px
+        background: $secondary_color_opacity
+        transform: rotate(5deg)
+
+      &::after
+        position: absolute
+        bottom: 50px
+        right: -10px
+        content: ('')
+        width: 120%
+        height: 20px
+        border-radius: 50%
+        background: $main_color
+        transform: rotate(5deg)  
+
       @media (max-width: 650px)
         width: 90%
 
       .MuiCardContent-root
         margin-bottom: 15px
+        
+        @media (max-width: 650px)
+            margin-bottom: 25px
 
       &--suspended
         color: $main-color
