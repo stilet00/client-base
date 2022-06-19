@@ -1,4 +1,5 @@
 let express = require('express')
+const nodeMailer = require('nodemailer')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -18,6 +19,8 @@ const PORT = process.env.PORT || 80
 
 let app = express()
 app.use(express.static(__dirname + '/build'))
+
+app.set('view engine', 'ejs')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extented: true }))
@@ -53,6 +56,34 @@ app.get(rootURL + 'tasks/?', function (request, response, next) {
 })
 app.get(rootURL + 'translators/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
+})
+
+//email api
+
+app.post(rootURL + 'send-mail', function (req, res) {
+    let transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'xxx@xx.com',
+            pass: 'xxxx',
+        },
+    })
+    let mailOptions = {
+        from: '"Anton Stilet" <antonstilet@gmail.com>', // sender address
+        to: 'safroninanton@gmail.com',
+        subject: 'test-email',
+        text: 'from our server',
+        html: '<b>NodeJS Email Tutorial</b>',
+    }
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response)
+        res.render('index')
+    })
 })
 
 // task list api
