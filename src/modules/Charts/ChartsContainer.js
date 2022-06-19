@@ -29,14 +29,14 @@ function ChartsContainer({ user }) {
 
     return user ? (
         <>
-            <div className={'socials button-add-container top-button'}>
+            {/* <div className={'socials button-add-container top-button'}>
                 <AccessTimeIcon />
                 <YearSelect
                     arrayOfYears={arrayOfYears}
                     year={selectedYear}
                     handleChange={handleChange}
                 />
-            </div>
+            </div> */}
             <div className={'taskList-container chart-container animated-box'}>
                 {months.length > 0 ? (
                     <ul className={'scrolled-container'}>

@@ -17,7 +17,6 @@
     padding-left: 0
     display: flex
     flex-flow: row wrap
-    justify-content: center
     gap: 10px
     margin: 0
     width: 100%
@@ -25,14 +24,12 @@
   .task
     display: flex
     flex-direction: column
-    align-items: center
-    justify-content: space-evenly
+    justify-content: space-between
     width: 50%
-    max-width: 400px
+    max-width: 300px
     min-height: 150px
     box-sizing: border-box
-    padding: 10px
-    margin-bottom: 10px
+    padding: 5px
     border-radius: 5px
     font-family: 'Lato', Sans-Serif
     list-style: none
@@ -40,7 +37,7 @@
     box-shadow: $material-box-shadow
     background-color: $main_color
 
-    @media (max-width: 910px)
+    @media (max-width: 690px)
       width: 90%
       max-width: none
 
@@ -71,8 +68,6 @@
 .button-add-container
   height: 60px
   max-width: 326px
-
-
 
 .item-enter
   opacity: 0

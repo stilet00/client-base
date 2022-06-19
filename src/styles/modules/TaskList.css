@@ -22,9 +22,6 @@
   -webkit-box-direction: normal;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
   gap: 10px;
   margin: 0;
   width: 100%;
@@ -38,19 +35,15 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   width: 50%;
-  max-width: 400px;
+  max-width: 300px;
   min-height: 150px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 5px;
   border-radius: 5px;
   font-family: 'Lato', Sans-Serif;
   list-style: none;
@@ -61,7 +54,7 @@
   background-color: white;
 }
 
-@media (max-width: 910px) {
+@media (max-width: 690px) {
   .taskList-container .task {
     width: 90%;
     max-width: none;

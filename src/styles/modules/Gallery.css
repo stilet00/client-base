@@ -225,7 +225,7 @@
   width: 120%;
   height: 20px;
   border-radius: 50%;
-  background: white;
+  background: #fafeff;
   -webkit-transform: rotate(5deg);
           transform: rotate(5deg);
 }
