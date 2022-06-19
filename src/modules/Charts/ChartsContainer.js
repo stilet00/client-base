@@ -7,6 +7,7 @@ import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirm
 import moment from 'moment'
 import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
+import '../../styles/modules/Chart.css'
 
 function ChartsContainer({ user }) {
     const {

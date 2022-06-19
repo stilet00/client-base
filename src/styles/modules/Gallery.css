@@ -169,7 +169,7 @@
   padding: 5px;
   border-radius: 5px;
   width: 120px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
   -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -205,14 +205,55 @@
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
+.gallery-container .inner-gallery-container .translator-item::before {
+  position: absolute;
+  bottom: -20px;
+  right: -10px;
+  content: "";
+  width: 120%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-transform: rotate(5deg);
+          transform: rotate(5deg);
+}
+
+.gallery-container .inner-gallery-container .translator-item::after {
+  position: absolute;
+  bottom: 50px;
+  right: -10px;
+  content: "";
+  width: 120%;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  -webkit-transform: rotate(5deg);
+          transform: rotate(5deg);
+}
+
 @media (max-width: 650px) {
   .gallery-container .inner-gallery-container .translator-item {
     width: 90%;
   }
 }
 
+.gallery-container .inner-gallery-container .translator-item .MuiCardContent-root {
+  margin-bottom: 15px;
+}
+
+@media (max-width: 650px) {
+  .gallery-container .inner-gallery-container .translator-item .MuiCardContent-root {
+    margin-bottom: 25px;
+  }
+}
+
 .gallery-container .inner-gallery-container .translator-item--suspended {
-  background: rgba(121, 114, 114, 0.7);
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.gallery-container .inner-gallery-container .translator-item--suspended .MuiRating-root {
+  background: white;
+  border-radius: 8px;
 }
 
 .gallery-container .inner-gallery-container .translator-item h4 {
