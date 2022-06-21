@@ -7,6 +7,7 @@ import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirm
 import moment from 'moment'
 import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
+import '../../styles/modules/Chart.css'
 
 function ChartsContainer({ user }) {
     const {
@@ -28,19 +29,24 @@ function ChartsContainer({ user }) {
 
     return user ? (
         <>
-            <div className={'socials button-add-container top-button'}>
+            {/* <div className={'socials button-add-container top-button'}>
                 <AccessTimeIcon />
                 <YearSelect
                     arrayOfYears={arrayOfYears}
                     year={selectedYear}
                     handleChange={handleChange}
                 />
-            </div>
+            </div> */}
             <div className={'taskList-container chart-container animated-box'}>
                 {months.length > 0 ? (
                     <ul className={'scrolled-container'}>
                         {months.map((month, index) => (
                             <SingleChart
+                                previousMonth={
+                                    month.month === moment().format('MM')
+                                        ? months[index + 1]
+                                        : null
+                                }
                                 graph={month}
                                 index={index}
                                 key={index}

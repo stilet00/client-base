@@ -8,7 +8,10 @@ import {
 } from '../../services/balanceServices/services'
 import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
 import useModal from '../../sharedHooks/useModal'
-import { calculateBalanceDayAllClients } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculateBalanceDayAllClients,
+    getNumberWithHundredths,
+} from '../../sharedFunctions/sharedFunctions'
 import { getTranslators } from '../../services/translatorsServices/services'
 import {
     currentYear,
@@ -110,7 +113,7 @@ export const useChartsContainer = user => {
                             )
                             if (daySum) {
                                 defaultMonth.values[dayCount - 1] =
-                                    Math.round(daySum)
+                                    getNumberWithHundredths(daySum)
                             }
                         }
                         if (
@@ -206,27 +209,6 @@ export const useChartsContainer = user => {
         openAlertConfirmation,
         cancelDeleteGraphClicked,
         deleteGraphClicked,
-    }
-}
-
-export const useSingleChart = ({
-    graph,
-    index,
-    deleteGraph,
-    onValueSubmit,
-}) => {
-    function onChartChange(data) {
-        let newArray = graph.values
-        newArray[data.selectedDate - 1] = data.value
-        let newGraph = { ...graph, values: newArray }
-        onValueSubmit(newGraph)
-    }
-
-    return {
-        onChartChange,
-        index,
-        graph,
-        deleteGraph,
     }
 }
 

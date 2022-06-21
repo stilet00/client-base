@@ -1,7 +1,10 @@
 {
-"version": 3,
-"mappings": "AAAQ,oFAA4E;ACA5E,0FAAkF;ADI1F,aAAa;EACX,WAAW,EAAE,qCAAoC;EACjD,WAAW,EAAE,eAAc;EAC3B,aAAa,EAAE,CAAC;EAChB,UAAU,EAAE,eAAc;EAC1B,KAAK,EAAE,KAAK;EACZ,cAAc,EAAE,cAAa;;AAE/B,eAAe;EACb,KAAK,EAAE,oBAAmB;;AAE5B,kCAAkC;EAChC,KAAK,ECdM,KAAmB",
-"sources": ["Slider.sass","../../variables.sass"],
-"names": [],
-"file": "Slider.css"
+    "version": 3,
+    "mappings": "AAAA,OAAO,CAAC,4EAAI;ACAZ,OAAO,CAAC,kFAAI;ADIZ,AAAA,aAAa,CAAC;EACZ,WAAW,EAAE,iBAAiB,EAAE,OAAO,CAAA,UAAU;EACjD,WAAW,EAAE,IAAI,CAAA,UAAU;EAC3B,aAAa,EAAE,CAAC;EAChB,UAAU,EAAE,IAAI,CAAA,UAAU;EAC1B,KAAK,EAAE,KAAK;EACZ,cAAc,EAAE,GAAG,CAAA,UAAU;CAAG;;AAElC,AAAA,eAAe,CAAC;EACd,KAAK,EAAE,SAAS,CAAA,UAAU;CAAG;;AAE/B,AAAA,gBAAgB,EAAE,gBAAgB,CAAC;EACjC,KAAK,ECdM,KAAmB;CDcT",
+    "sources": [
+        "Slider.sass",
+        "../../variables.sass"
+    ],
+    "names": [],
+    "file": "Slider.css"
 }

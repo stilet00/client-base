@@ -1,6 +1,5 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
-import ListAltIcon from '@mui/icons-material/ListAlt'
 import Drawer from '@material-ui/core/Drawer'
 import WomanIcon from '@mui/icons-material/Woman'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -9,6 +8,13 @@ import { useClientsList } from '../businessLogic'
 import moment from 'moment'
 import { Rating } from '@mui/material'
 import { calculatePercentDifference } from '../../../sharedFunctions/sharedFunctions'
+import {
+    faArrowAltCircleUp,
+    faArrowAltCircleDown,
+    faListAlt,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
 function ClientsList({
     translators,
@@ -21,19 +27,21 @@ function ClientsList({
     dragEndHandler,
     dragDropHandler,
 }) {
+    const { screenIsSmall } = useWindowDimensions()
     const {
         clientMonthSum,
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
+        getAllAsignedTranslators,
     } = useClientsList(translators)
 
     return (
         <>
             <Button
                 onClick={toggleDrawer('left', true)}
-                fullWidth
-                startIcon={<ListAltIcon />}
+                fullWidth={screenIsSmall}
+                startIcon={<FontAwesomeIcon icon={faListAlt} />}
             >
                 Show clients
             </Button>
@@ -48,34 +56,44 @@ function ClientsList({
                         All clients:
                     </h3>
                     <ul>
-                        {clients.sort(sortBySum).map(client => {
-                            const progressPage =
-                                calculateMiddleMonthSum(client._id) >=
+                        {clients.sort(sortBySum).map((client, index) => {
+                            const memoizedMiddleMonthSum =
+                                calculateMiddleMonthSum(client._id)
+                            const memoizedPreviousMiddleMonthSum =
                                 calculateMiddleMonthSum(
                                     client._id,
                                     moment().subtract(1, 'month')
-                                ) ? (
+                                )
+                            const memoizedMonthSum = clientMonthSum(client._id)
+                            const memoizedPreviousMonthSum = clientMonthSum(
+                                client._id,
+                                moment().subtract(1, 'month')
+                            )
+                            const progressPage =
+                                memoizedMiddleMonthSum >=
+                                memoizedPreviousMiddleMonthSum ? (
                                     <span>
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
-                                            {`${calculateMiddleMonthSum(
-                                                client._id
-                                            )} $`}
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
+                                            {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'green-text'}>
-                                            {` +${calculatePercentDifference(
-                                                calculateMiddleMonthSum(
-                                                    client._id
-                                                ),
-                                                calculateMiddleMonthSum(
-                                                    client._id,
-                                                    moment().subtract(
-                                                        1,
-                                                        'month'
-                                                    )
-                                                )
+                                        <span
+                                            className={
+                                                'green-text styled-text-numbers'
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowAltCircleUp}
+                                            />
+                                            {` ${calculatePercentDifference(
+                                                memoizedMiddleMonthSum,
+                                                memoizedPreviousMiddleMonthSum
                                             )} %`}
                                         </span>
                                     </span>
@@ -84,23 +102,24 @@ function ClientsList({
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
-                                            {`${calculateMiddleMonthSum(
-                                                client._id
-                                            )} $`}
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
+                                            {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'red-text'}>
-                                            {` -${calculatePercentDifference(
-                                                calculateMiddleMonthSum(
-                                                    client._id
-                                                ),
-                                                calculateMiddleMonthSum(
-                                                    client._id,
-                                                    moment().subtract(
-                                                        1,
-                                                        'month'
-                                                    )
-                                                )
+                                        <span
+                                            className={
+                                                'red-text styled-text-numbers'
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faArrowAltCircleDown}
+                                            />
+                                            {` ${calculatePercentDifference(
+                                                memoizedMiddleMonthSum,
+                                                memoizedPreviousMiddleMonthSum
                                             )} %`}
                                         </span>
                                     </span>
@@ -108,8 +127,12 @@ function ClientsList({
                             const totalPage = (
                                 <span>
                                     {`Balance for ${moment().format('MMMM')}: `}
-                                    <span className={'blue-text'}>
-                                        {`${clientMonthSum(client._id)} $`}
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
+                                        {`${memoizedMonthSum} $`}
                                     </span>
                                 </span>
                             )
@@ -119,11 +142,12 @@ function ClientsList({
                                     {`Balance for ${moment()
                                         .subtract(1, 'month')
                                         .format('MMMM')}: `}
-                                    <span className={'blue-text'}>
-                                        {`${clientMonthSum(
-                                            client._id,
-                                            moment().subtract(1, 'month')
-                                        )} $`}
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
+                                        {`${memoizedPreviousMonthSum} $`}
                                     </span>
                                 </span>
                             )
@@ -170,6 +194,17 @@ function ClientsList({
                                             'side-clients-menu__client__balance-container'
                                         }
                                         secondary={previousTotalPage}
+                                    />
+                                    <ListItemText
+                                        className={
+                                            'side-clients-menu__client__balance-container'
+                                        }
+                                        secondary={`Assigned at ${
+                                            getAllAsignedTranslators(client._id)
+                                                .length
+                                        } translators: ${getAllAsignedTranslators(
+                                            client._id
+                                        ).join(', ')}`}
                                     />
                                 </li>
                             )

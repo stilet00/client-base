@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { MESSAGES } from '../../constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -11,7 +11,8 @@ import {
     currentMonth,
     currentYear,
     DEFAULT_DAY_CLIENT,
-    previousDay,
+    previousMonth,
+    previousYear,
 } from '../../constants/constants'
 
 import {
@@ -27,6 +28,7 @@ import {
     calculateBalanceDaySum,
     calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
+    getNumberWithHundredths,
 } from '../../sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
@@ -365,16 +367,39 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const calculateMonthTotal = useCallback(() => {
-        let sum = 0
-        translators.forEach(translator => {
-            let translatorsStatistic = translator.statistics
-            sum =
-                sum +
-                Number(calculateTranslatorMonthTotal(translatorsStatistic))
-        })
-        return Math.round(sum)
-    }, [translators])
+    const calculateMonthTotal = useCallback(
+        (categoryName = null) => {
+            let sum = 0
+            if (categoryName) {
+                translators.forEach(translator => {
+                    let translatorsStatistic = translator.statistics
+                    sum =
+                        sum +
+                        Number(
+                            calculateTranslatorMonthTotal(
+                                translatorsStatistic,
+                                true,
+                                currentMonth,
+                                currentYear,
+                                false,
+                                categoryName
+                            )
+                        )
+                })
+            } else {
+                translators.forEach(translator => {
+                    let translatorsStatistic = translator.statistics
+                    sum =
+                        sum +
+                        Number(
+                            calculateTranslatorMonthTotal(translatorsStatistic)
+                        )
+                })
+            }
+            return getNumberWithHundredths(sum)
+        },
+        [translators]
+    )
 
     const suspendTranslator = useCallback(
         translatorId => {
@@ -395,6 +420,33 @@ export const useTranslators = user => {
                 : MESSAGES.translatorActivated
 
             saveChangedTranslator(editedTranslator, message)
+        },
+        [translators]
+    )
+
+    const addPersonalPenaltyToTranslator = useCallback(
+        (id, penalty) => {
+            let editedTranslator = translators.find(
+                translator => translator._id === id
+            )
+            if (editedTranslator.personalPenalties) {
+                editedTranslator = {
+                    ...editedTranslator,
+                    personalPenalties: [
+                        ...editedTranslator.personalPenalties,
+                        penalty,
+                    ],
+                }
+            } else {
+                editedTranslator = {
+                    ...editedTranslator,
+                    personalPenalties: [penalty],
+                }
+            }
+            saveChangedTranslator(
+                editedTranslator,
+                MESSAGES.personalPenaltyApplied
+            )
         },
         [translators]
     )
@@ -454,19 +506,30 @@ export const useTranslators = user => {
         changeFilter,
         filterTranslators,
         translatorFilter,
+        addPersonalPenaltyToTranslator,
     }
 }
 
 export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     const { open, handleOpen, handleClose } = useModal()
 
-    const [selectedClient, setSelectedClient] = useState(clients[0]._id)
+    const [selectedClient, setSelectedClient] = useState(
+        clients.filter(client => !client.suspended)[0]._id
+    )
 
-    const [selectedYear, setSelectedYear] = useState(currentYear)
+    const [selectedYear, setSelectedYear] = useState(
+        currentMonth === '1' && moment().format('D') === '1'
+            ? previousYear
+            : currentYear
+    )
 
-    const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+    const [selectedMonth, setSelectedMonth] = useState(
+        moment().format('D') === '1' ? previousMonth : currentMonth
+    )
 
-    const [selectedDay, setSelectedDay] = useState(previousDay)
+    const [selectedDay, setSelectedDay] = useState(
+        moment().subtract(1, 'day').format('D')
+    )
 
     const [currentBalanceDay, setCurrentBalanceDay] = useState(
         findTodayBalance()
@@ -568,7 +631,11 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 }
 
-export const useSingleTranslator = (statistics, selectedDate) => {
+export const useSingleTranslator = (
+    statistics,
+    selectedDate,
+    personalPenalties
+) => {
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
             .find(
@@ -589,6 +656,27 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         return calculateBalanceDayAllClients(day)
     }
 
+    const calculatePersonalPenalties = () => {
+        const thisMonthsPenaltiesArray = []
+        const selectedDatePenaltiesArray = []
+        personalPenalties?.forEach(penalty => {
+            if (moment().format('MM YYYY') === penalty.date.slice(3)) {
+                thisMonthsPenaltiesArray.push(Number(penalty.amount))
+            }
+            if (selectedDate.format('MM YYYY') === penalty.date.slice(3)) {
+                selectedDatePenaltiesArray.push(Number(penalty.amount))
+            }
+        })
+
+        return thisMonthsPenaltiesArray.length ||
+            selectedDatePenaltiesArray.length
+            ? {
+                  thisMonthsPenaltiesArray,
+                  selectedDatePenaltiesArray,
+              }
+            : null
+    }
+
     const calculateTranslatorDayTotal = statistics => {
         const day = statistics
             .find(year => year.year === selectedDate.format('YYYY'))
@@ -601,6 +689,20 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         return calculateBalanceDayAllClients(day)
     }
 
+    function findYesterdayStatisticObject() {
+        const yearStatistics = statistics.find(
+            item => item.year === moment().format('YYYY')
+        )
+        const monthStatistics = yearStatistics.months.find(
+            (item, index) =>
+                index + 1 === Number(moment().subtract(1, 'day').format('M'))
+        )
+        const yesterdayStatistics = monthStatistics.find(
+            item => item.id === moment().subtract(1, 'day').format('DD MM YYYY')
+        )
+        return yesterdayStatistics
+    }
+
     function findYear(yearFilter = currentYear) {
         return statistics.find(item => item.year === yearFilter)
     }
@@ -611,14 +713,8 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         )
     }
 
-    function findYesterdayBalance() {
-        return findMonth().find(
-            (item, index) => index + 1 === Number(previousDay)
-        )
-    }
-
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayBalance().clients.find(
+        const clientObject = findYesterdayStatisticObject().clients.find(
             item => item.id === clientId
         )
         return clientObject
@@ -653,7 +749,7 @@ export const useSingleTranslator = (statistics, selectedDate) => {
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayBalance().clients.find(
+        const clientObject = findYesterdayStatisticObject().clients.find(
             item => item.id === clientId
         )
 
@@ -677,5 +773,6 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         calculateMiddleMonthSum,
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
+        calculatePersonalPenalties,
     }
 }

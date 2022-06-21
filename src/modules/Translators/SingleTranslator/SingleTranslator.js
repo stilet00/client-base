@@ -9,14 +9,13 @@ import {
 } from '@material-ui/core'
 import EditBalanceForm from '../EditBalanceForm/EditBalanceForm'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import { Typography } from '@material-ui/core'
 import moment from 'moment'
 import { useSingleTranslator } from '../businessLogic'
 import {
     calculatePercentDifference,
     calculateTranslatorMonthTotal,
+    getSumFromArray,
 } from '../../../sharedFunctions/sharedFunctions'
 import {
     currentMonth,
@@ -27,6 +26,15 @@ import {
 import { IconButton, Rating } from '@mui/material'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faArrowAltCircleUp,
+    faArrowAltCircleDown,
+    faPersonCircleXmark,
+    faPersonCirclePlus,
+} from '@fortawesome/free-solid-svg-icons'
+import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
+import PenaltiesList from '../PenaltiesList/PenaltiesList'
 
 function SingleTranslator({
     name,
@@ -42,6 +50,8 @@ function SingleTranslator({
     suspended,
     suspendClient,
     selectedDate,
+    addPersonalPenaltyToTranslator,
+    personalPenalties,
 }) {
     const {
         calculateSumByClient,
@@ -50,30 +60,31 @@ function SingleTranslator({
         calculateMiddleMonthSum,
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
-    } = useSingleTranslator(statistics, selectedDate)
+        calculatePersonalPenalties,
+    } = useSingleTranslator(statistics, selectedDate, personalPenalties)
+
+    const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
+    const translatorPreviousMonthTotalSum = calculateTranslatorMonthTotal(
+        statistics,
+        false,
+        previousMonth
+    )
 
     const progressPage =
-        calculateTranslatorMonthTotal(statistics) >=
-        calculateTranslatorMonthTotal(statistics, false, previousMonth) ? (
-            <span className={'green-text'}>
-                {` +${calculatePercentDifference(
-                    calculateTranslatorMonthTotal(statistics),
-                    calculateTranslatorMonthTotal(
-                        statistics,
-                        false,
-                        previousMonth
-                    )
+        translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
+            <span className={'green-text styled-text-numbers'}>
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${calculatePercentDifference(
+                    translatorMonthTotalSum,
+                    translatorPreviousMonthTotalSum
                 )} %`}
             </span>
         ) : (
-            <span className={'red-text'}>
-                {` -${calculatePercentDifference(
-                    calculateTranslatorMonthTotal(statistics),
-                    calculateTranslatorMonthTotal(
-                        statistics,
-                        false,
-                        previousMonth
-                    )
+            <span className={'red-text styled-text-numbers'}>
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${calculatePercentDifference(
+                    translatorMonthTotalSum,
+                    translatorPreviousMonthTotalSum
                 )} %`}
             </span>
         )
@@ -84,7 +95,7 @@ function SingleTranslator({
             className={
                 suspended.status
                     ? 'translator-item translator-item--suspended'
-                    : 'translator-item'
+                    : 'translator-item gradient-box'
             }
             id={_id}
         >
@@ -95,39 +106,92 @@ function SingleTranslator({
                     readOnly
                     size="small"
                 />
-                <Typography variant="h5" component="div">
-                    {`${name} ${surname}`}
-                </Typography>
-                {suspended.time ? (
-                    <Typography variant="caption" align={'left'}>
-                        {suspended.status
-                            ? `Suspended since: `
-                            : `Activated since: `}
-                        <b>{suspended.time}</b>
+                <div
+                    style={{
+                        minHeight: 135,
+                    }}
+                >
+                    <Typography variant="h5" component="div">
+                        {`${name} ${surname}`}
                     </Typography>
-                ) : null}
-                <Typography variant="body1" align={'left'}>
-                    <i>Balance:</i>
-                </Typography>
-                <Typography variant="body2" align={'left'}>
-                    Total for {`${moment().format('MMMM')}: `}
-                    <b>{`${calculateTranslatorMonthTotal(statistics)} $`}</b>
-                    {progressPage}
-                </Typography>
-                <Typography variant="body2" align={'left'}>
-                    Middle for {`${moment().format('MMMM')}: `}
-                    <b>{`${calculateMiddleMonthSum()} $ `}</b>
-                </Typography>
-                <Typography variant="body2" align={'left'}>
-                    {`For yesterday: `}
-                    {calculateTranslatorYesterdayTotal(statistics) ? (
-                        <b>{`${calculateTranslatorYesterdayTotal(
-                            statistics
-                        )} $`}</b>
-                    ) : (
-                        'No data'
-                    )}
-                </Typography>
+                    {suspended.time ? (
+                        <Typography
+                            variant="caption"
+                            align={'left'}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            {suspended.status
+                                ? `Suspended since: `
+                                : `Activated since: `}
+                            <b>{suspended.time}</b>
+                        </Typography>
+                    ) : null}
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        Total for {`${moment().format('MMMM')}: `}
+                        {progressPage}
+                        <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        Middle for {`${moment().format('MMMM')}: `}
+                        <b>{`${calculateMiddleMonthSum()} $ `}</b>
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        align={'left'}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        {`For yesterday: `}
+                        {calculateTranslatorYesterdayTotal(statistics) ? (
+                            <b className="styled-text-numbers">
+                                {`${calculateTranslatorYesterdayTotal(
+                                    statistics
+                                )} $`}
+                            </b>
+                        ) : (
+                            'No data'
+                        )}
+                    </Typography>
+                    {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
+                        .length ? (
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            Penalties for {`${moment().format('MMMM')}: `}
+                            <PenaltiesList
+                                penaltiesArray={personalPenalties.filter(
+                                    penalty =>
+                                        penalty.date.slice(3) ===
+                                        moment().format('MM YYYY')
+                                )}
+                            />
+                        </Typography>
+                    ) : null}
+                </div>
                 {suspended.status ? null : (
                     <>
                         <Accordion>
@@ -146,6 +210,12 @@ function SingleTranslator({
                                     onDragLeave={dragLeaveHandler}
                                     onDrop={e => onBoardDrop(e, _id)}
                                 >
+                                    <Typography variant="caption">
+                                        {`Balance for ${moment(
+                                            `${previousDay}/${currentMonth}/${currentYear}`,
+                                            'D/M/YYYY'
+                                        ).format('DD MMMM')}:`}{' '}
+                                    </Typography>
                                     {clients.filter(client => !client.suspended)
                                         .length ? (
                                         clients
@@ -174,7 +244,9 @@ function SingleTranslator({
                                                         }
                                                         id={client._id}
                                                     >
-                                                        <p>{`${client.name} ${client.surname}`}</p>
+                                                        <p>
+                                                            {`${client.name} ${client.surname}`}
+                                                        </p>
                                                         <IconButton
                                                             color={'primary'}
                                                             variant={
@@ -202,12 +274,6 @@ function SingleTranslator({
                                                                 'clients-list__finance-container'
                                                             }
                                                         >
-                                                            {`Balance for ${moment(
-                                                                `${previousDay}/${currentMonth}/${currentYear}`,
-                                                                'D/M/YYYY'
-                                                            ).format(
-                                                                'DD MMMM'
-                                                            )}:`}{' '}
                                                             <b
                                                                 className={specialColorNeeded(
                                                                     client._id
@@ -301,6 +367,28 @@ function SingleTranslator({
                                         selectedDate.format('M')
                                     )} $`}</b>
                                 </Typography>
+                                {calculatePersonalPenalties()
+                                    ?.selectedDatePenaltiesArray.length ? (
+                                    <Typography variant="body2" align={'left'}>
+                                        Penalties for{' '}
+                                        {`${selectedDate.format('MMMM')}: `}
+                                        <PenaltiesList
+                                            penaltiesArray={personalPenalties.filter(
+                                                penalty =>
+                                                    penalty.date.slice(3) ===
+                                                    moment(selectedDate).format(
+                                                        'MM YYYY'
+                                                    )
+                                            )}
+                                        />
+                                        <span className="red-text styled-text-numbers">
+                                            {`${getSumFromArray(
+                                                calculatePersonalPenalties()
+                                                    .selectedDatePenaltiesArray
+                                            )} $`}
+                                        </span>
+                                    </Typography>
+                                ) : null}
                             </AccordionDetails>
                         </Accordion>
                     </>
@@ -320,18 +408,25 @@ function SingleTranslator({
                     />
                 ) : null}
                 <IconButton
-                    color={suspended.status ? 'default' : 'primary'}
+                    color={suspended.status ? 'primary' : 'error'}
                     variant={'contained'}
                     size={'small'}
                     onClick={() => suspendTranslator(_id)}
                     component="span"
                 >
                     {suspended.status ? (
-                        <PersonAddAlt1Icon />
+                        <FontAwesomeIcon icon={faPersonCirclePlus} />
                     ) : (
-                        <PersonRemoveIcon />
+                        <FontAwesomeIcon icon={faPersonCircleXmark} />
                     )}
                 </IconButton>
+                <PersonalPenaltyForm
+                    suspended={suspended.status}
+                    id={_id}
+                    addPersonalPenaltyToTranslator={
+                        addPersonalPenaltyToTranslator
+                    }
+                />
             </CardActions>
         </Card>
     )

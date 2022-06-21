@@ -233,13 +233,16 @@ app.put(translatorsURL + ':id', (req, res) => {
                 clients: req.body.clients,
                 statistics: req.body.statistics,
                 suspended: req.body.suspended,
+                personalPenalties: req.body.personalPenalties,
             },
         },
         err => {
             if (err) {
                 return res.sendStatus(500)
             }
-            res.send('Переводчик сохранен')
+            const message = 'Переводчик сохранен'
+            console.log(message)
+            res.send(message)
         }
     )
 })

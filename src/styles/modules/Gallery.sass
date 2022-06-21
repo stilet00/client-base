@@ -11,11 +11,21 @@
   display: flex
   flex-direction: column
   align-items: center
+  padding: 0 10px
   z-index: 1
   height: 100%
   max-height: 80vh
 
+  .bigScreen-translator-menu
+    display: flex
+    justify-content: space-evenly
+    padding: 10px
+    background: $main_color
+    border-top-left-radius: 10px
+    border-top-right-radius: 10px
+
   .gallery-menu
+    align-self: flex-start
     border: 2px solid $main_color
     border-bottom: none
     border-top-left-radius: 5px
@@ -26,7 +36,18 @@
 
     &_no-border
       border: none
-      padding-bottom: 0
+      padding: 0
+
+    &__inline-filters
+      display: flex
+      flex: 1
+      justify-content: space-evenly
+      border-left: 2px solid black
+
+    &__filters-label
+      position: relative
+      transform: rotate(90deg)
+      margin-left: -40px
 
     &__filters
       display: flex
@@ -39,6 +60,7 @@
 
     &__checkbox-container
       display: flex
+      align-items: center
       text-align: left
       padding: 2px
       width: 40%
@@ -54,9 +76,6 @@
         //background-color: rgba(0, 0, 0, 0.04)
         border-color: rgba(0, 0, 0, 0.87)
 
-
-
-
     .MuiAccordionDetails-root
       flex-direction: column
       padding: 0
@@ -70,7 +89,6 @@
     flex-wrap: wrap
     justify-content: space-evenly
     gap: 20px 5px
-    width: 90%
     min-width: 90vw
     padding: 10px
     box-sizing: border-box
@@ -80,8 +98,11 @@
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)
     backdrop-filter: blur(5px)
 
-    @media (max-width: 812px)
-      width: 90vw
+    @media (max-width: 1000px)
+      border-top-left-radius: 0
+
+    @media (max-width: 812)
+      border-top-left-radius: 10px
 
     .gallery-item
       display: flex
@@ -112,11 +133,50 @@
       width: 270px
       box-shadow: $material-box-shadow
 
+      &::before
+        position: absolute
+        bottom: -20px
+        right: -10px
+        content: ('')
+        width: 120%
+        height: 80px
+        background: $secondary_color_opacity
+        transform: rotate(5deg)
+
+      &::after
+        position: absolute
+        bottom: 50px
+        right: -10px
+        content: ('')
+        width: 120%
+        height: 20px
+        border-radius: 50%
+        background: #fafeff
+        transform: rotate(5deg)
+
       @media (max-width: 650px)
         width: 90%
 
+      .MuiCardContent-root
+        margin-bottom: 15px
+
+        @media (max-width: 650px)
+          margin-bottom: 25px
+
       &--suspended
+        color: $main-color
         background: $secondary_color_opacity
+
+        &::before
+          background: $main_color_opacity
+          transform: rotate(-5deg)
+
+        &::after
+          display: none
+
+        .MuiRating-root
+          background: $main_color
+          border-radius: 8px
 
       h4
         margin: 10px
@@ -141,11 +201,10 @@
 
       .MuiPaper-root:not(:first-child)
         margin-top: 12px
-        background: #f5f5f5
+        background: #ffffff
 
       .MuiCardActions-root
         padding: 4px 16px 8px 16px
-
 
       .clients-list
         box-sizing: border-box
@@ -223,9 +282,8 @@
         letter-spacing: 1px
         text-shadow: 2px 2px 3px rgba(255,255,255,0.1)
 
-
     .MuiCardActions-root
-      justify-content: flex-end
+      justify-content: flex-start
 
 .scrolled-container
   overflow-y: scroll

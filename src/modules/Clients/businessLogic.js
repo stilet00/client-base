@@ -1,67 +1,13 @@
 import { useCallback, useState } from 'react'
-import { CLIENTS } from '../../database/database'
 import { DEFAULT_CLIENT } from '../../constants/constants'
 import useModal from '../../sharedHooks/useModal'
 import {
     calculateBalanceDaySum,
     getMiddleValueFromArray,
     getSumFromArray,
+    getNumberWithHundredths,
 } from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
-
-export const useKarusell = () => {
-    const [currentStep, setCurrentStep] = useState(0)
-
-    const [animationClass, setAnimationClass] = useState('')
-
-    const [imageLoaded, setImageLoaded] = useState('none')
-
-    function goNext() {
-        setImageLoaded('none')
-        setAnimationClass('forward')
-        CLIENTS.length - 1 !== currentStep
-            ? setCurrentStep(currentStep + 1)
-            : setCurrentStep(0)
-    }
-
-    function goPrevious() {
-        setImageLoaded('none')
-        setAnimationClass('back')
-        currentStep === 0
-            ? setCurrentStep(CLIENTS.length - 1)
-            : setCurrentStep(currentStep - 1)
-    }
-
-    return {
-        currentStep,
-        animationClass,
-        imageLoaded,
-        setImageLoaded,
-        goPrevious,
-        goNext,
-    }
-}
-
-export const useGallery = () => {
-    const [ageFilter, setAgeFilter] = useState(18)
-
-    const [nameFilter, setNameFilter] = useState('')
-
-    const valueText = useCallback(value => {
-        setAgeFilter(value)
-    }, [])
-
-    const onNameFilter = useCallback(text => {
-        setNameFilter(text)
-    }, [])
-
-    return {
-        ageFilter,
-        nameFilter,
-        onNameFilter,
-        valueText,
-    }
-}
 
 export const useClientsForm = ({ onFormSubmit, editedClient }) => {
     const [client, setClient] = useState(editedClient || DEFAULT_CLIENT)
@@ -113,7 +59,27 @@ export const useClientsList = translators => {
             })
         })
 
-        return Math.round(totalClientBalance)
+        return getNumberWithHundredths(totalClientBalance)
+    }
+
+    function getAllAsignedTranslators(clientId, date = moment()) {
+        let arrayOfTranslators = []
+
+        translators.forEach(({ name, surname, clients, suspended }) => {
+            const assignedClient = clients.find(
+                client => client._id === clientId
+            )
+            if (assignedClient && 'suspended' in assignedClient) {
+                if (!assignedClient.suspended && !suspended.status) {
+                    arrayOfTranslators.push(`${name} ${surname}`)
+                }
+            } else if (assignedClient && !('suspended' in assignedClient)) {
+                if (!suspended.status) {
+                    arrayOfTranslators.push(`${name} ${surname}`)
+                }
+            }
+        })
+        return arrayOfTranslators
     }
 
     function calculateMiddleMonthSum(clientId, date = moment()) {
@@ -139,14 +105,14 @@ export const useClientsList = translators => {
                             const dayArray = []
                             monthSumArray[index] = [
                                 ...dayArray,
-                                Math.round(
+                                getNumberWithHundredths(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]
                         } else {
                             monthSumArray[index] = [
                                 ...monthSumArray[index],
-                                Math.round(
+                                getNumberWithHundredths(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]
@@ -191,5 +157,6 @@ export const useClientsList = translators => {
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
+        getAllAsignedTranslators,
     }
 }

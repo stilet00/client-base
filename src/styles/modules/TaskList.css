@@ -1,90 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .taskList-container {
-    width: 90%;
-    z-index: 1;
-    max-width: 500px;
-    max-height: 80vh;
-    margin: 0 auto;
-    padding: 10px;
-    border: 2px solid white;
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
-    overflow-x: hidden;
-}
-.taskList-container .task {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 90%;
-    min-height: 150px;
-    box-sizing: border-box;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    font-family: 'Lato', Sans-Serif;
-    list-style: none;
-    transition: 0.5s;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
-.taskList-container .task p {
-    margin: 0;
-    display: block;
-}
-.taskList-container .task .task-date {
-    font-size: 10px;
-}
-.taskList-container .task .button-container {
-    width: 50%;
-    display: flex;
-    justify-content: space-between;
-}
-@media (max-width: 400px) {
-    .taskList-container .task .button-container {
-        flex-direction: column;
-    }
-}
-.taskList-container .task .done-text {
-    color: orange;
-}
-.taskList-container .not-completed {
-    background: rgba(255, 255, 255, 0.7);
-}
-.taskList-container .completed {
-    background: #797272;
+  width: 90%;
+  z-index: 1;
+  max-height: 80vh;
+  margin: 0 auto;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  overflow-x: no;
 }
 
-ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 5px;
-    margin: 0;
-    width: 100%;
+.taskList-container ul {
+  padding-left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  gap: 10px;
+  margin: 0;
+  width: 100%;
+}
+
+.taskList-container .task {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 50%;
+  max-width: 300px;
+  min-height: 150px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: 'Lato', Sans-Serif;
+  list-style: none;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  background-color: white;
+}
+
+@media (max-width: 690px) {
+  .taskList-container .task {
+    width: 90%;
+    max-width: none;
+  }
+}
+
+.taskList-container .task p {
+  margin: 0;
+  display: block;
+}
+
+.taskList-container .task .task-date {
+  font-size: 10px;
+}
+
+.taskList-container .task .button-container {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+@media (max-width: 400px) {
+  .taskList-container .task .button-container {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+.taskList-container .task .done-text {
+  color: orange;
+}
+
+.taskList-container .completed {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+.taskList-container .completed button {
+  color: black;
 }
 
 .button-add-container {
-    height: 60px;
-    max-width: 326px;
+  height: 60px;
+  max-width: 326px;
 }
 
 .item-enter {
-    opacity: 0;
+  opacity: 0;
 }
 
 .item-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
+  opacity: 1;
+  -webkit-transition: opacity 500ms ease-in;
+  transition: opacity 500ms ease-in;
 }
 
 .item-exit {
-    opacity: 1;
+  opacity: 1;
 }
 
 .item-exit-active {
-    opacity: 0;
-    transition: opacity 500ms ease-in;
+  opacity: 0;
+  -webkit-transition: opacity 500ms ease-in;
+  transition: opacity 500ms ease-in;
 }
-
 /*# sourceMappingURL=TaskList.css.map */

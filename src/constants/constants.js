@@ -5,6 +5,7 @@ import {
 } from '../sharedFunctions/sharedFunctions'
 
 export const currentYear = moment().format('YYYY')
+export const previousYear = moment().subtract(1, 'year').format('YYYY')
 export const currentMonth = moment().format('M')
 export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
@@ -14,6 +15,12 @@ export const DEFAULT_CLIENT = {
     surname: '',
     translators: [],
     suspended: false,
+}
+
+export const DEFAULT_PENALTY = {
+    date: moment().format('DD MM YYYY'),
+    amount: 0,
+    description: '',
 }
 
 class DEFAULT_DAY_BALANCE {
@@ -63,6 +70,18 @@ export const DEFAULT_TRANSLATOR = {
         status: false,
         time: null,
     },
+    personalPenalties: [],
+}
+
+export const DEFAULT_CATEGORIES = {
+    chats: 'chats',
+    dating: 'dating',
+    letters: 'letters',
+    penalties: 'penalties',
+    virtualGiftsSvadba: 'virtualGiftsSvadba',
+    virtualGiftsDating: 'virtualGiftsDating',
+    photoAttachments: 'photoAttachments',
+    phoneCalls: 'phoneCalls',
 }
 
 function fillMonths(year) {

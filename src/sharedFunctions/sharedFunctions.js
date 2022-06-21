@@ -1,7 +1,11 @@
 import moment from 'moment'
 import { currentMonth, currentYear } from '../constants/constants'
 
-export function calculateBalanceDaySum(targetObject, onlySvadba = false) {
+export function calculateBalanceDaySum(
+    targetObject,
+    onlySvadba = false,
+    category = null
+) {
     if (onlySvadba) {
         const svadbaObject = {
             ...targetObject,
@@ -14,6 +18,18 @@ export function calculateBalanceDaySum(targetObject, onlySvadba = false) {
         }, 0)
 
         return svadbaSum - svadbaObject.penalties * 2
+    } else if (category) {
+        const categorizedObject = {
+            [category]: targetObject[category],
+        }
+        const categorySum = Object.values(categorizedObject).reduce(
+            (sum, current) => {
+                return typeof current === 'number' ? sum + current : sum
+            },
+            0
+        )
+
+        return categorySum
     } else {
         const arrayToSum = Object.values(targetObject)
 
@@ -51,7 +67,8 @@ export const calculateTranslatorMonthTotal = (
     forFullMonth = true,
     monthFilter = currentMonth,
     yearFilter = currentYear,
-    onlySvadba = false
+    onlySvadba = false,
+    category = null
 ) => {
     const month = statistics
         .find(year => year.year === yearFilter)
@@ -64,7 +81,10 @@ export const calculateTranslatorMonthTotal = (
             return (
                 sum +
                 current.clients.reduce((sum, current) => {
-                    return sum + calculateBalanceDaySum(current, onlySvadba)
+                    return (
+                        sum +
+                        calculateBalanceDaySum(current, onlySvadba, category)
+                    )
                 }, 0)
             )
         }, 0)
@@ -74,14 +94,19 @@ export const calculateTranslatorMonthTotal = (
                 ? sum +
                       current.clients.reduce((sum, current) => {
                           return (
-                              sum + calculateBalanceDaySum(current, onlySvadba)
+                              sum +
+                              calculateBalanceDaySum(
+                                  current,
+                                  onlySvadba,
+                                  category
+                              )
                           )
                       }, 0)
                 : sum
         }, 0)
     }
 
-    return Number(total.toFixed(2))
+    return getNumberWithHundredths(total)
 }
 
 export function getStringMonthNumber(monthNumber) {
@@ -103,6 +128,13 @@ export function calculatePercentDifference(currentSum, previousSum) {
         currentSum > previousSum
             ? ((currentSum - previousSum) * 100) / currentSum
             : ((previousSum - currentSum) * 100) / previousSum
+    const result = difference.toString() === 'NaN' ? 0 : difference.toFixed(1)
+    if (result[result.length - 1] === '0') {
+        return result.slice(0, result.length - 2)
+    }
+    return Math.round(result)
+}
 
-    return difference.toString() === 'NaN' ? 0 : Math.round(difference)
+export function getNumberWithHundredths(number) {
+    return Number(number.toFixed(2))
 }
