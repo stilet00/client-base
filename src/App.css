@@ -40,6 +40,16 @@ ul {
   list-style-type: none;
 }
 
+.gradient-box {
+  background: -webkit-gradient(linear, left bottom, left top, from(rgba(2, 0, 36, 0.2)), color-stop(0%, rgba(255, 255, 255, 0.2)), to(rgba(0, 212, 255, 0.2)));
+  background: linear-gradient(0deg, rgba(2, 0, 36, 0.2) 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
+}
+
+.gradient-box--intense {
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(2, 0, 36, 0.5)), color-stop(0%, rgba(255, 255, 255, 0.5)), to(rgba(0, 212, 255, 0.5)));
+  background: linear-gradient(180deg, rgba(2, 0, 36, 0.5) 0%, rgba(255, 255, 255, 0.5) 0%, rgba(0, 212, 255, 0.5) 100%);
+}
+
 @-webkit-keyframes sun-rotate {
   0% {
     -webkit-transform: rotate(0deg);

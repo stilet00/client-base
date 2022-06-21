@@ -11,6 +11,35 @@ import {
     faArrowAltCircleDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import CountUp from 'react-countup'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import { styled } from '@mui/material/styles'
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}))
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}))
 
 function Overview({ user }) {
     const {
@@ -33,57 +62,91 @@ function Overview({ user }) {
 
     const monthProgress =
         monthTotalSum > previousMonthTotal ? (
-            <span className={'green-text'}>
+            <span className={'green-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum,
-                    previousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={2}
+                    end={calculatePercentDifference(
+                        monthTotalSum,
+                        previousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
-            <span className={'red-text'}>
+            <span className={'red-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum,
-                    previousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={2}
+                    end={calculatePercentDifference(
+                        monthTotalSum,
+                        previousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     const svadbaMonthProgress =
         svadbaMonthTotal > svadbaPreviousMonthTotal ? (
-            <span className={'green-text'}>
+            <span className={'green-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    svadbaMonthTotal,
-                    svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={1}
+                    end={calculatePercentDifference(
+                        svadbaMonthTotal,
+                        svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
-            <span className={'red-text'}>
+            <span className={'red-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    svadbaMonthTotal,
-                    svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    delay={1}
+                    end={calculatePercentDifference(
+                        svadbaMonthTotal,
+                        svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     const datingMonthProgress =
         monthTotalSum - svadbaMonthTotal >
         previousMonthTotal - svadbaPreviousMonthTotal ? (
-            <span className={'green-text'}>
+            <span className={'green-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum - svadbaMonthTotal,
-                    previousMonthTotal - svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    end={calculatePercentDifference(
+                        monthTotalSum - svadbaMonthTotal,
+                        previousMonthTotal - svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         ) : (
-            <span className={'red-text'}>
+            <span className={'red-text styled-text-numbers'}>
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    monthTotalSum - svadbaMonthTotal,
-                    previousMonthTotal - svadbaPreviousMonthTotal
-                )} %`}
+                <span> </span>
+                <CountUp
+                    duration={0.75}
+                    end={calculatePercentDifference(
+                        monthTotalSum - svadbaMonthTotal,
+                        previousMonthTotal - svadbaPreviousMonthTotal
+                    )}
+                />
+                &nbsp;%
             </span>
         )
     return (
@@ -95,105 +158,151 @@ function Overview({ user }) {
                             'taskList-container chart-container table-container  animated-box'
                         }
                     >
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Statistic's type</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {selectedYear === moment().format('YYYY') ? (
-                                    <>
-                                        <tr>
-                                            <td>Current month</td>
-                                            <td>
-                                                <b>
+                        <TableContainer component={Paper}>
+                            <Table aria-label="simple table">
+                                <TableHead>
+                                    <StyledTableRow>
+                                        <StyledTableCell
+                                            style={{ fontWeight: 'bold' }}
+                                        >
+                                            Statistic's type
+                                        </StyledTableCell>
+                                        <StyledTableCell
+                                            style={{ fontWeight: 'bold' }}
+                                        >
+                                            Data
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {selectedYear ===
+                                    moment().format('YYYY') ? (
+                                        <>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Current month
+                                                </StyledTableCell>
+                                                <StyledTableCell>
                                                     {moment().format(
                                                         'MMMM YYYY'
                                                     )}
-                                                </b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Month balance</td>
-                                            <td>
-                                                {yearTotalSum ? (
-                                                    <>
-                                                        <span
-                                                            className={
-                                                                'blue-text'
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Month balance
+                                                </StyledTableCell>
+                                                <StyledTableCell>
+                                                    {yearTotalSum ? (
+                                                        <>
+                                                            <span
+                                                                className={
+                                                                    'blue-text styled-text-numbers'
+                                                                }
+                                                            >
+                                                                <CountUp
+                                                                    duration={
+                                                                        0.75
+                                                                    }
+                                                                    delay={2}
+                                                                    end={
+                                                                        monthTotalSum
+                                                                    }
+                                                                    separator=" "
+                                                                    prefix="$"
+                                                                />
+                                                            </span>
+                                                            {monthProgress}
+                                                        </>
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Svadba balance
+                                                </StyledTableCell>
+                                                <StyledTableCell>
+                                                    {yearTotalSum ? (
+                                                        <>
+                                                            <span
+                                                                className={
+                                                                    'blue-text styled-text-numbers'
+                                                                }
+                                                            >
+                                                                <CountUp
+                                                                    duration={
+                                                                        0.75
+                                                                    }
+                                                                    delay={1}
+                                                                    end={
+                                                                        svadbaMonthTotal
+                                                                    }
+                                                                    separator=" "
+                                                                    prefix="$"
+                                                                />
+                                                            </span>
+                                                            {
+                                                                svadbaMonthProgress
                                                             }
-                                                        >
-                                                            <b>
-                                                                {`${monthTotalSum} $`}
-                                                            </b>
-                                                        </span>
-                                                        {monthProgress}
-                                                    </>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Svadba balance</td>
-                                            <td>
-                                                {yearTotalSum ? (
-                                                    <>
-                                                        <span
-                                                            className={
-                                                                'blue-text'
-                                                            }
-                                                        >
-                                                            {`${svadbaMonthTotal} $`}
-                                                        </span>
-                                                        {svadbaMonthProgress}
-                                                    </>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dating balance</td>
-                                            <td>
-                                                {yearTotalSum ? (
-                                                    <>
-                                                        <span
-                                                            className={
-                                                                'blue-text'
-                                                            }
-                                                        >
-                                                            {`${
-                                                                monthTotalSum -
-                                                                svadbaMonthTotal
-                                                            } $`}
-                                                        </span>
+                                                        </>
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Dating balance
+                                                </StyledTableCell>
+                                                <StyledTableCell>
+                                                    {yearTotalSum ? (
+                                                        <>
+                                                            <span
+                                                                className={
+                                                                    'blue-text styled-text-numbers'
+                                                                }
+                                                            >
+                                                                <CountUp
+                                                                    duration={
+                                                                        0.75
+                                                                    }
+                                                                    end={
+                                                                        monthTotalSum -
+                                                                        svadbaMonthTotal
+                                                                    }
+                                                                    separator=" "
+                                                                    prefix="$"
+                                                                />
+                                                            </span>
 
-                                                        {datingMonthProgress}
-                                                    </>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total clients</td>
-                                            <td>
-                                                <b>
+                                                            {
+                                                                datingMonthProgress
+                                                            }
+                                                        </>
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Total clients
+                                                </StyledTableCell>
+                                                <StyledTableCell>
                                                     {clients.length ? (
                                                         clients.length
                                                     ) : (
                                                         <SmallLoader />
                                                     )}
-                                                </b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Active translators</td>
-                                            <td>
-                                                <b>
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Active translators
+                                                </StyledTableCell>
+                                                <StyledTableCell>
                                                     {translators.length ? (
                                                         translators.filter(
                                                             translator =>
@@ -204,50 +313,34 @@ function Overview({ user }) {
                                                     ) : (
                                                         <SmallLoader />
                                                     )}
-                                                </b>
-                                            </td>
-                                        </tr>
-                                    </>
-                                ) : null}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        </>
+                                    ) : null}
 
-                                {/*<tr>*/}
-                                {/*  <td>Best month of {moment(selectedYear).format("YYYY")}</td>*/}
-                                {/*  <td>*/}
-                                {/*    <b>*/}
-                                {/*      {bestMonth ? (*/}
-                                {/*        <span>*/}
-                                {/*          {`${moment(*/}
-                                {/*            `${selectedYear}-${bestMonth.month}-01`*/}
-                                {/*          ).format("MMM")} : `}*/}
-                                {/*          <b className={"green-text"}>*/}
-                                {/*            {bestMonth.values + " $"}*/}
-                                {/*          </b>*/}
-                                {/*        </span>*/}
-                                {/*      ) : (*/}
-                                {/*        <SmallLoader />*/}
-                                {/*      )}*/}
-                                {/*    </b>*/}
-                                {/*  </td>*/}
-                                {/*</tr>*/}
-
-                                <tr>
-                                    <td>Year's balance</td>
-                                    <td>
-                                        <b>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Year's balance
+                                        </StyledTableCell>
+                                        <StyledTableCell>
                                             {yearTotalSum ? (
                                                 yearTotalSum + ' $'
                                             ) : (
                                                 <SmallLoader />
                                             )}
-                                        </b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Salary payed</td>
-                                    <td>
-                                        <b>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Salary payed
+                                        </StyledTableCell>
+                                        <StyledTableCell>
                                             {yearTotalSum ? (
-                                                <span className={'blue-text'}>
+                                                <span
+                                                    className={
+                                                        'blue-text styled-text-numbers'
+                                                    }
+                                                >
                                                     {' '}
                                                     {Math.floor(
                                                         yearTotalSum * 0.45
@@ -256,15 +349,19 @@ function Overview({ user }) {
                                             ) : (
                                                 <SmallLoader />
                                             )}
-                                        </b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Payments to clients</td>
-                                    <td>
-                                        <b>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Payments to clients
+                                        </StyledTableCell>
+                                        <StyledTableCell>
                                             {yearTotalSum ? (
-                                                <span className={'blue-text'}>
+                                                <span
+                                                    className={
+                                                        'blue-text styled-text-numbers'
+                                                    }
+                                                >
                                                     {' '}
                                                     {Math.floor(
                                                         yearTotalSum * 0.1
@@ -273,33 +370,44 @@ function Overview({ user }) {
                                             ) : (
                                                 <SmallLoader />
                                             )}
-                                        </b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Total profit</td>
-                                    <td>
-                                        <b>
-                                            {yearTotalSum ? (
-                                                <span className={'green-text'}>
-                                                    {' '}
-                                                    {yearTotalSum -
-                                                        Math.floor(
-                                                            yearTotalSum * 0.4
-                                                        ) -
-                                                        Math.floor(
-                                                            yearTotalSum * 0.1
-                                                        ) +
-                                                        ' $'}{' '}
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </b>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Total profit
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            <b>
+                                                {yearTotalSum ? (
+                                                    <span
+                                                        className={
+                                                            'green-text styled-text-numbers'
+                                                        }
+                                                        style={{
+                                                            margin: 0,
+                                                        }}
+                                                    >
+                                                        {' '}
+                                                        {yearTotalSum -
+                                                            Math.floor(
+                                                                yearTotalSum *
+                                                                    0.4
+                                                            ) -
+                                                            Math.floor(
+                                                                yearTotalSum *
+                                                                    0.1
+                                                            ) +
+                                                            ' $'}{' '}
+                                                    </span>
+                                                ) : (
+                                                    <SmallLoader />
+                                                )}
+                                            </b>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
                 ) : (
                     <Unauthorized />

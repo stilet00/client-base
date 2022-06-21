@@ -1,24 +1,15 @@
 import React from 'react'
-import {
-    makeStyles,
-    ThemeProvider,
-    createTheme,
-} from '@material-ui/core/styles'
+import { styled } from '@mui/material/styles'
 import Button from '@material-ui/core/Button'
+import { lightBlue } from '@mui/material/colors'
 
-const useStyles = makeStyles(theme => ({
-    styledButton: {
-        marginTop: theme.spacing(1),
+const ColorButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(lightBlue[500]),
+    backgroundColor: lightBlue[500],
+    '&:hover': {
+        backgroundColor: lightBlue[700],
     },
 }))
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: 'rgba(255,255,255,1)',
-        },
-    },
-})
 
 export default function ColoredButton({
     innerContent,
@@ -28,24 +19,18 @@ export default function ColoredButton({
     type,
     style,
 }) {
-    const classes = useStyles()
-
     return (
         <div className={'green-button-container'}>
-            <ThemeProvider theme={theme}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.styledButton}
-                    disabled={disabled}
-                    onClick={onClick}
-                    type={type}
-                    fullWidth
-                    style={style}
-                >
-                    {innerContent || children}
-                </Button>
-            </ThemeProvider>
+            <ColorButton
+                variant="contained"
+                disabled={disabled}
+                onClick={onClick}
+                type={type}
+                fullWidth
+                style={style}
+            >
+                {innerContent || children}
+            </ColorButton>
         </div>
     )
 }

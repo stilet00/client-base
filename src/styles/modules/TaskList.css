@@ -3,7 +3,6 @@
 .taskList-container {
   width: 90%;
   z-index: 1;
-  max-width: 500px;
   max-height: 80vh;
   margin: 0 auto;
   padding: 10px;
@@ -11,7 +10,21 @@
   border-radius: 10px;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
-  overflow-x: hidden;
+  overflow-x: no;
+}
+
+.taskList-container ul {
+  padding-left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  gap: 10px;
+  margin: 0;
+  width: 100%;
 }
 
 .taskList-container .task {
@@ -22,18 +35,15 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  width: 90%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 50%;
+  max-width: 300px;
   min-height: 150px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 5px;
   border-radius: 5px;
   font-family: 'Lato', Sans-Serif;
   list-style: none;
@@ -41,6 +51,14 @@
   transition: 0.5s;
   -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  background-color: white;
+}
+
+@media (max-width: 690px) {
+  .taskList-container .task {
+    width: 90%;
+    max-width: none;
+  }
 }
 
 .taskList-container .task p {
@@ -75,28 +93,13 @@
   color: orange;
 }
 
-.taskList-container .not-completed {
-  background: rgba(255, 255, 255, 0.7);
-}
-
 .taskList-container .completed {
-  background: #797272;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
 }
 
-ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 5px;
-  margin: 0;
-  width: 100%;
+.taskList-container .completed button {
+  color: black;
 }
 
 .button-add-container {

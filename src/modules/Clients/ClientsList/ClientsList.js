@@ -14,6 +14,7 @@ import {
     faListAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
 function ClientsList({
     translators,
@@ -26,6 +27,7 @@ function ClientsList({
     dragEndHandler,
     dragDropHandler,
 }) {
+    const { screenIsSmall } = useWindowDimensions()
     const {
         clientMonthSum,
         sortBySum,
@@ -38,7 +40,7 @@ function ClientsList({
         <>
             <Button
                 onClick={toggleDrawer('left', true)}
-                fullWidth
+                fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faListAlt} />}
             >
                 Show clients
@@ -54,7 +56,7 @@ function ClientsList({
                         All clients:
                     </h3>
                     <ul>
-                        {clients.sort(sortBySum).map(client => {
+                        {clients.sort(sortBySum).map((client, index) => {
                             const memoizedMiddleMonthSum =
                                 calculateMiddleMonthSum(client._id)
                             const memoizedPreviousMiddleMonthSum =
@@ -74,10 +76,18 @@ function ClientsList({
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'green-text'}>
+                                        <span
+                                            className={
+                                                'green-text styled-text-numbers'
+                                            }
+                                        >
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleUp}
                                             />
@@ -92,10 +102,18 @@ function ClientsList({
                                         {`Middle for ${moment().format(
                                             'MMMM'
                                         )}: `}
-                                        <span className={'blue-text'}>
+                                        <span
+                                            className={
+                                                'blue-text styled-text-numbers'
+                                            }
+                                        >
                                             {`${memoizedMiddleMonthSum} $`}
                                         </span>
-                                        <span className={'red-text'}>
+                                        <span
+                                            className={
+                                                'red-text styled-text-numbers'
+                                            }
+                                        >
                                             <FontAwesomeIcon
                                                 icon={faArrowAltCircleDown}
                                             />
@@ -109,7 +127,11 @@ function ClientsList({
                             const totalPage = (
                                 <span>
                                     {`Balance for ${moment().format('MMMM')}: `}
-                                    <span className={'blue-text'}>
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
                                         {`${memoizedMonthSum} $`}
                                     </span>
                                 </span>
@@ -120,7 +142,11 @@ function ClientsList({
                                     {`Balance for ${moment()
                                         .subtract(1, 'month')
                                         .format('MMMM')}: `}
-                                    <span className={'blue-text'}>
+                                    <span
+                                        className={
+                                            'blue-text styled-text-numbers'
+                                        }
+                                    >
                                         {`${memoizedPreviousMonthSum} $`}
                                     </span>
                                 </span>

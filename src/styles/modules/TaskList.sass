@@ -5,30 +5,41 @@
 .taskList-container
   width: 90%
   z-index: 1
-  max-width: 500px
   max-height: 80vh
   margin: 0 auto
   padding: 10px
   border: 2px solid $main_color
   border-radius: 10px
   backdrop-filter: blur(5px)
-  overflow-x: hidden
+  overflow-x: no
+
+  ul
+    padding-left: 0
+    display: flex
+    flex-flow: row wrap
+    gap: 10px
+    margin: 0
+    width: 100%
 
   .task
     display: flex
     flex-direction: column
-    align-items: center
-    justify-content: space-evenly
-    width: 90%
+    justify-content: space-between
+    width: 50%
+    max-width: 300px
     min-height: 150px
     box-sizing: border-box
-    padding: 10px
-    margin-bottom: 10px
+    padding: 5px
     border-radius: 5px
     font-family: 'Lato', Sans-Serif
     list-style: none
     transition: 0.5s
     box-shadow: $material-box-shadow
+    background-color: $main_color
+
+    @media (max-width: 690px)
+      width: 90%
+      max-width: none
 
     p
       margin: 0
@@ -47,25 +58,16 @@
     .done-text
       color: orange
 
-  .not-completed
-    background: $main_color_opacity
-
   .completed
-    background: $secondary_color
+    background: $secondary_color_opacity
+    color: $main_color
 
-ul
-  display: flex
-  flex-direction: column
-  align-items: center
-  padding: 5px
-  margin: 0
-  width: 100%
+    button
+      color: black
 
 .button-add-container
   height: 60px
   max-width: 326px
-
-
 
 .item-enter
   opacity: 0

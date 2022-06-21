@@ -423,6 +423,33 @@ export const useTranslators = user => {
         [translators]
     )
 
+    const addPersonalPenaltyToTranslator = useCallback(
+        (id, penalty) => {
+            let editedTranslator = translators.find(
+                translator => translator._id === id
+            )
+            if (editedTranslator.personalPenalties) {
+                editedTranslator = {
+                    ...editedTranslator,
+                    personalPenalties: [
+                        ...editedTranslator.personalPenalties,
+                        penalty,
+                    ],
+                }
+            } else {
+                editedTranslator = {
+                    ...editedTranslator,
+                    personalPenalties: [penalty],
+                }
+            }
+            saveChangedTranslator(
+                editedTranslator,
+                MESSAGES.personalPenaltyApplied
+            )
+        },
+        [translators]
+    )
+
     const suspendClient = useCallback(
         (translatorId, clientId) => {
             const editedTranslator = translators.find(
@@ -478,13 +505,16 @@ export const useTranslators = user => {
         changeFilter,
         filterTranslators,
         translatorFilter,
+        addPersonalPenaltyToTranslator,
     }
 }
 
 export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     const { open, handleOpen, handleClose } = useModal()
 
-    const [selectedClient, setSelectedClient] = useState(clients[0]._id)
+    const [selectedClient, setSelectedClient] = useState(
+        clients.filter(client => !client.suspended)[0]._id
+    )
 
     const [selectedYear, setSelectedYear] = useState(
         currentMonth === '1' && moment().format('D') === '1'
@@ -600,7 +630,11 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 }
 
-export const useSingleTranslator = (statistics, selectedDate) => {
+export const useSingleTranslator = (
+    statistics,
+    selectedDate,
+    personalPenalties
+) => {
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
             .find(
@@ -619,6 +653,27 @@ export const useSingleTranslator = (statistics, selectedDate) => {
                 )
             })
         return calculateBalanceDayAllClients(day)
+    }
+
+    const calculatePersonalPenalties = () => {
+        const thisMonthsPenaltiesArray = []
+        const selectedDatePenaltiesArray = []
+        personalPenalties?.forEach(penalty => {
+            if (moment().format('MM YYYY') === penalty.date.slice(3)) {
+                thisMonthsPenaltiesArray.push(Number(penalty.amount))
+            }
+            if (selectedDate.format('MM YYYY') === penalty.date.slice(3)) {
+                selectedDatePenaltiesArray.push(Number(penalty.amount))
+            }
+        })
+
+        return thisMonthsPenaltiesArray.length ||
+            selectedDatePenaltiesArray.length
+            ? {
+                  thisMonthsPenaltiesArray,
+                  selectedDatePenaltiesArray,
+              }
+            : null
     }
 
     const calculateTranslatorDayTotal = statistics => {
@@ -717,5 +772,6 @@ export const useSingleTranslator = (statistics, selectedDate) => {
         calculateMiddleMonthSum,
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
+        calculatePersonalPenalties,
     }
 }

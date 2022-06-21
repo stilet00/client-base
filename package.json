@@ -1,6 +1,6 @@
 {
     "name": "Sunrise agency - client base",
-    "version": "2.2.4",
+    "version": "2.2.6",
     "engines": {
         "node": "16.15.0",
         "npm": "8.5.5"
@@ -42,12 +42,14 @@
         "react": "^17.0.2",
         "react-animations": "^1.0.0",
         "react-chartjs-2": "^3.0.3",
+        "react-countup": "^6.2.0",
         "react-dom": "^17.0.2",
         "react-media": "^1.10.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "^5.0.1",
         "react-transition-group": "^4.4.2",
         "styled-components": "^5.3.5",
+        "uuid": "^8.3.2",
         "web-vitals": "^1.0.1"
     },
     "scripts": {

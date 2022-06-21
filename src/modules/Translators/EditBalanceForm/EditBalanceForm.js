@@ -31,6 +31,9 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { styled } from '@mui/material/styles'
+import { purple, blue, blueGrey } from '@mui/material/colors'
+import { green, red } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -46,14 +49,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
     },
 }))
-
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInputBase-root:first-child': {
-            background: 'rgba(210,206,206,0.5)',
-        },
-    },
-})(TextField)
 
 export default function EditBalanceForm({
     balanceDaySubmit,
@@ -86,18 +81,41 @@ export default function EditBalanceForm({
     })
     const classes = useStyles()
 
+    const FormMainButton = styled(Button)(({ theme }) => ({
+        color: theme.palette.getContrastText(purple[500]),
+        backgroundColor: blue[500],
+        '&:hover': {
+            backgroundColor: blue[700],
+        },
+    }))
+
+    const SubmitButton = styled(Button)(({ theme }) => ({
+        color: theme.palette.getContrastText(green[500]),
+        backgroundColor: green[500],
+        '&:hover': {
+            backgroundColor: green[700],
+        },
+    }))
+
+    const CloseButton = styled(Button)(({ theme }) => ({
+        color: theme.palette.getContrastText(red[500]),
+        backgroundColor: red[500],
+        '&:hover': {
+            backgroundColor: red[700],
+        },
+    }))
+
     return (
         <>
-            <Button
+            <FormMainButton
                 type="button"
                 size={'small'}
                 variant={'contained'}
                 onClick={handleOpen}
-                fullWidth
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
                 Edit balance
-            </Button>
+            </FormMainButton>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -111,12 +129,11 @@ export default function EditBalanceForm({
                 }}
             >
                 <Fade in={open}>
-                    <div className={'form-container balance-form'}>
+                    <div className={'form-container balance-form gradient-box'}>
                         <form>
                             <h2 id="transition-modal-title">
-                                Statistics on {name + ' ' + surname}
+                                {name + ' ' + surname}
                             </h2>
-                            <p>Filters:</p>
                             <div className={'balance-form__date'}>
                                 <Accordion
                                     className={'balance-form__date__accordion'}
@@ -207,6 +224,9 @@ export default function EditBalanceForm({
                                         value={selectedClient}
                                         onChange={handleClient}
                                         label="Client"
+                                        style={{
+                                            height: 40,
+                                        }}
                                     >
                                         {clients
                                             .filter(client => !client.suspended)
@@ -227,7 +247,7 @@ export default function EditBalanceForm({
                                     <div className="balance-form__finances">
                                         <div className="balance-form__finances__svadba">
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'chats'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -242,6 +262,7 @@ export default function EditBalanceForm({
                                                     step="0.01"
                                                     fullWidth
                                                     required
+                                                    size="small"
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position="end">
@@ -252,7 +273,7 @@ export default function EditBalanceForm({
                                                 />
                                             </div>
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'letters'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -261,6 +282,7 @@ export default function EditBalanceForm({
                                                     value={
                                                         findClientById().letters
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={'Letters'}
                                                     type={'number'}
@@ -277,7 +299,7 @@ export default function EditBalanceForm({
                                                 />
                                             </div>
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'virtualGiftsSvadba'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -287,6 +309,7 @@ export default function EditBalanceForm({
                                                         findClientById()
                                                             .virtualGiftsSvadba
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={'Virtual gifts'}
                                                     type={'number'}
@@ -303,7 +326,7 @@ export default function EditBalanceForm({
                                                 />
                                             </div>
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'penalties'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -313,6 +336,7 @@ export default function EditBalanceForm({
                                                         findClientById()
                                                             .penalties
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={'Penalties'}
                                                     type={'number'}
@@ -331,7 +355,7 @@ export default function EditBalanceForm({
                                         </div>
                                         <div className="balance-form__finances__dating">
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'dating'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -340,6 +364,7 @@ export default function EditBalanceForm({
                                                     value={
                                                         findClientById().dating
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={'Dating'}
                                                     type={'number'}
@@ -357,7 +382,7 @@ export default function EditBalanceForm({
                                                 />
                                             </div>
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'phoneCalls'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -367,6 +392,7 @@ export default function EditBalanceForm({
                                                         findClientById()
                                                             .phoneCalls
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={'Phone calls'}
                                                     type={'number'}
@@ -384,7 +410,7 @@ export default function EditBalanceForm({
                                                 />
                                             </div>
                                             <div className="balance-form__finances-input">
-                                                <CssTextField
+                                                <TextField
                                                     name={'virtualGiftsDating'}
                                                     onChange={handleChange}
                                                     onClick={e =>
@@ -394,6 +420,7 @@ export default function EditBalanceForm({
                                                         findClientById()
                                                             .virtualGiftsDating
                                                     }
+                                                    size="small"
                                                     variant="outlined"
                                                     label={
                                                         'Virtual gifts dating'
@@ -435,6 +462,7 @@ export default function EditBalanceForm({
                                                         type={'text'}
                                                         multiline
                                                         fullWidth
+                                                        size="small"
                                                         maxRows={4}
                                                         value={
                                                             findClientById()
@@ -453,20 +481,28 @@ export default function EditBalanceForm({
                                             </Accordion>
                                         </div>
                                     </div>
-                                    <p>
+                                    <p
+                                        style={{
+                                            margin: '0 8px',
+                                        }}
+                                    >
                                         <strong>Day balance: </strong>
                                         {calculateBalanceDaySum(
                                             findClientById()
                                         ).toFixed(2) + ' $'}
                                     </p>
                                     {findClientById().comments ? (
-                                        <p>
+                                        <p
+                                            style={{
+                                                margin: '0 8px',
+                                            }}
+                                        >
                                             <strong>Day comment: </strong>
                                             {` ${findClientById().comments}.`}
                                         </p>
                                     ) : null}
                                     <div className="balance-form__actions">
-                                        <Button
+                                        <SubmitButton
                                             type={'button'}
                                             variant={'outlined'}
                                             onClick={onSavePressed}
@@ -475,9 +511,9 @@ export default function EditBalanceForm({
                                             }
                                             startIcon={<SaveAsIcon />}
                                         >
-                                            Save changes
-                                        </Button>
-                                        <Button
+                                            Save
+                                        </SubmitButton>
+                                        <CloseButton
                                             type={'button'}
                                             variant={'outlined'}
                                             onClick={handleClose}
@@ -486,8 +522,8 @@ export default function EditBalanceForm({
                                             }
                                             startIcon={<CloseIcon />}
                                         >
-                                            Close window
-                                        </Button>
+                                            Close
+                                        </CloseButton>
                                     </div>
                                 </>
                             ) : (
