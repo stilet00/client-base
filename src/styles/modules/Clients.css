@@ -15,6 +15,15 @@
   background: rgba(192, 222, 229, 0.7);
 }
 
+.side-clients-menu ul {
+  padding: 0;
+}
+
+.side-clients-menu ul li {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media (max-width: 500px) {
   .side-clients-menu {
     max-width: 70vw;

@@ -24,7 +24,6 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { DEFAULT_CATEGORIES } from '../../constants/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
-import CountUp from 'react-countup'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 
 function Translators({ user }) {
@@ -174,12 +173,9 @@ function Translators({ user }) {
                                 <Typography sx={{ p: 2 }} align={'left'}>
                                     {`Total by ${moment().format('D MMMM')}: `}{' '}
                                     <b>
-                                        <CountUp
-                                            duration={1.75}
-                                            end={calculateMonthTotal()}
-                                            separator=" "
-                                            prefix="$"
-                                        />
+                                        <b>{`${calculateMonthTotal().toFixed(
+                                            2
+                                        )} $`}</b>
                                     </b>
                                 </Typography>
                             </Popover>
@@ -290,14 +286,7 @@ function Translators({ user }) {
                         <Divider />
                         <Typography sx={{ p: 2 }} align={'left'}>
                             {`Total by ${moment().format('D MMMM')}: `}{' '}
-                            <b>
-                                <CountUp
-                                    duration={1.75}
-                                    end={calculateMonthTotal()}
-                                    separator=" "
-                                    prefix="$"
-                                />
-                            </b>
+                            <b>{`${calculateMonthTotal()} $`}</b>
                         </Typography>
                     </Popover>
                     <div class="gallery-menu__inline-filters">

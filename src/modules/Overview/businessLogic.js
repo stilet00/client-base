@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
-import { calculateTranslatorMonthTotal } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculateTranslatorMonthTotal,
+    getNumberWithHundredths,
+} from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
@@ -77,7 +80,7 @@ export const useOverview = user => {
                         )
                 })
             }
-            return Math.round(sum)
+            return getNumberWithHundredths(sum)
         },
         [translators]
     )

@@ -134,9 +134,7 @@ export default function Navigation({ user }) {
                                 history.push(newValue)
                                 setPage(newValue)
                             }}
-                            className={
-                                'header_nav gradient-box gradient-box--intense'
-                            }
+                            className={'header_nav gradient-box'}
                         >
                             <BottomNavigationAction
                                 label="Overview"
