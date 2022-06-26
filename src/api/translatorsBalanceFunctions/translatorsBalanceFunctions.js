@@ -1,9 +1,28 @@
 const moment = require('moment')
 
-// const calculateTranslatorYesterdayTotal = translator => {
-//     const monthTotal = calculateTranslatorMonthTotal(translator.statistics)
-//     return monthTotal
-// }
+const calculateTranslatorYesterdayTotal = statistics => {
+    const day = statistics
+        .find(year => year.year === moment().subtract(1, 'day').format('YYYY'))
+        .months.find(
+            (month, index) =>
+                index + 1 === Number(moment().subtract(1, 'day').format('M'))
+        )
+        .find(day => {
+            return (
+                day.id === moment().subtract(1, 'day').format('DD MM YYYY') ||
+                day.id === moment().format('DD MM YYYY')
+            )
+        })
+    return calculateBalanceDayAllClients(day)
+}
+
+const calculateBalanceDayAllClients = day => {
+    return day.clients
+        .reduce((sum, current) => {
+            return sum + calculateBalanceDaySum(current)
+        }, 0)
+        .toFixed(2)
+}
 
 const calculateTranslatorMonthTotal = (
     statistics,
@@ -92,4 +111,7 @@ const calculateBalanceDaySum = (
     }
 }
 
-module.exports = calculateTranslatorMonthTotal
+module.exports = {
+    calculateTranslatorYesterdayTotal,
+    calculateTranslatorMonthTotal,
+}
