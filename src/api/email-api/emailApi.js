@@ -1,26 +1,30 @@
 const nodeMailer = require('nodemailer')
 const moment = require('moment')
-const calculateTranslatorMonthTotal = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
+const {
+    calculateTranslatorYesterdayTotal,
+    calculateTranslatorMonthTotal,
+} = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getEmailTemplateHTMLCode = require('../email-api/email-template/getEmailTemplateHTMLcode')
 
 const sendEmailTemplateToTranslators = translatorsCollection => {
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
         .map(({ name, surname, statistics }) => {
-            const translatorSum = calculateTranslatorMonthTotal(statistics)
-            return translatorSum
-                ? `${name} ${surname}: ${translatorSum}$`
+            const translatorSum = calculateTranslatorYesterdayTotal(statistics)
+            return translatorSum !== '0.00'
+                ? `${name} ${surname}: <b>${translatorSum}$</b>`
                 : null
         })
         .filter(notEmptyString => notEmptyString)
-    const monthTotalSum = translatorsCollection.reduce(
-        (sum, { statistics }) => {
-            return sum + Number(calculateTranslatorMonthTotal(statistics))
-        },
-        0
-    )
+
+    const yesterdayTotalSum = translatorsCollection
+        .map(({ statistics }) => {
+            return Number(calculateTranslatorYesterdayTotal(statistics))
+        })
+        .reduce((sum, current) => sum + current, 0)
+
     const emailHtmlTemplate = getEmailTemplateHTMLCode({
         arrayOfTranslatorsNamesAndMonthSums,
-        monthTotalSum,
+        yesterdayTotalSum,
     })
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
@@ -34,7 +38,7 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
     const emailList = [
         'antonstilet@gmail.com',
         'safroninanton@gmail.com',
-        'vasiliybabchenkov@gmail.com',
+        // 'vasiliybabchenkov@gmail.com',
     ]
     let mailOptions = {
         from: '"Sunrise agency" <antonstilet@gmail.com>',

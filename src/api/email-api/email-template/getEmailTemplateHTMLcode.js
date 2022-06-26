@@ -1,11 +1,26 @@
 const getEmailTemplateHTMLCode = ({
     arrayOfTranslatorsNamesAndMonthSums,
-    monthTotalSum,
+    yesterdayTotalSum,
 }) => {
-    const translatorsSumToHtmlCode = arrayOfTranslatorsNamesAndMonthSums.map(
-        translatorStrings =>
+    const lengthOfHalfNamesAndMonthsSumsArray = Math.round(
+        arrayOfTranslatorsNamesAndMonthSums.length / 2
+    )
+    const firstRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
+        0,
+        lengthOfHalfNamesAndMonthsSumsArray
+    )
+    const secondRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
+        lengthOfHalfNamesAndMonthsSumsArray
+    )
+    const translatorsSumToHtmlCode = firstRowOfSumsAndNames.map(
+        (translatorStrings, index) =>
             `<tr class="translator-info-container">
-                <td colspan="2"><span>${translatorStrings}</span></td>
+                <td><span>${translatorStrings}</span></td>
+                <td><span>${
+                    secondRowOfSumsAndNames[index]
+                        ? secondRowOfSumsAndNames[index]
+                        : ''
+                }</span></td>
             </tr>`
     )
     const emailTemplate = `<!DOCTYPE html>
@@ -44,7 +59,7 @@ const getEmailTemplateHTMLCode = ({
                                                 .titlesInfo > td {
                                                     padding: 0.5rem;
                                                 }
-                                    
+
                                                 .titlesInfo > td:first-child {
                                                     border-top-left-radius: 8px;
                                                     padding: 0.5rem;
@@ -52,7 +67,7 @@ const getEmailTemplateHTMLCode = ({
                                                 .titlesInfo > td:nth-child(2) {
                                                     border-top-right-radius: 8px;
                                                 }
-                                    
+
                                                 .titlesInfo :nth-child(2) {
                                                     text-align: right;
                                                 }
@@ -107,14 +122,19 @@ const getEmailTemplateHTMLCode = ({
                                             <title>Agency total balance</title>
                                         </head>
                                         <body>
-                                            <table cellspacing="0" cellpadding="0">
+                                            <table>
                                                 <thead>
                                                     <tr class="titlesInfo">
                                                         <td>Total:</td>
-                                                        <td>${monthTotalSum}$</td>
+                                                        <td>${yesterdayTotalSum}$</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <tr class="translator-info-container">
+                                                        <td colspan="2">
+                                                            <b>Balances for yesterday:</b>
+                                                        </td>
+                                                    </tr>
                                                     ${translatorsSumToHtmlCode.join(
                                                         ''
                                                     )}
