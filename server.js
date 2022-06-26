@@ -1,4 +1,6 @@
 let express = require('express')
+const sendEmailTemplateToTranslators = require('./src/api/email-api/emailApi')
+const moment = require('moment-timezone')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -18,6 +20,8 @@ const PORT = process.env.PORT || 80
 
 let app = express()
 app.use(express.static(__dirname + '/build'))
+
+app.set('view engine', 'ejs')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extented: true }))
@@ -54,6 +58,19 @@ app.get(rootURL + 'tasks/?', function (request, response, next) {
 app.get(rootURL + 'translators/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
+
+//email api
+async function sendRegularEmails() {
+    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:00:00') {
+        const translatorsCollection = await collectionTranslators
+            .find()
+            .toArray()
+        if (translatorsCollection.length) {
+            sendEmailTemplateToTranslators(translatorsCollection)
+        }
+    }
+}
+setInterval(sendRegularEmails, 1000)
 
 // task list api
 
