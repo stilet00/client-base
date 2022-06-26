@@ -1,5 +1,6 @@
 let express = require('express')
-const sendEmailTemplateToTranslators = require('./src/api/emailApi/emailApi')
+const sendEmailTemplateToTranslators = require('./src/api/email-api/emailApi')
+const moment = require('moment-timezone')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -59,12 +60,8 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 })
 
 //email api
-
-let timer = 0
 async function sendRegularEmails() {
-    timer += 1
-    if (timer % 30 === 0) {
-        console.log(timer)
+    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:00:00') {
         const translatorsCollection = await collectionTranslators
             .find()
             .toArray()

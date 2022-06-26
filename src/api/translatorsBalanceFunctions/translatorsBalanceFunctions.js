@@ -1,9 +1,9 @@
 const moment = require('moment')
 
-const calculateTranslatorYesterdayTotal = translator => {
-    const monthTotal = calculateTranslatorMonthTotal(translator.statistics)
-    return monthTotal
-}
+// const calculateTranslatorYesterdayTotal = translator => {
+//     const monthTotal = calculateTranslatorMonthTotal(translator.statistics)
+//     return monthTotal
+// }
 
 const calculateTranslatorMonthTotal = (
     statistics,
@@ -92,4 +92,4 @@ const calculateBalanceDaySum = (
     }
 }
 
-module.exports = calculateTranslatorYesterdayTotal
+module.exports = calculateTranslatorMonthTotal
