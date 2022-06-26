@@ -61,7 +61,7 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 
 //email api
 async function sendRegularEmails() {
-    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '19:10:00') {
+    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:15:00') {
         const translatorsCollection = await collectionTranslators
             .find()
             .toArray()

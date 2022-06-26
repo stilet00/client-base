@@ -38,7 +38,7 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
     const emailList = [
         'antonstilet@gmail.com',
         'safroninanton@gmail.com',
-        // 'vasiliybabchenkov@gmail.com',
+        'vasiliybabchenkov@gmail.com',
     ]
     let mailOptions = {
         from: '"Sunrise agency" <antonstilet@gmail.com>',
