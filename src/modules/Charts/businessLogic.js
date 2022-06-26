@@ -8,7 +8,10 @@ import {
 } from '../../services/balanceServices/services'
 import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
 import useModal from '../../sharedHooks/useModal'
-import { calculateBalanceDayAllClients } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculateBalanceDayAllClients,
+    getNumberWithHundredths,
+} from '../../sharedFunctions/sharedFunctions'
 import { getTranslators } from '../../services/translatorsServices/services'
 import {
     currentYear,
@@ -110,7 +113,7 @@ export const useChartsContainer = user => {
                             )
                             if (daySum) {
                                 defaultMonth.values[dayCount - 1] =
-                                    Math.round(daySum)
+                                    getNumberWithHundredths(daySum)
                             }
                         }
                         if (

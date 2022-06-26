@@ -489,7 +489,7 @@ export default function EditBalanceForm({
                                         <strong>Day balance: </strong>
                                         {calculateBalanceDaySum(
                                             findClientById()
-                                        ).toFixed(2) + ' $'}
+                                        ) + ' $'}
                                     </p>
                                     {findClientById().comments ? (
                                         <p

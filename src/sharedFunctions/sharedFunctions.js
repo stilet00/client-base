@@ -106,7 +106,7 @@ export const calculateTranslatorMonthTotal = (
         }, 0)
     }
 
-    return Number(total.toFixed(2))
+    return getNumberWithHundredths(total)
 }
 
 export function getStringMonthNumber(monthNumber) {
@@ -133,4 +133,8 @@ export function calculatePercentDifference(currentSum, previousSum) {
         return result.slice(0, result.length - 2)
     }
     return Math.round(result)
+}
+
+export function getNumberWithHundredths(number) {
+    return Number(number.toFixed(2))
 }

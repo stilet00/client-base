@@ -112,11 +112,11 @@ function SingleChart({ graph, index, previousMonth }) {
         <div className={'single-chart'}>
             {chartStyle}
             <div className="total-sum">
-                <p className={'total-text'}>{`Total: ${Math.round(
-                    graph.values.reduce((sum, current) => {
+                <p className={'total-text'}>{`Total: ${graph.values
+                    .reduce((sum, current) => {
                         return sum + Number(current)
                     }, 0)
-                )} $`}</p>
+                    .toFixed(2)} $`}</p>
                 <span className={'green-line'} />
                 <p className={'total-text'}>{`Middle: ${
                     graph.values.length
