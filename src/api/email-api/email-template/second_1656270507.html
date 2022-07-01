@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css"> 
+    body {
+    background: rgb(151 184 211);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+h2 {
+    margin: 0; 
+}
+.container {
+    margin: 0 auto;
+    width: 80%;
+    padding: 1rem;
+    border: 2px solid rgba(226, 206, 206, 0.87)  
+}
+.mainInfo{
+    width: 100%;
+    margin: 1rem auto;
+    text-align: center;
+    background: whitesmoke;
+    border: 4px solid  whitesmoke;
+    border-radius: 10px;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+    color: #6c757d   
+}
+th, td {
+    padding: 1rem;  
+}
+.titlesInfo__first_td{ 
+    font-size: 1rem;
+    font-weight: bold;
+    background-image: linear-gradient(to right top, #249dc2, #4192af, #51869c, #5a7b8a, #607078);
+    border: 1px solid #249dc2;
+    color: white;
+    border-radius: 20% 0 0 0;
+}
+.titlesInfo__second_td{
+    background-color: transparent;
+    border:  none ; 
+    color: white;
+}
+.titlesInfo__third_td{
+    border-radius: 0 20% 0 0;
+    font-size: 1rem;
+    font-weight: bold;
+    background-image: linear-gradient(to right top, #249dc2, #4192af, #51869c, #5a7b8a, #607078);
+    border: 1px solid #249dc2;
+    color: white;
+}
+.middleBalance{
+    background: linear-gradient(to right top, #1faee4, #3badd7, #50abca, #61a9bf, #70a7b4);
+}
+.numbersInfo > td{
+    padding: 4rem; 
+}
+.numbersInfo >td > span{  
+    border-radius: 50%;
+    padding: 3rem;
+    font-size: large;
+    font-weight: bold;    
+}
+.numbersInfo__first_td{
+    border-bottom: 4px solid; 
+}
+.numbersInfo__first_td > span{
+    background:linear-gradient(to right top, #249dc2, #4192af, #51869c, #5a7b8a, #607078);
+    color: white;
+    border: 1px solid #249dc2;
+}
+.numbersInfo__second_td{
+    background: white;
+    color: #6c757d;
+    border: 1px solid #249dc2;;
+}
+.second_td{
+    background: white;
+    color: #6c757d;
+    border: 1px solid #249dc2;;
+}
+.expectedInfo__second_td{
+    color: white
+}
+@media(max-width: 700px) {
+    body{
+        background-repeat: initial
+    }
+    .container {
+        width: 50%
+    }
+}
+    </style>
+    <title>Statistic</title>
+</head>
+<body>
+    <table class="container">
+            <thead>
+            <tr>
+                <th align="center" valign="center">
+                        <h2>
+                            <img src="./images/abstract-user-flat-1.png" alt="user">
+                        </img>
+                            Hello Antonina, here is your balance:
+                        </h2>
+                    
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <table class="mainInfo">
+                        
+                            <colgroup>
+                                <col>
+                                <col class="middleBalance">
+                                <col>
+                            </colgroup>
+                            <tr class="titlesInfo">
+                                <td class="titlesInfo__first_td">
+                                     TOTAL 
+                                    <img src="images/kisspng-money-bag-dollar-sign-currency-symbol-shops-png-icons-and-graphics-png-repo-free-png-i-5cb73840858969.882527501555511360547.png" alt="total">
+                                </img> 
+                                    </td>
+                                <td class="titlesInfo__second_td">
+                                    MIDDLE
+                                 <img src="./images/kisspng-computer-icons-balance-icon-design-5b0dad503da200.0551951615276229922525.png" alt="middle">
+                                </img>
+                                </td>
+                                <td class="titlesInfo__third_td">
+                                    For yesterday
+                                    <img src="./images/transparent-business-icon-assets-icon-money-icon-coins-icon-5f9667e17f4c84.9081517016036925135214.png" alt="forYesterday">
+                                </img>
+                                </td>
+                            </tr>
+                            <tr class="numbersInfo">
+                                <td class="numbersInfo__first_td"><span>$1080</span></td>
+                                <td><span class="numbersInfo__second_td">$83/d</span></td>
+                                <td class="numbersInfo__first_td"><span >$69/d</span></td>
+                            </tr>
+                            <tr class="expectedInfo">
+                                <td>Expected Total: $1200</td>
+                                <td class="expectedInfo__second_td">Expected Middle: $104</td>
+                                <td>Expected Balance: $84</td>
+                            </tr>
+                        
+                    </table>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>

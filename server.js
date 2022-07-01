@@ -61,16 +61,20 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 
 //email api
 async function sendRegularEmails() {
-    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:15:00') {
-        const translatorsCollection = await collectionTranslators
-            .find()
-            .toArray()
-        if (translatorsCollection.length) {
-            sendEmailTemplateToTranslators(translatorsCollection)
-        }
+    const translatorsCollection = await collectionTranslators.find().toArray()
+    if (translatorsCollection.length) {
+        sendEmailTemplateToTranslators(translatorsCollection)
     }
+    // if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:15:00') {
+    //     const translatorsCollection = await collectionTranslators
+    //         .find()
+    //         .toArray()
+    //     if (translatorsCollection.length) {
+    //         sendEmailTemplateToTranslators(translatorsCollection)
+    //     }
+    // }
 }
-setInterval(sendRegularEmails, 1000)
+setInterval(sendRegularEmails, 5000)
 
 // task list api
 

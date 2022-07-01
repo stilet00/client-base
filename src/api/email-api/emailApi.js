@@ -2,16 +2,15 @@ const nodeMailer = require('nodemailer')
 const moment = require('moment')
 const {
     calculateTranslatorYesterdayTotal,
-    calculateTranslatorMonthTotal,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
-const getEmailTemplateHTMLCode = require('../email-api/email-template/getEmailTemplateHTMLcode')
+const getAdministratorsEmailTemplateHTMLCode = require('./email-template/getAdministratorsEmailTemplateHTMLcode')
 
 const sendEmailTemplateToTranslators = translatorsCollection => {
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
         .map(({ name, surname, statistics }) => {
             const translatorSum = calculateTranslatorYesterdayTotal(statistics)
-            return translatorSum !== '0.00'
-                ? `${name} ${surname}: <b>${translatorSum}$</b>`
+            return translatorSum
+                ? `${name} ${surname}: <b>${translatorSum} $</b>`
                 : null
         })
         .filter(notEmptyString => notEmptyString)
@@ -21,8 +20,9 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
             return Number(calculateTranslatorYesterdayTotal(statistics))
         })
         .reduce((sum, current) => sum + current, 0)
+        .toFixed(2)
 
-    const emailHtmlTemplate = getEmailTemplateHTMLCode({
+    const emailHtmlTemplate = getAdministratorsEmailTemplateHTMLCode({
         arrayOfTranslatorsNamesAndMonthSums,
         yesterdayTotalSum,
     })
@@ -37,15 +37,15 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
     })
     const emailList = [
         'antonstilet@gmail.com',
-        'safroninanton@gmail.com',
-        'vasiliybabchenkov@gmail.com',
+        // 'safroninanton@gmail.com',
+        // 'vasiliybabchenkov@gmail.com',
     ]
     let mailOptions = {
         from: '"Sunrise agency" <antonstilet@gmail.com>',
         to: emailList,
-        subject: `Sunrise agency statistics total by ${moment().format(
-            'MMMM DD, YYYY'
-        )}`,
+        subject: `Statistics for ${moment()
+            .subtract(1, 'day')
+            .format('MMMM DD, YYYY')}`,
         text: 'From our server',
         html: emailHtmlTemplate,
     }

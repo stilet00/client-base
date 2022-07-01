@@ -17,11 +17,13 @@ const calculateTranslatorYesterdayTotal = statistics => {
 }
 
 const calculateBalanceDayAllClients = day => {
-    return day.clients
-        .reduce((sum, current) => {
-            return sum + calculateBalanceDaySum(current)
-        }, 0)
-        .toFixed(2)
+    return Number(
+        day.clients
+            .reduce((sum, current) => {
+                return sum + calculateBalanceDaySum(current)
+            }, 0)
+            .toFixed(2)
+    )
 }
 
 const calculateTranslatorMonthTotal = (
