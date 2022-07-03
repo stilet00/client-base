@@ -71,6 +71,7 @@ export const DEFAULT_TRANSLATOR = {
         time: null,
     },
     personalPenalties: [],
+    email: null,
 }
 
 export const DEFAULT_CATEGORIES = {

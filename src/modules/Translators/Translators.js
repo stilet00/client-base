@@ -35,7 +35,6 @@ function Translators({ user }) {
         dragOverHandler,
         loading,
         onBoardDrop,
-        startTranslatorDelete,
         state,
         toggleDrawer,
         openAlert,
@@ -60,9 +59,11 @@ function Translators({ user }) {
         filterTranslators,
         translatorFilter,
         addPersonalPenaltyToTranslator,
+        updateTranslatorEmail,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
+    console.log('state is updated')
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
@@ -343,7 +344,6 @@ function Translators({ user }) {
                 {translators.length && !loading ? (
                     filterTranslators().map(item => (
                         <SingleTranslator
-                            deleteTranslator={startTranslatorDelete}
                             {...item}
                             key={item._id}
                             dragOverHandler={dragOverHandler}
@@ -361,6 +361,7 @@ function Translators({ user }) {
                             addPersonalPenaltyToTranslator={
                                 addPersonalPenaltyToTranslator
                             }
+                            updateTranslatorEmail={updateTranslatorEmail}
                         />
                     ))
                 ) : loading ? (

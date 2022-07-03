@@ -1,5 +1,8 @@
 let express = require('express')
-const sendEmailTemplateToTranslators = require('./src/api/email-api/emailApi')
+const {
+    sendEmailTemplateToAdministrators,
+    sendEmailTemplateToTranslators,
+} = require('./src/api/email-api/emailApi')
 const moment = require('moment-timezone')
 let MongoClient = require('mongodb').MongoClient
 const uri =
@@ -70,7 +73,7 @@ async function sendRegularEmails() {
     //         .find()
     //         .toArray()
     //     if (translatorsCollection.length) {
-    //         sendEmailTemplateToTranslators(translatorsCollection)
+    //         sendEmailTemplateToAdministrators(translatorsCollection)
     //     }
     // }
 }
@@ -255,6 +258,7 @@ app.put(translatorsURL + ':id', (req, res) => {
                 statistics: req.body.statistics,
                 suspended: req.body.suspended,
                 personalPenalties: req.body.personalPenalties,
+                email: req.body.email,
             },
         },
         err => {

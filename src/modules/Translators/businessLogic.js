@@ -61,18 +61,21 @@ export const useTranslators = user => {
         closeAlertConfirmationNoReload,
     } = useAlertConfirmation()
 
-    function changeFilter(e) {
-        if (e.target) {
-            const newFilter = {
-                ...translatorFilter,
-                [e.target.name]: !translatorFilter[e.target.name],
-            }
+    const changeFilter = useCallback(
+        e => {
+            if (e.target) {
+                const newFilter = {
+                    ...translatorFilter,
+                    [e.target.name]: !translatorFilter[e.target.name],
+                }
 
-            setTranslatorFilter(newFilter)
-        } else {
-            setTranslatorFilter({ ...translatorFilter, date: e })
-        }
-    }
+                setTranslatorFilter(newFilter)
+            } else {
+                setTranslatorFilter({ ...translatorFilter, date: e })
+            }
+        },
+        [translatorFilter]
+    )
 
     const filterTranslators = useCallback(() => {
         if (translatorFilter.suspended) {
@@ -132,19 +135,14 @@ export const useTranslators = user => {
         e.target.style.border = '2px solid black'
     }, [])
 
-    const dragLeaveHandler = useCallback(
-        e => {
-            if (state.left === true) {
-                setState({ left: false })
-            }
-            if (e.target.tagName === 'UL') {
-                e.target.style.background = 'none'
-            } else if (e.target.tagName === 'LI') {
-                e.target.parentNode.style.background = 'none'
-            }
-        },
-        [state]
-    )
+    const dragLeaveHandler = useCallback(e => {
+        setState({ left: false })
+        if (e.target.tagName === 'UL') {
+            e.target.style.background = 'none'
+        } else if (e.target.tagName === 'LI') {
+            e.target.parentNode.style.background = 'none'
+        }
+    }, [])
 
     const dragEndHandler = useCallback(e => {
         e.target.style.background = 'none'
@@ -475,6 +473,18 @@ export const useTranslators = user => {
         [translators]
     )
 
+    const updateTranslatorEmail = useCallback(
+        (email, id) => {
+            let editedTranslator = translators.find(item => item._id === id)
+            editedTranslator = { ...editedTranslator, email }
+            saveChangedTranslator(
+                editedTranslator,
+                MESSAGES.translatorEmailUpdated
+            )
+        },
+        [translators]
+    )
+
     return {
         translators,
         startTranslatorDelete,
@@ -507,6 +517,7 @@ export const useTranslators = user => {
         filterTranslators,
         translatorFilter,
         addPersonalPenaltyToTranslator,
+        updateTranslatorEmail,
     }
 }
 

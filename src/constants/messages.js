@@ -28,6 +28,10 @@ export const MESSAGES = {
         text: 'Translator has been activated!',
         status: true,
     },
+    translatorEmailUpdated: {
+        text: "Translator's email has been updated!",
+        status: true,
+    },
 
     clientExist: {
         text: 'Translator already has this client!',

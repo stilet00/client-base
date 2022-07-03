@@ -35,6 +35,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
 import PenaltiesList from '../PenaltiesList/PenaltiesList'
+import EditTranslatorEmailForm from '../EditTranslatorEmailForm/EditTranslatorEmailForm'
 
 function SingleTranslator({
     name,
@@ -52,6 +53,8 @@ function SingleTranslator({
     selectedDate,
     addPersonalPenaltyToTranslator,
     personalPenalties,
+    email,
+    updateTranslatorEmail,
 }) {
     const {
         calculateSumByClient,
@@ -114,6 +117,13 @@ function SingleTranslator({
                     <Typography variant="h5" component="div">
                         {`${name} ${surname}`}
                     </Typography>
+                    <div>
+                        <EditTranslatorEmailForm
+                            email={email}
+                            updateTranslatorEmail={updateTranslatorEmail}
+                            id={_id}
+                        />
+                    </div>
                     {suspended.time ? (
                         <Typography
                             variant="caption"

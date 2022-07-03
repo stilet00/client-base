@@ -1,6 +1,10 @@
 const moment = require('moment')
 
-const calculateTranslatorYesterdayTotal = statistics => {
+const calculateTranslatorYesterdayTotal = (
+    statistics,
+    onlySvadba = false,
+    category = null
+) => {
     const day = statistics
         .find(year => year.year === moment().subtract(1, 'day').format('YYYY'))
         .months.find(
@@ -13,14 +17,16 @@ const calculateTranslatorYesterdayTotal = statistics => {
                 day.id === moment().format('DD MM YYYY')
             )
         })
-    return calculateBalanceDayAllClients(day)
+    return calculateBalanceDayAllClients(day, onlySvadba, category)
 }
 
-const calculateBalanceDayAllClients = day => {
+const calculateBalanceDayAllClients = (day, onlySvadba, category) => {
     return Number(
         day.clients
             .reduce((sum, current) => {
-                return sum + calculateBalanceDaySum(current)
+                return (
+                    sum + calculateBalanceDaySum(current, onlySvadba, category)
+                )
             }, 0)
             .toFixed(2)
     )
