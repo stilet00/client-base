@@ -6,7 +6,7 @@
 }
 
 .clients-form {
-  min-height: 300px;
+  min-height: 300px !important;
 }
 
 .clients-form h2 {

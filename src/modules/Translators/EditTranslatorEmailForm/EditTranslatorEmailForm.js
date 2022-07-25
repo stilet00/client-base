@@ -10,8 +10,8 @@ import useModal from '../../../sharedHooks/useModal'
 import { faEnvelope, faAt } from '@fortawesome/free-solid-svg-icons'
 import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { DEFAULT_PENALTY } from '../../../constants/constants'
-import { v4 as uuidv4 } from 'uuid'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -23,9 +23,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function EditTranslatorEmailForm(props) {
     const classes = useStyles()
-    const emailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    const emailRegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
 
     const [email, setEmail] = useState(props.email || '')
+    const [wantsToReceiveEmails, setWantsToReceiveEmails] = useState(
+        Boolean(props.wantsToReceiveEmails)
+    )
 
     const { open, handleOpen, handleClose } = useModal()
 
@@ -44,7 +47,9 @@ export default function EditTranslatorEmailForm(props) {
                 type="button"
                 onClick={handleOpen}
                 size={'small'}
-                color="primary"
+                color={
+                    Boolean(props.wantsToReceiveEmails) ? 'success' : 'primary'
+                }
             >
                 <FontAwesomeIcon icon={faEnvelope} />
             </IconButton>
@@ -65,11 +70,26 @@ export default function EditTranslatorEmailForm(props) {
                         <form
                             onSubmit={e => {
                                 e.preventDefault()
-                                props.updateTranslatorEmail(email, props.id)
+                                props.updateTranslatorEmail(
+                                    email,
+                                    props.id,
+                                    wantsToReceiveEmails
+                                )
                                 handleClose()
                             }}
+                            style={{
+                                alignItems: 'flex-start',
+                            }}
                         >
-                            <h2 id="transition-modal-title">Current email:</h2>
+                            <h2
+                                id="transition-modal-title"
+                                style={{
+                                    alignSelf: 'center',
+                                    marginBottom: 10,
+                                }}
+                            >
+                                Current email:
+                            </h2>
                             <TextField
                                 id="filled-basic-2"
                                 label="Email address"
@@ -87,6 +107,22 @@ export default function EditTranslatorEmailForm(props) {
                                     ),
                                 }}
                             />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={wantsToReceiveEmails}
+                                        onChange={() =>
+                                            setWantsToReceiveEmails(
+                                                !wantsToReceiveEmails
+                                            )
+                                        }
+                                        color="success"
+                                        name="wantsToReceiveEmails"
+                                    />
+                                }
+                                label="Wishes to receive emails"
+                            />
+
                             <Button
                                 type={'submit'}
                                 variant={'contained'}

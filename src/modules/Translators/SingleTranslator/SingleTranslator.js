@@ -55,6 +55,7 @@ function SingleTranslator({
     personalPenalties,
     email,
     updateTranslatorEmail,
+    wantsToReceiveEmails,
 }) {
     const {
         calculateSumByClient,
@@ -121,6 +122,7 @@ function SingleTranslator({
                         <EditTranslatorEmailForm
                             email={email}
                             updateTranslatorEmail={updateTranslatorEmail}
+                            wantsToReceiveEmails={wantsToReceiveEmails}
                             id={_id}
                         />
                     </div>

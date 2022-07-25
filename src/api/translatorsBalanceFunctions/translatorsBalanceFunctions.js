@@ -3,7 +3,8 @@ const moment = require('moment')
 const calculateTranslatorYesterdayTotal = (
     statistics,
     onlySvadba = false,
-    category = null
+    category = null,
+    clientId = null
 ) => {
     const day = statistics
         .find(year => year.year === moment().subtract(1, 'day').format('YYYY'))
@@ -17,7 +18,9 @@ const calculateTranslatorYesterdayTotal = (
                 day.id === moment().format('DD MM YYYY')
             )
         })
-    return calculateBalanceDayAllClients(day, onlySvadba, category)
+    return clientId
+        ? calculateBalanceDayOneClient(day, onlySvadba, category, clientId)
+        : calculateBalanceDayAllClients(day, onlySvadba, category)
 }
 
 const calculateBalanceDayAllClients = (day, onlySvadba, category) => {
@@ -32,6 +35,13 @@ const calculateBalanceDayAllClients = (day, onlySvadba, category) => {
     )
 }
 
+const calculateBalanceDayOneClient = (day, onlySvadba, category, clientId) => {
+    const clientStatistics = day.clients.find(client => client.id === clientId)
+    return Number(
+        calculateBalanceDaySum(clientStatistics, onlySvadba, category)
+    )
+}
+
 const calculateTranslatorMonthTotal = (
     statistics,
     forFullMonth = true,
@@ -43,9 +53,7 @@ const calculateTranslatorMonthTotal = (
     const month = statistics
         .find(year => year.year === yearFilter)
         .months.find((month, index) => index + 1 === Number(monthFilter))
-
     let total
-
     if (forFullMonth) {
         total = month.reduce((sum, current) => {
             return (
@@ -75,7 +83,6 @@ const calculateTranslatorMonthTotal = (
                 : sum
         }, 0)
     }
-
     return Number(total.toFixed(2))
 }
 
@@ -106,15 +113,12 @@ const calculateBalanceDaySum = (
             },
             0
         )
-
         return categorySum
     } else {
         const arrayToSum = Object.values(targetObject)
-
         const sumResult = arrayToSum.reduce((sum, current) => {
             return typeof current === 'number' ? sum + current : sum
         }, 0)
-
         return sumResult - targetObject.penalties * 2
     }
 }

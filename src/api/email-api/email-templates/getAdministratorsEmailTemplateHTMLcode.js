@@ -34,7 +34,7 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                                     width: 450px;
                                                     margin: 50px auto;
                                                     min-height: 400px;
-                                                    background: linear-gradient(0deg, rgba(2,0,36,0.2) 0%, rgba(255,255,255,0.2) 0%, rgba(0,212,255,0.2) 100%);
+                                                    background: linear-gradient(0deg, rgba(2,0,36,0.2) 0%, rgba(182,254,255,0.2) 0%, rgba(0,212,255,0.2) 100%);
                                                     border-radius: 8px;
                                                     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
                                                         0 6px 6px rgba(0, 0, 0, 0.23);

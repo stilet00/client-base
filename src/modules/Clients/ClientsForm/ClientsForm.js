@@ -80,6 +80,9 @@ export default function ClientsForm(props) {
                                 clearClient()
                                 setTimeout(handleClose, 1100)
                             }}
+                            style={{
+                                height: 250,
+                            }}
                         >
                             <h2 id="transition-modal-title">
                                 Enter client's name and surname:

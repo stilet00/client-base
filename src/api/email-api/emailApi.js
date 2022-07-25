@@ -5,7 +5,7 @@ const {
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
-const { DEFAULT_FINANCE_DAY } = require('../constants')
+const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
 
 const sendEmailTemplateToAdministrators = translatorsCollection => {
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
@@ -38,18 +38,11 @@ const sendEmailTemplateToAdministrators = translatorsCollection => {
             pass: 'vsurysphowtyqljr',
         },
     })
-    const emailList = [
-        'antonstilet@gmail.com',
-        // 'safroninanton@gmail.com',
-        // 'vasiliybabchenkov@gmail.com',
-    ]
     let mailOptions = {
-        from: '"Sunrise agency" <antonstilet@gmail.com>',
-        to: emailList,
-        subject: `Statistics for ${moment()
-            .subtract(1, 'day')
-            .format('MMMM DD, YYYY')}`,
-        text: 'From our server',
+        from: '"Sunrise agency" <sunrise-agency@gmail.com>',
+        to: administratorsEmailList,
+        subject: `Date: ${moment().subtract(1, 'day').format('MMMM DD, YYYY')}`,
+        text: `Balance: ${yesterdayTotalSum}$`,
         html: emailHtmlTemplateForAdministrators,
     }
     transporter.sendMail(mailOptions, (error, info) => {
@@ -64,14 +57,21 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
     let arrayOfTranslatorsInfoForEmailLetter = translatorsCollection.map(
         translator => ({
             email: translator.email,
-            label: `${translator.name} ${translator.surname}`,
+            label: translator.name,
             id: translator._id,
             suspended: translator.suspended,
+            activeClients: translator.clients.filter(
+                client => !client.suspended
+            ),
+            wantsToReceiveEmails: translator.wantsToReceiveEmails,
         })
     )
     arrayOfTranslatorsInfoForEmailLetter =
         arrayOfTranslatorsInfoForEmailLetter.filter(
-            item => item.email && !item.suspended.status
+            item =>
+                item.email &&
+                !item.suspended.status &&
+                item.wantsToReceiveEmails
         )
 
     arrayOfTranslatorsInfoForEmailLetter =
@@ -83,17 +83,25 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
                 translatorsStatistics
             )
             const financeFieldList = new DEFAULT_FINANCE_DAY()
-            const detailedStatistic = Object.keys(financeFieldList).map(
-                fieldName => {
-                    return {
-                        [fieldName]: calculateTranslatorYesterdayTotal(
-                            translatorsStatistics,
-                            false,
-                            fieldName
-                        ),
+            const detailedStatistic = translator.activeClients.map(client => {
+                const statisticByClient = Object.keys(financeFieldList).map(
+                    fieldName => {
+                        return {
+                            [fieldName]: calculateTranslatorYesterdayTotal(
+                                translatorsStatistics,
+                                false,
+                                fieldName,
+                                client._id
+                            ),
+                        }
                     }
+                )
+                return {
+                    name: `${client.name} ${client.surname}`,
+                    statistics: statisticByClient,
                 }
-            )
+            })
+
             return { ...translator, yesterdaySum, detailedStatistic }
         })
 
@@ -106,36 +114,87 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
             pass: 'vsurysphowtyqljr',
         },
     })
-    console.log(
-        JSON.stringify(arrayOfTranslatorsInfoForEmailLetter, undefined, 2)
-    )
 
-    arrayOfTranslatorsInfoForEmailLetter.forEach(translator => {
-        const emailHtmlTemplateForTranslators =
-            getTranslatorsEmailTemplateHTMLCode(translator)
-        let mailOptions = {
-            from: '"Sunrise agency" <antonstilet@gmail.com>',
-            to: translator.email,
-            subject: "Your yesterday's balance",
-            text: `Statistics for ${moment()
-                .subtract(1, 'day')
-                .format('MMMM DD, YYYY')}`,
-            html: emailHtmlTemplateForTranslators,
-            attachments: [
-                {
-                    filename: 'mail-icon.png',
-                    path: './src/images/mail-icon.png',
-                    cid: 'mailIcon',
-                },
-            ],
-        }
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error)
+    arrayOfTranslatorsInfoForEmailLetter.forEach(
+        translatorInfoForEmailLetter => {
+            const emailHtmlTemplateForTranslators =
+                getTranslatorsEmailTemplateHTMLCode(
+                    translatorInfoForEmailLetter
+                )
+            let mailOptions = {
+                from: '"Sunrise agency" <sunrise-agency@gmail.com>',
+                to: translatorInfoForEmailLetter.email,
+                subject: `Date: ${moment()
+                    .subtract(1, 'day')
+                    .format('MMMM DD, YYYY')}`,
+                text: `Balance: ${translatorInfoForEmailLetter.yesterdaySum}$`,
+                html: emailHtmlTemplateForTranslators,
+                attachments: [
+                    {
+                        filename: 'mail-icon.png',
+                        path: './src/images/email-images/email-icon.png',
+                        cid: 'emailIcon',
+                    },
+                    {
+                        filename: 'women.png',
+                        path: './src/images/email-images/women.png',
+                        cid: 'women',
+                    },
+                    {
+                        filename: 'chat.png',
+                        path: './src/images/email-images/chat.png',
+                        cid: 'chat',
+                    },
+                    {
+                        filename: 'love.png',
+                        path: './src/images/email-images/love.png',
+                        cid: 'love',
+                    },
+                    {
+                        filename: 'email-letter.png',
+                        path: './src/images/email-images/email-letter.png',
+                        cid: 'email-letter',
+                    },
+                    {
+                        filename: 'telephone.png',
+                        path: './src/images/email-images/telephone.png',
+                        cid: 'telephone',
+                    },
+                    {
+                        filename: 'gift.png',
+                        path: './src/images/email-images/gift.png',
+                        cid: 'gift',
+                    },
+                    {
+                        filename: 'heart.png',
+                        path: './src/images/email-images/heart.png',
+                        cid: 'heart',
+                    },
+                    {
+                        filename: 'dollar-sign.png',
+                        path: './src/images/email-images/dollar-sign.png',
+                        cid: 'dollar-sign',
+                    },
+                    {
+                        filename: 'photoAttachments.png',
+                        path: './src/images/email-images/photoAttachments.png',
+                        cid: 'photoAttachments',
+                    },
+                    {
+                        filename: 'penalties.png',
+                        path: './src/images/email-images/penalties.png',
+                        cid: 'penalties',
+                    },
+                ],
             }
-            console.log(`Message sent to: ${info.accepted.join(', ')}`)
-        })
-    })
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error)
+                }
+                console.log(`Message sent to: ${info.accepted.join(', ')}`)
+            })
+        }
+    )
 }
 module.exports = {
     sendEmailTemplateToAdministrators,

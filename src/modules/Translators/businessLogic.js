@@ -6,6 +6,7 @@ import {
     getTranslators,
     removeTranslator,
     updateTranslator,
+    sendNotificationEmailsRequest,
 } from '../../services/translatorsServices/services'
 import {
     currentMonth,
@@ -45,6 +46,8 @@ export const useTranslators = user => {
     })
 
     const [loading, setLoading] = useState(true)
+
+    const [mailoutInProgress, setMailoutInProgress] = useState(false)
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
@@ -297,6 +300,21 @@ export const useTranslators = user => {
         deletedTranslator,
     ])
 
+    const sendNotificationEmails = () => {
+        setMailoutInProgress(true)
+        sendNotificationEmailsRequest().then(res => {
+            if (res.status === 200) {
+                closeAlertConfirmationNoReload()
+                showAlertMessage(MESSAGES.mailoutSuccess)
+                setMailoutInProgress(false)
+            } else {
+                showAlertMessage(MESSAGES.somethingWrong)
+                setMailoutInProgress(false)
+                console.log(res.data)
+            }
+        })
+    }
+
     const translatorsFormSubmit = useCallback(
         (e, newTranslator) => {
             e.preventDefault()
@@ -474,9 +492,13 @@ export const useTranslators = user => {
     )
 
     const updateTranslatorEmail = useCallback(
-        (email, id) => {
+        (email, id, wantsToReceiveEmails) => {
             let editedTranslator = translators.find(item => item._id === id)
-            editedTranslator = { ...editedTranslator, email }
+            editedTranslator = {
+                ...editedTranslator,
+                email,
+                wantsToReceiveEmails,
+            }
             saveChangedTranslator(
                 editedTranslator,
                 MESSAGES.translatorEmailUpdated
@@ -518,6 +540,8 @@ export const useTranslators = user => {
         translatorFilter,
         addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
+        sendNotificationEmails,
+        mailoutInProgress,
     }
 }
 

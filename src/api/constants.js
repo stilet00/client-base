@@ -10,5 +10,10 @@ class DEFAULT_FINANCE_DAY {
         this.penalties = 0
     }
 }
+const administratorsEmailList = [
+    'antonstilet@gmail.com',
+    'safroninanton@gmail.com',
+    'vasiliybabchenkov@gmail.com',
+]
 
-module.exports = { DEFAULT_FINANCE_DAY }
+module.exports = { DEFAULT_FINANCE_DAY, administratorsEmailList }

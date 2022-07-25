@@ -72,4 +72,9 @@ export const MESSAGES = {
         text: 'Penalty has been applied',
         status: true,
     },
+
+    mailoutSuccess: {
+        text: 'Emails to the administrators and translators have been sent',
+        status: true,
+    },
 }

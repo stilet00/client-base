@@ -1,193 +1,178 @@
-const getTranslatorsEmailTemplateHTMLCode = translator => {
+const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
+    const arrayOfDetailedBalanceFields =
+        translatorInfoForEmailLetter.detailedStatistic.map(
+            (statisticsInfoForClient, index) => {
+                const amountsForStatisticCategories =
+                    statisticsInfoForClient.statistics.map(
+                        statisticsCategory => {
+                            return `<td class="container__tbody_amount">${Object.values(
+                                statisticsCategory
+                            ).join('')}</td>`
+                        }
+                    )
+                return `<tr class="${
+                    index % 2 ? 'container__tbody_secondTR' : ''
+                }">
+                    <td class="container__tbody_client">
+                        ${statisticsInfoForClient.name}
+                    </td>
+                    ${amountsForStatisticCategories.join('')}
+                </tr> `
+            }
+        )
     const emailTemplate = `<!DOCTYPE html>
-                                <html lang="en">
-                                    <head>
-                                        <meta charset="UTF-8" />
-                                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                                        <link rel="preconnect" href="https://fonts.googleapis.com" />
-                                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-                                        <link
-                                            href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600&display=swap"
-                                            rel="stylesheet"
-                                        />
-                                        <style type="text/css">
-                                            .email-container {
-                                                width: 100%;
-                                                height: 100%;
-                                                position: relative;
-                                                background: rgb(202, 229, 235);
-                                                clip-path: polygon(0% 10%, 100% 0, 100% 90%, 0 100%);
-                                                overflow: hidden;
+                            <html lang="en">
+                                <head>
+                                    <meta charset="UTF-8" />
+                                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                    <style type="text/css">
+                                            h2 {
+                                                margin: 0;
                                             }
-                                
-                                            .email-container__card {
-                                                width: 400px;
-                                                margin: 50px auto;
-                                                border-radius: 5px;
-                                                background: #fcfcfc;
+                                            .wrapper {
+                                                width: 100%;
+                                                background: rgb(209,228,237);
+                                                margin: 0 auto;
                                                 border-collapse: collapse;
+                                            }
+                                            .container {
+                                                margin: 0 auto;
+                                                width: 90%;
+                                                max-width: 500px;
+                                                padding: 1rem;
+                                                text-align: center;
+                                                background-color: #ffffff;
+                                                border-collapse: collapse;
+                                                border-radius: 8px;
+                                                color: #564f4f;
                                                 font-family: 'Kantumruy Pro', sans-serif;
                                             }
-                                
-                                            .email-container__card__header {
-                                                background: rgb(121, 189, 203);
-                                                border-radius: 5px;
-                                                text-align: center;
-                                                font-size: 20px;
-                                                color: #ffffff;
+                                            tr, td {
+                                                padding: 0.5rem;
                                             }
-                                
-                                            .email-container__card__header-cell-one {
-                                                border-top-left-radius: 5px;
-                                                border-top-right-radius: 5px;
-                                                padding: 20px 10px 0 10px;
+                                            .container__tableheader {
+                                                background: rgb(95,205,181);
+                                                padding: 10px 0 0 0;
+                                                border-radius: 8px 8px 0 0;
                                             }
-                                
-                                            .email-container__card__header-cell-two {
-                                                padding: 0 10px 20px 10px;
+                                            .container__tableheader-greetingsinfo {
+                                                background: rgb(95,205,181);
+                                                color: white
                                             }
-                                
-                                            .email-container__card__body--total {
-                                                text-align: center;
-                                                height: 30px;
-                                                font-size: 15px;
+                                            .container__tbody-header {
+                                                font-weight: bold;
+                                                vertical-align: bottom;
                                             }
-                                
-                                            .email-container__card__body--total-cell-one {
-                                                color: #727070;
-                                                padding: 10px 0;
-                                                border-bottom: 1px solid #727070;
+                                            .container__tbody-main {
+                                                background: rgb(95,205,181);
+                                                font-weight: bold
                                             }
-                                
-                                            .email-container__card__body--total-cell-one__line {
-                                                display: block;
-                                                width: 100%;
-                                                margin-top: 5px;
+                                            .container__tbody-header-first-td {
+                                                width: 15%
                                             }
-                                
-                                            .email-container__card__body--detailed-note {
-                                                padding: 10px 20px 0 20px;
-                                                color: #727070;
-                                                font-size: 10px;
+                                            .container__tbody_secondTR {
+                                                background: #fcfcfc;
+                                                border-top: 1px solid #afa5a5;
+                                                border-bottom: 1px solid #afa5a5;
                                             }
-                                
-                                            .email-container__card__body--detailed-header {
-                                                padding: 10px 20px 0 20px;
+                                            .container__tbody_client {
+                                                font-family: sans-serif;
                                                 font-weight: 400;
+                                                text-align: left;
                                             }
-                                
-                                            .email-container__card__body--detailed-amount {
-                                                padding: 10px 20px 0 20px;
-                                                font-weight: 600;
+                                            .container__tbody_amount {
+                                                font-style: italic;
+                                                text-align: center;
+                                                font-weight: bold;
                                             }
-                                
-                                            .email-container__card__body--detailed--last-child {
-                                                padding-bottom: 20px;
+                                            .container__tfoot-td {
+                                                text-align: end;
+                                                font-weight: bold;
+                                                border-top: 4px solid rgb(95,205,181);
+                                                vertical-align: bottom;
                                             }
-                                        </style>
-                                        <title>Document</title>
-                                    </head>
-                                    <body>
-                                        <table class="email-container">
-                                            <tr>
-                                                <td colspan="2">
-                                                    <table class="email-container__card">
-                                                        <thead class="email-container__card__header">
-                                                            <tr>
-                                                                <td
-                                                                    colspan="2"
-                                                                    class="email-container__card__header-cell-one"
-                                                                >
-                                                                    <img
-                                                                        src="cid:mailIcon"
-                                                                        width="50px"
-                                                                        height="50px"
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    colspan="2"
-                                                                    class="email-container__card__header-cell-two"
-                                                                >
-                                                                    Hello Antonina! Here is your statistics up
-                                                                    to July 1, 2022
-                                                                </td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody class="email-container__card__body">
-                                                            <tr class="email-container__card__body--total">
-                                                                <td
-                                                                    colspan="2"
-                                                                    class="email-container__card__body--total-cell-one"
-                                                                >
-                                                                    Total for yesterday: <strong>100 $</strong>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    colspan="2"
-                                                                    class="email-container__card__body--detailed-note"
-                                                                >
-                                                                    More detailed balance:
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-header"
-                                                                >
-                                                                    Chats & letters
-                                                                </td>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-amount"
-                                                                >
-                                                                    20$
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-header"
-                                                                >
-                                                                    Phone calls
-                                                                </td>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-amount"
-                                                                >
-                                                                    30$
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-header"
-                                                                >
-                                                                    Virtual gifts
-                                                                </td>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-amount"
-                                                                >
-                                                                    10$
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-header email-container__card__body--detailed--last-child"
-                                                                >
-                                                                    Chats & letters
-                                                                </td>
-                                                                <td
-                                                                    class="email-container__card__body--detailed-amount email-container__card__body--detailed--last-child"
-                                                                >
-                                                                    20$
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </body>
-                                </html>
+                                            .icons {
+                                                width: 2rem;
+                                                height: 2rem;
+                                            }    
+        
+                                    </style>
+                                    <title>Email from Sunrise</title>
+                                </head>
+                                <body>
+                                    <table class="wrapper">
+                                        <tr>
+                                            <td>
+                                                <table class="container">
+                                                    <thead>
+                                                    <tr>
+                                                        <td  class="container__tableheader" colspan="9">
+                                                            <img src="cid:emailIcon" alt="placeholder"></img>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="container__tableheader-greetingsinfo"  colspan="9">
+                                                                <h2>
+                                                                    Hello ${
+                                                                        translatorInfoForEmailLetter.label
+                                                                    }, here is your balance:
+                                                                </h2>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="container__tbody-main">
+                                                        <td class="container__tbody-header-first-td">
+                                                            <img src="cid:women" alt="Client name"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:chat" class="icons" alt="Chats"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:email-letter" class="icons"  alt="Letters"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:love"class="icons" alt="Dating"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:gift" class="icons" alt="Virtual gifts on Svadba"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:heart" alt="virtual gifts Dating" class="icons" alt="Virtual gifts on Dating"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:photoAttachments" class="icons"  alt="Photo attachments"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:telephone" class="icons"  alt="Phone calls"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:penalties" class="icons"  alt="Penalties"></img>
+                                                        </td>
+                                                    </tr>
+                                                    ${arrayOfDetailedBalanceFields.join(
+                                                        ''
+                                                    )}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td class="container__tfoot-td" colspan="9">
+                                                            For yesterday: ${
+                                                                translatorInfoForEmailLetter.yesterdaySum
+                                                            } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr align="center">
+                                            <td>Thank you for all your hard work.</td>
+                                        </tr>
+                                    </table>
+                                </body>
+                            </html>
                             `
     return emailTemplate
 }

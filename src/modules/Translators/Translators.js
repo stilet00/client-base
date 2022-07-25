@@ -23,7 +23,7 @@ import { Checkbox, Divider, TextField } from '@mui/material'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { DEFAULT_CATEGORIES } from '../../constants/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
+import { faPiggyBank, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 
 function Translators({ user }) {
@@ -51,7 +51,6 @@ function Translators({ user }) {
         alertStatusConfirmation,
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
-        finishTranslatorDelete,
         calculateMonthTotal,
         suspendTranslator,
         suspendClient,
@@ -60,10 +59,11 @@ function Translators({ user }) {
         translatorFilter,
         addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
+        sendNotificationEmails,
+        mailoutInProgress,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
-    console.log('state is updated')
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
@@ -231,6 +231,14 @@ function Translators({ user }) {
                     >
                         Show total
                     </Button>
+                    <Button
+                        aria-describedby={id}
+                        onClick={openAlertConfirmation}
+                        fullWidth={screenIsSmall}
+                        startIcon={<FontAwesomeIcon icon={faPaperPlane} />}
+                    >
+                        Send notification emails
+                    </Button>
                     <Popover
                         id={id}
                         open={open}
@@ -383,14 +391,17 @@ function Translators({ user }) {
                 status={message.status}
             />
             <AlertMessageConfirmation
-                mainText={'Please confirm that you want to delete translator?'}
-                additionalText={message.text}
+                mainText={'Please confirm mailout'}
+                additionalText={
+                    "Continue, if you've finished all work in translator's statistics"
+                }
                 open={alertStatusConfirmation}
                 handleClose={closeAlertConfirmationNoReload}
                 handleOpen={openAlertConfirmation}
                 status={false}
                 onCancel={closeAlertConfirmationNoReload}
-                onConfirm={finishTranslatorDelete}
+                onConfirm={sendNotificationEmails}
+                loadingStatus={mailoutInProgress}
             />
         </div>
     ) : (
