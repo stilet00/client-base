@@ -29,7 +29,7 @@ export function calculateBalanceDaySum(
             0
         )
 
-        return Math.round(categorySum)
+        return categorySum
     } else {
         const arrayToSum = Object.values(targetObject)
 
@@ -37,7 +37,7 @@ export function calculateBalanceDaySum(
             return typeof current === 'number' ? sum + current : sum
         }, 0)
 
-        return Math.round(sumResult - targetObject.penalties * 2)
+        return sumResult - targetObject.penalties * 2
     }
 }
 
