@@ -14,3 +14,7 @@ export function removeTranslator(id) {
 export function updateTranslator(translator) {
     return axios.put(translatorsURL + translator._id, translator)
 }
+
+export function sendNotificationEmailsRequest() {
+    return axios.get(translatorsURL + 'send-emails')
+}

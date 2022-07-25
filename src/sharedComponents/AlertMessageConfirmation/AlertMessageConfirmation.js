@@ -2,6 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import '../../styles/sharedComponents/AlertMessageConfirmation.css'
 import { Button } from '@material-ui/core'
+import SendIcon from '@mui/icons-material/Send'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -19,6 +21,7 @@ export default function AlertMessageConfirmation({
     status,
     onConfirm,
     onCancel,
+    loadingStatus,
 }) {
     const classes = useStyles()
 
@@ -37,16 +40,18 @@ export default function AlertMessageConfirmation({
                     </h2>
                     {additionalText ? <p>{additionalText}</p> : null}
                     <div className="confirmation-buttons">
-                        <Button
-                            variant={'outlined'}
-                            color={'secondary'}
-                            onClick={onConfirm}
-                        >
-                            DELETE
-                        </Button>
                         <Button variant={'outlined'} onClick={onCancel}>
                             CANCEL
                         </Button>
+                        <LoadingButton
+                            onClick={onConfirm}
+                            endIcon={<SendIcon />}
+                            loading={loadingStatus}
+                            loadingPosition="end"
+                            variant="contained"
+                        >
+                            CONFIRM
+                        </LoadingButton>
                     </div>
                 </div>
             </Modal>

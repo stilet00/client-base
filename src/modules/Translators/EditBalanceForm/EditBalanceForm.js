@@ -16,6 +16,7 @@ import FormControl from '@material-ui/core/FormControl'
 import DraftsIcon from '@mui/icons-material/Drafts'
 import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import moment from 'moment'
@@ -347,6 +348,33 @@ export default function EditBalanceForm({
                                                         endAdornment: (
                                                             <InputAdornment position="end">
                                                                 <MoneyOffIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="balance-form__finances-input">
+                                                <TextField
+                                                    name={'photoAttachments'}
+                                                    onChange={handleChange}
+                                                    onClick={e =>
+                                                        e.target.select()
+                                                    }
+                                                    value={
+                                                        findClientById()
+                                                            .photoAttachments
+                                                    }
+                                                    size="small"
+                                                    variant="outlined"
+                                                    label={'Photo attachments'}
+                                                    type={'number'}
+                                                    step="0.01"
+                                                    fullWidth
+                                                    required
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <AddPhotoAlternateIcon />
                                                             </InputAdornment>
                                                         ),
                                                     }}
