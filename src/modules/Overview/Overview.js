@@ -388,7 +388,8 @@ function Overview({ user }) {
                                                         }}
                                                     >
                                                         {' '}
-                                                        {yearTotalSum -
+                                                        {(
+                                                            yearTotalSum -
                                                             Math.floor(
                                                                 yearTotalSum *
                                                                     0.4
@@ -396,7 +397,8 @@ function Overview({ user }) {
                                                             Math.floor(
                                                                 yearTotalSum *
                                                                     0.1
-                                                            ) +
+                                                            )
+                                                        ).toFixed(2) +
                                                             ' $'}{' '}
                                                     </span>
                                                 ) : (

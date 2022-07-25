@@ -1,6 +1,8 @@
 let express = require('express')
-const sendEmailTemplateToTranslators = require('./src/api/email-api/emailApi')
-const moment = require('moment-timezone')
+const {
+    sendEmailTemplateToAdministrators,
+    sendEmailTemplateToTranslators,
+} = require('./src/api/email-api/emailApi')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -60,17 +62,20 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 })
 
 //email api
-async function sendRegularEmails() {
-    if (moment().tz('Europe/Kiev').format('HH:mm:ss') === '12:15:00') {
+async function balanceMailout() {
+    try {
         const translatorsCollection = await collectionTranslators
             .find()
             .toArray()
         if (translatorsCollection.length) {
             sendEmailTemplateToTranslators(translatorsCollection)
+            sendEmailTemplateToAdministrators(translatorsCollection)
         }
+        return true
+    } catch (error) {
+        return false
     }
 }
-setInterval(sendRegularEmails, 1000)
 
 // task list api
 
@@ -226,6 +231,16 @@ app.get(translatorsURL + 'get', (req, res) => {
     })
 })
 
+app.get(translatorsURL + 'send-emails', (req, res) => {
+    balanceMailout().then(emailsWereSentSuccessfuly => {
+        if (emailsWereSentSuccessfuly) {
+            return res.sendStatus(200)
+        } else {
+            return res.sendStatus(500)
+        }
+    })
+})
+
 app.post(translatorsURL + 'add', function (req, res, next) {
     if (!req.body) {
         res.send('Ошибка при загрузке переводчика')
@@ -251,6 +266,8 @@ app.put(translatorsURL + ':id', (req, res) => {
                 statistics: req.body.statistics,
                 suspended: req.body.suspended,
                 personalPenalties: req.body.personalPenalties,
+                email: req.body.email,
+                wantsToReceiveEmails: req.body.wantsToReceiveEmails,
             },
         },
         err => {

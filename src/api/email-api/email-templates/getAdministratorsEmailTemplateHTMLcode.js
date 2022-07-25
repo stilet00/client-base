@@ -1,4 +1,4 @@
-const getEmailTemplateHTMLCode = ({
+const getAdministratorsEmailTemplateHTMLCode = ({
     arrayOfTranslatorsNamesAndMonthSums,
     yesterdayTotalSum,
 }) => {
@@ -31,10 +31,10 @@ const getEmailTemplateHTMLCode = ({
                                             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                                             <style type="text/css">
                                                 table {
-                                                    width: 300px;
+                                                    width: 450px;
                                                     margin: 50px auto;
                                                     min-height: 400px;
-                                                    background: #f5f5f5;
+                                                    background: linear-gradient(0deg, rgba(2,0,36,0.2) 0%, rgba(182,254,255,0.2) 0%, rgba(0,212,255,0.2) 100%);
                                                     border-radius: 8px;
                                                     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
                                                         0 6px 6px rgba(0, 0, 0, 0.23);
@@ -47,22 +47,19 @@ const getEmailTemplateHTMLCode = ({
                                                 .titlesInfo {
                                                     font-size: 1rem;
                                                     font-weight: bold;
-                                                    background-image: linear-gradient(
-                                                        to right top,
-                                                        #249dc2,
-                                                        #4192af,
-                                                        #51869c,
-                                                        #5a7b8a,
-                                                        #607078
-                                                    );
+                                                    border-radius: 8px;
                                                 }
                                                 .titlesInfo > td {
-                                                    padding: 0.5rem;
+                                                    padding: 1rem;
+                                                }
+                                                .title-info {
+                                                    border-top-left-radius: 8px;
+                                                    border-top-right-radius: 8px;
                                                 }
 
                                                 .titlesInfo > td:first-child {
                                                     border-top-left-radius: 8px;
-                                                    padding: 0.5rem;
+                                                    padding: 1rem;
                                                 }
                                                 .titlesInfo > td:nth-child(2) {
                                                     border-top-right-radius: 8px;
@@ -109,6 +106,9 @@ const getEmailTemplateHTMLCode = ({
                                                     color: #6c757d;
                                                     border: 1px solid #249dc2;
                                                 }
+                                                .translator-info-title {
+                                                    text-align: center;
+                                                }
                                                 .translator-info-container {
                                                     text-align: left;
                                                 }
@@ -119,22 +119,16 @@ const getEmailTemplateHTMLCode = ({
                                                     color: white;
                                                 }
                                             </style>
-                                            <title>Agency total balance</title>
+                                            <title>Agency total balance for previous day</title>
                                         </head>
                                         <body>
                                             <table>
                                                 <thead>
                                                     <tr class="titlesInfo">
-                                                        <td>Total:</td>
-                                                        <td>${yesterdayTotalSum}$</td>
+                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum} $</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="translator-info-container">
-                                                        <td colspan="2">
-                                                            <b>Balances for yesterday:</b>
-                                                        </td>
-                                                    </tr>
                                                     ${translatorsSumToHtmlCode.join(
                                                         ''
                                                     )}
@@ -146,4 +140,4 @@ const getEmailTemplateHTMLCode = ({
     return emailTemplate
 }
 
-module.exports = getEmailTemplateHTMLCode
+module.exports = getAdministratorsEmailTemplateHTMLCode

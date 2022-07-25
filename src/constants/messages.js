@@ -28,6 +28,10 @@ export const MESSAGES = {
         text: 'Translator has been activated!',
         status: true,
     },
+    translatorEmailUpdated: {
+        text: "Translator's email has been updated!",
+        status: true,
+    },
 
     clientExist: {
         text: 'Translator already has this client!',
@@ -66,6 +70,11 @@ export const MESSAGES = {
 
     personalPenaltyApplied: {
         text: 'Penalty has been applied',
+        status: true,
+    },
+
+    mailoutSuccess: {
+        text: 'Emails to the administrators and translators have been sent',
         status: true,
     },
 }
