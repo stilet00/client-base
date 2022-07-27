@@ -237,7 +237,7 @@ function Translators({ user }) {
                         fullWidth={screenIsSmall}
                         startIcon={<FontAwesomeIcon icon={faPaperPlane} />}
                     >
-                        Send notification emails
+                        Send emails
                     </Button>
                     <Popover
                         id={id}

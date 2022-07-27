@@ -108,7 +108,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                     <thead>
                                                     <tr>
                                                         <td  class="container__tableheader" colspan="9">
-                                                            <img src="cid:emailIcon" alt="placeholder"></img>
+                                                            <img src="cid:email-icon" alt="placeholder"></img>
                                                         </td>
                                                     </tr>
                                                     <tr>
