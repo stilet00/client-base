@@ -142,15 +142,17 @@
           backdrop-filter: blur(5px);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1130px) {
   .gallery-container .inner-gallery-container {
     border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 
-@media (max-width: 812) {
+@media (max-width: 999px) {
   .gallery-container .inner-gallery-container {
-    border-top-left-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 10px;
   }
 }
 

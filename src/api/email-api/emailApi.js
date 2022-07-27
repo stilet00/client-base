@@ -6,6 +6,28 @@ const {
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
 const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
+var path = require('path')
+class imageAttachmentInformation {
+    constructor(imageName) {
+        this.filename = imageName
+        this.path = path.join(__dirname, 'email-images', imageName)
+        this.cid = imageName.replace('.png', '')
+    }
+}
+
+const imageNamesArrayForEmail = [
+    'email-icon.png',
+    'women.png',
+    'chat.png',
+    'love.png',
+    'email-letter.png',
+    'telephone.png',
+    'gift.png',
+    'heart.png',
+    'dollar-sign.png',
+    'photoAttachments.png',
+    'penalties.png',
+]
 
 const sendEmailTemplateToAdministrators = translatorsCollection => {
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
@@ -121,6 +143,14 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
                 getTranslatorsEmailTemplateHTMLCode(
                     translatorInfoForEmailLetter
                 )
+            const imagesPathArrayForEmail = imageNamesArrayForEmail.map(
+                imageName => {
+                    const imageInfoObject = new imageAttachmentInformation(
+                        imageName
+                    )
+                    return imageInfoObject
+                }
+            )
             let mailOptions = {
                 from: '"Sunrise agency" <sunrise-agency@gmail.com>',
                 to: translatorInfoForEmailLetter.email,
@@ -129,63 +159,7 @@ const sendEmailTemplateToTranslators = translatorsCollection => {
                     .format('MMMM DD, YYYY')}`,
                 text: `Balance: ${translatorInfoForEmailLetter.yesterdaySum}$`,
                 html: emailHtmlTemplateForTranslators,
-                attachments: [
-                    {
-                        filename: 'mail-icon.png',
-                        path: './src/images/email-images/email-icon.png',
-                        cid: 'emailIcon',
-                    },
-                    {
-                        filename: 'women.png',
-                        path: './src/images/email-images/women.png',
-                        cid: 'women',
-                    },
-                    {
-                        filename: 'chat.png',
-                        path: './src/images/email-images/chat.png',
-                        cid: 'chat',
-                    },
-                    {
-                        filename: 'love.png',
-                        path: './src/images/email-images/love.png',
-                        cid: 'love',
-                    },
-                    {
-                        filename: 'email-letter.png',
-                        path: './src/images/email-images/email-letter.png',
-                        cid: 'email-letter',
-                    },
-                    {
-                        filename: 'telephone.png',
-                        path: './src/images/email-images/telephone.png',
-                        cid: 'telephone',
-                    },
-                    {
-                        filename: 'gift.png',
-                        path: './src/images/email-images/gift.png',
-                        cid: 'gift',
-                    },
-                    {
-                        filename: 'heart.png',
-                        path: './src/images/email-images/heart.png',
-                        cid: 'heart',
-                    },
-                    {
-                        filename: 'dollar-sign.png',
-                        path: './src/images/email-images/dollar-sign.png',
-                        cid: 'dollar-sign',
-                    },
-                    {
-                        filename: 'photoAttachments.png',
-                        path: './src/images/email-images/photoAttachments.png',
-                        cid: 'photoAttachments',
-                    },
-                    {
-                        filename: 'penalties.png',
-                        path: './src/images/email-images/penalties.png',
-                        cid: 'penalties',
-                    },
-                ],
+                attachments: imagesPathArrayForEmail,
             }
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
