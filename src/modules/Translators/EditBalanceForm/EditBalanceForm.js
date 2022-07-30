@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
@@ -33,8 +33,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '@mui/material/styles'
-import { purple, blue, blueGrey } from '@mui/material/colors'
+import { purple, blue } from '@mui/material/colors'
 import { green, red } from '@material-ui/core/colors'
+import { SUNRISE_TRANSLATOR_ID } from '../../../constants/constants'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -57,6 +58,7 @@ export default function EditBalanceForm({
     name,
     surname,
     clients,
+    id,
 }) {
     const {
         handleOpen,
@@ -353,33 +355,39 @@ export default function EditBalanceForm({
                                                     }}
                                                 />
                                             </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'photoAttachments'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .photoAttachments
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Photo attachments'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <AddPhotoAlternateIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
+                                            {id === SUNRISE_TRANSLATOR_ID && (
+                                                <div className="balance-form__finances-input">
+                                                    <TextField
+                                                        name={
+                                                            'photoAttachments'
+                                                        }
+                                                        onChange={handleChange}
+                                                        onClick={e =>
+                                                            e.target.select()
+                                                        }
+                                                        value={
+                                                            findClientById()
+                                                                .photoAttachments
+                                                        }
+                                                        size="small"
+                                                        variant="outlined"
+                                                        label={
+                                                            'Photo attachments'
+                                                        }
+                                                        type={'number'}
+                                                        step="0.01"
+                                                        fullWidth
+                                                        required
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    <AddPhotoAlternateIcon />
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="balance-form__finances__dating">
                                             <div className="balance-form__finances-input">

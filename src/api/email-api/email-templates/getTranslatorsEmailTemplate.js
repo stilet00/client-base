@@ -115,7 +115,9 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                         <td class="container__tableheader-greetingsinfo"  colspan="9">
                                                                 <h2>
                                                                     Hello ${
-                                                                        translatorInfoForEmailLetter.label
+                                                                        translatorInfoForEmailLetter.label.split(
+                                                                            ' '
+                                                                        )[0]
                                                                     }, here is your balance:
                                                                 </h2>
                                                         </td>

@@ -29,7 +29,8 @@ export default function AlertMessage({
                             : 'message-container decline-box'
                     }
                 >
-                    <h2>{mainText}</h2>
+                    {/* <h2>{mainText}</h2> */}
+                    <h2>HELLO</h2>
                     {additionalText ? <p>{additionalText}</p> : null}
                 </div>
             </Modal>

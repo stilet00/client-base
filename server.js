@@ -68,10 +68,13 @@ async function balanceMailout() {
             .find()
             .toArray()
         if (translatorsCollection.length) {
-            sendEmailTemplateToTranslators(translatorsCollection)
-            sendEmailTemplateToAdministrators(translatorsCollection)
+            const listOfTranslatorsWhoReceivedEmails =
+                await sendEmailTemplateToTranslators(translatorsCollection)
+            // sendEmailTemplateToAdministrators(translatorsCollection)
+            return listOfTranslatorsWhoReceivedEmails
+        } else {
+            return []
         }
-        return true
     } catch (error) {
         return false
     }
@@ -232,9 +235,9 @@ app.get(translatorsURL + 'get', (req, res) => {
 })
 
 app.get(translatorsURL + 'send-emails', (req, res) => {
-    balanceMailout().then(emailsWereSentSuccessfuly => {
-        if (emailsWereSentSuccessfuly) {
-            return res.sendStatus(200)
+    balanceMailout().then(emailsWereSentSuccessfully => {
+        if (emailsWereSentSuccessfully.length) {
+            return res.send(emailsWereSentSuccessfully)
         } else {
             return res.sendStatus(500)
         }
