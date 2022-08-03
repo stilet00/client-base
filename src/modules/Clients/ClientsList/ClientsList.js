@@ -42,6 +42,7 @@ function ClientsList({
                 onClick={toggleDrawer('left', true)}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faListAlt} />}
+                className="translators-container__buttons"
             >
                 Show clients
             </Button>

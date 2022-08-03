@@ -227,6 +227,7 @@ function Translators({ user }) {
                     <Button
                         aria-describedby={id}
                         onClick={handleClick}
+                        className="translators-container__buttons"
                         startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
                     >
                         Show total
@@ -235,6 +236,7 @@ function Translators({ user }) {
                         aria-describedby={id}
                         onClick={openAlertConfirmation}
                         fullWidth={screenIsSmall}
+                        className="translators-container__buttons"
                         startIcon={<FontAwesomeIcon icon={faPaperPlane} />}
                     >
                         Send emails
