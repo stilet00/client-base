@@ -57,7 +57,7 @@ export default function ClientsForm(props) {
                 onClick={handleOpen}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faVenus} />}
-                className="translators-container__buttons"
+                className="translators-container__menu-button"
             >
                 Add client
             </Button>
