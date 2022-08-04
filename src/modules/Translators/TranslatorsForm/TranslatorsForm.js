@@ -68,6 +68,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                 onClick={handleOpen}
                 fullWidth={screenIsSmall}
                 startIcon={<WorkIcon />}
+                className="translators-container__menu-button"
             >
                 Add translator
             </Button>
