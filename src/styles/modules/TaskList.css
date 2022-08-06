@@ -23,6 +23,7 @@
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
   margin: 0 auto;
+  width: 90%;
   gap: 0.9rem;
   row-gap: 1rem;
 }
@@ -41,7 +42,6 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  width: 24%;
   max-width: 250px;
   min-height: 150px;
   -webkit-box-sizing: border-box;
@@ -89,9 +89,6 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-flex: 0;
-        -ms-flex: 0;
-            flex: 0;
   }
 }
 
