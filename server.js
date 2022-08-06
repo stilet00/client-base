@@ -70,7 +70,7 @@ async function balanceMailout() {
         if (translatorsCollection.length) {
             const listOfTranslatorsWhoReceivedEmails =
                 await sendEmailTemplateToTranslators(translatorsCollection)
-            // sendEmailTemplateToAdministrators(translatorsCollection)
+            sendEmailTemplateToAdministrators(translatorsCollection)
             return listOfTranslatorsWhoReceivedEmails
         } else {
             return []

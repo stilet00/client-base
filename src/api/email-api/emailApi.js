@@ -2,6 +2,8 @@ const nodeMailer = require('nodemailer')
 const moment = require('moment')
 const {
     calculateTranslatorYesterdayTotal,
+    calculateTranslatorMonthTotal,
+    calculatePercentDifference,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
@@ -105,6 +107,19 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
             const yesterdaySum = calculateTranslatorYesterdayTotal(
                 translatorsStatistics
             )
+            const currentMonthTotal = calculateTranslatorMonthTotal(
+                translatorsStatistics
+            )
+            const previousMonthTotal = calculateTranslatorMonthTotal(
+                translatorsStatistics,
+                false,
+                moment().subtract(1, 'month').format('MM')
+            )
+            const monthProgressPercent = calculatePercentDifference(
+                currentMonthTotal,
+                previousMonthTotal
+            )
+            // const stringOfMonthProgressPercent = `${percentDifference.progressIsPositive ? '+' : '-'}${percentDifference.value}%`
             const financeFieldList = new DEFAULT_FINANCE_DAY()
             const detailedStatistic = translator.activeClients.map(client => {
                 const statisticByClient = Object.keys(financeFieldList).map(
@@ -125,7 +140,13 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                 }
             })
 
-            return { ...translator, yesterdaySum, detailedStatistic }
+            return {
+                ...translator,
+                yesterdaySum,
+                currentMonthTotal,
+                monthProgressPercent,
+                detailedStatistic,
+            }
         })
 
     let transporter = nodeMailer.createTransport({
@@ -140,7 +161,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
 
     const arrayOfTranslatorsWhoReceivedLetter = Promise.all(
         arrayOfTranslatorsInfoForEmailLetter.map(
-            async translatorInfoForEmailLetter => {
+            async (translatorInfoForEmailLetter, index) => {
                 const emailHtmlTemplateForTranslators =
                     getTranslatorsEmailTemplateHTMLCode(
                         translatorInfoForEmailLetter
@@ -163,12 +184,16 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                     html: emailHtmlTemplateForTranslators,
                     attachments: imagesPathArrayForEmail,
                 }
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        throw new Error(error)
-                    }
-                    console.log(`Message sent to: ${info.accepted.join(', ')}`)
-                })
+                setTimeout(() => {
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            throw new Error(error)
+                        }
+                        console.log(
+                            `Message sent to: ${info.accepted.join(', ')}`
+                        )
+                    })
+                }, index + 1 * 1000)
                 return translatorInfoForEmailLetter.label
             }
         )

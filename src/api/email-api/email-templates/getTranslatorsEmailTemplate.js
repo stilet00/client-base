@@ -1,3 +1,4 @@
+const moment = require('moment')
 const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
     const arrayOfDetailedBalanceFields =
         translatorInfoForEmailLetter.detailedStatistic.map(
@@ -159,10 +160,26 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td class="container__tfoot-td" colspan="9">
-                                                            For yesterday: ${
+                                                        <td class="container__tfoot-td" colspan="3">
+                                                            Yesterday: ${
                                                                 translatorInfoForEmailLetter.yesterdaySum
                                                             } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
+                                                        </td>
+                                                        <td class="container__tfoot-td" colspan="6">
+                                                            Total for ${moment().format(
+                                                                'MMMM'
+                                                            )}: ${
+        translatorInfoForEmailLetter.currentMonthTotal
+    } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
+    <span style="color:${
+        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
+            ? 'green'
+            : 'red'
+    }">${
+        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
+            ? '+'
+            : '-'
+    }${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
                                                         </td>
                                                     </tr>
                                                 </tfoot>
