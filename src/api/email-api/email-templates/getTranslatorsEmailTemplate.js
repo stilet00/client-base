@@ -6,9 +6,17 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                 const amountsForStatisticCategories =
                     statisticsInfoForClient.statistics.map(
                         statisticsCategory => {
-                            return `<td class="container__tbody_amount">${Object.values(
-                                statisticsCategory
-                            ).join('')}</td>`
+                            if (
+                                Object.keys(statisticsCategory).includes(
+                                    'photoAttachments'
+                                )
+                            ) {
+                                return ''
+                            } else {
+                                return `<td class="container__tbody_amount">${Object.values(
+                                    statisticsCategory
+                                ).join('')}</td>`
+                            }
                         }
                     )
                 return `<tr class="${
@@ -145,9 +153,6 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                             <img src="cid:heart" alt="virtual gifts Dating" class="icons" alt="Virtual gifts on Dating"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:photoAttachments" class="icons"  alt="Photo attachments"></img>
-                                                        </td>
-                                                        <td class="container__tbody_amount">
                                                             <img src="cid:telephone" class="icons"  alt="Phone calls"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
@@ -165,17 +170,19 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                                 translatorInfoForEmailLetter.yesterdaySum
                                                             } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
                                                         </td>
-                                                        <td class="container__tfoot-td" colspan="6">
-                                                            Total for ${moment().format(
+                                                        <td class="container__tfoot-td" colspan="5">
+                                                            ${moment().format(
                                                                 'MMMM'
                                                             )}: ${
         translatorInfoForEmailLetter.currentMonthTotal
     } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
-    <span style="color:${
-        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
-            ? 'green'
-            : 'red'
-    }">${
+                                                            <span style="color:${
+                                                                translatorInfoForEmailLetter
+                                                                    .monthProgressPercent
+                                                                    .progressIsPositive
+                                                                    ? 'green'
+                                                                    : 'red'
+                                                            }">${
         translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
             ? '+'
             : '-'

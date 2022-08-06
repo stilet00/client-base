@@ -9,7 +9,6 @@ const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdm
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
 const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
 var path = require('path')
-const { ConstructionOutlined } = require('@mui/icons-material')
 class imageAttachmentInformation {
     constructor(imageName) {
         this.filename = imageName
@@ -28,7 +27,6 @@ const imageNamesArrayForEmail = [
     'gift.png',
     'heart.png',
     'dollar-sign.png',
-    'photoAttachments.png',
     'penalties.png',
 ]
 
@@ -119,7 +117,6 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                 currentMonthTotal,
                 previousMonthTotal
             )
-            // const stringOfMonthProgressPercent = `${percentDifference.progressIsPositive ? '+' : '-'}${percentDifference.value}%`
             const financeFieldList = new DEFAULT_FINANCE_DAY()
             const detailedStatistic = translator.activeClients.map(client => {
                 const statisticByClient = Object.keys(financeFieldList).map(
