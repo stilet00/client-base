@@ -15,7 +15,6 @@ import { useSingleTranslator } from '../businessLogic'
 import {
     calculatePercentDifference,
     calculateTranslatorMonthTotal,
-    getSumFromArray,
 } from '../../../sharedFunctions/sharedFunctions'
 import {
     currentMonth,
@@ -393,12 +392,6 @@ function SingleTranslator({
                                                     )
                                             )}
                                         />
-                                        <span className="red-text styled-text-numbers">
-                                            {`${getSumFromArray(
-                                                calculatePersonalPenalties()
-                                                    .selectedDatePenaltiesArray
-                                            )} $`}
-                                        </span>
                                     </Typography>
                                 ) : null}
                             </AccordionDetails>
