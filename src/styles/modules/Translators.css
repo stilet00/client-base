@@ -30,6 +30,19 @@
   width: 15rem;
 }
 
+@media (min-width: 1000px) and (max-width: 1064px) {
+  .translators-container__menu-button > span {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 5px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
 @media (max-width: 900px) {
   .translators-container {
     max-width: 90vw;

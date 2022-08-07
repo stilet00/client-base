@@ -119,6 +119,19 @@
   border-bottom-right-radius: 0;
 }
 
+@media (min-width: 1000px) and (max-width: 1064px) {
+  .gallery-container .gallery-menu__checkbox-container {
+    -ms-flex-item-align: end;
+        -ms-grid-row-align: end;
+        align-self: end;
+  }
+  .gallery-container .gallery-menu__date-container {
+    -ms-flex-item-align: end;
+        -ms-grid-row-align: end;
+        align-self: end;
+  }
+}
+
 .gallery-container .inner-gallery-container {
   display: -webkit-box;
   display: -ms-flexbox;
