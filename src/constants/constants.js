@@ -74,6 +74,8 @@ export const DEFAULT_TRANSLATOR = {
     email: null,
 }
 
+export const SUNRISE_TRANSLATOR_ID = '62470d5dffe20600169edac1'
+
 export const DEFAULT_CATEGORIES = {
     chats: 'chats',
     dating: 'dating',

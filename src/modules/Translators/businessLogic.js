@@ -113,9 +113,9 @@ export const useTranslators = user => {
     }, [user])
 
     const showAlertMessage = useCallback(
-        alertMessage => {
+        (alertMessage, duration) => {
             setMessage(alertMessage)
-            openAlert()
+            openAlert({ duration })
         },
         [openAlert]
     )
@@ -305,7 +305,11 @@ export const useTranslators = user => {
         sendNotificationEmailsRequest().then(res => {
             if (res.status === 200) {
                 closeAlertConfirmationNoReload()
-                showAlertMessage(MESSAGES.mailoutSuccess)
+                const messageAboutEmailsReceived = {
+                    text: `Emails have been sent to: ${res.data.join(', ')}`,
+                    status: true,
+                }
+                showAlertMessage(messageAboutEmailsReceived, 20000)
                 setMailoutInProgress(false)
             } else {
                 showAlertMessage(MESSAGES.somethingWrong)
