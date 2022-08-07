@@ -62,7 +62,6 @@ function Translators({ user }) {
         sendNotificationEmails,
         mailoutInProgress,
     } = useTranslators(user)
-    console.log('re-render')
 
     const [anchorEl, setAnchorEl] = useState(null)
 
