@@ -156,7 +156,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         },
     })
 
-    const arrayOfTranslatorsWhoReceivedLetter = Promise.all(
+    const arrayOfTranslatorsWhoReceivedLetter = await Promise.all(
         arrayOfTranslatorsInfoForEmailLetter.map(
             async (translatorInfoForEmailLetter, index) => {
                 const emailHtmlTemplateForTranslators =
@@ -190,7 +190,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                             `Message sent to: ${info.accepted.join(', ')}`
                         )
                     })
-                }, index + 1 * 1000)
+                }, index * 5000)
                 return translatorInfoForEmailLetter.label
             }
         )
