@@ -10,7 +10,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
         backgroundColor: lightBlue[700],
     },
 }))
-
 export default function ColoredButton({
     innerContent,
     children,

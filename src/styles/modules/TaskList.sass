@@ -1,7 +1,7 @@
 @import "../../variables"
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap')
-
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap')
 .taskList-container
   width: 90%
   z-index: 1
@@ -19,24 +19,26 @@
     flex-flow: row wrap
     margin: 0 auto
     width: 90%
-    gap: 0.9rem
+    gap: 1rem
     row-gap: 1rem
+        
+
 
   .task
     display: flex
-    flex: 1
+    flex: 1 250px
     flex-direction: column
     justify-content: space-between
-    max-width: 250px
-    min-height: 150px
+    max-width: 300px
+    min-height: 300px
     box-sizing: border-box
-    padding: 5px
-    border-radius: 5px
-    font-family: 'Lato', Sans-Serif
+    // padding: 5px
+    border-radius: 10px
+    // font-family: 'Lato', Sans-Serif
     list-style: none
     transition: 0.5s
     box-shadow: $material-box-shadow
-    background-color: $main_color
+    background-color: antiquewhite
 
     @media (max-width: 719px)
       width: 90%
@@ -45,6 +47,7 @@
     p
       margin: 0
       display: block
+      font-size: 0.5rem
 
     .task-date
       font-size: 10px
