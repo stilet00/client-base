@@ -8,6 +8,7 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { TASKS_BACKGROUNDS } from '../../../constants/constants'
+import styled from 'styled-components'
 
 function SingleTask({
     taskName,
@@ -33,6 +34,19 @@ function SingleTask({
     ) : null
 
     let toggleButton = !completed ? <DoneOutlineIcon /> : <DoneAllIcon />
+    const getRandomFrom1To10 = () => Math.floor(Math.random() * 10)
+    let CustomDiv = styled.div`
+        width: 100%;
+        height: 40%;
+        border-radius: 10px 10px 0 0;
+        background: url(${TASKS_BACKGROUNDS[getRandomFrom1To10()]});
+        background-size: 100%;
+        background-position: center;
+        transition: background-size 2s;
+        &:hover {
+            background-size: 150%;
+        }
+    `
     return (
         <li
             id={_id}
@@ -42,29 +56,9 @@ function SingleTask({
                     : 'task gallery-item gradient-box'
             }
         >
-            <div
-                className="task-card_background"
-                style={
-                    completed
-                        ? {
-                              ...styles.taskHeaderBackground,
-                              backgroundImage: `url(${
-                                  TASKS_BACKGROUNDS[
-                                      Math.floor(Math.random() * 10)
-                                  ]
-                              })`,
-                              opacity: '0.2',
-                          }
-                        : {
-                              ...styles.taskHeaderBackground,
-                              backgroundImage: `url(${
-                                  TASKS_BACKGROUNDS[
-                                      Math.floor(Math.random() * 10)
-                                  ]
-                              })`,
-                          }
-                }
-            ></div>
+            <CustomDiv
+                style={completed ? { opacity: '0.2' } : { opacity: '1' }}
+            ></CustomDiv>
             <CardContent style={{ padding: '0' }}>
                 <Typography
                     variant="h5"
@@ -91,15 +85,25 @@ function SingleTask({
                     {done}
                 </Typography>
             </CardContent>
-            <CardActions style={styles.taskFooter}>
+            <CardActions
+                style={
+                    completed
+                        ? {
+                              ...styles.taskFooter,
+                              background: transparentColor,
+                              opacity: '0.1',
+                          }
+                        : styles.taskFooter
+                }
+            >
                 <ColoredButton
                     variant={'contained'}
                     onClick={() => onDelete(_id)}
-                    style={
-                        completed
-                            ? { background: 'rgb(234, 0, 85)' }
-                            : { backgroundColor: 'rgba(255,255,255,1)' }
-                    }
+                    style={{
+                        background: completed
+                            ? footerAndButtonsColor
+                            : transparentColor,
+                    }}
                 >
                     <DeleteForeverIcon />
                 </ColoredButton>
@@ -107,11 +111,11 @@ function SingleTask({
                     variant={'contained'}
                     onClick={toggler}
                     disabled={completed}
-                    style={
-                        completed
-                            ? { background: 'rgb(234, 0, 85)' }
-                            : { backgroundColor: 'rgba(255,255,255,1)' }
-                    }
+                    style={{
+                        background: completed
+                            ? footerAndButtonsColor
+                            : transparentColor,
+                    }}
                 >
                     {toggleButton}
                 </ColoredButton>
@@ -121,7 +125,8 @@ function SingleTask({
 }
 
 export default SingleTask
-
+const footerAndButtonsColor = 'rgb(236, 251, 255)'
+const transparentColor = 'rgba(255,255,255,1)'
 const styles = {
     taskContent: {
         fontFamily: 'Open Sans, sans-serif',
@@ -135,7 +140,7 @@ const styles = {
         borderRadius: '10px 10px 0 0',
     },
     taskFooter: {
-        background: 'rgb(234, 0, 85)',
+        background: footerAndButtonsColor,
         borderRadius: '0 0 10px 10px',
     },
 }
