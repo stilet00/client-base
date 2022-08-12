@@ -3,16 +3,16 @@ import {
     getStringMonthNumber,
     getTotalDaysOfMonth,
 } from '../sharedFunctions/sharedFunctions'
-import image1 from '../images/tasks_backgrounds/image1-min.png'
-import image2 from '../images/tasks_backgrounds/image2-min.png'
-import image3 from '../images/tasks_backgrounds/image3-min.png'
-import image4 from '../images/tasks_backgrounds/image4-min.png'
-import image5 from '../images/tasks_backgrounds/image5-min.png'
-import image6 from '../images/tasks_backgrounds/image6-min.png'
-import image7 from '../images/tasks_backgrounds/image7-min.png'
-import image8 from '../images/tasks_backgrounds/image8-min.png'
-import image9 from '../images/tasks_backgrounds/image9-min.png'
-import image10 from '../images/tasks_backgrounds/image10-min.png'
+import background1 from '../images/tasks_backgrounds/background1.png'
+import background2 from '../images/tasks_backgrounds/background2.png'
+import background3 from '../images/tasks_backgrounds/background3.png'
+import background4 from '../images/tasks_backgrounds/background4.png'
+import background5 from '../images/tasks_backgrounds/background5.png'
+import background6 from '../images/tasks_backgrounds/background6.png'
+import background7 from '../images/tasks_backgrounds/background7.png'
+import background8 from '../images/tasks_backgrounds/background8.png'
+import background9 from '../images/tasks_backgrounds/background9.png'
+import background10 from '../images/tasks_backgrounds/background10.png'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -118,14 +118,14 @@ function fillDays(month, year) {
     return totalDays
 }
 export const TASKS_BACKGROUNDS = [
-    image1,
-    image2,
-    image3,
-    image4,
-    image5,
-    image6,
-    image7,
-    image8,
-    image9,
-    image10,
+    background1,
+    background2,
+    background3,
+    background4,
+    background5,
+    background6,
+    background7,
+    background8,
+    background9,
+    background10,
 ]
