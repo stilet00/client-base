@@ -97,7 +97,7 @@ function SingleTask({
                 }
             >
                 <ColoredButton
-                    variant={'contained'}
+                    variant={'outlined'}
                     onClick={() => onDelete(_id)}
                     style={{
                         background: completed
@@ -108,7 +108,7 @@ function SingleTask({
                     <DeleteForeverIcon />
                 </ColoredButton>
                 <ColoredButton
-                    variant={'contained'}
+                    variant={'outlined'}
                     onClick={toggler}
                     disabled={completed}
                     style={{
