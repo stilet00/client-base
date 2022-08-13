@@ -123,7 +123,26 @@ const calculateBalanceDaySum = (
     }
 }
 
+const calculatePercentDifference = (currentSum, previousSum) => {
+    const difference =
+        currentSum > previousSum
+            ? ((currentSum - previousSum) * 100) / currentSum
+            : ((previousSum - currentSum) * 100) / previousSum
+    const result = difference.toString() === 'NaN' ? 0 : difference.toFixed(1)
+    if (result[result.length - 1] === '0') {
+        return {
+            progressIsPositive: currentSum > previousSum,
+            value: result.slice(0, result.length - 2),
+        }
+    }
+    return {
+        progressIsPositive: currentSum > previousSum,
+        value: Math.round(result),
+    }
+}
+
 module.exports = {
     calculateTranslatorYesterdayTotal,
     calculateTranslatorMonthTotal,
+    calculatePercentDifference,
 }
