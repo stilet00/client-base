@@ -18,8 +18,8 @@ export const useTaskList = user => {
     useEffect(() => {
         if (user) {
             getTasks().then(res => {
-                setTasks(res.data)
                 setLoading(false)
+                setTasks(res.data)
             })
         }
     }, [user])
@@ -34,9 +34,11 @@ export const useTaskList = user => {
                 }
 
                 addTask(task).then(res => {
-                    let newTask = { ...task, _id: res.data }
                     if (res.status === 200) {
-                        setTasks([...tasks, newTask])
+                        setTasks(prevTasks => {
+                            let newTask = { ...task, _id: res.data }
+                            return [...prevTasks, newTask]
+                        })
                     } else {
                         console.log('something went wrong')
                     }
@@ -45,34 +47,30 @@ export const useTaskList = user => {
                 openAlert()
             }
         },
-        [tasks, openAlert]
+        [openAlert]
     )
 
-    const deleteTask = useCallback(
-        _id => {
-            removeTask(_id).then(res => {
-                if (res.status === 200) {
-                    setTasks(tasks.filter(item => item._id !== _id))
-                } else {
-                    console.log('something went wrong')
-                }
-            })
-        },
-        [tasks]
-    )
+    const deleteTask = useCallback(_id => {
+        removeTask(_id).then(res => {
+            if (res.status === 200) {
+                setTasks(prevTasks =>
+                    prevTasks.filter(item => item._id !== _id)
+                )
+            } else {
+                console.log('something went wrong')
+            }
+        })
+    }, [])
 
-    const toggleTodo = useCallback(
-        task => {
-            changeTodoStatus(task).then(res => {
-                if (res.status === 200) {
-                    setTasks(
-                        tasks.map(item => (item._id === task._id ? task : item))
-                    )
-                }
-            })
-        },
-        [tasks]
-    )
+    const toggleTodo = useCallback(task => {
+        changeTodoStatus(task).then(res => {
+            if (res.status === 200) {
+                setTasks(prevTasks =>
+                    prevTasks.map(item => (item._id === task._id ? task : item))
+                )
+            }
+        })
+    }, [])
 
     return {
         tasks,
