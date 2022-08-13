@@ -3,6 +3,16 @@ import {
     getStringMonthNumber,
     getTotalDaysOfMonth,
 } from '../sharedFunctions/sharedFunctions'
+import background1 from '../images/tasks_backgrounds/background1.png'
+import background2 from '../images/tasks_backgrounds/background2.png'
+import background3 from '../images/tasks_backgrounds/background3.png'
+import background4 from '../images/tasks_backgrounds/background4.png'
+import background5 from '../images/tasks_backgrounds/background5.png'
+import background6 from '../images/tasks_backgrounds/background6.png'
+import background7 from '../images/tasks_backgrounds/background7.png'
+import background8 from '../images/tasks_backgrounds/background8.png'
+import background9 from '../images/tasks_backgrounds/background9.png'
+import background10 from '../images/tasks_backgrounds/background10.png'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -109,3 +119,15 @@ function fillDays(month, year) {
     }
     return totalDays
 }
+export const TASKS_BACKGROUNDS = [
+    background1,
+    background2,
+    background3,
+    background4,
+    background5,
+    background6,
+    background7,
+    background8,
+    background9,
+    background10,
+]

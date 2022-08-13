@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
 .taskList-container {
   width: 90%;
   z-index: 1;
@@ -14,7 +15,7 @@
 }
 
 .taskList-container ul {
-  padding-left: 0;
+  padding: 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -22,15 +23,19 @@
   -webkit-box-direction: normal;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
-  gap: 10px;
-  margin: 0;
-  width: 100%;
+  margin: 0 auto;
+  width: 90%;
+  gap: 1rem;
+  row-gap: 1rem;
 }
 
 .taskList-container .task {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 250px;
+          flex: 1 250px;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -38,20 +43,17 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  width: 50%;
   max-width: 300px;
-  min-height: 150px;
+  min-height: 300px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 5px;
-  border-radius: 5px;
-  font-family: 'Lato', Sans-Serif;
+  border-radius: 10px;
   list-style: none;
   -webkit-transition: 0.5s;
   transition: 0.5s;
   -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  background-color: white;
+  background-color: floralwhite;
 }
 
 @media (max-width: 690px) {
@@ -64,6 +66,7 @@
 .taskList-container .task p {
   margin: 0;
   display: block;
+  font-size: 0.5rem;
 }
 
 .taskList-container .task .task-date {
@@ -80,7 +83,7 @@
           justify-content: space-between;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .taskList-container .task .button-container {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
