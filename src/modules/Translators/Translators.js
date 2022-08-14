@@ -300,8 +300,10 @@ function Translators({ user }) {
                             <b>{`${calculateMonthTotal()} $`}</b>
                         </Typography>
                     </Popover>
-                    <div class="gallery-menu__inline-filters">
-                        <div class="gallery-menu__filters-label">Filters</div>
+                    <div className="gallery-menu__inline-filters">
+                        <div className="gallery-menu__filters-label">
+                            Filters
+                        </div>
                         <div className={'gallery-menu__checkbox-container'}>
                             <Checkbox
                                 defaultChecked
