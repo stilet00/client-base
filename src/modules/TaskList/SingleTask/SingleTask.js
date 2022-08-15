@@ -134,10 +134,11 @@ const styles = {
     taskFooter: {
         background: footerColor,
         borderRadius: '0 0 10px 10px',
+        display: 'flex',
     },
     taskFooterText: {
         textAlign: 'center',
-        width: '70%',
+        flex: '1',
     },
 }
 
