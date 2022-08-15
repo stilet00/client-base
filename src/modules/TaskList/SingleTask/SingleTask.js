@@ -44,7 +44,6 @@ function SingleTask({
         background-position: center;
         border-radius: 10px 10px 0 0;
         transition: background-size 2s;
-        cursor: zoom-in;
         &:hover {
             background-size: 150%;
         }
@@ -62,14 +61,12 @@ function SingleTask({
                 style={{ opacity: completed ? '0.2' : '1' }}
             ></TaskBackgroundImageContainer>
             <CardContent
-                style={
-                    completed
-                        ? {
-                              ...styles.taskContent,
-                              color: 'rgb(192,192,192)',
-                          }
-                        : styles.taskContent
-                }
+                style={{
+                    ...styles.taskContent,
+                    color: completed
+                        ? taskTextCompletedColor
+                        : taskTextDefaultColor,
+                }}
             >
                 <Typography
                     variant="h5"
@@ -98,18 +95,17 @@ function SingleTask({
                 >
                     <DeleteForeverIcon />
                 </ColoredButton>
-                <ColoredButton
-                    variant={'outlined'}
-                    onClick={toggler}
-                    disabled={completed}
-                    style={
-                        completed
-                            ? { display: 'none' }
-                            : { background: contentContainerColor }
-                    }
-                >
-                    {toggleButton}
-                </ColoredButton>
+
+                {!completed && (
+                    <ColoredButton
+                        variant={'outlined'}
+                        onClick={toggler}
+                        disabled={completed}
+                        style={{ background: contentContainerColor }}
+                    >
+                        {toggleButton}
+                    </ColoredButton>
+                )}
                 <div style={styles.taskFooterText}>
                     <Typography color="text.secondary">{done}</Typography>
                     <Typography variant="body2">Created: {created}</Typography>
@@ -123,14 +119,17 @@ export default SingleTask
 const footerColor = 'rgb(236, 251, 255)'
 const contentContainerColor = 'rgba(255,250,240,1)'
 const transparentColor = 'rgba(0, 0, 0, 0.07)'
+const taskTextDefaultColor = 'rgb(30,32,33)'
+const taskTextCompletedColor = 'rgb(224,224,224)'
 const styles = {
     taskContent: {
         fontFamily: 'Open Sans, sans-serif',
-        color: 'rgb(30,32,33)',
+        color: taskTextDefaultColor,
         fontSize: '1.2rem',
         padding: '1rem',
         overflowY: 'scroll',
         height: '30%',
+        maxHeight: '100px',
     },
     taskFooter: {
         background: footerColor,
@@ -138,7 +137,7 @@ const styles = {
     },
     taskFooterText: {
         textAlign: 'center',
-        width: '80%',
+        width: '70%',
     },
 }
 

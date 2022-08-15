@@ -29,13 +29,6 @@
   max-height: 75vh;
 }
 
-@media (min-width: 690px) and (max-width: 890px) {
-  .taskList-container ul {
-    width: 90%;
-    margin: 0 auto;
-  }
-}
-
 .taskList-container .task {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -61,6 +54,12 @@
   -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   background-color: floralwhite;
+}
+
+@media (min-width: 690px) and (max-width: 890px) {
+  .taskList-container .task {
+    max-width: none;
+  }
 }
 
 @media (max-width: 690px) {
