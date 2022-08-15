@@ -44,6 +44,7 @@ function SingleTask({
         background-position: center;
         border-radius: 10px 10px 0 0;
         transition: background-size 2s;
+        cursor: zoom-in;
         &:hover {
             background-size: 150%;
         }
@@ -60,30 +61,22 @@ function SingleTask({
             <TaskBackgroundImageContainer
                 style={{ opacity: completed ? '0.2' : '1' }}
             ></TaskBackgroundImageContainer>
-            <CardContent style={{ padding: '0' }}>
+            <CardContent
+                style={
+                    completed
+                        ? {
+                              ...styles.taskContent,
+                              color: 'rgb(192,192,192)',
+                          }
+                        : styles.taskContent
+                }
+            >
                 <Typography
                     variant="h5"
                     component="div"
-                    style={
-                        completed
-                            ? {
-                                  ...styles.taskContent,
-                                  color: 'rgb(192,192,192)',
-                              }
-                            : styles.taskContent
-                    }
+                    style={{ fontSize: '1.2rem' }}
                 >
                     {taskName}
-                </Typography>
-
-                <Typography variant="body2" style={{ marginTop: '10px' }}>
-                    Created: {created}
-                </Typography>
-                <Typography
-                    style={{ marginTop: '10px' }}
-                    color="text.secondary"
-                >
-                    {done}
                 </Typography>
             </CardContent>
             <CardActions
@@ -109,14 +102,18 @@ function SingleTask({
                     variant={'outlined'}
                     onClick={toggler}
                     disabled={completed}
-                    style={{
-                        background: completed
-                            ? transparentColor
-                            : contentContainerColor,
-                    }}
+                    style={
+                        completed
+                            ? { display: 'none' }
+                            : { background: contentContainerColor }
+                    }
                 >
                     {toggleButton}
                 </ColoredButton>
+                <div style={styles.taskFooterText}>
+                    <Typography color="text.secondary">{done}</Typography>
+                    <Typography variant="body2">Created: {created}</Typography>
+                </div>
             </CardActions>
         </li>
     )
@@ -131,9 +128,18 @@ const styles = {
         fontFamily: 'Open Sans, sans-serif',
         color: 'rgb(30,32,33)',
         fontSize: '1.2rem',
+        padding: '1rem',
+        overflowY: 'scroll',
+        height: '30%',
     },
     taskFooter: {
         background: footerColor,
         borderRadius: '0 0 10px 10px',
     },
+    taskFooterText: {
+        textAlign: 'center',
+        width: '80%',
+    },
 }
+
+

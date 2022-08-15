@@ -24,9 +24,16 @@
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
   margin: 0 auto;
-  width: 90%;
   gap: 1rem;
   row-gap: 1rem;
+  max-height: 75vh;
+}
+
+@media (min-width: 690px) and (max-width: 890px) {
+  .taskList-container ul {
+    width: 90%;
+    margin: 0 auto;
+  }
 }
 
 .taskList-container .task {
@@ -66,11 +73,11 @@
 .taskList-container .task p {
   margin: 0;
   display: block;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
 }
 
 .taskList-container .task .task-date {
-  font-size: 10px;
+  font-size: 0.7rem;
 }
 
 .taskList-container .task .button-container {

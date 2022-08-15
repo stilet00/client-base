@@ -6,6 +6,16 @@
 body
   font-family: $text-font-family
   margin: 0
+  .main_Container
+    width: 90%
+    z-index: 1
+    max-height: 80vh
+    margin: 0 auto
+    padding: 10px
+    border: 2px solid $main_color
+    border-radius: 10px
+    backdrop-filter: blur(5px)
+    overflow-x: no
 
 .App
   position: relative
@@ -18,6 +28,7 @@ body
   display: flex
   flex-direction: column
   animation: movingBackground infinite 300s linear
+
 
 .invisible
   display: none!important
