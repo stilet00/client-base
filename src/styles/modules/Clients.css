@@ -13,6 +13,9 @@
   padding: 10px;
   max-width: 40vw;
   background: rgba(192, 222, 229, 0.7);
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
 }
 
 .side-clients-menu ul {

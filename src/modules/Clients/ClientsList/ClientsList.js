@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import { React, useState } from 'react'
 import styled from 'styled-components'
 import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
@@ -37,7 +36,7 @@ function ClientsList({
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
     } = useClientsList(translators)
-    const [Search, setSearch] = useState('')
+    const [search, setSearch] = useState('')
     function onSearchChange(e) {
         setSearch(e.target.value.trim().toLowerCase())
     }
@@ -64,8 +63,8 @@ function ClientsList({
                         <StyledInputForSearches
                             type="text"
                             placeholder="Search..."
-                            defaultValue={Search}
-                            value={Search}
+                            defaultValue={search}
+                            value={search}
                             onChange={onSearchChange}
                         ></StyledInputForSearches>
                     </h3>
@@ -75,10 +74,10 @@ function ClientsList({
                                 client =>
                                     client.name
                                         .toLowerCase()
-                                        .includes(Search) ||
+                                        .includes(search) ||
                                     client.surname
                                         .toLowerCase()
-                                        .includes(Search)
+                                        .includes(search)
                             )
                             .sort(sortBySum)
                             .map((client, index) => {
@@ -256,5 +255,7 @@ const StyledInputForSearches = styled.input`
     font-size: inherit;
     color: inherit;
     margin-left: 1rem;
+    max-width: 50%;
+    overflow-x: auto;
     outline: none;
 `
