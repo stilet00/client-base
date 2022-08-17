@@ -51,7 +51,7 @@ function ClientsList({
     } = useClientsList(translators)
     const [search, setSearch] = useState('')
     function onSearchChange(e) {
-        setSearch(e.target.value.trim().toLowerCase())
+        setSearch(e.target.value.toLowerCase())
     }
 
     return (
@@ -82,14 +82,10 @@ function ClientsList({
                     </h3>
                     <ul>
                         {clients
-                            .filter(
-                                client =>
-                                    client.name
-                                        .toLowerCase()
-                                        .includes(search) ||
-                                    client.surname
-                                        .toLowerCase()
-                                        .includes(search)
+                            .filter(client =>
+                                `${client.name} ${client.surname}`
+                                    .toLowerCase()
+                                    .includes(search)
                             )
                             .sort(sortBySum)
                             .map((client, index) => {
