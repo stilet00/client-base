@@ -17,6 +17,19 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
+const SearchTextField = styled.input`
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    margin-left: 1rem;
+    max-width: 50%;
+    overflow-x: auto;
+    outline: none;
+`
+
 function ClientsList({
     translators,
     clients,
@@ -60,13 +73,12 @@ function ClientsList({
                     <h3>
                         <WomanIcon />
                         All clients:{' '}
-                        <StyledInputForSearches
+                        <SearchTextField
                             type="text"
                             placeholder="Search..."
-                            defaultValue={search}
                             value={search}
                             onChange={onSearchChange}
-                        ></StyledInputForSearches>
+                        ></SearchTextField>
                     </h3>
                     <ul>
                         {clients
@@ -246,16 +258,3 @@ function ClientsList({
 }
 
 export default ClientsList
-
-const StyledInputForSearches = styled.input`
-    padding: 0;
-    background: transparent;
-    border: none;
-    font-family: inherit;
-    font-size: inherit;
-    color: inherit;
-    margin-left: 1rem;
-    max-width: 50%;
-    overflow-x: auto;
-    outline: none;
-`
