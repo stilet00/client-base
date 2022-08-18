@@ -70,7 +70,7 @@ function SingleTask({
             >
                 <Typography
                     variant="h5"
-                    component="div"
+                    component="p"
                     style={{ fontSize: '1.2rem' }}
                 >
                     {taskName}
@@ -123,6 +123,9 @@ const taskTextDefaultColor = 'rgb(30,32,33)'
 const taskTextCompletedColor = 'rgb(224,224,224)'
 const styles = {
     taskContent: {
+        display: 'flex',
+        alignItems: 'center',
+        boxSizing: 'border-box',
         fontFamily: 'Open Sans, sans-serif',
         color: taskTextDefaultColor,
         fontSize: '1.2rem',
