@@ -53,7 +53,6 @@ function ClientsList({
     function onSearchChange(e) {
         setSearch(e.target.value.toLowerCase())
     }
-
     return (
         <>
             <Button

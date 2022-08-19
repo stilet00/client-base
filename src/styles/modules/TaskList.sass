@@ -18,25 +18,25 @@
     display: flex
     flex-flow: row wrap
     margin: 0 auto
-    width: 90%
     gap: 1rem
     row-gap: 1rem
-        
-
-
+    max-height: 75vh
+    
   .task
     display: flex
     flex: 1 250px
     flex-direction: column
     justify-content: space-between
     max-width: 300px
-    min-height: 300px
+    min-height: 250px
     box-sizing: border-box
     border-radius: 10px
     list-style: none
     transition: 0.5s
     box-shadow: $material-box-shadow
     background-color: rgba(255,250,240,1)
+    @media (min-width: 690px) and (max-width: 890px)
+      max-width: 350px
     @media (max-width: 690px)
       width: 90%
       max-width: none
@@ -44,10 +44,10 @@
     p
       margin: 0
       display: block
-      font-size: 0.5rem
+      font-size: 0.7rem
 
     .task-date
-      font-size: 10px
+      font-size: 0.7rem
 
     .button-container
       width: 50%

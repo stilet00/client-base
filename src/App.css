@@ -26,6 +26,19 @@ body {
           animation: movingBackground infinite 300s linear;
 }
 
+.main-container {
+  width: 90%;
+  z-index: 1;
+  max-height: 80vh;
+  margin: 0 auto;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  overflow-x: no;
+}
+
 .invisible {
   display: none !important;
 }
