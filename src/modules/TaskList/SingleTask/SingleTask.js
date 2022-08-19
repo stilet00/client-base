@@ -35,11 +35,12 @@ function SingleTask({
 
     let toggleButton = !completed ? <DoneOutlineIcon /> : <DoneAllIcon />
     const getRandomFrom1To10 = () => Math.floor(Math.random() * 10)
+    const wallpaperIndex = React.useMemo(() => getRandomFrom1To10(), [])
     const TaskBackgroundImageContainer = styled.div`
         width: 100%;
         height: 40%;
         border-radius: 10px 10px 0 0;
-        background: url(${TASKS_BACKGROUNDS[getRandomFrom1To10()]});
+        background: url(${TASKS_BACKGROUNDS[wallpaperIndex]});
         background-size: 100%;
         background-position: center;
         border-radius: 10px 10px 0 0;
@@ -144,5 +145,3 @@ const styles = {
         flex: '1',
     },
 }
-
-
