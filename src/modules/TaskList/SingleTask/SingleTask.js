@@ -125,7 +125,7 @@ const taskTextCompletedColor = 'rgb(224,224,224)'
 const styles = {
     taskContent: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         boxSizing: 'border-box',
         fontFamily: 'Open Sans, sans-serif',
         color: taskTextDefaultColor,
