@@ -93,7 +93,7 @@ function SingleTask({
                 top: 0;
                 left: 0;
                 width: 100%;
-                border-radius: 8px;
+                border-radius: 0 0 8px 8px;
                 backdrop-filter: blur(5px);
                 background: ${props =>
                     props.completed
@@ -103,12 +103,13 @@ function SingleTask({
                     0 10px 10px rgba(0, 0, 0, 0.22);
                 font-weight: 600;
                 color: inherit;
-                z-index: 1;
                 opacity: 0;
-                transition: all 1s ease-in-out;
+                z-index: -1;
+                transition: opacity 1s ease-in;
             }
             &:hover {
                 &::after {
+                    z-index: 1;
                     opacity: 1;
                 }
             }
