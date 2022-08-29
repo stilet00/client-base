@@ -12,7 +12,7 @@
 }
 
 .form-container_task-form {
-  height: 250px;
+  min-height: 250px;
 }
 
 .form-container_penalty-form {

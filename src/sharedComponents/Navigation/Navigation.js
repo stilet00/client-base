@@ -16,6 +16,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import MenuIcon from '@mui/icons-material/Menu'
 import WorkIcon from '@mui/icons-material/Work'
 import PageViewIcon from '@mui/icons-material/Pageview'
+import PriceChangeOutlinedIcon from '@mui/icons-material/PriceChangeOutlined'
 import { BottomNavigationAction, IconButton } from '@mui/material'
 import styled, { keyframes } from 'styled-components'
 import { fadeInRight } from 'react-animations'
@@ -87,6 +88,12 @@ export default function Navigation({ user }) {
                     </ListItemIcon>
                     <ListItemText primary={'Overview'} />
                 </ListItem>
+                <ListItem button onClick={() => history.push('/payments')}>
+                    <ListItemIcon>
+                        <PriceChangeOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'payments'} />
+                </ListItem>
                 <ListItem button onClick={() => history.push('/translators')}>
                     <ListItemIcon>
                         <WorkIcon />
@@ -140,6 +147,11 @@ export default function Navigation({ user }) {
                                 label="Overview"
                                 icon={<PageViewIcon />}
                                 value={'/overview'}
+                            />
+                            <BottomNavigationAction
+                                label="Payments"
+                                icon={<PriceChangeOutlinedIcon />}
+                                value={'/payments'}
                             />
                             <BottomNavigationAction
                                 label="Translators & Balance"
