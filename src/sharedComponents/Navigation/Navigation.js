@@ -88,11 +88,14 @@ export default function Navigation({ user }) {
                     </ListItemIcon>
                     <ListItemText primary={'Overview'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/payments')}>
+                <ListItem
+                    button
+                    onClick={() => history.push('/FinanceStatementPage')}
+                >
                     <ListItemIcon>
                         <PriceChangeOutlinedIcon />
                     </ListItemIcon>
-                    <ListItemText primary={'payments'} />
+                    <ListItemText primary={'FinanceStatementPage'} />
                 </ListItem>
                 <ListItem button onClick={() => history.push('/translators')}>
                     <ListItemIcon>
@@ -149,9 +152,9 @@ export default function Navigation({ user }) {
                                 value={'/overview'}
                             />
                             <BottomNavigationAction
-                                label="Payments"
+                                label="Finance Statement"
                                 icon={<PriceChangeOutlinedIcon />}
-                                value={'/payments'}
+                                value={'/FinanceStatementPage'}
                             />
                             <BottomNavigationAction
                                 label="Translators & Balance"
