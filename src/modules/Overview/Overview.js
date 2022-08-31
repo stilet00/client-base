@@ -155,7 +155,7 @@ function Overview({ user }) {
                 return user ? (
                     <div
                         className={
-                            'taskList-container chart-container table-container  animated-box'
+                            'taskList-container  table-container  animated-box'
                         }
                     >
                         <TableContainer component={Paper}>
