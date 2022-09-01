@@ -39,7 +39,7 @@ function ChartsContainer({ user }) {
             </div> */}
             <div className={'main-container  scrolled-container animated-box'}>
                 {months.length > 0 ? (
-                    <ul className={'charts-ul'}>
+                    <ul className={'chart-list'}>
                         {months.map((month, index) => (
                             <SingleChart
                                 previousMonth={
