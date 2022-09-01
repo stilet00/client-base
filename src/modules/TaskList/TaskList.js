@@ -22,10 +22,7 @@ function TaskList({ user }) {
 
     const page =
         tasks.length && !loading ? (
-            <TransitionGroup
-                className="todo-list scrolled-container"
-                component={'ul'}
-            >
+            <TransitionGroup className="todo-list" component={'ul'}>
                 {tasks.map(item => (
                     <CSSTransition
                         key={item._id}
@@ -47,7 +44,11 @@ function TaskList({ user }) {
         )
     return user ? (
         <>
-            <div className={'taskList-container animated-box'}>{page}</div>
+            <div
+                className={'taskList-container scrolled-container animated-box'}
+            >
+                {page}
+            </div>
             <div className="socials button-add-container bottom-button">
                 <Form addTask={newTask} />
             </div>
