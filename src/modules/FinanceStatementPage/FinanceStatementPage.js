@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
-import SinglePayment from './SinglePayment/SinglePayment'
+import StatementItem from './StatementItem/StatementItem'
 import moment from 'moment'
 
 export default function FinanceStatementPage() {
@@ -42,7 +42,6 @@ export default function FinanceStatementPage() {
                         TRANSLATORS
                     </button>
                 </div>
-
                 <ul
                     className={'scrolled-container'}
                     style={{
@@ -51,12 +50,12 @@ export default function FinanceStatementPage() {
                         overflow: 'auto',
                     }}
                 >
-                    <div className={'inner-wrapper'}>
-                        <div className={'inner-wrapper__header'}>
-                            29.08.2022
+                    <div className={'finances-inner-wrapper'}>
+                        <div className={'finances-inner-wrapper__header'}>
+                            {moment().format('L')}
                         </div>
                         {paymentsList.map(item => (
-                            <SinglePayment key={item.id} {...item} />
+                            <StatementItem key={item.id} {...item} />
                         ))}
                     </div>
                 </ul>

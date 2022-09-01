@@ -82,7 +82,7 @@ function App() {
                                             <Route path="/translators/">
                                                 <Translators user={user} />
                                             </Route>
-                                            <Route path="/FinanceStatementPage/">
+                                            <Route path="/finances/">
                                                 <FinanceStatementPage
                                                     user={user}
                                                 />

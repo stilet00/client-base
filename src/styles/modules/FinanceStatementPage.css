@@ -23,10 +23,10 @@
 }
 
 .category-holder__button:hover {
-  background: #c0bebe;
+  background: #797272;
 }
 
-.inner-wrapper {
+.finances-inner-wrapper {
   width: 100%;
   padding: 0 10px;
   background: white;
@@ -34,7 +34,7 @@
           box-sizing: border-box;
 }
 
-.inner-wrapper__header {
+.finances-inner-wrapper__header {
   width: 100%;
   background: white;
   padding: 5px 0;
@@ -44,7 +44,7 @@
   text-align: left;
 }
 
-.inner-wrapper__element {
+.finances-inner-wrapper__list-item {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -59,15 +59,15 @@
   transition: all 0.5s;
 }
 
-.inner-wrapper__element:hover {
-  background: #c0bebe;
+.finances-inner-wrapper__list-item:hover {
+  background: #797272;
 }
 
-.inner-wrapper__element div:first-child {
+.finances-inner-wrapper__list-item .list-item__picture {
   width: 20%;
 }
 
-.inner-wrapper__element div:nth-child(2) {
+.finances-inner-wrapper__list-item .list-item__info {
   height: 100%;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -75,28 +75,36 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 10px 0;
-  font-family: Open Sans, sans-serif;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   text-align: left;
-}
-
-.inner-wrapper__element div:nth-child(2) p {
-  margin: 0;
-  margin-bottom: 2px;
   font-size: 1rem;
   color: #333333;
 }
 
-.inner-wrapper__element div:nth-child(2) p:nth-child(2) {
+.finances-inner-wrapper__list-item .list-item__info p {
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+.finances-inner-wrapper__list-item .list-item__info .list-item__info_aditional-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 2px;
   font-size: 0.8rem;
   color: #93a0ab;
 }
 
-.inner-wrapper__element div:nth-child(2) p:last-child {
+.finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info {
   font-size: 1.2rem;
   font-family: auto;
 }
 
-.inner-wrapper__element div:nth-child(2) p:last-child span {
+.finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info span {
   color: #93a0ab;
   font-size: 1rem;
 }
