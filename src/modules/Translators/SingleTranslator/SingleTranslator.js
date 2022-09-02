@@ -148,7 +148,7 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        Total for {`${moment().format('MMMM')}: `}
+                        Total for {`${moment().format('MMM')}: `}
                         {progressPage}
                         <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
                     </Typography>
@@ -160,7 +160,7 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        Middle for {`${moment().format('MMMM')}: `}
+                        Middle for {`${moment().format('MMM')}: `}
                         <b>{`${calculateMiddleMonthSum()} $ `}</b>
                     </Typography>
                     <Typography
