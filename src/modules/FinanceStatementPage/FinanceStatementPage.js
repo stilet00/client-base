@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
 import StatementItem from './StatementItem/StatementItem'
+import Form from './Form/Form'
 import moment from 'moment'
 
 export default function FinanceStatementPage() {
@@ -59,6 +60,9 @@ export default function FinanceStatementPage() {
                         ))}
                     </div>
                 </ul>
+            </div>
+            <div className="socials button-add-container bottom-button">
+                <Form />
             </div>
         </>
     )
