@@ -4,6 +4,7 @@ import StatementItem from './StatementItem/StatementItem'
 import Form from './Form/Form'
 import moment from 'moment'
 
+
 export default function FinanceStatementPage() {
     const [paymentsList, setPaymentsList] = useState([
         {
@@ -31,6 +32,11 @@ export default function FinanceStatementPage() {
             date: moment().format('MMM Do YY'),
         },
     ])
+
+    function creatingNewPayment(payment) {
+        let newPayment = { ...payment, date: moment().format('MMM Do YY') }
+        setPaymentsList([...paymentsList, newPayment])
+    }
 
     return (
         <>
@@ -62,7 +68,7 @@ export default function FinanceStatementPage() {
                 </ul>
             </div>
             <div className="socials button-add-container bottom-button">
-                <Form />
+                <Form newPayments={creatingNewPayment} />
             </div>
         </>
     )

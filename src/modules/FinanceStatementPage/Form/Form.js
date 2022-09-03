@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import MenuItem from '@mui/material/MenuItem'
@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import TextField from '@material-ui/core/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
+import { getClients } from '../../../services/clientsServices/services'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -20,17 +21,29 @@ const useStyles = makeStyles(theme => ({
 
 const senders = ['Agency', 'Oleksandr', 'Anton']
 
-export default function Form() {
+export default function Form({ newPayments }) {
     const classes = useStyles()
 
     const [empty, setEmpty] = useState({
         name: '',
         amount: '',
         sender: 'Agency',
-        comments: '',
+        comment: '',
     })
+    const [clientsNames, setClientsNames] = useState([])
     const [validated, setValidated] = useState(true)
 
+    useEffect(() => {
+        getClients().then(res => {
+            if (res.status === 200) {
+                setClientsNames(
+                    res.data.map(
+                        clients => `${clients.name} ${clients.surname}`
+                    )
+                )
+            }
+        })
+    }, [])
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
@@ -38,6 +51,9 @@ export default function Form() {
             ...empty,
             [e.target.name]: e.target.value,
         })
+    }
+    function handleSubmit() {
+        newPayments(empty)
     }
 
     const handleChange = e => {
@@ -49,7 +65,7 @@ export default function Form() {
             name: '',
             amount: '',
             sender: 'Agency',
-            comments: '',
+            comment: '',
         })
     }
 
@@ -71,43 +87,32 @@ export default function Form() {
                 }}
             >
                 <Fade in={open}>
-                    <div className={'form-container form-container_task-form'}>
+                    <div className={'form-container'}>
                         <form
                             onSubmit={e => {
                                 e.preventDefault()
+                                handleSubmit()
                                 clearPaymentsForm()
                                 handleClose()
                             }}
                         >
-                            <h2 id="transition-modal-title">Enter Comments</h2>
+                            <h2 id="transition-modal-title">Choose client:</h2>
                             <TextField
-                                id="filled-basic"
-                                label="Comments"
-                                variant="outlined"
                                 fullWidth
-                                name="comments"
-                                onChange={onInputChange}
-                            />
-                            <h2 id="transition-modal-title">
-                                Enter client name:
-                            </h2>
-                            <TextField
-                                id="filled-basic"
-                                label="Client Name"
+                                id="outlined-select"
                                 variant="outlined"
-                                fullWidth
+                                select
+                                label="Clients"
                                 name="name"
-                                onChange={onInputChange}
-                            />
-                            <h2 id="transition-modal-title">Enter amount</h2>
-                            <TextField
-                                id="filled-basic"
-                                label="Amount"
-                                variant="outlined"
-                                fullWidth
-                                name="amount"
-                                onChange={onInputChange}
-                            />
+                                value={empty.name}
+                                onChange={handleChange}
+                            >
+                                {clientsNames.map((clientName, index) => (
+                                    <MenuItem key={index} value={clientName}>
+                                        {clientName}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
                             <h2 id="transition-modal-title">Choose sender:</h2>
                             <TextField
                                 fullWidth
@@ -119,12 +124,30 @@ export default function Form() {
                                 value={empty.sender}
                                 onChange={handleChange}
                             >
-                                {senders.map((item, index) => (
-                                    <MenuItem key={index} value={item}>
-                                        {item}
+                                {senders.map((clientName, index) => (
+                                    <MenuItem key={index} value={clientName}>
+                                        {clientName}
                                     </MenuItem>
                                 ))}
                             </TextField>
+                            <h2 id="transition-modal-title">Enter comment:</h2>
+                            <TextField
+                                id="filled-basic"
+                                label="comment"
+                                variant="outlined"
+                                fullWidth
+                                name={'comment'}
+                                onChange={onInputChange}
+                            />
+                            <h2 id="transition-modal-title">Enter amount:</h2>
+                            <TextField
+                                id="filled-basic"
+                                label="amount"
+                                variant="outlined"
+                                fullWidth
+                                name={'amount'}
+                                onChange={onInputChange}
+                            />
                             <Button
                                 disabled={!validated}
                                 type={'submit'}
