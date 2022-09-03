@@ -149,6 +149,7 @@ export default function Form({ newPayments }) {
                                 onChange={onInputChange}
                             />
                             <Button
+                                style={{ marginTop: '10px' }}
                                 disabled={!validated}
                                 type={'submit'}
                                 fullWidth
