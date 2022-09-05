@@ -9,26 +9,26 @@ export default function FinanceStatementPage() {
     const [paymentsList, setPaymentsList] = useState([
         {
             id: '1',
-            name: 'Ivanova Anna',
+            receiver: 'Ivanova Anna',
             amount: '150',
             sender: 'Agency',
-            comment: 'monthly payment',
+            comment: 'salary',
             date: moment().format('MMM Do YY'),
         },
         {
             id: '2',
-            name: 'Steian Andrea',
+            receiver: 'Steian Andrea',
             amount: '150',
             sender: 'Anton',
-            comment: 'Payed to scount',
+            comment: 'Payment to Scout',
             date: moment().format('MMM Do YY'),
         },
         {
             id: '3',
-            name: 'Bavdis Mariana',
+            receiver: 'Bavdis Mariana',
             amount: '3159',
             sender: 'Agency',
-            comment: 'Salary for July 2022',
+            comment: 'salary',
             date: moment().format('MMM Do YY'),
         },
     ])

@@ -108,4 +108,54 @@
   color: #93a0ab;
   font-size: 1rem;
 }
+
+.payment-form {
+  padding: 0;
+  border: transparent;
+  background: #c1d2d6;
+}
+
+.payment-form__header {
+  width: 100%;
+  height: 200px;
+  background: url(../../images/background-27.png);
+  border-radius: 10px 10px 0 0;
+  -webkit-clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
+          clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
+}
+
+.payment-form__header .payment-form__header_picture {
+  height: 100%;
+  background: rgba(192, 222, 229, 0.7);
+  border-radius: 10px 10px 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.payment-form__main {
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.payment-form__main .payment-form__main_radio-container {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 10px 0;
+}
 /*# sourceMappingURL=FinanceStatementPage.css.map */

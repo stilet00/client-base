@@ -10,6 +10,11 @@ import TextField from '@material-ui/core/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
 import { getClients } from '../../../services/clientsServices/services'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormLabel from '@mui/material/FormLabel'
+import FormControl from '@mui/material/FormControl'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -19,19 +24,22 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const senders = ['Agency', 'Oleksandr', 'Anton']
+const senders = {
+    names: ['Agency', 'Oleksandr', 'Anton'],
+    comments: ['Salary', 'Payment to Scout'],
+}
 
 export default function Form({ newPayments }) {
     const classes = useStyles()
 
     const [empty, setEmpty] = useState({
-        name: '',
+        receiver: '',
         amount: '',
         sender: 'Agency',
         comment: '',
     })
     const [clientsNames, setClientsNames] = useState([])
-    const [validated, setValidated] = useState(true)
+    const [validated, setValidated] = useState(false)
 
     useEffect(() => {
         getClients().then(res => {
@@ -44,25 +52,31 @@ export default function Form({ newPayments }) {
             }
         })
     }, [])
+
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
-        setEmpty({
-            ...empty,
-            [e.target.name]: e.target.value,
-        })
+        if (e.target.value !== '' && /\d/.test(e.target.value)) {
+            setEmpty({
+                ...empty,
+                [e.target.name]: e.target.value,
+            })
+            setValidated(true)
+        } else setValidated(false)
     }
+
     function handleSubmit() {
         newPayments(empty)
     }
 
     const handleChange = e => {
         setEmpty({ ...empty, [e.target.name]: e.target.value })
+        console.log(empty.sender)
     }
 
     function clearPaymentsForm() {
         setEmpty({
-            name: '',
+            receiver: '',
             amount: '',
             sender: 'Agency',
             comment: '',
@@ -87,8 +101,14 @@ export default function Form({ newPayments }) {
                 }}
             >
                 <Fade in={open}>
-                    <div className={'form-container'}>
+                    <div className={'form-container payment-form'}>
+                        <div className={'payment-form__header'}>
+                            <div className={'payment-form__header_picture'}>
+                                Compose bill
+                            </div>
+                        </div>
                         <form
+                            className="payment-form__main"
                             onSubmit={e => {
                                 e.preventDefault()
                                 handleSubmit()
@@ -96,15 +116,16 @@ export default function Form({ newPayments }) {
                                 handleClose()
                             }}
                         >
-                            <h2 id="transition-modal-title">Choose client:</h2>
+                            <FormLabel>Choose Receiver</FormLabel>
                             <TextField
                                 fullWidth
                                 id="outlined-select"
-                                variant="outlined"
+                                variant="filled"
                                 select
-                                label="Clients"
-                                name="name"
-                                value={empty.name}
+                                label="Receivers"
+                                name="receiver"
+                                focused
+                                value={empty.receiver}
                                 onChange={handleChange}
                             >
                                 {clientsNames.map((clientName, index) => (
@@ -113,37 +134,46 @@ export default function Form({ newPayments }) {
                                     </MenuItem>
                                 ))}
                             </TextField>
-                            <h2 id="transition-modal-title">Choose sender:</h2>
-                            <TextField
-                                fullWidth
-                                id="outlined-select"
-                                variant="outlined"
-                                select
-                                label="Sender"
-                                name="sender"
-                                value={empty.sender}
-                                onChange={handleChange}
-                            >
-                                {senders.map((clientName, index) => (
-                                    <MenuItem key={index} value={clientName}>
-                                        {clientName}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <h2 id="transition-modal-title">Enter comment:</h2>
-                            <TextField
-                                id="filled-basic"
-                                label="comment"
-                                variant="outlined"
-                                fullWidth
-                                name={'comment'}
-                                onChange={onInputChange}
-                            />
-                            <h2 id="transition-modal-title">Enter amount:</h2>
+                            <div className="payment-form__main_radio-container">
+                                <FormControl>
+                                    <FormLabel>Choose Sender</FormLabel>
+                                    <RadioGroup>
+                                        {senders.names.map((sender, index) => (
+                                            <FormControlLabel
+                                                key={index}
+                                                value={sender}
+                                                control={<Radio />}
+                                                label={sender}
+                                                name="sender"
+                                                onChange={handleChange}
+                                            />
+                                        ))}
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Choose Comment</FormLabel>
+                                    <RadioGroup>
+                                        {senders.comments.map(
+                                            (comment, index) => (
+                                                <FormControlLabel
+                                                    key={index}
+                                                    value={comment}
+                                                    control={<Radio />}
+                                                    label={comment}
+                                                    name="comment"
+                                                    onChange={handleChange}
+                                                />
+                                            )
+                                        )}
+                                    </RadioGroup>
+                                </FormControl>
+                            </div>
+                            <FormLabel>Enter amount</FormLabel>
                             <TextField
                                 id="filled-basic"
                                 label="amount"
-                                variant="outlined"
+                                variant="filled"
+                                color="secondary"
                                 fullWidth
                                 name={'amount'}
                                 onChange={onInputChange}
@@ -155,7 +185,7 @@ export default function Form({ newPayments }) {
                                 fullWidth
                                 variant={'outlined'}
                             >
-                                Submit
+                                compose
                             </Button>
                         </form>
                     </div>
