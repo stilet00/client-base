@@ -74,14 +74,6 @@ export default function FinanceStatementPage() {
     return (
         <>
             <div className={'main-container scrolled-container  animated-box'}>
-                <div className={'category-holder'}>
-                    <button className={'category-holder__button'}>
-                        CLIENTS
-                    </button>
-                    <button className={'category-holder__button'}>
-                        TRANSLATORS
-                    </button>
-                </div>
                 <ul
                     style={{
                         gap: '0px',
