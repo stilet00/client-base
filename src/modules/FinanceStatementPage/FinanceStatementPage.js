@@ -13,7 +13,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Agency',
             comment: 'salary',
-            date: moment().format('MMM Do YY'),
+            date: 'Sep 6th 22',
         },
         {
             id: '2',
@@ -21,7 +21,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Anton',
             comment: 'Payment to Scout',
-            date: moment().format('MMM Do YY'),
+            date: 'Sep 5th 22',
         },
         {
             id: '3',
@@ -29,7 +29,15 @@ export default function FinanceStatementPage() {
             amount: '3159',
             sender: 'Agency',
             comment: 'salary',
-            date: moment().format('MMM Do YY'),
+            date: 'Sep 5th 22',
+        },
+        {
+            id: '4',
+            receiver: 'Bavdis Mariana',
+            amount: '3159',
+            sender: 'Oleksandr',
+            comment: 'Payment to Scout',
+            date: 'Sep 7th 22',
         },
     ])
 
@@ -38,9 +46,34 @@ export default function FinanceStatementPage() {
         setPaymentsList([...paymentsList, newPayment])
     }
 
+    const getDateArray = arrayWithDates => {
+        const uniqueDates = [
+            ...new Set(
+                arrayWithDates.map((payments, index) => {
+                    return payments.date
+                })
+            ),
+        ]
+        const arrayWithGroupedDates = uniqueDates
+            .sort()
+            .reverse()
+            .map(data => {
+                let duplicateDates = []
+                arrayWithDates.forEach(element => {
+                    if (element.date === data) {
+                        duplicateDates.push(element)
+                    }
+                })
+                const groupedByDate = { date: data, dateGroup: duplicateDates }
+                return groupedByDate
+            })
+        return arrayWithGroupedDates
+    }
+    const needDates = getDateArray(paymentsList)
+
     return (
         <>
-            <div className={'main-container chart-container animated-box'}>
+            <div className={'main-container scrolled-container  animated-box'}>
                 <div className={'category-holder'}>
                     <button className={'category-holder__button'}>
                         CLIENTS
@@ -50,19 +83,15 @@ export default function FinanceStatementPage() {
                     </button>
                 </div>
                 <ul
-                    className={'scrolled-container'}
                     style={{
                         gap: '0px',
                         height: '70vh',
-                        overflow: 'auto',
+                        padding: '0',
                     }}
                 >
                     <div className={'finances-inner-wrapper'}>
-                        <div className={'finances-inner-wrapper__header'}>
-                            {moment().format('L')}
-                        </div>
-                        {paymentsList.map(item => (
-                            <StatementItem key={item.id} {...item} />
+                        {needDates.map((item, index) => (
+                            <StatementItem key={index} {...item} />
                         ))}
                     </div>
                 </ul>
