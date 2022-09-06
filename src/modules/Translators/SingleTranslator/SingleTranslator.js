@@ -152,9 +152,7 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        <span style={{ maxWidth: '40%' }}>
-                            Total for {currentMonth}:
-                        </span>
+                        <span>Total for {currentMonth}:</span>
                         {progressPage}
                         <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
                     </Typography>
