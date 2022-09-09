@@ -26,25 +26,25 @@ const useStyles = makeStyles(theme => ({
 
 const senders = {
     names: ['Agency', 'Oleksandr', 'Anton'],
-    comments: ['Salary', 'Payment to Scout'],
+    comments: ['salary', 'Payment to Scout'],
 }
 
-export default function Form({ newPayments }) {
+export default function Form({ handleNewPayment }) {
     const classes = useStyles()
 
-    const [empty, setEmpty] = useState({
+    const [paymentsData, setPaymentsData] = useState({
         receiver: '',
         amount: '',
         sender: 'Agency',
         comment: '',
     })
-    const [clientsNames, setClientsNames] = useState([])
-    const [validated, setValidated] = useState(false)
+    const [receivers, setReceivers] = useState([])
+    const [formValidation, setFormValidation] = useState(false)
 
     useEffect(() => {
         getClients().then(res => {
             if (res.status === 200) {
-                setClientsNames(
+                setReceivers(
                     res.data.map(
                         clients => `${clients.name} ${clients.surname}`
                     )
@@ -57,25 +57,25 @@ export default function Form({ newPayments }) {
 
     function onInputChange(e) {
         if (e.target.value !== '' && /\d/.test(e.target.value)) {
-            setEmpty({
-                ...empty,
+            setPaymentsData({
+                ...paymentsData,
                 [e.target.name]: e.target.value,
             })
-            setValidated(true)
-        } else setValidated(false)
+            setFormValidation(true)
+        } else setFormValidation(false)
     }
 
-    function handleSubmit() {
-        newPayments(empty)
+    function onSubmit() {
+        handleNewPayment(paymentsData)
     }
 
     const handleChange = e => {
-        setEmpty({ ...empty, [e.target.name]: e.target.value })
-        console.log(empty.sender)
+        setPaymentsData({ ...paymentsData, [e.target.name]: e.target.value })
+        console.log(paymentsData.sender)
     }
 
     function clearPaymentsForm() {
-        setEmpty({
+        setPaymentsData({
             receiver: '',
             amount: '',
             sender: 'Agency',
@@ -111,7 +111,7 @@ export default function Form({ newPayments }) {
                             className="payment-form__main"
                             onSubmit={e => {
                                 e.preventDefault()
-                                handleSubmit()
+                                onSubmit()
                                 clearPaymentsForm()
                                 handleClose()
                             }}
@@ -125,12 +125,12 @@ export default function Form({ newPayments }) {
                                 label="Receivers"
                                 name="receiver"
                                 focused
-                                value={empty.receiver}
+                                value={paymentsData.receiver}
                                 onChange={handleChange}
                             >
-                                {clientsNames.map((clientName, index) => (
-                                    <MenuItem key={index} value={clientName}>
-                                        {clientName}
+                                {receivers.map((receiver, index) => (
+                                    <MenuItem key={index} value={receiver}>
+                                        {receiver}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -180,7 +180,7 @@ export default function Form({ newPayments }) {
                             />
                             <Button
                                 style={{ marginTop: '10px' }}
-                                disabled={!validated}
+                                disabled={!formValidation}
                                 type={'submit'}
                                 fullWidth
                                 variant={'outlined'}

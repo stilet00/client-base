@@ -13,7 +13,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Agency',
             comment: 'salary',
-            date: 'Sep 6th 22',
+            date: '05 09 22',
         },
         {
             id: '2',
@@ -21,7 +21,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Anton',
             comment: 'Payment to Scout',
-            date: 'Sep 5th 22',
+            date: '07 09 22',
         },
         {
             id: '3',
@@ -29,7 +29,7 @@ export default function FinanceStatementPage() {
             amount: '3159',
             sender: 'Agency',
             comment: 'salary',
-            date: 'Sep 5th 22',
+            date: '06 09 22',
         },
         {
             id: '4',
@@ -37,39 +37,42 @@ export default function FinanceStatementPage() {
             amount: '3159',
             sender: 'Oleksandr',
             comment: 'Payment to Scout',
-            date: 'Sep 7th 22',
+            date: '07 09 22',
         },
     ])
 
-    function creatingNewPayment(payment) {
-        let newPayment = { ...payment, date: moment().format('MMM Do YY') }
+    function createNewPayment(payment) {
+        let newPayment = { ...payment, date: moment().format('DD MM YYYY') }
         setPaymentsList([...paymentsList, newPayment])
     }
 
-    const getDateArray = arrayWithDates => {
-        const uniqueDates = [
+    const getStatementGroupedByDates = statements => {
+        const arrayWithUniqueDates = [
             ...new Set(
-                arrayWithDates.map((payments, index) => {
-                    return payments.date
+                statements.map(item => {
+                    return item.date
                 })
             ),
         ]
-        const arrayWithGroupedDates = uniqueDates
+        const arrayWithGroupedDates = arrayWithUniqueDates
             .sort()
             .reverse()
             .map(data => {
-                let duplicateDates = []
-                arrayWithDates.forEach(element => {
-                    if (element.date === data) {
-                        duplicateDates.push(element)
+                let groupedByDatesArray = []
+                statements.forEach(statement => {
+                    if (statement.date === data) {
+                        groupedByDatesArray.push(statement)
                     }
                 })
-                const groupedByDate = { date: data, dateGroup: duplicateDates }
-                return groupedByDate
+                const statementsGroupedByDate = {
+                    date: data,
+                    dateGroup: groupedByDatesArray,
+                }
+                return statementsGroupedByDate
             })
         return arrayWithGroupedDates
     }
-    const needDates = getDateArray(paymentsList)
+    const dates = getStatementGroupedByDates(paymentsList)
 
     return (
         <>
@@ -82,14 +85,14 @@ export default function FinanceStatementPage() {
                     }}
                 >
                     <div className={'finances-inner-wrapper'}>
-                        {needDates.map((item, index) => (
+                        {dates.map((item, index) => (
                             <StatementItem key={index} {...item} />
                         ))}
                     </div>
                 </ul>
             </div>
             <div className="socials button-add-container bottom-button">
-                <Form newPayments={creatingNewPayment} />
+                <Form handleNewPayment={createNewPayment} />
             </div>
         </>
     )

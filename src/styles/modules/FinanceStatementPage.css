@@ -130,7 +130,7 @@
           clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
 }
 
-.payment-form__header .payment-form__header_picture {
+.payment-form__header_picture {
   height: 100%;
   background: rgba(192, 222, 229, 0.7);
   border-radius: 10px 10px 0 0;
@@ -154,7 +154,7 @@
           box-sizing: border-box;
 }
 
-.payment-form__main .payment-form__main_radio-container {
+.payment-form__main_radio-container {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
