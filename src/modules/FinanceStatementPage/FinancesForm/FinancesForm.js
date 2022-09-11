@@ -29,7 +29,7 @@ const senders = {
     comments: ['salary', 'Payment to Scout'],
 }
 
-export default function Form({ handleNewPayment }) {
+export default function FinancesForm({ handleNewPayment }) {
     const classes = useStyles()
 
     const [paymentsData, setPaymentsData] = useState({
@@ -173,7 +173,6 @@ export default function Form({ handleNewPayment }) {
                                 id="filled-basic"
                                 label="amount"
                                 variant="filled"
-                                color="secondary"
                                 fullWidth
                                 name={'amount'}
                                 onChange={onInputChange}

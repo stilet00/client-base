@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
 import StatementItem from './StatementItem/StatementItem'
-import Form from './Form/Form'
+import FinancesForm from './FinancesForm/FinancesForm'
 import moment from 'moment'
-
 
 export default function FinanceStatementPage() {
     const [paymentsList, setPaymentsList] = useState([
@@ -92,7 +91,7 @@ export default function FinanceStatementPage() {
                 </ul>
             </div>
             <div className="socials button-add-container bottom-button">
-                <Form handleNewPayment={createNewPayment} />
+                <FinancesForm handleNewPayment={createNewPayment} />
             </div>
         </>
     )
