@@ -12,7 +12,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Agency',
             comment: 'salary',
-            date: '05 09 22',
+            date: '05 09 2022',
         },
         {
             id: '2',
@@ -20,23 +20,7 @@ export default function FinanceStatementPage() {
             amount: '150',
             sender: 'Anton',
             comment: 'Payment to Scout',
-            date: '07 09 22',
-        },
-        {
-            id: '3',
-            receiver: 'Bavdis Mariana',
-            amount: '3159',
-            sender: 'Agency',
-            comment: 'salary',
-            date: '06 09 22',
-        },
-        {
-            id: '4',
-            receiver: 'Bavdis Mariana',
-            amount: '3159',
-            sender: 'Oleksandr',
-            comment: 'Payment to Scout',
-            date: '07 09 22',
+            date: '07 09 2022',
         },
     ])
 
@@ -53,22 +37,26 @@ export default function FinanceStatementPage() {
                 })
             ),
         ]
-        const arrayWithGroupedDates = arrayWithUniqueDates
+        let sortedArraywithUniqueDates = arrayWithUniqueDates.map(item =>
+            item.split(' ').reverse().join(' ')
+        )
+        sortedArraywithUniqueDates = sortedArraywithUniqueDates
             .sort()
             .reverse()
-            .map(data => {
-                let groupedByDatesArray = []
-                statements.forEach(statement => {
-                    if (statement.date === data) {
-                        groupedByDatesArray.push(statement)
-                    }
-                })
-                const statementsGroupedByDate = {
-                    date: data,
-                    dateGroup: groupedByDatesArray,
+            .map(item => item.split(' ').reverse().join(' '))
+        const arrayWithGroupedDates = sortedArraywithUniqueDates.map(data => {
+            let groupedByDatesArray = []
+            statements.forEach(statement => {
+                if (statement.date === data) {
+                    groupedByDatesArray.push(statement)
                 }
-                return statementsGroupedByDate
             })
+            const statementsGroupedByDate = {
+                date: data,
+                dateGroup: groupedByDatesArray,
+            }
+            return statementsGroupedByDate
+        })
         return arrayWithGroupedDates
     }
     const dates = getStatementGroupedByDates(paymentsList)
@@ -85,7 +73,7 @@ export default function FinanceStatementPage() {
                 >
                     <div className={'finances-inner-wrapper'}>
                         {dates.map((item, index) => (
-                            <StatementItem key={index} {...item} />
+                            <StatementItem key={item.date + index} {...item} />
                         ))}
                     </div>
                 </ul>

@@ -1,12 +1,5 @@
-import '../../../styles/modules/FinanceStatementPage.css'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
-import CreditScoreIcon from '@mui/icons-material/CreditScore'
-import { green, blue } from '@mui/material/colors'
 import Badge from '@mui/material/Badge'
 import { Avatar } from '@material-ui/core'
-import agency from '../../../images/logo.png'
-import anton from '../../../images/avatars/anton-avatar.png'
-import oleksandr from '../../../images/avatars/sasha-avatar.png'
 import { styled } from '@mui/material/styles'
 
 export default function StatementLi({
@@ -15,9 +8,9 @@ export default function StatementLi({
     date,
     sender,
     comment,
+    avatar,
+    image,
 }) {
-    const currentSender = () =>
-        sender === 'Anton' ? anton : sender === 'Oleksandr' ? oleksandr : agency
     const SmallAvatar = styled(Avatar)(({ theme }) => ({
         width: 20,
         height: 20,
@@ -31,21 +24,13 @@ export default function StatementLi({
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
                         <SmallAvatar
-                            alt="Remy Sharp"
-                            src={currentSender()}
+                            alt={sender}
+                            src={avatar}
                             style={{ backgroundColor: 'rgba(145, 31, 31, 1)' }}
                         />
                     }
                 >
-                    {comment === 'salary' ? (
-                        <MonetizationOnIcon
-                            sx={{ fontSize: 40, color: green['A400'] }}
-                        />
-                    ) : (
-                        <CreditScoreIcon
-                            sx={{ fontSize: 40, color: blue['A400'] }}
-                        />
-                    )}
+                    {image}
                 </Badge>
             </div>
             <div className="list-item__info">

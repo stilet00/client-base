@@ -15,6 +15,11 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
+import {
+    SENDERS,
+    COMMENTS,
+    DEFAULT_STATEMENT,
+} from '../../../constants/constants.js'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -24,20 +29,10 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const senders = {
-    names: ['Agency', 'Oleksandr', 'Anton'],
-    comments: ['salary', 'Payment to Scout'],
-}
-
 export default function FinancesForm({ handleNewPayment }) {
     const classes = useStyles()
 
-    const [paymentsData, setPaymentsData] = useState({
-        receiver: '',
-        amount: '',
-        sender: 'Agency',
-        comment: '',
-    })
+    const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [formValidation, setFormValidation] = useState(false)
 
@@ -56,31 +51,57 @@ export default function FinancesForm({ handleNewPayment }) {
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
-        if (e.target.value !== '' && /\d/.test(e.target.value)) {
-            setPaymentsData({
-                ...paymentsData,
+        if (e.target.value !== '') {
+            setPaymentData({
+                ...paymentData,
                 [e.target.name]: e.target.value,
             })
             setFormValidation(true)
         } else setFormValidation(false)
     }
 
-    function onSubmit() {
-        handleNewPayment(paymentsData)
+    function submitNewPayment() {
+        handleNewPayment(paymentData)
+        setFormValidation(false)
     }
 
-    const handleChange = e => {
-        setPaymentsData({ ...paymentsData, [e.target.name]: e.target.value })
-        console.log(paymentsData.sender)
+    const handeOptionalFieldsChange = e => {
+        let name = e.target.name
+        switch (name) {
+            case 'receiver':
+                setPaymentData({
+                    ...paymentData,
+                    [e.target.name]: e.target.value,
+                })
+                break
+            case 'comment':
+                let comment = COMMENTS.find(
+                    item => item.name === e.target.value
+                )
+                setPaymentData({
+                    ...paymentData,
+                    [e.target.name]: e.target.value,
+                    image: comment.image,
+                })
+                break
+            case 'sender':
+                let sender = SENDERS.find(item => item.name === e.target.value)
+                setPaymentData({
+                    ...paymentData,
+                    [e.target.name]: e.target.value,
+                    avatar: sender.avatar,
+                })
+                break
+            default:
+                setPaymentData({
+                    ...paymentData,
+                    [e.target.name]: e.target.value,
+                })
+        }
     }
 
     function clearPaymentsForm() {
-        setPaymentsData({
-            receiver: '',
-            amount: '',
-            sender: 'Agency',
-            comment: '',
-        })
+        setPaymentData(DEFAULT_STATEMENT)
     }
 
     return (
@@ -111,7 +132,7 @@ export default function FinancesForm({ handleNewPayment }) {
                             className="payment-form__main"
                             onSubmit={e => {
                                 e.preventDefault()
-                                onSubmit()
+                                submitNewPayment()
                                 clearPaymentsForm()
                                 handleClose()
                             }}
@@ -125,11 +146,14 @@ export default function FinancesForm({ handleNewPayment }) {
                                 label="Receivers"
                                 name="receiver"
                                 focused
-                                value={paymentsData.receiver}
-                                onChange={handleChange}
+                                value={paymentData.receiver}
+                                onChange={handeOptionalFieldsChange}
                             >
                                 {receivers.map((receiver, index) => (
-                                    <MenuItem key={index} value={receiver}>
+                                    <MenuItem
+                                        key={receiver + index}
+                                        value={receiver}
+                                    >
                                         {receiver}
                                     </MenuItem>
                                 ))}
@@ -137,40 +161,43 @@ export default function FinancesForm({ handleNewPayment }) {
                             <div className="payment-form__main_radio-container">
                                 <FormControl>
                                     <FormLabel>Choose Sender</FormLabel>
-                                    <RadioGroup>
-                                        {senders.names.map((sender, index) => (
+                                    <RadioGroup defaultValue={SENDERS[0].name}>
+                                        {SENDERS.map((sender, index) => (
                                             <FormControlLabel
-                                                key={index}
-                                                value={sender}
+                                                key={sender.name + index}
+                                                value={sender.name}
                                                 control={<Radio />}
-                                                label={sender}
+                                                label={sender.name}
                                                 name="sender"
-                                                onChange={handleChange}
+                                                onChange={
+                                                    handeOptionalFieldsChange
+                                                }
                                             />
                                         ))}
                                     </RadioGroup>
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>Choose Comment</FormLabel>
-                                    <RadioGroup>
-                                        {senders.comments.map(
-                                            (comment, index) => (
-                                                <FormControlLabel
-                                                    key={index}
-                                                    value={comment}
-                                                    control={<Radio />}
-                                                    label={comment}
-                                                    name="comment"
-                                                    onChange={handleChange}
-                                                />
-                                            )
-                                        )}
+                                    <RadioGroup defaultValue={COMMENTS[0].name}>
+                                        {COMMENTS.map((comment, index) => (
+                                            <FormControlLabel
+                                                key={comment.name + index}
+                                                value={comment.name}
+                                                control={<Radio />}
+                                                label={comment.name}
+                                                name="comment"
+                                                onChange={
+                                                    handeOptionalFieldsChange
+                                                }
+                                            />
+                                        ))}
                                     </RadioGroup>
                                 </FormControl>
                             </div>
                             <FormLabel>Enter amount</FormLabel>
                             <TextField
                                 id="filled-basic"
+                                type="number"
                                 label="amount"
                                 variant="filled"
                                 fullWidth
