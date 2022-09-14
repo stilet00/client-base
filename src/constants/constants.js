@@ -168,7 +168,7 @@ export const DEFAULT_STATEMENT = {
     receiver: '',
     amount: 0,
     sender: SENDERS[0].name,
-    comment: '',
+    comment: COMMENTS[0].name,
     avatar: SENDERS[0].avatar,
     image: COMMENTS[0].image,
 }

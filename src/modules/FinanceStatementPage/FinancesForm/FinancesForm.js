@@ -35,6 +35,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [formValidation, setFormValidation] = useState(false)
+    const [fromErrors, setFormErrors] = useState({})
 
     useEffect(() => {
         getClients().then(res => {
@@ -51,18 +52,16 @@ export default function FinancesForm({ handleNewPayment }) {
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
-        if (e.target.value !== '') {
-            setPaymentData({
-                ...paymentData,
-                [e.target.name]: e.target.value,
-            })
-            setFormValidation(true)
-        } else setFormValidation(false)
+        const { name, value } = e.target
+        setPaymentData({
+            ...paymentData,
+            [name]: value,
+        })
     }
 
-    function submitNewPayment() {
-        handleNewPayment(paymentData)
-        setFormValidation(false)
+    function submitNewPayment(e) {
+        setFormErrors(handleFormValidation(paymentData))
+        setFormValidation(true)
     }
 
     const handeOptionalFieldsChange = e => {
@@ -104,6 +103,31 @@ export default function FinancesForm({ handleNewPayment }) {
         setPaymentData(DEFAULT_STATEMENT)
     }
 
+    const handleFormValidation = values => {
+        const errors = {}
+        if (!values.receiver) {
+            errors.reciever = `Please choose a receiver`
+        }
+        if (!values.amount) {
+            errors.amount = `Enter the amount`
+        }
+        if (values.amount > 10000) {
+            errors.amount = `amount is too large`
+        }
+        if (values.amount < 100) {
+            errors.amount = `amount is too small`
+        }
+
+        return errors
+    }
+    useEffect(() => {
+        if (Object.keys(fromErrors).length === 0 && formValidation) {
+            handleNewPayment(paymentData)
+            clearPaymentsForm()
+            handleClose()
+        }
+    }, [fromErrors])
+
     return (
         <div className={'modal-wrapper down-add-button'}>
             <Button type="button" onClick={handleOpen} fullWidth>
@@ -133,8 +157,6 @@ export default function FinancesForm({ handleNewPayment }) {
                             onSubmit={e => {
                                 e.preventDefault()
                                 submitNewPayment()
-                                clearPaymentsForm()
-                                handleClose()
                             }}
                         >
                             <FormLabel>Choose Receiver</FormLabel>
@@ -148,6 +170,8 @@ export default function FinancesForm({ handleNewPayment }) {
                                 focused
                                 value={paymentData.receiver}
                                 onChange={handeOptionalFieldsChange}
+                                error={fromErrors.reciever}
+                                helperText={fromErrors.reciever}
                             >
                                 {receivers.map((receiver, index) => (
                                     <MenuItem
@@ -203,10 +227,11 @@ export default function FinancesForm({ handleNewPayment }) {
                                 fullWidth
                                 name={'amount'}
                                 onChange={onInputChange}
+                                error={fromErrors.amount}
+                                helperText={fromErrors.amount}
                             />
                             <Button
                                 style={{ marginTop: '10px' }}
-                                disabled={!formValidation}
                                 type={'submit'}
                                 fullWidth
                                 variant={'outlined'}
