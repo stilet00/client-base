@@ -64,8 +64,8 @@ export default function FinancesForm({ handleNewPayment }) {
         setFormValidation(true)
     }
 
-    const handeOptionalFieldsChange = e => {
-        let name = e.target.name
+    const handleSelectedFieldsChange = e => {
+        const name = e.target.name
         switch (name) {
             case 'receiver':
                 setPaymentData({
@@ -74,7 +74,7 @@ export default function FinancesForm({ handleNewPayment }) {
                 })
                 break
             case 'comment':
-                let comment = COMMENTS.find(
+                const comment = COMMENTS.find(
                     item => item.name === e.target.value
                 )
                 setPaymentData({
@@ -84,7 +84,9 @@ export default function FinancesForm({ handleNewPayment }) {
                 })
                 break
             case 'sender':
-                let sender = SENDERS.find(item => item.name === e.target.value)
+                const sender = SENDERS.find(
+                    item => item.name === e.target.value
+                )
                 setPaymentData({
                     ...paymentData,
                     [e.target.name]: e.target.value,
@@ -99,7 +101,7 @@ export default function FinancesForm({ handleNewPayment }) {
         }
     }
 
-    function clearPaymentsForm() {
+    function clearPaymentsData() {
         setPaymentData(DEFAULT_STATEMENT)
     }
 
@@ -112,18 +114,19 @@ export default function FinancesForm({ handleNewPayment }) {
             errors.amount = `Enter the amount`
         }
         if (values.amount > 10000) {
-            errors.amount = `amount is too large`
+            errors.amount = `Amount is too large`
         }
         if (values.amount < 100) {
-            errors.amount = `amount is too small`
+            errors.amount = `Amount is too small`
         }
 
         return errors
     }
     useEffect(() => {
-        if (Object.keys(fromErrors).length === 0 && formValidation) {
+        const arrayWithErrors = Object.keys(fromErrors)
+        if (arrayWithErrors.length === 0 && formValidation) {
             handleNewPayment(paymentData)
-            clearPaymentsForm()
+            clearPaymentsData()
             handleClose()
         }
     }, [fromErrors])
@@ -169,7 +172,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 name="receiver"
                                 focused
                                 value={paymentData.receiver}
-                                onChange={handeOptionalFieldsChange}
+                                onChange={handleSelectedFieldsChange}
                                 error={fromErrors.reciever}
                                 helperText={fromErrors.reciever}
                             >
@@ -194,7 +197,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                                 label={sender.name}
                                                 name="sender"
                                                 onChange={
-                                                    handeOptionalFieldsChange
+                                                    handleSelectedFieldsChange
                                                 }
                                             />
                                         ))}
@@ -211,7 +214,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                                 label={comment.name}
                                                 name="comment"
                                                 onChange={
-                                                    handeOptionalFieldsChange
+                                                    handleSelectedFieldsChange
                                                 }
                                             />
                                         ))}
@@ -236,7 +239,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 fullWidth
                                 variant={'outlined'}
                             >
-                                compose
+                                Compose payment
                             </Button>
                         </form>
                     </div>

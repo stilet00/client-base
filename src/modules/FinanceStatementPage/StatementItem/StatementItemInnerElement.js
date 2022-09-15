@@ -2,7 +2,7 @@ import Badge from '@mui/material/Badge'
 import { Avatar } from '@material-ui/core'
 import { styled } from '@mui/material/styles'
 
-export default function StatementLi({
+export default function StatementItemInnerElement({
     receiver,
     amount,
     date,
