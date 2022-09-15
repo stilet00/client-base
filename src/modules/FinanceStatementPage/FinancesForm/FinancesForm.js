@@ -34,8 +34,8 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
-    const [formValidation, setFormValidation] = useState(false)
     const [fromErrors, setFormErrors] = useState({})
+    const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
         getClients().then(res => {
@@ -53,52 +53,44 @@ export default function FinancesForm({ handleNewPayment }) {
 
     function onInputChange(e) {
         const { name, value } = e.target
-        setPaymentData({
-            ...paymentData,
-            [name]: value,
-        })
+        const newState = { ...paymentData, [name]: value }
+        setPaymentData(newState)
+        setFormErrors(handleFormValidation(newState))
     }
 
     function submitNewPayment(e) {
-        setFormErrors(handleFormValidation(paymentData))
-        setFormValidation(true)
+        handleNewPayment(paymentData)
+        clearPaymentsData()
+        handleClose()
     }
 
     const handleSelectedFieldsChange = e => {
-        const name = e.target.name
+        const { name, value } = e.target
+        const newState = { ...paymentData, [name]: value }
         switch (name) {
             case 'receiver':
-                setPaymentData({
-                    ...paymentData,
-                    [e.target.name]: e.target.value,
-                })
+                setPaymentData(newState)
                 break
             case 'comment':
-                const comment = COMMENTS.find(
-                    item => item.name === e.target.value
-                )
+                const comment = COMMENTS.find(item => item.name === value)
                 setPaymentData({
                     ...paymentData,
-                    [e.target.name]: e.target.value,
+                    [name]: value,
                     image: comment.image,
                 })
                 break
             case 'sender':
-                const sender = SENDERS.find(
-                    item => item.name === e.target.value
-                )
+                const sender = SENDERS.find(item => item.name === value)
                 setPaymentData({
                     ...paymentData,
-                    [e.target.name]: e.target.value,
+                    [name]: value,
                     avatar: sender.avatar,
                 })
                 break
             default:
-                setPaymentData({
-                    ...paymentData,
-                    [e.target.name]: e.target.value,
-                })
+                setPaymentData(newState)
         }
+        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
@@ -116,20 +108,12 @@ export default function FinancesForm({ handleNewPayment }) {
         if (values.amount > 10000) {
             errors.amount = `Amount is too large`
         }
-        if (values.amount < 100) {
+        if (values.amount < 50) {
+            console.log(typeof values.amount)
             errors.amount = `Amount is too small`
         }
-
         return errors
     }
-    useEffect(() => {
-        const arrayWithErrors = Object.keys(fromErrors)
-        if (arrayWithErrors.length === 0 && formValidation) {
-            handleNewPayment(paymentData)
-            clearPaymentsData()
-            handleClose()
-        }
-    }, [fromErrors])
 
     return (
         <div className={'modal-wrapper down-add-button'}>
@@ -227,14 +211,18 @@ export default function FinancesForm({ handleNewPayment }) {
                                 type="number"
                                 label="amount"
                                 variant="filled"
+                                error={fromErrors.amount}
+                                helperText={fromErrors.amount}
                                 fullWidth
                                 name={'amount'}
                                 onChange={onInputChange}
-                                error={fromErrors.amount}
-                                helperText={fromErrors.amount}
                             />
                             <Button
                                 style={{ marginTop: '10px' }}
+                                disabled={
+                                    paymentData.amount === 0 ||
+                                    arrayWithErrors.length !== 0
+                                }
                                 type={'submit'}
                                 fullWidth
                                 variant={'outlined'}
