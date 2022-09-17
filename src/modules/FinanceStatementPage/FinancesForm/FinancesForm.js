@@ -109,7 +109,6 @@ export default function FinancesForm({ handleNewPayment }) {
             errors.amount = `Amount is too large`
         }
         if (values.amount < 50) {
-            console.log(typeof values.amount)
             errors.amount = `Amount is too small`
         }
         return errors

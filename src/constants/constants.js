@@ -13,9 +13,9 @@ import background7 from '../images/tasks_backgrounds/background7.png'
 import background8 from '../images/tasks_backgrounds/background8.png'
 import background9 from '../images/tasks_backgrounds/background9.png'
 import background10 from '../images/tasks_backgrounds/background10.png'
-import Agency from '../images/logo.png'
-import Anton from '../images/avatars/anton-avatar.png'
-import Oleksandr from '../images/avatars/sasha-avatar.png'
+import Agency_avatar from '../images/logo.png'
+import Anton_avatar from '../images/avatars/anton-avatar.png'
+import Oleksandr_avatar from '../images/avatars/sasha-avatar.png'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import { green, blue } from '@mui/material/colors'
@@ -141,15 +141,15 @@ export const TASKS_BACKGROUNDS = [
 export const SENDERS = [
     {
         name: 'Agency',
-        avatar: Agency,
+        avatar: Agency_avatar,
     },
     {
         name: 'Anton',
-        avatar: Anton,
+        avatar: Anton_avatar,
     },
     {
         name: 'Oleksandr',
-        avatar: Oleksandr,
+        avatar: Oleksandr_avatar,
     },
 ]
 export const COMMENTS = [

@@ -25,7 +25,11 @@ export default function FinanceStatementPage() {
     ])
 
     function createNewPayment(payment) {
-        let newPayment = { ...payment, date: moment().format('DD MM YYYY') }
+        let newPayment = {
+            ...payment,
+            date: moment().format('DD MM YYYY'),
+            id: paymentsList.length + 1,
+        }
         setPaymentsList([...paymentsList, newPayment])
     }
 
@@ -75,7 +79,7 @@ export default function FinanceStatementPage() {
                 >
                     <div className={'finances-inner-wrapper'}>
                         {dates.map((item, index) => (
-                            <StatementGroup key={item.date + index} {...item} />
+                            <StatementGroup key={item.id} {...item} />
                         ))}
                     </div>
                 </ul>
