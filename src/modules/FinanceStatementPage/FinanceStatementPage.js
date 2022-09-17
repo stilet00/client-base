@@ -37,14 +37,16 @@ export default function FinanceStatementPage() {
                 })
             ),
         ]
-        let sortedArraywithUniqueDates = arrayWithUniqueDates.map(item =>
-            item.split(' ').reverse().join(' ')
-        )
-        sortedArraywithUniqueDates = sortedArraywithUniqueDates
-            .sort()
+        function compareDates(item1, item2) {
+            return (
+                item1.split(' ').reverse().join('') -
+                item2.split(' ').reverse().join('')
+            )
+        }
+        let sortedArrayWithUniqueDates = arrayWithUniqueDates
+            .sort(compareDates)
             .reverse()
-            .map(item => item.split(' ').reverse().join(' '))
-        const arrayWithGroupedDates = sortedArraywithUniqueDates.map(data => {
+        const arrayWithGroupedDates = sortedArrayWithUniqueDates.map(data => {
             let groupedByDatesArray = []
             statements.forEach(statement => {
                 if (statement.date === data) {
