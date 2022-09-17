@@ -1,12 +1,12 @@
 import React from 'react'
-import StatementItemInnerElement from './StatementItemInnerElement'
+import SingleStatement from './SingleStatement'
 
 export default function StatementItem({ date, dateGroup }) {
     return (
         <>
             <div className={'finances-inner-wrapper__header'}>{date}</div>
             {dateGroup.map((data, index) => (
-                <StatementItemInnerElement key={date.id + index} {...data} />
+                <SingleStatement key={date.id + index} {...data} />
             ))}
         </>
     )

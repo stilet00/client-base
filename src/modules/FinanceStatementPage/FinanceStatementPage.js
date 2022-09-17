@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
-import StatementItem from './StatementItem/StatementItem'
+import StatementGroup from './StatementGroup/StatementGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
 import moment from 'moment'
 
@@ -73,7 +73,7 @@ export default function FinanceStatementPage() {
                 >
                     <div className={'finances-inner-wrapper'}>
                         {dates.map((item, index) => (
-                            <StatementItem key={item.date + index} {...item} />
+                            <StatementGroup key={item.date + index} {...item} />
                         ))}
                     </div>
                 </ul>
