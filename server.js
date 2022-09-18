@@ -9,15 +9,21 @@ const uri =
 const client = new MongoClient(uri, { useUnifiedTopology: true })
 let ObjectId = require('mongodb').ObjectID
 let bodyParser = require('body-parser')
-let collectionTasks
-let collectionBalance
-let collectionClients
-let collectionTranslators
-let rootURL = '/'
-let tasksURL = rootURL + 'tasks/'
-let balanceURL = rootURL + 'balance/'
-let clientsURL = rootURL + 'clients/'
-let translatorsURL = rootURL + 'translators/'
+let {
+    collectionTasks,
+    collectionBalance,
+    collectionClients,
+    collectionTranslators,
+    collectionStatements,
+} = require('./src/api/database/collections')
+const {
+    rootURL,
+    balanceURL,
+    clientsURL,
+    translatorsURL,
+    financeStatementsURL,
+    tasksURL,
+} = require('./src/api/routes/routes')
 const PORT = process.env.PORT || 80
 
 let app = express()
@@ -295,11 +301,49 @@ app.delete(translatorsURL + ':id', (req, res) => {
     )
 })
 
+//statements api
+
+app.get(financeStatementsURL + 'get', (req, res) => {
+    collectionStatements.find().toArray((err, docs) => {
+        if (err) {
+            return res.sendStatus(500)
+        }
+        res.send(docs)
+    })
+})
+
+app.post(financeStatementsURL + 'add', function (req, res, next) {
+    if (!req.body) {
+        res.send('Ошибка при загрузке платежа')
+    } else {
+        collectionStatements.insertOne(req.body, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            } else {
+                res.send(result?.insertedId)
+            }
+        })
+    }
+})
+
+app.delete(financeStatementsURL + ':id', (req, res) => {
+    collectionStatements.deleteOne(
+        { _id: ObjectId(req.params.id) },
+        (err, docs) => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
+})
+
 client.connect(function (err) {
     collectionTasks = client.db('taskListDB').collection('tasks')
     collectionBalance = client.db('taskListDB').collection('totalBalance')
     collectionClients = client.db('clientsDB').collection('clients')
     collectionTranslators = client.db('translatorsDB').collection('translators')
+    collectionStatements = client.db('statementsDB').collection('statements')
     console.log('Connected successfully to server...')
     app.listen(PORT, () => {
         console.log('API started at port', PORT)
