@@ -1,8 +1,4 @@
-.chart-container {
-  overflow-x: scroll;
-}
-
-.chart-container ul {
+.chart-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

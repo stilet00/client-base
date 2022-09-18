@@ -91,6 +91,10 @@ function SingleTranslator({
                 )} %`}
             </span>
         )
+    const currentMonth =
+        moment().format('MMMM').length > '5'
+            ? moment().format('MMM')
+            : moment().format('MMMM')
 
     return (
         <Card
@@ -148,7 +152,7 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        Total for {`${moment().format('MMMM')}: `}
+                        <span>Total for {currentMonth}:</span>
                         {progressPage}
                         <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
                     </Typography>
@@ -160,7 +164,7 @@ function SingleTranslator({
                             justifyContent: 'space-between',
                         }}
                     >
-                        Middle for {`${moment().format('MMMM')}: `}
+                        <span>Middle for {currentMonth}:</span>
                         <b>{`${calculateMiddleMonthSum()} $ `}</b>
                     </Typography>
                     <Typography
