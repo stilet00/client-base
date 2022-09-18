@@ -25,6 +25,7 @@ import sun from '../src/images/sun_transparent.png'
 import background from '../src/images/main-background-2.png'
 import Footer from './modules/Footer/Footer'
 import PreloadPage from './modules/PreloadPage/PreloadPage'
+import FinanceStatementPage from './modules/FinanceStatementPage/FinanceStatementPage'
 import BackgroundImageOnLoad from 'background-image-on-load'
 import Navigation from './sharedComponents/Navigation/Navigation'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
@@ -80,6 +81,11 @@ function App() {
                                             </Route>
                                             <Route path="/translators/">
                                                 <Translators user={user} />
+                                            </Route>
+                                            <Route path="/finances/">
+                                                <FinanceStatementPage
+                                                    user={user}
+                                                />
                                             </Route>
                                             <Redirect
                                                 from="/chart/*"
