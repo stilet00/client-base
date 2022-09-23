@@ -67,30 +67,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
-        switch (name) {
-            case 'receiver':
-                setPaymentData(newState)
-                break
-            case 'comment':
-                const comment = COMMENTS.find(item => item.name === value)
-                setPaymentData({
-                    ...paymentData,
-                    [name]: value,
-                    image: comment.image,
-                })
-                break
-            case 'sender':
-                const sender = SENDERS.find(item => item.name === value)
-                setPaymentData({
-                    ...paymentData,
-                    [name]: value,
-                    avatar: sender.avatar,
-                })
-                break
-            default:
-                setPaymentData(newState)
-        }
-        setFormErrors(handleFormValidation(newState))
+        setPaymentData(newState)
     }
 
     function clearPaymentsData() {
@@ -171,13 +148,13 @@ export default function FinancesForm({ handleNewPayment }) {
                             <div className="payment-form__main_radio-container">
                                 <FormControl>
                                     <FormLabel>Choose Sender</FormLabel>
-                                    <RadioGroup defaultValue={SENDERS[0].name}>
+                                    <RadioGroup defaultValue={SENDERS[0]}>
                                         {SENDERS.map((sender, index) => (
                                             <FormControlLabel
-                                                key={sender.name + index}
-                                                value={sender.name}
+                                                key={sender + index}
+                                                value={sender}
                                                 control={<Radio />}
-                                                label={sender.name}
+                                                label={sender}
                                                 name="sender"
                                                 onChange={
                                                     handleSelectedFieldsChange
@@ -188,13 +165,13 @@ export default function FinancesForm({ handleNewPayment }) {
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>Choose Comment</FormLabel>
-                                    <RadioGroup defaultValue={COMMENTS[0].name}>
+                                    <RadioGroup defaultValue={COMMENTS[0]}>
                                         {COMMENTS.map((comment, index) => (
                                             <FormControlLabel
-                                                key={comment.name + index}
-                                                value={comment.name}
+                                                key={comment + index}
+                                                value={comment}
                                                 control={<Radio />}
-                                                label={comment.name}
+                                                label={comment}
                                                 name="comment"
                                                 onChange={
                                                     handleSelectedFieldsChange

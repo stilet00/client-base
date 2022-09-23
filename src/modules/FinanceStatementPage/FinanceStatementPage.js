@@ -1,36 +1,68 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
 import StatementGroup from './StatementGroup/StatementGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
 import moment from 'moment'
+import Loader from '../../sharedComponents/Loader/Loader'
+import {
+    getPayments,
+    addPayment,
+    removePayment,
+} from '../../services/financesStatement/services'
+import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
+import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 
 export default function FinanceStatementPage() {
-    const [paymentsList, setPaymentsList] = useState([
-        {
-            id: '1',
-            receiver: 'Ivanova Anna',
-            amount: '150',
-            sender: 'Agency',
-            comment: 'salary',
-            date: '05 09 2022',
-        },
-        {
-            id: '2',
-            receiver: 'Steian Andrea',
-            amount: '150',
-            sender: 'Anton',
-            comment: 'Payment to Scout',
-            date: '07 09 2022',
-        },
-    ])
+    const [loading, setLoading] = useState(true)
+    const [paymentsList, setPaymentsList] = useState([])
+    const [deletedPayment, setDeletedPayment] = useState(null)
+    const {
+        alertStatusConfirmation,
+        openAlertConfirmation,
+        closeAlertConfirmationNoReload,
+    } = useAlertConfirmation()
 
+    useEffect(() => {
+        getPayments().then(res => {
+            if (res.status === 200) {
+                setLoading(false)
+                setPaymentsList(res.data)
+            }
+        })
+    }, [])
+
+    function getPaymentId(_id) {
+        const payment = paymentsList.find(item => item._id === _id)
+        setDeletedPayment(payment)
+        openAlertConfirmation()
+    }
     function createNewPayment(payment) {
         let newPayment = {
             ...payment,
             date: moment().format('DD MM YYYY'),
-            id: paymentsList.length + 1,
         }
-        setPaymentsList([...paymentsList, newPayment])
+        addPayment(newPayment).then(res => {
+            if (res.status === 200) {
+                setPaymentsList([...paymentsList, newPayment])
+            } else {
+                console.log('Payments did not add')
+            }
+        })
+    }
+
+    function deletePayment() {
+        const _id = deletedPayment._id
+        removePayment(_id).then(res => {
+            if (res.status === 200) {
+                setPaymentsList(prevStatement =>
+                    prevStatement.filter(item => item._id !== _id)
+                )
+                closeAlertConfirmationNoReload()
+            } else {
+                console.log('Statement is not deleted')
+                closeAlertConfirmationNoReload()
+            }
+        })
     }
 
     const getStatementGroupedByDates = statements => {
@@ -65,9 +97,24 @@ export default function FinanceStatementPage() {
         })
         return arrayWithGroupedDates
     }
-    const dates = getStatementGroupedByDates(paymentsList)
 
-    return (
+    const dates = getStatementGroupedByDates(paymentsList)
+    const page =
+        paymentsList.length && !loading ? (
+            dates.map(item => (
+                <StatementGroup
+                    key={item.id}
+                    {...item}
+                    deletingOneStatement={getPaymentId}
+                />
+            ))
+        ) : (
+            <h1>No payments yet</h1>
+        )
+
+    return loading ? (
+        <Loader />
+    ) : (
         <>
             <div className={'main-container scrolled-container  animated-box'}>
                 <ul
@@ -77,15 +124,22 @@ export default function FinanceStatementPage() {
                         padding: '0',
                     }}
                 >
-                    <div className={'finances-inner-wrapper'}>
-                        {dates.map((item, index) => (
-                            <StatementGroup key={item.id} {...item} />
-                        ))}
-                    </div>
+                    <div className={'finances-inner-wrapper'}>{page}</div>
                 </ul>
             </div>
             <div className="socials button-add-container bottom-button">
                 <FinancesForm handleNewPayment={createNewPayment} />
+                <AlertMessageConfirmation
+                    mainText={
+                        'Please confirm that you want to delete this payment?'
+                    }
+                    open={alertStatusConfirmation}
+                    handleClose={closeAlertConfirmationNoReload}
+                    handleOpen={openAlertConfirmation}
+                    status={false}
+                    onCancel={closeAlertConfirmationNoReload}
+                    onConfirm={deletePayment}
+                />
             </div>
         </>
     )
