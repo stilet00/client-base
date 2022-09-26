@@ -18,6 +18,7 @@
 }
 
 .finances-inner-wrapper__list-item {
+  position: relative;
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -27,24 +28,43 @@
       -ms-flex-align: center;
           align-items: center;
   text-align: center;
-  -webkit-transition: 1s;
-  transition: 1s;
+  z-index: 1;
+}
+
+.finances-inner-wrapper__list-item::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(circle, #747373 0%, white 83%);
+  z-index: -1;
+  -webkit-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+  opacity: 0;
 }
 
 .finances-inner-wrapper__list-item .list-item__picture {
   width: 20%;
+  color: #65ba10;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 
 .finances-inner-wrapper__list-item .list-item__menu-button {
   position: relative;
   -ms-flex-item-align: start;
       align-self: flex-start;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 
 .finances-inner-wrapper__list-item .list-item__menu-button .menu-button_delete {
   position: absolute;
-  top: 25px;
+  top: 30px;
   right: 5px;
+  background: #333333;
 }
 
 .finances-inner-wrapper__list-item .list-item__info {
@@ -77,32 +97,37 @@
   margin-bottom: 2px;
   font-size: 0.8rem;
   color: #93a0ab;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info {
   font-size: 1rem;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info span {
   color: #93a0ab;
   font-size: 1rem;
-}
-
-.finances-inner-wrapper__list-item:hover {
-  color: white;
-  background: #797272;
-}
-
-.finances-inner-wrapper__list-item:hover .list-item__info_aditional-info {
   -webkit-transition: 1s;
   transition: 1s;
+}
+
+.finances-inner-wrapper__list-item:hover::before {
+  opacity: 1;
+}
+
+.finances-inner-wrapper__list-item:hover .list-item__info, .finances-inner-wrapper__list-item:hover .list-item__picture, .finances-inner-wrapper__list-item:hover .list-item__menu-button {
+  color: #333333;
+}
+
+.finances-inner-wrapper__list-item:hover .list-item__info_aditional-info, .finances-inner-wrapper__list-item:hover .menu-button_delete {
   color: white;
 }
 
 .finances-inner-wrapper__list-item:hover .list-item__info_amount-info span {
-  -webkit-transition: 1s;
-  transition: 1s;
   color: white;
 }
 

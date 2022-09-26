@@ -14,20 +14,37 @@
         font-size: 0.875rem
         text-align: left
     &__list-item
+        position: relative
         width: 100%
         display: flex
         background: $main_color
         align-items: center
         text-align: center
+        z-index: 1
+        &::before
+            position: absolute
+            content: ""
+            top: 0
+            right: 0
+            bottom: 0
+            left: 0
+            background: radial-gradient(circle, rgba(116,115,115,1) 0%, rgba(255,255,255,1) 83%)
+            z-index: -1
+            transition: opacity 0.5s linear
+            opacity: 0
         .list-item__picture
             width: 20%
+            color: rgba(101,186,16,1)
+            transition: 1s     
         .list-item__menu-button
-                position: relative
-                align-self: flex-start
-                .menu-button_delete
-                    position: absolute
-                    top: 25px
-                    right: 5px    
+            position: relative
+            align-self: flex-start
+            transition: 1s
+            .menu-button_delete
+                position: absolute
+                top: 30px
+                right: 5px
+                background: $finances-text-black    
         .list-item__info
             height: 100%
             flex: 1
@@ -45,24 +62,27 @@
                 flex-direction: column
                 margin-bottom: 2px
                 font-size: 0.8rem
-                color: $finances-text-grey  
+                color: $finances-text-grey
+                transition: 1s   
             .list-item__info_amount-info
                 font-size: 1rem
                 font-family: $table-font-family
+                transition: 1s 
                 span
                     color: $finances-text-grey
                     font-size: 1rem
-        transition: 1s            
+                    transition: 1s                       
         &:hover
-            color: $main_color
-            background: $secondary_color
-            .list-item__info_aditional-info
-                transition: 1s  
+            &::before
+                opacity: 1
+            .list-item__info, .list-item__picture, .list-item__menu-button
+                color: $finances-text-black
+            .list-item__info_aditional-info, .menu-button_delete 
                 color: $main_color
             .list-item__info_amount-info
                 span
-                    transition: 1s  
                     color: $main_color
+
 .payment-form
     padding: 0
     border: transparent

@@ -18,7 +18,6 @@ import Anton_avatar from '../images/avatars/anton-avatar.png'
 import Oleksandr_avatar from '../images/avatars/sasha-avatar.png'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
-import { green, blue } from '@mui/material/colors'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -149,16 +148,8 @@ export const FINANCE_AVATARS = {
     agency: Agency_avatar,
 }
 export const FINANCE_IMAGES = {
-    salary: <MonetizationOnIcon sx={{ fontSize: 40, color: green['A400'] }} />,
-    salaryHover: (
-        <MonetizationOnIcon sx={{ fontSize: 40, color: blue['A400'] }} />
-    ),
-    paymentToScout: (
-        <CreditScoreIcon sx={{ fontSize: 40, color: blue['A400'] }} />
-    ),
-    paymentToScoutHover: (
-        <CreditScoreIcon sx={{ fontSize: 40, color: green['A400'] }} />
-    ),
+    salary: <MonetizationOnIcon sx={{ fontSize: 40 }} />,
+    paymentToScout: <CreditScoreIcon sx={{ fontSize: 40 }} />,
 }
 export const FINANCE_COMMENTS = {
     salary: 'salary',

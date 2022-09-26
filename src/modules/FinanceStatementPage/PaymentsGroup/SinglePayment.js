@@ -3,10 +3,10 @@ import { Avatar } from '@material-ui/core'
 import { styled } from '@mui/material/styles'
 import { FINANCE_IMAGES, FINANCE_AVATARS } from '../../../constants/constants'
 import IconButton from '@mui/material/IconButton'
-import { grey } from '@mui/material/colors'
 import { useState } from 'react'
 import MenuSharpIcon from '@mui/icons-material/MenuSharp'
 import Button from '@mui/material/Button'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 export default function SinglePayment({
     receiver,
@@ -17,24 +17,13 @@ export default function SinglePayment({
     _id,
     onDelete,
 }) {
-    const [isHover, setIsHover] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
-
-    const handleMouseEnter = () => {
-        setIsHover(true)
-    }
-
-    const handleMouseLeave = () => {
-        setIsHover(false)
-    }
 
     const avatar = Object.keys(FINANCE_AVATARS).find(
         avatar => compareStrings(avatar) === compareStrings(sender)
     )
-    const FinancesImage = Object.keys(FINANCE_IMAGES).find(image =>
-        isHover
-            ? compareStrings(image) === compareStrings(comment + 'hover')
-            : compareStrings(image) === compareStrings(comment)
+    const FinancesImage = Object.keys(FINANCE_IMAGES).find(
+        image => compareStrings(image) === compareStrings(comment)
     )
     const SmallAvatar = styled(Avatar)(({ theme }) => ({
         width: 20,
@@ -48,11 +37,7 @@ export default function SinglePayment({
     }
 
     return (
-        <div
-            className={'finances-inner-wrapper__list-item'}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+        <div className={'finances-inner-wrapper__list-item'}>
             <div className="list-item__picture">
                 <Badge
                     overlap="circular"
@@ -60,14 +45,12 @@ export default function SinglePayment({
                         vertical: 'bottom',
                         horizontal: 'right',
                     }}
-                    style={{ borderColor: isHover ? 'black' : 'white' }}
                     badgeContent={
                         <SmallAvatar
                             alt={sender}
                             src={FINANCE_AVATARS[avatar]}
                             style={{
                                 backgroundColor: 'rgba(145, 31, 31, 1)',
-                                borderColor: isHover ? 'black' : 'white',
                             }}
                         />
                     }
@@ -86,18 +69,15 @@ export default function SinglePayment({
                     {amount} <span>$</span>
                 </p>
             </div>
-            <IconButton
-                className="list-item__menu-button"
-                sx={{ color: isHover ? grey[50] : grey[400] }}
-            >
+            <IconButton className="list-item__menu-button">
                 <MenuSharpIcon onClick={() => setDisplayMenu(!displayMenu)} />
                 {displayMenu ? (
                     <Button
                         className="menu-button_delete"
-                        variant="text"
+                        variant="contained"
                         aria-label="delete"
                         size="small"
-                        sx={{ color: isHover ? grey[50] : grey[400] }}
+                        startIcon={<DeleteIcon />}
                         onClick={() => onDelete(_id)}
                     >
                         delete
