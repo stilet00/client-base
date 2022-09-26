@@ -1,31 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
-.category-holder {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  padding: 10px 0;
-}
-
-.category-holder__button {
-  width: 30%;
-  height: 2rem;
-  border: none;
-  border-radius: 4px;
-  background: white;
-  color: #333333;
-  font-family: Open sans-serif;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-}
-
-.category-holder__button:hover {
-  background: #797272;
-}
-
 .finances-inner-wrapper {
   width: 100%;
   padding: 0 10px;
@@ -39,7 +12,7 @@
   background: white;
   padding: 5px 0;
   border-bottom: 1px solid #e0e0e0;
-  color: #333333;
+  color: #797272;
   font-size: 0.875rem;
   text-align: left;
 }
@@ -50,21 +23,28 @@
   display: -ms-flexbox;
   display: flex;
   background: white;
-  border-bottom: 1px solid #e0e0e0;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   text-align: center;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-}
-
-.finances-inner-wrapper__list-item:hover {
-  background: #797272;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 
 .finances-inner-wrapper__list-item .list-item__picture {
   width: 20%;
+}
+
+.finances-inner-wrapper__list-item .list-item__menu-button {
+  position: relative;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+}
+
+.finances-inner-wrapper__list-item .list-item__menu-button .menu-button_delete {
+  position: absolute;
+  top: 25px;
+  right: 5px;
 }
 
 .finances-inner-wrapper__list-item .list-item__info {
@@ -100,13 +80,30 @@
 }
 
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info {
-  font-size: 1.2rem;
-  font-family: auto;
+  font-size: 1rem;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 }
 
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info span {
   color: #93a0ab;
   font-size: 1rem;
+}
+
+.finances-inner-wrapper__list-item:hover {
+  color: white;
+  background: #797272;
+}
+
+.finances-inner-wrapper__list-item:hover .list-item__info_aditional-info {
+  -webkit-transition: 1s;
+  transition: 1s;
+  color: white;
+}
+
+.finances-inner-wrapper__list-item:hover .list-item__info_amount-info span {
+  -webkit-transition: 1s;
+  transition: 1s;
+  color: white;
 }
 
 .payment-form {

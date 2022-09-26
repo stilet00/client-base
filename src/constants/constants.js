@@ -138,23 +138,36 @@ export const TASKS_BACKGROUNDS = [
     background10,
 ]
 
-export const SENDERS = ['Agency', 'Anton', 'Oleksandr']
-export const FINANCES_AVATARS = {
-    Anton: Anton_avatar,
-    Oleksandr: Oleksandr_avatar,
-    Agency: Agency_avatar,
+export const FINANCE_SENDERS = {
+    anton: 'Anton',
+    agency: 'Agency',
+    oleksandr: 'Oleksandr',
 }
-export const FINANCES_IMAGES = {
+export const FINANCE_AVATARS = {
+    anton: Anton_avatar,
+    oleksandr: Oleksandr_avatar,
+    agency: Agency_avatar,
+}
+export const FINANCE_IMAGES = {
     salary: <MonetizationOnIcon sx={{ fontSize: 40, color: green['A400'] }} />,
-    'Payment to scout': (
+    salaryHover: (
+        <MonetizationOnIcon sx={{ fontSize: 40, color: blue['A400'] }} />
+    ),
+    paymentToScout: (
         <CreditScoreIcon sx={{ fontSize: 40, color: blue['A400'] }} />
     ),
+    paymentToScoutHover: (
+        <CreditScoreIcon sx={{ fontSize: 40, color: green['A400'] }} />
+    ),
 }
-export const COMMENTS = ['salary', 'Payment to scout']
+export const FINANCE_COMMENTS = {
+    salary: 'salary',
+    paymentToScout: 'Payment to scout',
+}
 export const DEFAULT_STATEMENT = {
     receiver: '',
     amount: 0,
-    sender: SENDERS[0],
-    comment: COMMENTS[0],
+    sender: FINANCE_SENDERS.agency,
+    comment: FINANCE_COMMENTS.salary,
 }
 

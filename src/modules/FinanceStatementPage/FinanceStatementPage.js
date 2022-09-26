@@ -1,65 +1,103 @@
 import { useState, useEffect } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
-import StatementGroup from './StatementGroup/StatementGroup'
+import PaymentsGroup from './PaymentsGroup/PaymentsGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
 import moment from 'moment'
 import Loader from '../../sharedComponents/Loader/Loader'
 import {
-    getPayments,
-    addPayment,
-    removePayment,
+    getPaymentsRequest,
+    addPaymentRequest,
+    removePaymentRequest,
 } from '../../services/financesStatement/services'
 import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
+import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
+import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 
 export default function FinanceStatementPage() {
     const [loading, setLoading] = useState(true)
     const [paymentsList, setPaymentsList] = useState([])
     const [deletedPayment, setDeletedPayment] = useState(null)
+    const [alertInfo, setAlertInfo] = useState({
+        mainTitle: 'no message had been put',
+        status: true,
+    })
     const {
         alertStatusConfirmation,
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
     } = useAlertConfirmation()
+    const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
-        getPayments().then(res => {
+        getPaymentsRequest().then(res => {
             if (res.status === 200) {
                 setLoading(false)
                 setPaymentsList(res.data)
+            } else {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: 'Something went wrong',
+                    status: false,
+                })
+                openAlert()
             }
         })
     }, [])
 
-    function getPaymentId(_id) {
+    function pressDeleteButton(_id) {
         const payment = paymentsList.find(item => item._id === _id)
         setDeletedPayment(payment)
         openAlertConfirmation()
+        setAlertInfo({
+            ...alertInfo,
+            mainTitle: 'Payment has been deleted successfully',
+            status: true,
+        })
     }
     function createNewPayment(payment) {
+        setDeletedPayment(null)
         let newPayment = {
             ...payment,
-            date: moment().format('DD MM YYYY'),
+            date: moment().format('DD.MM.YYYY'),
         }
-        addPayment(newPayment).then(res => {
+        addPaymentRequest(newPayment).then(res => {
             if (res.status === 200) {
+                newPayment = { ...newPayment, _id: res.data }
                 setPaymentsList([...paymentsList, newPayment])
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: 'new payment has been added',
+                    status: true,
+                })
+                openAlert()
             } else {
-                console.log('Payments did not add')
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: 'Payments did not add',
+                    status: false,
+                })
+                openAlert()
             }
         })
     }
 
-    function deletePayment() {
+    const deletePayment = () => {
         const _id = deletedPayment._id
-        removePayment(_id).then(res => {
+        removePaymentRequest(_id).then(res => {
             if (res.status === 200) {
                 setPaymentsList(prevStatement =>
                     prevStatement.filter(item => item._id !== _id)
                 )
                 closeAlertConfirmationNoReload()
+                openAlert()
             } else {
-                console.log('Statement is not deleted')
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: 'Payment is not deleted',
+                    status: false,
+                })
+                openAlert()
                 closeAlertConfirmationNoReload()
             }
         })
@@ -98,20 +136,19 @@ export default function FinanceStatementPage() {
         return arrayWithGroupedDates
     }
 
-    const dates = getStatementGroupedByDates(paymentsList)
-    const page =
-        paymentsList.length && !loading ? (
-            dates.map(item => (
-                <StatementGroup
-                    key={item.id}
-                    {...item}
-                    deletingOneStatement={getPaymentId}
-                />
-            ))
-        ) : (
-            <h1>No payments yet</h1>
-        )
-
+    const arrayOfStatementsGroupedByDate =
+        getStatementGroupedByDates(paymentsList)
+    const page = arrayOfStatementsGroupedByDate.length ? (
+        arrayOfStatementsGroupedByDate.map(item => (
+            <PaymentsGroup
+                key={item.id}
+                {...item}
+                deletingOneStatement={pressDeleteButton}
+            />
+        ))
+    ) : (
+        <h1>No payments yet</h1>
+    )
     return loading ? (
         <Loader />
     ) : (
@@ -129,18 +166,26 @@ export default function FinanceStatementPage() {
             </div>
             <div className="socials button-add-container bottom-button">
                 <FinancesForm handleNewPayment={createNewPayment} />
-                <AlertMessageConfirmation
-                    mainText={
-                        'Please confirm that you want to delete this payment?'
-                    }
-                    open={alertStatusConfirmation}
-                    handleClose={closeAlertConfirmationNoReload}
-                    handleOpen={openAlertConfirmation}
-                    status={false}
-                    onCancel={closeAlertConfirmationNoReload}
-                    onConfirm={deletePayment}
-                />
             </div>
+            <AlertMessageConfirmation
+                mainText={
+                    'Please confirm that you want to delete this payment?'
+                }
+                open={alertStatusConfirmation}
+                handleClose={closeAlertConfirmationNoReload}
+                handleOpen={openAlertConfirmation}
+                status={true}
+                onCancel={closeAlertConfirmationNoReload}
+                onConfirm={deletePayment}
+            />
+
+            <AlertMessage
+                mainText={alertInfo.mainTitle}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={alertInfo.status}
+            />
         </>
     )
 }

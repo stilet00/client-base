@@ -3,14 +3,14 @@ import { rootURL } from '../rootURL'
 
 const financeStatementsURL = rootURL + 'statements/'
 
-export function getPayments() {
+export function getPaymentsRequest() {
     return axios.get(financeStatementsURL + 'get/')
 }
 
-export function addPayment(payment) {
+export function addPaymentRequest(payment) {
     return axios.post(financeStatementsURL + 'add/', payment)
 }
 
-export function removePayment(id) {
+export function removePaymentRequest(id) {
     return axios.delete(financeStatementsURL + id)
 }

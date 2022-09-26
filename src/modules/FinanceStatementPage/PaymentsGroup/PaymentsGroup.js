@@ -1,6 +1,6 @@
-import SingleStatement from './SingleStatement'
+import SinglePayment from './SinglePayment'
 
-export default function StatementGroup({
+export default function PaymentsGroup({
     date,
     dateGroup,
     deletingOneStatement,
@@ -8,8 +8,8 @@ export default function StatementGroup({
     return (
         <>
             <div className={'finances-inner-wrapper__header'}>{date}</div>
-            {dateGroup.map((data, index) => (
-                <SingleStatement
+            {dateGroup.map(data => (
+                <SinglePayment
                     key={data._id}
                     {...data}
                     onDelete={deletingOneStatement}
