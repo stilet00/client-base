@@ -53,7 +53,7 @@ export default function FinancesForm({ handleNewPayment }) {
 
     function onInputChange(e) {
         const { name, value } = e.target
-        const newState = { ...paymentData, [name]: value }
+        const newState = { ...paymentData, [name]: Number(value) }
         setPaymentData(newState)
         setFormErrors(handleFormValidation(newState))
     }
