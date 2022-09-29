@@ -30,19 +30,23 @@ export default function FinanceStatementPage() {
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
-        getPaymentsRequest().then(res => {
-            if (res.status === 200) {
+        getPaymentsRequest()
+            .then(res => {
+                if (res.status === 200) {
+                    setLoading(false)
+                    setPaymentsList(res.data)
+                }
+            })
+            .catch(err => {
+                const message = err.message
                 setLoading(false)
-                setPaymentsList(res.data)
-            } else {
                 setAlertInfo({
                     ...alertInfo,
-                    mainTitle: 'Something went wrong',
+                    mainTitle: message,
                     status: false,
                 })
-                openAlert()
-            }
-        })
+                openAlert(5000)
+            })
     }, [])
 
     function pressDeleteButton(_id) {
@@ -61,46 +65,53 @@ export default function FinanceStatementPage() {
             ...payment,
             date: moment().format('DD.MM.YYYY'),
         }
-        addPaymentRequest(newPayment).then(res => {
-            if (res.status === 200) {
-                newPayment = { ...newPayment, _id: res.data }
-                setPaymentsList([...paymentsList, newPayment])
+        addPaymentRequest(newPayment)
+            .then(res => {
+                if (res.status === 200) {
+                    newPayment = { ...newPayment, _id: res.data }
+                    setPaymentsList([...paymentsList, newPayment])
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: 'new payment has been added',
+                        status: true,
+                    })
+                    openAlert()
+                }
+            })
+            .catch(err => {
+                const message = err.message
+                setLoading(false)
                 setAlertInfo({
                     ...alertInfo,
-                    mainTitle: 'new payment has been added',
-                    status: true,
-                })
-                openAlert()
-            } else {
-                setAlertInfo({
-                    ...alertInfo,
-                    mainTitle: 'Payments did not add',
+                    mainTitle: message,
                     status: false,
                 })
                 openAlert()
-            }
-        })
+            })
     }
 
     const deletePayment = () => {
         const _id = deletedPayment._id
-        removePaymentRequest(_id).then(res => {
-            if (res.status === 200) {
-                setPaymentsList(prevStatement =>
-                    prevStatement.filter(item => item._id !== _id)
-                )
-                closeAlertConfirmationNoReload()
-                openAlert()
-            } else {
+        removePaymentRequest(_id)
+            .then(res => {
+                if (res.status === 200) {
+                    setPaymentsList(prevStatement =>
+                        prevStatement.filter(item => item._id !== _id)
+                    )
+                    closeAlertConfirmationNoReload()
+                    openAlert()
+                }
+            })
+            .catch(err => {
+                const message = err.message
+                setLoading(false)
                 setAlertInfo({
                     ...alertInfo,
-                    mainTitle: 'Payment is not deleted',
+                    mainTitle: message,
                     status: false,
                 })
                 openAlert()
-                closeAlertConfirmationNoReload()
-            }
-        })
+            })
     }
 
     const getStatementGroupedByDates = statements => {
