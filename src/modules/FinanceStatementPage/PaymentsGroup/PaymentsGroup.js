@@ -1,10 +1,6 @@
 import SinglePayment from './SinglePayment'
 
-export default function PaymentsGroup({
-    date,
-    dateGroup,
-    deletingOneStatement,
-}) {
+export default function PaymentsGroup({ date, dateGroup, deleteOneStatement }) {
     return (
         <>
             <div className={'finances-inner-wrapper__header'}>{date}</div>
@@ -12,7 +8,7 @@ export default function PaymentsGroup({
                 <SinglePayment
                     key={data._id}
                     {...data}
-                    onDelete={deletingOneStatement}
+                    onDelete={deleteOneStatement}
                 />
             ))}
         </>

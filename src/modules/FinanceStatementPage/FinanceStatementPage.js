@@ -154,7 +154,7 @@ export default function FinanceStatementPage() {
             <PaymentsGroup
                 key={item.id}
                 {...item}
-                deletingOneStatement={pressDeleteButton}
+                deleteOneStatement={pressDeleteButton}
             />
         ))
     ) : (

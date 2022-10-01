@@ -20,10 +20,12 @@ export default function SinglePayment({
     const [displayMenu, setDisplayMenu] = useState(false)
 
     const avatar = Object.keys(FINANCE_AVATARS).find(
-        avatar => compareStrings(avatar) === compareStrings(sender)
+        avatar =>
+            avatar.toLowerCase() === removeSpacesAndUppercaseFromString(sender)
     )
-    const FinancesImage = Object.keys(FINANCE_IMAGES).find(
-        image => compareStrings(image) === compareStrings(comment)
+    const financesImage = Object.keys(FINANCE_IMAGES).find(
+        image =>
+            image.toLowerCase() === removeSpacesAndUppercaseFromString(comment)
     )
     const SmallAvatar = styled(Avatar)(({ theme }) => ({
         width: 20,
@@ -31,9 +33,9 @@ export default function SinglePayment({
         border: `2px solid ${theme.palette.background.paper}`,
     }))
 
-    function compareStrings(string) {
-        const newString = string.toLowerCase().split(' ').join('')
-        return newString
+    function removeSpacesAndUppercaseFromString(string) {
+        const changedString = string.toLowerCase().split(' ').join('')
+        return changedString
     }
 
     return (
@@ -55,7 +57,7 @@ export default function SinglePayment({
                         />
                     }
                 >
-                    {FINANCE_IMAGES[FinancesImage]}
+                    {FINANCE_IMAGES[financesImage]}
                 </Badge>
             </div>
             <div className="list-item__info">
