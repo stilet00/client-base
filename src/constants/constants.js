@@ -13,6 +13,11 @@ import background7 from '../images/tasks_backgrounds/background7.png'
 import background8 from '../images/tasks_backgrounds/background8.png'
 import background9 from '../images/tasks_backgrounds/background9.png'
 import background10 from '../images/tasks_backgrounds/background10.png'
+import Agency_avatar from '../images/logo.png'
+import Anton_avatar from '../images/avatars/anton-avatar.png'
+import Oleksandr_avatar from '../images/avatars/sasha-avatar.png'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import CreditScoreIcon from '@mui/icons-material/CreditScore'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -131,3 +136,29 @@ export const TASKS_BACKGROUNDS = [
     background9,
     background10,
 ]
+
+export const FINANCE_SENDERS = {
+    anton: 'Anton',
+    agency: 'Agency',
+    oleksandr: 'Oleksandr',
+}
+export const FINANCE_AVATARS = {
+    anton: Anton_avatar,
+    oleksandr: Oleksandr_avatar,
+    agency: Agency_avatar,
+}
+export const FINANCE_IMAGES = {
+    salary: <MonetizationOnIcon sx={{ fontSize: 40 }} />,
+    paymentToScout: <CreditScoreIcon sx={{ fontSize: 40 }} />,
+}
+export const FINANCE_COMMENTS = {
+    salary: 'salary',
+    paymentToScout: 'Payment to scout',
+}
+export const DEFAULT_STATEMENT = {
+    receiver: '',
+    amount: 0,
+    sender: FINANCE_SENDERS.agency,
+    comment: FINANCE_COMMENTS.salary,
+}
+

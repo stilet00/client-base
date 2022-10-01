@@ -35,7 +35,10 @@ export default function AlertMessageConfirmation({
                             : 'message-container decline-box'
                     }
                 >
-                    <h2 className={status ? 'green-text' : 'red-text'}>
+                    <h2
+                        className={status ? 'green-text' : 'red-text'}
+                        style={{ paddingBottom: 10 }}
+                    >
                         {mainText}
                     </h2>
                     {additionalText ? <p>{additionalText}</p> : null}
