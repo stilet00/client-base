@@ -16,8 +16,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import {
-    SENDERS,
-    COMMENTS,
+    FINANCE_SENDERS,
+    FINANCE_COMMENTS,
     DEFAULT_STATEMENT,
 } from '../../../constants/constants.js'
 
@@ -53,7 +53,7 @@ export default function FinancesForm({ handleNewPayment }) {
 
     function onInputChange(e) {
         const { name, value } = e.target
-        const newState = { ...paymentData, [name]: value }
+        const newState = { ...paymentData, [name]: Number(value) }
         setPaymentData(newState)
         setFormErrors(handleFormValidation(newState))
     }
@@ -67,30 +67,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
-        switch (name) {
-            case 'receiver':
-                setPaymentData(newState)
-                break
-            case 'comment':
-                const comment = COMMENTS.find(item => item.name === value)
-                setPaymentData({
-                    ...paymentData,
-                    [name]: value,
-                    image: comment.image,
-                })
-                break
-            case 'sender':
-                const sender = SENDERS.find(item => item.name === value)
-                setPaymentData({
-                    ...paymentData,
-                    [name]: value,
-                    avatar: sender.avatar,
-                })
-                break
-            default:
-                setPaymentData(newState)
-        }
-        setFormErrors(handleFormValidation(newState))
+        setPaymentData(newState)
     }
 
     function clearPaymentsData() {
@@ -171,36 +148,44 @@ export default function FinancesForm({ handleNewPayment }) {
                             <div className="payment-form__main_radio-container">
                                 <FormControl>
                                     <FormLabel>Choose Sender</FormLabel>
-                                    <RadioGroup defaultValue={SENDERS[0].name}>
-                                        {SENDERS.map((sender, index) => (
-                                            <FormControlLabel
-                                                key={sender.name + index}
-                                                value={sender.name}
-                                                control={<Radio />}
-                                                label={sender.name}
-                                                name="sender"
-                                                onChange={
-                                                    handleSelectedFieldsChange
-                                                }
-                                            />
-                                        ))}
+                                    <RadioGroup
+                                        defaultValue={FINANCE_SENDERS.agency}
+                                    >
+                                        {Object.values(FINANCE_SENDERS).map(
+                                            sender => (
+                                                <FormControlLabel
+                                                    key={sender}
+                                                    value={sender}
+                                                    control={<Radio />}
+                                                    label={sender}
+                                                    name="sender"
+                                                    onChange={
+                                                        handleSelectedFieldsChange
+                                                    }
+                                                />
+                                            )
+                                        )}
                                     </RadioGroup>
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel>Choose Comment</FormLabel>
-                                    <RadioGroup defaultValue={COMMENTS[0].name}>
-                                        {COMMENTS.map((comment, index) => (
-                                            <FormControlLabel
-                                                key={comment.name + index}
-                                                value={comment.name}
-                                                control={<Radio />}
-                                                label={comment.name}
-                                                name="comment"
-                                                onChange={
-                                                    handleSelectedFieldsChange
-                                                }
-                                            />
-                                        ))}
+                                    <RadioGroup
+                                        defaultValue={FINANCE_COMMENTS.salary}
+                                    >
+                                        {Object.values(FINANCE_COMMENTS).map(
+                                            comment => (
+                                                <FormControlLabel
+                                                    key={comment}
+                                                    value={comment}
+                                                    control={<Radio />}
+                                                    label={comment}
+                                                    name="comment"
+                                                    onChange={
+                                                        handleSelectedFieldsChange
+                                                    }
+                                                />
+                                            )
+                                        )}
                                     </RadioGroup>
                                 </FormControl>
                             </div>

@@ -18,7 +18,6 @@ import Anton_avatar from '../images/avatars/anton-avatar.png'
 import Oleksandr_avatar from '../images/avatars/sasha-avatar.png'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
-import { green, blue } from '@mui/material/colors'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -138,38 +137,28 @@ export const TASKS_BACKGROUNDS = [
     background10,
 ]
 
-export const SENDERS = [
-    {
-        name: 'Agency',
-        avatar: Agency_avatar,
-    },
-    {
-        name: 'Anton',
-        avatar: Anton_avatar,
-    },
-    {
-        name: 'Oleksandr',
-        avatar: Oleksandr_avatar,
-    },
-]
-export const COMMENTS = [
-    {
-        name: 'salary',
-        image: (
-            <MonetizationOnIcon sx={{ fontSize: 40, color: green['A400'] }} />
-        ),
-    },
-    {
-        name: 'Payment to scout',
-        image: <CreditScoreIcon sx={{ fontSize: 40, color: blue['A400'] }} />,
-    },
-]
+export const FINANCE_SENDERS = {
+    anton: 'Anton',
+    agency: 'Agency',
+    oleksandr: 'Oleksandr',
+}
+export const FINANCE_AVATARS = {
+    anton: Anton_avatar,
+    oleksandr: Oleksandr_avatar,
+    agency: Agency_avatar,
+}
+export const FINANCE_IMAGES = {
+    salary: <MonetizationOnIcon sx={{ fontSize: 40 }} />,
+    paymentToScout: <CreditScoreIcon sx={{ fontSize: 40 }} />,
+}
+export const FINANCE_COMMENTS = {
+    salary: 'salary',
+    paymentToScout: 'Payment to scout',
+}
 export const DEFAULT_STATEMENT = {
     receiver: '',
     amount: 0,
-    sender: SENDERS[0].name,
-    comment: COMMENTS[0].name,
-    avatar: SENDERS[0].avatar,
-    image: COMMENTS[0].image,
+    sender: FINANCE_SENDERS.agency,
+    comment: FINANCE_COMMENTS.salary,
 }
 
