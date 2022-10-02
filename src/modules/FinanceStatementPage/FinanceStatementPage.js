@@ -135,7 +135,7 @@ export default function FinanceStatementPage() {
             let groupedByDatesArray = []
             statements.forEach(statement => {
                 if (statement.date === data) {
-                    groupedByDatesArray.push(statement)
+                    groupedByDatesArray.unshift(statement)
                 }
             })
             const statementsGroupedByDate = {
@@ -170,6 +170,7 @@ export default function FinanceStatementPage() {
                         gap: '0px',
                         height: '70vh',
                         padding: '0',
+                        margin: '0',
                     }}
                 >
                     <div className={'finances-inner-wrapper'}>{page}</div>

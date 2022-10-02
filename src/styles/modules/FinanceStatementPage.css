@@ -5,6 +5,7 @@
   background: white;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  border-radius: 4px;
 }
 
 .finances-inner-wrapper__header {
