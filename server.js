@@ -66,6 +66,9 @@ app.get(rootURL + 'tasks/?', function (request, response, next) {
 app.get(rootURL + 'translators/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
+app.get(rootURL + 'finances/?', function (request, response, next) {
+    response.sendFile(__dirname + '/build/index.html')
+})
 
 //email api
 async function balanceMailout() {
