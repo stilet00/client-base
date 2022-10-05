@@ -60,7 +60,10 @@ export default function SinglePayment({
                     {FINANCE_IMAGES[financesImage]}
                 </Badge>
             </div>
-            <div className="list-item__info">
+            <div
+                className="list-item__info"
+                onClick={() => setDisplayMenu(false)}
+            >
                 <p>{comment}</p>
                 <div className="list-item__info_aditional-info">
                     <span>Receiver: {receiver}</span>
