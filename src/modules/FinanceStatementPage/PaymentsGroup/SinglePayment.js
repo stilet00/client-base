@@ -7,6 +7,7 @@ import { useState } from 'react'
 import MenuSharpIcon from '@mui/icons-material/MenuSharp'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 export default function SinglePayment({
     receiver,
@@ -60,10 +61,7 @@ export default function SinglePayment({
                     {FINANCE_IMAGES[financesImage]}
                 </Badge>
             </div>
-            <div
-                className="list-item__info"
-                onClick={() => setDisplayMenu(false)}
-            >
+            <div className="list-item__info">
                 <p>{comment}</p>
                 <div className="list-item__info_aditional-info">
                     <span>Receiver: {receiver}</span>
@@ -74,21 +72,25 @@ export default function SinglePayment({
                     {amount} <span>$</span>
                 </p>
             </div>
-            <IconButton className="list-item__menu-button">
-                <MenuSharpIcon onClick={() => setDisplayMenu(!displayMenu)} />
-                {displayMenu ? (
-                    <Button
-                        className="menu-button_delete"
-                        variant="contained"
-                        aria-label="delete"
-                        size="small"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => onDelete(_id)}
-                    >
-                        delete
-                    </Button>
-                ) : null}
-            </IconButton>
+            <ClickAwayListener onClickAway={() => setDisplayMenu(false)}>
+                <IconButton className="list-item__menu-button">
+                    <MenuSharpIcon
+                        onClick={() => setDisplayMenu(!displayMenu)}
+                    />
+                    {displayMenu ? (
+                        <Button
+                            className="menu-button_delete"
+                            variant="contained"
+                            aria-label="delete"
+                            size="small"
+                            startIcon={<DeleteIcon />}
+                            onClick={() => onDelete(_id)}
+                        >
+                            delete
+                        </Button>
+                    ) : null}
+                </IconButton>
+            </ClickAwayListener>
         </div>
     )
 }
