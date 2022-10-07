@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
 import PaymentsGroup from './PaymentsGroup/PaymentsGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
-import moment from 'moment'
 import Loader from '../../sharedComponents/Loader/Loader'
 import {
     getPaymentsRequest,
@@ -63,7 +62,7 @@ export default function FinanceStatementPage() {
         setDeletedPayment(null)
         let newPayment = {
             ...payment,
-            date: moment().format('DD.MM.YYYY'),
+            date: payment.date.format('DD.MM.YYYY'),
         }
         addPaymentRequest(newPayment)
             .then(res => {
@@ -86,7 +85,7 @@ export default function FinanceStatementPage() {
                     mainTitle: message,
                     status: false,
                 })
-                openAlert()
+                openAlert(5000)
             })
     }
 
@@ -124,8 +123,8 @@ export default function FinanceStatementPage() {
         ]
         function compareDates(item1, item2) {
             return (
-                item1.split(' ').reverse().join('') -
-                item2.split(' ').reverse().join('')
+                item1.split('.').reverse().join('') -
+                item2.split('.').reverse().join('')
             )
         }
         let sortedArrayWithUniqueDates = arrayWithUniqueDates

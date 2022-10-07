@@ -20,6 +20,7 @@ import {
     FINANCE_COMMENTS,
     DEFAULT_STATEMENT,
 } from '../../../constants/constants.js'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -63,11 +64,15 @@ export default function FinancesForm({ handleNewPayment }) {
         clearPaymentsData()
         handleClose()
     }
+    const handleDateChange = newValue => {
+        setPaymentData({ ...paymentData, date: newValue })
+    }
 
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
         setPaymentData(newState)
+        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
@@ -79,13 +84,13 @@ export default function FinancesForm({ handleNewPayment }) {
         if (!values.receiver) {
             errors.reciever = `Please choose a receiver`
         }
-        if (!values.amount) {
+        if (!values.amount || values.amount === 0) {
             errors.amount = `Enter the amount`
         }
         if (values.amount > 10000) {
             errors.amount = `Amount is too large`
         }
-        if (values.amount < 50) {
+        if (values.amount > 0 && values.amount < 50) {
             errors.amount = `Amount is too small`
         }
         return errors
@@ -97,6 +102,7 @@ export default function FinancesForm({ handleNewPayment }) {
                 <AddIcon />
             </Button>
             <Modal
+                disableEnforceFocus
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
@@ -122,6 +128,21 @@ export default function FinancesForm({ handleNewPayment }) {
                                 submitNewPayment()
                             }}
                         >
+                            <MobileDatePicker
+                                disableFuture
+                                label="Balance date"
+                                inputFormat="MM.DD.YYYY"
+                                value={paymentData.date}
+                                name="date"
+                                onChange={handleDateChange}
+                                renderInput={params => (
+                                    <TextField
+                                        variant="filled"
+                                        fullWidth
+                                        {...params}
+                                    />
+                                )}
+                            />
                             <FormLabel>Choose Receiver</FormLabel>
                             <TextField
                                 fullWidth

@@ -116,22 +116,6 @@
   transition: 1s;
 }
 
-.finances-inner-wrapper__list-item:hover::before {
-  opacity: 1;
-}
-
-.finances-inner-wrapper__list-item:hover .list-item__info, .finances-inner-wrapper__list-item:hover .list-item__picture, .finances-inner-wrapper__list-item:hover .list-item__menu-button {
-  color: #333333;
-}
-
-.finances-inner-wrapper__list-item:hover .list-item__info_aditional-info, .finances-inner-wrapper__list-item:hover .menu-button_delete {
-  color: white;
-}
-
-.finances-inner-wrapper__list-item:hover .list-item__info_amount-info span {
-  color: white;
-}
-
 .payment-form {
   padding: 0;
   border: transparent;
