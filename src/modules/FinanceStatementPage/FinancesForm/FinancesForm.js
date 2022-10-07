@@ -130,7 +130,7 @@ export default function FinancesForm({ handleNewPayment }) {
                         >
                             <MobileDatePicker
                                 disableFuture
-                                label="Balance date"
+                                label="Date of Payment"
                                 inputFormat="MM.DD.YYYY"
                                 value={paymentData.date}
                                 name="date"
