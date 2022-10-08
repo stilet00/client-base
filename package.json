@@ -18,7 +18,7 @@
         "@mui/icons-material": "^5.6.1",
         "@mui/lab": "^5.0.0-alpha.91",
         "@mui/material": "^5.6.1",
-        "@mui/x-date-pickers": "^5.0.0-alpha.2",
+        "@mui/x-date-pickers": "^5.0.4",
         "@react-firebase/auth": "^0.2.10",
         "@testing-library/jest-dom": "^5.11.4",
         "@testing-library/react": "^11.1.0",

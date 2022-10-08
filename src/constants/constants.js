@@ -160,5 +160,6 @@ export const DEFAULT_STATEMENT = {
     amount: 0,
     sender: FINANCE_SENDERS.agency,
     comment: FINANCE_COMMENTS.salary,
+    date: moment().format('MM.DD.YYYY'),
 }
 

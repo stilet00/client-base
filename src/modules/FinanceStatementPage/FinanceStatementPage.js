@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import '../../styles/modules/FinanceStatementPage.css'
 import PaymentsGroup from './PaymentsGroup/PaymentsGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
-import moment from 'moment'
 import Loader from '../../sharedComponents/Loader/Loader'
 import {
     getPaymentsRequest,
@@ -61,15 +60,15 @@ export default function FinanceStatementPage() {
     }
     function createNewPayment(payment) {
         setDeletedPayment(null)
-        let newPayment = {
+        const newPayment = {
             ...payment,
-            date: moment().format('DD.MM.YYYY'),
+            date: payment.date.format('DD.MM.YYYY'),
         }
         addPaymentRequest(newPayment)
             .then(res => {
                 if (res.status === 200) {
-                    newPayment = { ...newPayment, _id: res.data }
-                    setPaymentsList([...paymentsList, newPayment])
+                    const newPaymentWithId = { ...newPayment, _id: res.data }
+                    setPaymentsList([...paymentsList, newPaymentWithId])
                     setAlertInfo({
                         ...alertInfo,
                         mainTitle: 'new payment has been added',
@@ -86,7 +85,7 @@ export default function FinanceStatementPage() {
                     mainTitle: message,
                     status: false,
                 })
-                openAlert()
+                openAlert(5000)
             })
     }
 
@@ -124,8 +123,8 @@ export default function FinanceStatementPage() {
         ]
         function compareDates(item1, item2) {
             return (
-                item1.split(' ').reverse().join('') -
-                item2.split(' ').reverse().join('')
+                item1.split('.').reverse().join('') -
+                item2.split('.').reverse().join('')
             )
         }
         let sortedArrayWithUniqueDates = arrayWithUniqueDates
