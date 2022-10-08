@@ -64,8 +64,8 @@ export default function FinancesForm({ handleNewPayment }) {
         clearPaymentsData()
         handleClose()
     }
-    const handleDateChange = newValue => {
-        setPaymentData({ ...paymentData, date: newValue })
+    const handleDateChange = newDate => {
+        setPaymentData({ ...paymentData, date: newDate })
     }
 
     const handleSelectedFieldsChange = e => {
