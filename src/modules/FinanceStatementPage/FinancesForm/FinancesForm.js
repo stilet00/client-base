@@ -65,6 +65,7 @@ export default function FinancesForm({ handleNewPayment }) {
         handleClose()
     }
     const handleDateChange = newDate => {
+        console.log(typeof newDate)
         setPaymentData({ ...paymentData, date: newDate })
     }
 
@@ -72,7 +73,6 @@ export default function FinancesForm({ handleNewPayment }) {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
         setPaymentData(newState)
-        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
