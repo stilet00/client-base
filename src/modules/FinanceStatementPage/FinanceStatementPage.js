@@ -60,15 +60,15 @@ export default function FinanceStatementPage() {
     }
     function createNewPayment(payment) {
         setDeletedPayment(null)
-        let newPayment = {
+        const newPayment = {
             ...payment,
             date: payment.date.format('DD.MM.YYYY'),
         }
         addPaymentRequest(newPayment)
             .then(res => {
                 if (res.status === 200) {
-                    newPayment = { ...newPayment, _id: res.data }
-                    setPaymentsList([...paymentsList, newPayment])
+                    const newPaymentWithId = { ...newPayment, _id: res.data }
+                    setPaymentsList([...paymentsList, newPaymentWithId])
                     setAlertInfo({
                         ...alertInfo,
                         mainTitle: 'new payment has been added',
