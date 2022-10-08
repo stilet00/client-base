@@ -72,7 +72,6 @@ export default function FinancesForm({ handleNewPayment }) {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
         setPaymentData(newState)
-        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
