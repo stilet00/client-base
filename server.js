@@ -2,7 +2,10 @@ let express = require('express')
 const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
-} = require('./src/api/email-api/emailApi')
+} = require('./src/api/email-api/financeEmailAPi')
+const {
+    sendTaskNotificationEmailTemplatesToAdministrators,
+} = require('./src/api/email-api/taskNotificationEmailAPI')
 let MongoClient = require('mongodb').MongoClient
 const uri =
     'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
@@ -24,6 +27,8 @@ const {
     financeStatementsURL,
     tasksURL,
 } = require('./src/api/routes/routes')
+const { threeDaysTimeIntervalInMiliseconds } = require('./src/api/constants')
+
 const PORT = process.env.PORT || 80
 
 let app = express()
@@ -85,8 +90,16 @@ async function balanceMailout() {
             return []
         }
     } catch (error) {
+        console.log(error)
         return false
     }
+}
+
+function taskNotificationsMailout() {
+    setTimeout(async () => {
+        const taskCollection = await collectionTasks.find().toArray()
+        sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
+    }, threeDaysTimeIntervalInMiliseconds)
 }
 
 // task list api
@@ -351,4 +364,5 @@ client.connect(function (err) {
     app.listen(PORT, () => {
         console.log('API started at port', PORT)
     })
+    taskNotificationsMailout()
 })
