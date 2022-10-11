@@ -35,6 +35,8 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
+    const [botList, setBotList] = useState(['Chat4me', 'Sender'])
+    const [botFlag, setBotFlag] = useState(false)
     const [fromErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(fromErrors)
 
@@ -70,8 +72,18 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
-        const newState = { ...paymentData, [name]: value }
-        setPaymentData(newState)
+        if (value === 'Payment to bot') {
+            const newState = { ...paymentData, [name]: value }
+            setPaymentData(newState)
+            setBotFlag(true)
+        } else if (name === 'comment') {
+            const newState = { ...paymentData, [name]: value }
+            setPaymentData(newState)
+            setBotFlag(false)
+        } else {
+            const newState = { ...paymentData, [name]: value }
+            setPaymentData(newState)
+        }
     }
 
     function clearPaymentsData() {
@@ -89,7 +101,7 @@ export default function FinancesForm({ handleNewPayment }) {
         if (values.amount > 10000) {
             errors.amount = `Amount is too large`
         }
-        if (values.amount > 0 && values.amount < 50) {
+        if (values.amount > 0 && values.amount < 10) {
             errors.amount = `Amount is too small`
         }
         return errors
@@ -143,28 +155,53 @@ export default function FinancesForm({ handleNewPayment }) {
                                 )}
                             />
                             <FormLabel>Choose Receiver</FormLabel>
-                            <TextField
-                                fullWidth
-                                id="outlined-select"
-                                variant="filled"
-                                select
-                                label="Receivers"
-                                name="receiver"
-                                focused
-                                value={paymentData.receiver}
-                                onChange={handleSelectedFieldsChange}
-                                error={fromErrors.reciever}
-                                helperText={fromErrors.reciever}
-                            >
-                                {receivers.map((receiver, index) => (
-                                    <MenuItem
-                                        key={receiver + index}
-                                        value={receiver}
-                                    >
-                                        {receiver}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
+                            {!botFlag ? (
+                                <TextField
+                                    fullWidth
+                                    id="outlined-select"
+                                    variant="filled"
+                                    select
+                                    label="Receivers"
+                                    name="receiver"
+                                    focused
+                                    value={paymentData.receiver}
+                                    onChange={handleSelectedFieldsChange}
+                                    error={fromErrors.reciever}
+                                    helperText={fromErrors.reciever}
+                                >
+                                    {receivers.map((receiver, index) => (
+                                        <MenuItem
+                                            key={receiver + index}
+                                            value={receiver}
+                                        >
+                                            {receiver}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            ) : (
+                                <TextField
+                                    fullWidth
+                                    id="outlined-select"
+                                    variant="filled"
+                                    select
+                                    label="Receivers"
+                                    name="receiver"
+                                    focused
+                                    value={botList[0]}
+                                    onChange={handleSelectedFieldsChange}
+                                    error={fromErrors.reciever}
+                                    helperText={fromErrors.reciever}
+                                >
+                                    {botList.map((receiver, index) => (
+                                        <MenuItem
+                                            key={receiver + index}
+                                            value={receiver}
+                                        >
+                                            {receiver}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            )}
                             <div className="payment-form__main_radio-container">
                                 <FormControl>
                                     <FormLabel>Choose Sender</FormLabel>
