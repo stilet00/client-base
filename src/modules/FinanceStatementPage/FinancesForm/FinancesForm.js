@@ -88,6 +88,7 @@ export default function FinancesForm({ handleNewPayment }) {
 
     function clearPaymentsData() {
         setPaymentData(DEFAULT_STATEMENT)
+        setBotFlag(false)
     }
 
     const handleFormValidation = values => {
