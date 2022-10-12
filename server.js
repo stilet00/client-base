@@ -96,7 +96,7 @@ async function balanceMailout() {
 }
 
 function taskNotificationsMailout() {
-    setTimeout(async () => {
+    setInterval(async () => {
         const taskCollection = await collectionTasks.find().toArray()
         sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
     }, threeDaysTimeIntervalInMiliseconds)
