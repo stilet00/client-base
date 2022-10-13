@@ -17,7 +17,6 @@ const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
         )
 
         if (uncompletedTasksWithStartedWeekAgoOrMore?.length > 0) {
-            console.log('todo: create and send email')
             const notificationsEmailTemplateHTMLCode =
                 getNotificationsEmailTemplateHTMLCode(
                     uncompletedTasksWithStartedWeekAgoOrMore
@@ -31,9 +30,10 @@ const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
                     pass: 'vsurysphowtyqljr',
                 },
             })
-            const administratorsEmailListWithoutVasyl = [
-                ...administratorsEmailList,
-            ].pop()
+            const administratorsEmailListWithoutVasyl =
+                administratorsEmailList.filter(
+                    email => email !== 'vasiliybabchenkov@gmail.com'
+                )
             let mailOptions = {
                 from: '"Sunrise agency" <sunrise-agency@gmail.com>',
                 to: administratorsEmailListWithoutVasyl,

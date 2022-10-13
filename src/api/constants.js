@@ -16,7 +16,7 @@ const administratorsEmailList = [
     'vasiliybabchenkov@gmail.com',
 ]
 
-const threeDaysTimeIntervalInMiliseconds = 6220800000
+const threeDaysTimeIntervalInMiliseconds = 259200000
 
 module.exports = {
     DEFAULT_FINANCE_DAY,

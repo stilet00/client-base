@@ -16,5 +16,17 @@ export function removeTask(id) {
 }
 
 export function changeTodoStatus(todo) {
-    return axios.put(tasksURL + todo._id, todo)
+    return axios.put(tasksURL + `edit/${todo._id}`, todo)
+}
+
+export function getTaskNotificationsSettings() {
+    return axios.get(tasksURL + 'notifications/')
+}
+
+export function changeTaskNotificationsSettings(
+    taskNotificationsSettingsValue
+) {
+    return axios.put(tasksURL + 'notifications/', {
+        allowed: taskNotificationsSettingsValue,
+    })
 }

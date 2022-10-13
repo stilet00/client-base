@@ -18,6 +18,7 @@ let {
     collectionClients,
     collectionTranslators,
     collectionStatements,
+    collectionTaskNotifications,
 } = require('./src/api/database/collections')
 const {
     rootURL,
@@ -95,11 +96,11 @@ async function balanceMailout() {
     }
 }
 
-function taskNotificationsMailout() {
-    setInterval(async () => {
-        const taskCollection = await collectionTasks.find().toArray()
-        sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
-    }, threeDaysTimeIntervalInMiliseconds)
+let outdatedTaskNotificationsInterval
+
+async function taskNotificationsMailout() {
+    const taskCollection = await collectionTasks.find().toArray()
+    sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
 }
 
 // task list api
@@ -138,13 +139,51 @@ app.post(tasksURL + 'add', (req, res) => {
     }
 })
 
-app.put(tasksURL + ':id', (req, res) => {
+app.put(tasksURL + 'edit/:id', (req, res) => {
     collectionTasks.updateOne(
         { _id: ObjectId(req.params.id) },
         {
             $set: {
                 completed: req.body.completed,
                 doneAt: req.body.doneAt,
+            },
+        },
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
+})
+
+app.get(tasksURL + 'notifications/', (req, res) => {
+    collectionTaskNotifications.find().toArray((err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.send(docs)
+    })
+})
+
+app.put(tasksURL + 'notifications/', (req, res) => {
+    const taskNotificationsAreAllowed = req.body.allowed
+    if (taskNotificationsAreAllowed) {
+        outdatedTaskNotificationsInterval = setInterval(
+            taskNotificationsMailout,
+            threeDaysTimeIntervalInMiliseconds
+        )
+    }
+    if (!taskNotificationsAreAllowed) {
+        clearInterval(outdatedTaskNotificationsInterval)
+    }
+    const notificationSettingsDatabaseId = '6346e3ed4620ec03ee702c34'
+    collectionTaskNotifications.updateOne(
+        { _id: ObjectId(notificationSettingsDatabaseId) },
+        {
+            $set: {
+                allowed: req.body.allowed,
             },
         },
         err => {
@@ -357,6 +396,9 @@ app.delete(financeStatementsURL + ':id', (req, res) => {
 client.connect(function (err) {
     collectionTasks = client.db('taskListDB').collection('tasks')
     collectionBalance = client.db('taskListDB').collection('totalBalance')
+    collectionTaskNotifications = client
+        .db('taskListDB')
+        .collection('notificationSwitch')
     collectionClients = client.db('clientsDB').collection('clients')
     collectionTranslators = client.db('translatorsDB').collection('translators')
     collectionStatements = client.db('statementsDB').collection('statements')
@@ -364,5 +406,20 @@ client.connect(function (err) {
     app.listen(PORT, () => {
         console.log('API started at port', PORT)
     })
-    taskNotificationsMailout()
+
+    collectionTaskNotifications.find().toArray((err, docs) => {
+        if (err) {
+            throw new Error(err)
+        }
+        const taskNotificationsAreAllowed = docs[0]?.allowed
+        if (taskNotificationsAreAllowed) {
+            console.log(
+                'Task notifications are allowed, running mailout interval.'
+            )
+            outdatedTaskNotificationsInterval = setInterval(
+                taskNotificationsMailout,
+                threeDaysTimeIntervalInMiliseconds
+            )
+        }
+    })
 })

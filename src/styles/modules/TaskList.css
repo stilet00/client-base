@@ -1,6 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
+.taskList-menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  width: 90%;
+}
+
+.taskList-menu__switch-container {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
 .taskList-container {
   width: 90%;
   z-index: 1;

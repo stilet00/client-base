@@ -5,6 +5,8 @@ import {
     changeTodoStatus,
     getTasks,
     removeTask,
+    getTaskNotificationsSettings,
+    changeTaskNotificationsSettings,
 } from '../../services/taskListServices/services'
 import moment from 'moment'
 
@@ -13,16 +15,39 @@ export const useTaskList = user => {
 
     const [loading, setLoading] = useState(true)
 
+    const [notificationsAreAllowed, setNotificationsAreAllowed] = useState(true)
+
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
-        if (user) {
-            getTasks().then(res => {
+        ;(async () => {
+            if (user) {
+                const responseWithTasks = await getTasks()
+                if (responseWithTasks.status === 200) {
+                    setTasks(responseWithTasks.data)
+                }
+                const responseWithTaskNotificationsSettings =
+                    await getTaskNotificationsSettings()
+                if (responseWithTaskNotificationsSettings.status === 200) {
+                    setNotificationsAreAllowed(
+                        responseWithTaskNotificationsSettings.data[0]?.allowed
+                    )
+                }
                 setLoading(false)
-                setTasks(res.data)
-            })
-        }
+            }
+        })()
     }, [user])
+
+    const onTaskNotificationsSettingsChange = () => {
+        const changedTaskNotificationsSettings = !notificationsAreAllowed
+        changeTaskNotificationsSettings(changedTaskNotificationsSettings).then(
+            res => {
+                if (res.status === 200) {
+                    setNotificationsAreAllowed(changedTaskNotificationsSettings)
+                }
+            }
+        )
+    }
 
     const newTask = useCallback(
         text => {
@@ -81,5 +106,7 @@ export const useTaskList = user => {
         openAlert,
         closeAlert,
         loading,
+        notificationsAreAllowed,
+        onTaskNotificationsSettingsChange,
     }
 }
