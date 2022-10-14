@@ -166,4 +166,5 @@ export const DEFAULT_STATEMENT = {
     comment: FINANCE_COMMENTS.salary,
     date: moment(),
 }
+export const BOT_LIST = ['Chat4me', 'Sender']
 

@@ -19,6 +19,7 @@ import {
     FINANCE_SENDERS,
     FINANCE_COMMENTS,
     DEFAULT_STATEMENT,
+    BOT_LIST,
 } from '../../../constants/constants.js'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 
@@ -35,8 +36,7 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
-    const [botList, setBotList] = useState(['Chat4me', 'Sender'])
-    const [botFlag, setBotFlag] = useState(false)
+    const [botList, setBotList] = useState(BOT_LIST)
     const [fromErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(fromErrors)
 
@@ -72,23 +72,12 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
-        if (value === 'Payment to bot') {
-            const newState = { ...paymentData, [name]: value }
-            setPaymentData(newState)
-            setBotFlag(true)
-        } else if (name === 'comment') {
-            const newState = { ...paymentData, [name]: value }
-            setPaymentData(newState)
-            setBotFlag(false)
-        } else {
-            const newState = { ...paymentData, [name]: value }
-            setPaymentData(newState)
-        }
+        const newState = { ...paymentData, [name]: value }
+        setPaymentData(newState)
     }
 
     function clearPaymentsData() {
         setPaymentData(DEFAULT_STATEMENT)
-        setBotFlag(false)
     }
 
     const handleFormValidation = values => {
@@ -102,7 +91,7 @@ export default function FinancesForm({ handleNewPayment }) {
         if (values.amount > 10000) {
             errors.amount = `Amount is too large`
         }
-        if (values.amount > 0 && values.amount < 10) {
+        if (values.amount < 10) {
             errors.amount = `Amount is too small`
         }
         return errors
@@ -156,7 +145,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 )}
                             />
                             <FormLabel>Choose Receiver</FormLabel>
-                            {!botFlag ? (
+                            {paymentData.comment === 'Payment to bot' ? (
                                 <TextField
                                     fullWidth
                                     id="outlined-select"
@@ -165,12 +154,12 @@ export default function FinancesForm({ handleNewPayment }) {
                                     label="Receivers"
                                     name="receiver"
                                     focused
-                                    value={paymentData.receiver}
+                                    value={botList[0]}
                                     onChange={handleSelectedFieldsChange}
                                     error={fromErrors.reciever}
                                     helperText={fromErrors.reciever}
                                 >
-                                    {receivers.map((receiver, index) => (
+                                    {botList.map((receiver, index) => (
                                         <MenuItem
                                             key={receiver + index}
                                             value={receiver}
@@ -188,12 +177,12 @@ export default function FinancesForm({ handleNewPayment }) {
                                     label="Receivers"
                                     name="receiver"
                                     focused
-                                    value={botList[0]}
+                                    value={paymentData.receiver[0]}
                                     onChange={handleSelectedFieldsChange}
                                     error={fromErrors.reciever}
                                     helperText={fromErrors.reciever}
                                 >
-                                    {botList.map((receiver, index) => (
+                                    {receivers.map((receiver, index) => (
                                         <MenuItem
                                             key={receiver + index}
                                             value={receiver}
@@ -257,6 +246,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 helperText={fromErrors.amount}
                                 fullWidth
                                 name={'amount'}
+                                minValue={0}
                                 onChange={onInputChange}
                             />
                             <Button
