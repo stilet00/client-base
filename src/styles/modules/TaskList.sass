@@ -2,6 +2,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap')
 @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap')
+
+.taskList-menu
+  display: flex
+  justify-content: flex-start
+  width: 90%
+
+  &__switch-container
+    background-color: $main_color_opacity
+    padding: 0 10px
+    border-top-left-radius: 10px
+    border-top-right-radius: 10px
+
 .taskList-container
   width: 90%
   z-index: 1
@@ -21,7 +33,7 @@
     gap: 1rem
     row-gap: 1rem
     max-height: 75vh
-    
+
   .task
     display: flex
     flex: 1 250px

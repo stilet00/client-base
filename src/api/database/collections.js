@@ -3,6 +3,7 @@ let collectionBalance
 let collectionClients
 let collectionTranslators
 let collectionStatements
+let collectionTaskNotifications
 
 module.exports = {
     collectionTasks,
@@ -10,4 +11,5 @@ module.exports = {
     collectionClients,
     collectionTranslators,
     collectionStatements,
+    collectionTaskNotifications,
 }
