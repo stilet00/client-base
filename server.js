@@ -2,7 +2,7 @@ let express = require('express')
 const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
-} = require('./src/api/email-api/financeEmailAPi')
+} = require('./src/api/email-api/financeEmailAPI')
 const {
     sendTaskNotificationEmailTemplatesToAdministrators,
 } = require('./src/api/email-api/taskNotificationEmailAPI')
