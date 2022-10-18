@@ -36,7 +36,6 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
-    const [botList, setBotList] = useState(BOT_LIST)
     const [fromErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(fromErrors)
 
@@ -74,6 +73,7 @@ export default function FinancesForm({ handleNewPayment }) {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
         setPaymentData(newState)
+        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
@@ -82,8 +82,18 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const handleFormValidation = values => {
         const errors = {}
+        console.log(values.receiver)
         if (!values.receiver) {
             errors.reciever = `Please choose a receiver`
+        }
+        if (
+            (values.comment !== 'Payment to bot' &&
+                BOT_LIST.includes(values.receiver)) ||
+            (values.comment === 'Payment to bot' &&
+                receivers.includes(values.receiver))
+        ) {
+            console.log('wrong value')
+            errors.reciever = `Please change reciever`
         }
         if (!values.amount || values.amount === 0) {
             errors.amount = `Enter the amount`
@@ -96,6 +106,9 @@ export default function FinancesForm({ handleNewPayment }) {
         }
         return errors
     }
+
+    const listOfReceivers =
+        paymentData.comment === 'Payment to bot' ? BOT_LIST : receivers
 
     return (
         <div className={'modal-wrapper down-add-button'}>
@@ -145,53 +158,28 @@ export default function FinancesForm({ handleNewPayment }) {
                                 )}
                             />
                             <FormLabel>Choose Receiver</FormLabel>
-                            {paymentData.comment === 'Payment to bot' ? (
-                                <TextField
-                                    fullWidth
-                                    id="outlined-select"
-                                    variant="filled"
-                                    select
-                                    label="Receivers"
-                                    name="receiver"
-                                    focused
-                                    value={botList[0]}
-                                    onChange={handleSelectedFieldsChange}
-                                    error={fromErrors.reciever}
-                                    helperText={fromErrors.reciever}
-                                >
-                                    {botList.map((receiver, index) => (
-                                        <MenuItem
-                                            key={receiver + index}
-                                            value={receiver}
-                                        >
-                                            {receiver}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            ) : (
-                                <TextField
-                                    fullWidth
-                                    id="outlined-select"
-                                    variant="filled"
-                                    select
-                                    label="Receivers"
-                                    name="receiver"
-                                    focused
-                                    value={paymentData.receiver[0]}
-                                    onChange={handleSelectedFieldsChange}
-                                    error={fromErrors.reciever}
-                                    helperText={fromErrors.reciever}
-                                >
-                                    {receivers.map((receiver, index) => (
-                                        <MenuItem
-                                            key={receiver + index}
-                                            value={receiver}
-                                        >
-                                            {receiver}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            )}
+                            <TextField
+                                fullWidth
+                                id="outlined-select"
+                                variant="filled"
+                                select
+                                label="Receivers"
+                                name="receiver"
+                                focused
+                                value={paymentData.receiver}
+                                onChange={handleSelectedFieldsChange}
+                                error={fromErrors.reciever}
+                                helperText={fromErrors.reciever}
+                            >
+                                {listOfReceivers.map((receiver, index) => (
+                                    <MenuItem
+                                        key={receiver + index}
+                                        value={receiver}
+                                    >
+                                        {receiver}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
                             <div className="payment-form__main_radio-container">
                                 <FormControl>
                                     <FormLabel>Choose Sender</FormLabel>
