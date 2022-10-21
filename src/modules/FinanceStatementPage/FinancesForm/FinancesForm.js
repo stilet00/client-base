@@ -19,6 +19,7 @@ import {
     FINANCE_SENDERS,
     FINANCE_COMMENTS,
     DEFAULT_STATEMENT,
+    BOT_LIST,
 } from '../../../constants/constants.js'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 
@@ -72,6 +73,7 @@ export default function FinancesForm({ handleNewPayment }) {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: value }
         setPaymentData(newState)
+        setFormErrors(handleFormValidation(newState))
     }
 
     function clearPaymentsData() {
@@ -80,8 +82,18 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const handleFormValidation = values => {
         const errors = {}
+        console.log(values.receiver)
         if (!values.receiver) {
             errors.reciever = `Please choose a receiver`
+        }
+        if (
+            (values.comment !== 'Payment to bot' &&
+                BOT_LIST.includes(values.receiver)) ||
+            (values.comment === 'Payment to bot' &&
+                receivers.includes(values.receiver))
+        ) {
+            console.log('wrong value')
+            errors.reciever = `Please change reciever`
         }
         if (!values.amount || values.amount === 0) {
             errors.amount = `Enter the amount`
@@ -89,11 +101,14 @@ export default function FinancesForm({ handleNewPayment }) {
         if (values.amount > 10000) {
             errors.amount = `Amount is too large`
         }
-        if (values.amount > 0 && values.amount < 50) {
+        if (values.amount < 10) {
             errors.amount = `Amount is too small`
         }
         return errors
     }
+
+    const listOfReceivers =
+        paymentData.comment === 'Payment to bot' ? BOT_LIST : receivers
 
     return (
         <div className={'modal-wrapper down-add-button'}>
@@ -156,7 +171,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 error={fromErrors.reciever}
                                 helperText={fromErrors.reciever}
                             >
-                                {receivers.map((receiver, index) => (
+                                {listOfReceivers.map((receiver, index) => (
                                     <MenuItem
                                         key={receiver + index}
                                         value={receiver}
@@ -219,6 +234,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 helperText={fromErrors.amount}
                                 fullWidth
                                 name={'amount'}
+                                minValue={0}
                                 onChange={onInputChange}
                             />
                             <Button
