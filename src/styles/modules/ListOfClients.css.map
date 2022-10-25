@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,wBAAwB,CAAC;EACrB,OAAO,EAAE,WAAW;EACpB,KAAK,EAAE,IAAI;EACX,qBAAqB,EAAE,eAAe;CAOd;;AANvB,AAAD,+BAAQ,CAAC;EACL,WAAW,EAAE,CAAC;CAAG;;AACpB,AAAD,8BAAO,CAAC;EACJ,WAAW,EAAE,CAAC;CAAG;;AACpB,AAAD,8BAAO,CAAC;EACJ,WAAW,EAAE,KAAK;EAClB,UAAU,EAAE,GAAG;CAAG",
+    "sources": [
+        "ListOfClients.sass"
+    ],
+    "names": [],
+    "file": "ListOfClients.css"
+}
