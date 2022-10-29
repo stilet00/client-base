@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom'
 import AuthorizationPage from './modules/AuthorizationPage/AuthorizationPage'
 import TaskList from './modules/TaskList/TaskList'
+import ListOfClients from './modules/ListOfClients/ListOfClients'
 import ChartsContainer from './modules/Charts/ChartsContainer'
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -86,6 +87,9 @@ function App() {
                                                 <FinanceStatementPage
                                                     user={user}
                                                 />
+                                            </Route>
+                                            <Route path="/clients/">
+                                                <ListOfClients user={user} />
                                             </Route>
                                             <Redirect
                                                 from="/chart/*"

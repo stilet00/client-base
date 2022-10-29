@@ -82,7 +82,6 @@ export default function FinancesForm({ handleNewPayment }) {
 
     const handleFormValidation = values => {
         const errors = {}
-        console.log(values.receiver)
         if (!values.receiver) {
             errors.reciever = `Please choose a receiver`
         }
@@ -92,7 +91,6 @@ export default function FinancesForm({ handleNewPayment }) {
             (values.comment === 'Payment to bot' &&
                 receivers.includes(values.receiver))
         ) {
-            console.log('wrong value')
             errors.reciever = `Please change reciever`
         }
         if (!values.amount || values.amount === 0) {
