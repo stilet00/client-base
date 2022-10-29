@@ -103,6 +103,9 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .balance-form {
+    overflow-y: scroll;
+  }
   .balance-form__date__accordion .MuiAccordionDetails-root {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
