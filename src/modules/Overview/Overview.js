@@ -48,8 +48,32 @@ function Overview({ user }) {
         translators,
         calculateMonthTotal,
         calculateYearTotal,
-        clientsAmount,
+        payments,
     } = useOverview(user)
+
+    const paymentsToBotTotal = payments
+        .filter(payment => {
+            if (
+                payment.date.includes(selectedYear) &&
+                payment.comment === 'Payment to bot'
+            ) {
+                return payment
+            }
+        })
+        .map(filtredPayment => filtredPayment.amount)
+        .reduce((acc, current) => acc + current, 0)
+
+    const paymentsToClientsTotal = payments
+        .filter(payment => {
+            if (
+                payment.date.includes(selectedYear) &&
+                payment.comment !== 'Payment to bot'
+            ) {
+                return payment
+            }
+        })
+        .map(filtredPayment => filtredPayment.amount)
+        .reduce((acc, current) => acc + current, 0)
 
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
@@ -150,7 +174,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-    const clientsTotatAmount = clientsAmount.reduce((acc, num) => acc + num, 0)
+
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
@@ -364,7 +388,26 @@ function Overview({ user }) {
                                                         'blue-text styled-text-numbers'
                                                     }
                                                 >
-                                                    {clientsTotatAmount + ' $'}
+                                                    {paymentsToClientsTotal +
+                                                        ' $'}
+                                                </span>
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Payments to bot
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            {yearTotalSum ? (
+                                                <span
+                                                    className={
+                                                        'blue-text styled-text-numbers'
+                                                    }
+                                                >
+                                                    {paymentsToBotTotal + ' $'}
                                                 </span>
                                             ) : (
                                                 <SmallLoader />
@@ -393,7 +436,8 @@ function Overview({ user }) {
                                                                 yearTotalSum *
                                                                     0.45
                                                             ) -
-                                                            clientsTotatAmount
+                                                            (paymentsToClientsTotal +
+                                                                paymentsToBotTotal)
                                                         ).toFixed(2) +
                                                             ' $'}{' '}
                                                     </span>

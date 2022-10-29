@@ -11,7 +11,7 @@ import { currentMonth, currentYear } from '../../constants/constants'
 export const useOverview = user => {
     const [clients, setClients] = useState([])
 
-    const [clientsAmount, setClientsAmount] = useState([])
+    const [payments, setPayments] = useState([])
 
     const [translators, setTranslators] = useState([])
 
@@ -50,11 +50,11 @@ export const useOverview = user => {
 
             getPaymentsRequest().then(res => {
                 if (res.status === 200) {
-                    setClientsAmount(res.data.map(item => item.amount))
+                    setPayments(res.data)
                 }
             })
         }
-    }, [selectedYear, user])
+    }, [user])
 
     const calculateMonthTotal = useCallback(
         (
@@ -112,6 +112,6 @@ export const useOverview = user => {
         bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
-        clientsAmount,
+        payments,
     }
 }
