@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
+import { getPaymentsRequest } from '../../services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
     getNumberWithHundredths,
@@ -9,6 +10,8 @@ import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
+
+    const [clientsAmount, setClientsAmount] = useState([])
 
     const [translators, setTranslators] = useState([])
 
@@ -42,6 +45,12 @@ export const useOverview = user => {
             getTranslators().then(res => {
                 if (res.status === 200) {
                     setTranslators(res.data)
+                }
+            })
+
+            getPaymentsRequest().then(res => {
+                if (res.status === 200) {
+                    setClientsAmount(res.data.map(item => item.amount))
                 }
             })
         }
@@ -103,5 +112,6 @@ export const useOverview = user => {
         bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
+        clientsAmount,
     }
 }

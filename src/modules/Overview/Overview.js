@@ -48,6 +48,7 @@ function Overview({ user }) {
         translators,
         calculateMonthTotal,
         calculateYearTotal,
+        clientsAmount,
     } = useOverview(user)
 
     const yearTotalSum = calculateYearTotal()
@@ -149,6 +150,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    const clientsTotatAmount = clientsAmount.reduce((acc, num) => acc + num, 0)
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
@@ -362,10 +364,7 @@ function Overview({ user }) {
                                                         'blue-text styled-text-numbers'
                                                     }
                                                 >
-                                                    {' '}
-                                                    {Math.floor(
-                                                        yearTotalSum * 0.1
-                                                    ) + ' $'}{' '}
+                                                    {clientsTotatAmount + ' $'}
                                                 </span>
                                             ) : (
                                                 <SmallLoader />
@@ -392,12 +391,9 @@ function Overview({ user }) {
                                                             yearTotalSum -
                                                             Math.floor(
                                                                 yearTotalSum *
-                                                                    0.4
+                                                                    0.45
                                                             ) -
-                                                            Math.floor(
-                                                                yearTotalSum *
-                                                                    0.1
-                                                            )
+                                                            clientsTotatAmount
                                                         ).toFixed(2) +
                                                             ' $'}{' '}
                                                     </span>
