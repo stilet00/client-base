@@ -1,0 +1,25 @@
+.grid-template-container {
+  display: -ms-inline-grid;
+  display: inline-grid;
+  width: 100%;
+  -ms-grid-columns: 100px auto 50px;
+      grid-template-columns: 100px auto 50px;
+}
+
+.grid-template-container__title {
+  -ms-grid-column: 1;
+  grid-column: 1;
+}
+
+.grid-template-container__info {
+  -ms-grid-column: 3;
+  grid-column: 3;
+}
+
+.grid-template-container__card {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / 4;
+  text-align: end;
+}
+/*# sourceMappingURL=ListOfClients.css.map */

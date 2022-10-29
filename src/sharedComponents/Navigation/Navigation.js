@@ -16,6 +16,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import MenuIcon from '@mui/icons-material/Menu'
 import WorkIcon from '@mui/icons-material/Work'
 import PageViewIcon from '@mui/icons-material/Pageview'
+import GroupIcon from '@mui/icons-material/Group'
 import PriceChangeOutlinedIcon from '@mui/icons-material/PriceChangeOutlined'
 import { BottomNavigationAction, IconButton } from '@mui/material'
 import styled, { keyframes } from 'styled-components'
@@ -94,6 +95,12 @@ export default function Navigation({ user }) {
                     </ListItemIcon>
                     <ListItemText primary={'Finance Statement'} />
                 </ListItem>
+                <ListItem button onClick={() => history.push('/clients')}>
+                    <ListItemIcon>
+                        <GroupIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'List of Clients'} />
+                </ListItem>
                 <ListItem button onClick={() => history.push('/translators')}>
                     <ListItemIcon>
                         <WorkIcon />
@@ -152,6 +159,11 @@ export default function Navigation({ user }) {
                                 label="Finance Statement"
                                 icon={<PriceChangeOutlinedIcon />}
                                 value={'/finances'}
+                            />
+                            <BottomNavigationAction
+                                label="List of Clients"
+                                icon={<GroupIcon />}
+                                value={'/clients'}
                             />
                             <BottomNavigationAction
                                 label="Translators & Balance"
