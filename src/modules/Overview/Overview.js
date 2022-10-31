@@ -48,32 +48,36 @@ function Overview({ user }) {
         translators,
         calculateMonthTotal,
         calculateYearTotal,
-        payments,
+        statements,
     } = useOverview(user)
 
-    const paymentsToBotTotal = payments
-        .filter(payment => {
-            if (
-                payment.date.includes(selectedYear) &&
-                payment.comment === 'Payment to bot'
-            ) {
-                return payment
-            }
-        })
-        .map(filtredPayment => filtredPayment.amount)
-        .reduce((acc, current) => acc + current, 0)
+    const statementsGroupedByComment = statements => {
+        const groupedByComment = [
+            ...new Set(
+                statements.map(item => {
+                    return item.comment
+                })
+            ),
+        ]
 
-    const paymentsToClientsTotal = payments
-        .filter(payment => {
-            if (
-                payment.date.includes(selectedYear) &&
-                payment.comment !== 'Payment to bot'
-            ) {
-                return payment
+        const groupedStatement = groupedByComment.map(comment => {
+            let groupedByAmount = []
+            statements.forEach(statement => {
+                if (statement.comment === comment) {
+                    groupedByAmount.push(statement.amount)
+                }
+            })
+            const groupedByCommentAndAmount = {
+                comment: comment,
+                amount: groupedByAmount.reduce(
+                    (acc, current) => acc + current,
+                    0
+                ),
             }
+            return groupedByCommentAndAmount
         })
-        .map(filtredPayment => filtredPayment.amount)
-        .reduce((acc, current) => acc + current, 0)
+        return groupedStatement
+    }
 
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
@@ -377,43 +381,34 @@ function Overview({ user }) {
                                             )}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Payments to clients
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {yearTotalSum ? (
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    {paymentsToClientsTotal +
-                                                        ' $'}
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Payments to bot
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {yearTotalSum ? (
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    {paymentsToBotTotal + ' $'}
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
+                                    {statements.length
+                                        ? statementsGroupedByComment(
+                                              statements
+                                          ).map(statement => (
+                                              <StyledTableRow>
+                                                  <StyledTableCell>
+                                                      {statement.comment ===
+                                                      'salary'
+                                                          ? 'Clients Salary'
+                                                          : statement.comment}
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>
+                                                      {yearTotalSum ? (
+                                                          <span
+                                                              className={
+                                                                  'blue-text styled-text-numbers'
+                                                              }
+                                                          >
+                                                              {statement.amount +
+                                                                  ' $'}
+                                                          </span>
+                                                      ) : (
+                                                          <SmallLoader />
+                                                      )}
+                                                  </StyledTableCell>
+                                              </StyledTableRow>
+                                          ))
+                                        : null}
                                     <StyledTableRow>
                                         <StyledTableCell>
                                             Total profit
@@ -436,8 +431,20 @@ function Overview({ user }) {
                                                                 yearTotalSum *
                                                                     0.45
                                                             ) -
-                                                            (paymentsToClientsTotal +
-                                                                paymentsToBotTotal)
+                                                            statements
+                                                                .map(
+                                                                    statement =>
+                                                                        statement.amount
+                                                                )
+                                                                .reduce(
+                                                                    (
+                                                                        acc,
+                                                                        current
+                                                                    ) =>
+                                                                        acc +
+                                                                        current,
+                                                                    0
+                                                                )
                                                         ).toFixed(2) +
                                                             ' $'}{' '}
                                                     </span>

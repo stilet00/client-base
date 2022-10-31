@@ -11,7 +11,7 @@ import { currentMonth, currentYear } from '../../constants/constants'
 export const useOverview = user => {
     const [clients, setClients] = useState([])
 
-    const [payments, setPayments] = useState([])
+    const [statements, setStatments] = useState([])
 
     const [translators, setTranslators] = useState([])
 
@@ -50,7 +50,7 @@ export const useOverview = user => {
 
             getPaymentsRequest().then(res => {
                 if (res.status === 200) {
-                    setPayments(res.data)
+                    setStatments(res.data)
                 }
             })
         }
@@ -112,6 +112,6 @@ export const useOverview = user => {
         bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
-        payments,
+        statements,
     }
 }
