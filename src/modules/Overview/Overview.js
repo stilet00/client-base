@@ -20,6 +20,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
+import { FINANCE_COMMENTS } from '../../constants/constants'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -52,30 +53,24 @@ function Overview({ user }) {
     } = useOverview(user)
 
     const statementsGroupedByComment = statements => {
-        const groupedByComment = [
-            ...new Set(
-                statements.map(item => {
-                    return item.comment
+        const groupedStatement = Object.values(FINANCE_COMMENTS).map(
+            comment => {
+                let groupedByAmount = []
+                statements.forEach(statement => {
+                    if (statement.comment === comment) {
+                        groupedByAmount.push(statement.amount)
+                    }
                 })
-            ),
-        ]
-
-        const groupedStatement = groupedByComment.map(comment => {
-            let groupedByAmount = []
-            statements.forEach(statement => {
-                if (statement.comment === comment) {
-                    groupedByAmount.push(statement.amount)
+                const groupedByCommentAndAmount = {
+                    comment: comment,
+                    amount: groupedByAmount.reduce(
+                        (sum, current) => sum + current,
+                        0
+                    ),
                 }
-            })
-            const groupedByCommentAndAmount = {
-                comment: comment,
-                amount: groupedByAmount.reduce(
-                    (acc, current) => acc + current,
-                    0
-                ),
+                return groupedByCommentAndAmount
             }
-            return groupedByCommentAndAmount
-        })
+        )
         return groupedStatement
     }
 
@@ -438,10 +433,10 @@ function Overview({ user }) {
                                                                 )
                                                                 .reduce(
                                                                     (
-                                                                        acc,
+                                                                        sum,
                                                                         current
                                                                     ) =>
-                                                                        acc +
+                                                                        sum +
                                                                         current,
                                                                     0
                                                                 )
