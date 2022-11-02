@@ -52,7 +52,7 @@ function Overview({ user }) {
         statements,
     } = useOverview(user)
 
-    const statementsGroupedByComment = statements => {
+    const getstatementsGroupedByComment = statements => {
         const groupedStatement = Object.values(FINANCE_COMMENTS).map(
             comment => {
                 let groupedByAmount = []
@@ -74,6 +74,7 @@ function Overview({ user }) {
         return groupedStatement
     }
 
+    const statementsGroupedByComment = getstatementsGroupedByComment(statements)
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
     const previousMonthTotal = calculateMonthTotal(previousMonth, false)
@@ -376,33 +377,33 @@ function Overview({ user }) {
                                             )}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                    {statements.length
-                                        ? statementsGroupedByComment(
-                                              statements
-                                          ).map(statement => (
-                                              <StyledTableRow>
-                                                  <StyledTableCell>
-                                                      {statement.comment ===
-                                                      'salary'
-                                                          ? 'Clients Salary'
-                                                          : statement.comment}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell>
-                                                      {yearTotalSum ? (
-                                                          <span
-                                                              className={
-                                                                  'blue-text styled-text-numbers'
-                                                              }
-                                                          >
-                                                              {statement.amount +
-                                                                  ' $'}
-                                                          </span>
-                                                      ) : (
-                                                          <SmallLoader />
-                                                      )}
-                                                  </StyledTableCell>
-                                              </StyledTableRow>
-                                          ))
+                                    {statementsGroupedByComment.length
+                                        ? statementsGroupedByComment.map(
+                                              statement => (
+                                                  <StyledTableRow>
+                                                      <StyledTableCell>
+                                                          {statement.comment ===
+                                                          'salary'
+                                                              ? 'Clients Salary'
+                                                              : statement.comment}
+                                                      </StyledTableCell>
+                                                      <StyledTableCell>
+                                                          {yearTotalSum ? (
+                                                              <span
+                                                                  className={
+                                                                      'blue-text styled-text-numbers'
+                                                                  }
+                                                              >
+                                                                  {statement.amount +
+                                                                      ' $'}
+                                                              </span>
+                                                          ) : (
+                                                              <SmallLoader />
+                                                          )}
+                                                      </StyledTableCell>
+                                                  </StyledTableRow>
+                                              )
+                                          )
                                         : null}
                                     <StyledTableRow>
                                         <StyledTableCell>
