@@ -31,7 +31,18 @@ export const DEFAULT_CLIENT = {
     name: '',
     surname: '',
     translators: [],
+    sumAmount: '1000',
+    bank: '',
+    link: 'https://',
     suspended: false,
+    svadba: {
+        login: '',
+        password: '',
+    },
+    dating: {
+        login: '',
+        password: '',
+    },
 }
 
 export const DEFAULT_PENALTY = {
