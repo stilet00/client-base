@@ -57,7 +57,10 @@ function Overview({ user }) {
             comment => {
                 let groupedByAmount = []
                 statements.forEach(statement => {
-                    if (statement.comment === comment) {
+                    if (
+                        statement.comment === comment &&
+                        statement.date.includes(selectedYear)
+                    ) {
                         groupedByAmount.push(statement.amount)
                     }
                 })
@@ -84,7 +87,6 @@ function Overview({ user }) {
         false,
         true
     )
-
     const monthProgress =
         monthTotalSum > previousMonthTotal ? (
             <span className={'green-text styled-text-numbers'}>
@@ -174,7 +176,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-
+    console.log(statements[0])
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
