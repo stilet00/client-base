@@ -52,7 +52,7 @@ function Overview({ user }) {
         statements,
     } = useOverview(user)
 
-    const getstatementsGroupedByComment = statements => {
+    const getStatementsGroupedByCommentAndYear = statements => {
         const groupedStatement = Object.values(FINANCE_COMMENTS).map(
             comment => {
                 let groupedByAmount = []
@@ -77,7 +77,8 @@ function Overview({ user }) {
         return groupedStatement
     }
 
-    const statementsGroupedByComment = getstatementsGroupedByComment(statements)
+    const statementsGroupedByComment =
+        getStatementsGroupedByCommentAndYear(statements)
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
     const previousMonthTotal = calculateMonthTotal(previousMonth, false)
@@ -176,7 +177,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-    console.log(statements[0])
+    
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
