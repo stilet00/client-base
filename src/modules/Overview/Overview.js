@@ -20,6 +20,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
+import { FINANCE_COMMENTS } from '../../constants/constants'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -48,8 +49,36 @@ function Overview({ user }) {
         translators,
         calculateMonthTotal,
         calculateYearTotal,
+        statements,
     } = useOverview(user)
 
+    const getStatementsGroupedByCommentAndYear = statements => {
+        const groupedStatement = Object.values(FINANCE_COMMENTS).map(
+            comment => {
+                let groupedByAmount = []
+                statements.forEach(statement => {
+                    if (
+                        statement.comment === comment &&
+                        statement.date.includes(selectedYear)
+                    ) {
+                        groupedByAmount.push(statement.amount)
+                    }
+                })
+                const groupedByCommentAndAmount = {
+                    comment: comment,
+                    amount: groupedByAmount.reduce(
+                        (sum, current) => sum + current,
+                        0
+                    ),
+                }
+                return groupedByCommentAndAmount
+            }
+        )
+        return groupedStatement
+    }
+
+    const statementsGroupedByComment =
+        getStatementsGroupedByCommentAndYear(statements)
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
     const previousMonthTotal = calculateMonthTotal(previousMonth, false)
@@ -59,7 +88,6 @@ function Overview({ user }) {
         false,
         true
     )
-
     const monthProgress =
         monthTotalSum > previousMonthTotal ? (
             <span className={'green-text styled-text-numbers'}>
@@ -149,6 +177,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
@@ -351,27 +380,34 @@ function Overview({ user }) {
                                             )}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Payments to clients
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {yearTotalSum ? (
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    {' '}
-                                                    {Math.floor(
-                                                        yearTotalSum * 0.1
-                                                    ) + ' $'}{' '}
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
+                                    {statementsGroupedByComment.length
+                                        ? statementsGroupedByComment.map(
+                                              statement => (
+                                                  <StyledTableRow>
+                                                      <StyledTableCell>
+                                                          {statement.comment ===
+                                                          'salary'
+                                                              ? 'Clients Salary'
+                                                              : statement.comment}
+                                                      </StyledTableCell>
+                                                      <StyledTableCell>
+                                                          {yearTotalSum ? (
+                                                              <span
+                                                                  className={
+                                                                      'blue-text styled-text-numbers'
+                                                                  }
+                                                              >
+                                                                  {statement.amount +
+                                                                      ' $'}
+                                                              </span>
+                                                          ) : (
+                                                              <SmallLoader />
+                                                          )}
+                                                      </StyledTableCell>
+                                                  </StyledTableRow>
+                                              )
+                                          )
+                                        : null}
                                     <StyledTableRow>
                                         <StyledTableCell>
                                             Total profit
@@ -392,12 +428,22 @@ function Overview({ user }) {
                                                             yearTotalSum -
                                                             Math.floor(
                                                                 yearTotalSum *
-                                                                    0.4
+                                                                    0.45
                                                             ) -
-                                                            Math.floor(
-                                                                yearTotalSum *
-                                                                    0.1
-                                                            )
+                                                            statements
+                                                                .map(
+                                                                    statement =>
+                                                                        statement.amount
+                                                                )
+                                                                .reduce(
+                                                                    (
+                                                                        sum,
+                                                                        current
+                                                                    ) =>
+                                                                        sum +
+                                                                        current,
+                                                                    0
+                                                                )
                                                         ).toFixed(2) +
                                                             ' $'}{' '}
                                                     </span>
