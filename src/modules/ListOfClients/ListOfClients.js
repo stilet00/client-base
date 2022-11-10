@@ -1,14 +1,31 @@
-import { useState, useEffect } from 'react'
-import { getClients } from '../../services/clientsServices/services'
+import { useState, useEffect, useCallback } from 'react'
+import { getClients, addClient } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
+import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
+import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
 import Grid from '@mui/material/Grid'
 import '../../styles/modules/ListOfClients.css'
 import ClientsForm from './ClientsForm/ClientsForm'
+import { useClientsList } from './businessLogic'
+import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
+import moment from 'moment'
 
 export default function ListOfClients({ user }) {
     const [clients, setClients] = useState([])
     const [translators, setTranslators] = useState([])
+    const [alertInfo, setAlertInfo] = useState({
+        mainTitle: 'no message had been put',
+        status: true,
+    })
+    const { alertOpen, closeAlert, openAlert } = useAlert()
+    const {
+        clientMonthSum,
+        sortBySum,
+        getClientsRating,
+        calculateMiddleMonthSum,
+        getAllAsignedTranslators,
+    } = useClientsList(translators)
 
     useEffect(() => {
         if (user) {
@@ -30,27 +47,70 @@ export default function ListOfClients({ user }) {
         }
     }, [user])
 
-    const getClientsWithData = clients => {
-        const editedClientsWithData = clients.map(client => {
-            const editedClient = {
-                id: client._id,
-                name: client.name,
-                surname: client.surname,
-                sumAmount: '1000',
-                translators: ['Kislaya Antonina', 'Bavdis Mariana'],
-                bank: '4149 4627 2099 4043',
-                link: 'https://www.instagram.com/erudaya/',
-            }
-            return editedClient
-        })
-        return editedClientsWithData
+    const handleClientsFormSubmit = useCallback(
+        newClient => {
+            setAlertInfo({
+                ...alertInfo,
+                mainTitle: 'client had been added',
+                status: true,
+            })
+            openAlert(2000)
+            addClient(newClient).then(res => {
+                if (res.status === 200) {
+                    setClients([...clients, { ...newClient, _id: res.data }])
+                } else {
+                    console.log(res.data)
+                }
+            })
+        },
+        [clients]
+    )
+    const getSortedClientsWithCalculations = clients => {
+        const sortedClientsWithCalculations = clients
+            .sort(sortBySum)
+            .map(client => {
+                const memorizedMiddleMonthSum = calculateMiddleMonthSum(
+                    client._id
+                )
+                const memorizedPreviousMiddleMonthSum = calculateMiddleMonthSum(
+                    client._id,
+                    moment().subtract(1, 'month')
+                )
+                const memorizedMonthSum = clientMonthSum(client._id)
+                const memorizedPreviousMonthSum = clientMonthSum(
+                    client._id,
+                    moment().subtract(1, 'month')
+                )
+
+                const clientWithCalculations = {
+                    id: client._id,
+                    name: client.name,
+                    surname: client.surname,
+                    currentMonthTotalAmount: memorizedMonthSum,
+                    translators: getAllAsignedTranslators(client._id),
+                    rating: getClientsRating(client._id),
+                    bank: client.bank || 'PayPal',
+                    link:
+                        'https://www.instagram.com/' + client.link ||
+                        'https://www.instagram.com/erudaya/',
+                    previousMonthTotalAmount: memorizedPreviousMonthSum,
+                    middleMonthSum: memorizedMiddleMonthSum,
+                    prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
+                    monthProgressPercent: calculatePercentDifference(
+                        memorizedMiddleMonthSum,
+                        memorizedPreviousMiddleMonthSum
+                    ),
+                }
+                return clientWithCalculations
+            })
+        return sortedClientsWithCalculations
     }
 
     return (
         <>
             <div className={'main-container scrolled-container  animated-box'}>
                 <Grid container spacing={2}>
-                    {getClientsWithData(clients).map(client => (
+                    {getSortedClientsWithCalculations(clients).map(client => (
                         <Grid key={client.id} item xs={12} md={4} sm={6}>
                             <SingleClient key={client.id} {...client} />
                         </Grid>
@@ -58,8 +118,18 @@ export default function ListOfClients({ user }) {
                 </Grid>
             </div>
             <div className="socials button-add-container bottom-button">
-                <ClientsForm translators={translators} />
+                <ClientsForm
+                    onClientsFormSubmit={handleClientsFormSubmit}
+                    translators={translators}
+                />
             </div>
+            <AlertMessage
+                mainText={alertInfo.mainTitle}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={alertInfo.status}
+            />
         </>
     )
 }

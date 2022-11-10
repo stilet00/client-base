@@ -13,11 +13,20 @@ import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faArrowAltCircleUp,
+    faArrowAltCircleDown,
+} from '@fortawesome/free-solid-svg-icons'
 
 export default function SingleClient({
     name,
     surname,
-    sumAmount,
+    currentMonthTotalAmount,
+    previousMonthTotalAmount,
+    middleMonthSum,
+    prevousMiddleMonthSum,
+    monthProgressPercent,
     translators,
     bank,
     link,
@@ -28,7 +37,7 @@ export default function SingleClient({
         setExpanded(!expanded)
     }
     function getClientsRating() {
-        const amount = sumAmount
+        const amount = currentMonthTotalAmount
 
         return amount >= 1000
             ? 5
@@ -41,10 +50,20 @@ export default function SingleClient({
             : 1
     }
 
-    const currentMonth =
-        moment().format('MMMM').length > '5'
-            ? moment().format('MMM')
-            : moment().format('MMMM')
+    const currentMonth = moment().format('MMMM')
+    const previousMonth = moment().subtract(1, 'month').format('MMMM')
+    const progressPage =
+        middleMonthSum >= prevousMiddleMonthSum ? (
+            <span className={'green-text styled-text-numbers'}>
+                <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                {` ${monthProgressPercent} %`}
+            </span>
+        ) : (
+            <span className={'red-text styled-text-numbers'}>
+                <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                {` ${monthProgressPercent} %`}
+            </span>
+        )
 
     return (
         <Card
@@ -75,7 +94,7 @@ export default function SingleClient({
                     <span className="grid-template-container__title">
                         Total for {currentMonth}:
                     </span>
-                    <b className="styled-text-numbers grid-template-container__info">{`${sumAmount} $`}</b>
+                    <b className="styled-text-numbers grid-template-container__info">{`${currentMonthTotalAmount} $`}</b>
                 </Typography>
                 <Typography
                     variant="body2"
@@ -83,7 +102,28 @@ export default function SingleClient({
                     className="grid-template-container"
                 >
                     <span className="grid-template-container__title">
-                        bank account:
+                        Total for {previousMonth}:
+                    </span>
+                    <b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Middle for {currentMonth}:
+                    </span>
+                    {progressPage}
+                    <b className="styled-text-numbers grid-template-container__info">{`${middleMonthSum} $`}</b>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Bank account:
                     </span>
                     <span className="grid-template-container__card">
                         {bank}
@@ -95,18 +135,18 @@ export default function SingleClient({
                     className="grid-template-container"
                 >
                     <span className="grid-template-container__title">
-                        translators:
+                        Assigned translators:
                     </span>
-                    <div
+                    <span
                         className="grid-template-container__card"
                         style={{ display: 'grid' }}
                     >
                         {translators.map(translator => (
-                            <span style={{ textAlign: 'end' }}>
+                            <span key={translator} style={{ textAlign: 'end' }}>
                                 {translator}
                             </span>
                         ))}
-                    </div>
+                    </span>
                 </Typography>
             </CardContent>
             <CardActions

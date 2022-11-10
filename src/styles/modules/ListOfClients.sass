@@ -1,11 +1,12 @@
 .grid-template-container
     display: inline-grid
     width: 100%
-    grid-template-columns: 100px auto 50px   
+    grid-template-columns: auto   
     &__title
         grid-column: 1
     &__info
         grid-column: 3
+        justify-self: end
     &__card
         grid-column: 2 / 4
         text-align: end

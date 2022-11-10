@@ -264,25 +264,27 @@ app.post(clientsURL + 'add', function (req, res, next) {
     if (!req.body) {
         res.send('Ошибка при загрузке клиентки')
     } else {
-        collectionClients.insertOne(req.body, (err, result) => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.send(result?.insertedId)
-        })
+        console.log(req.body)
+        // collectionClients.insertOne(req.body, (err, result) => {
+        //     if (err) {
+        //         return res.sendStatus(500)
+        //     }
+        //     res.send(result?.insertedId)
+        // })
     }
 })
-app.delete(clientsURL + ':id', (req, res) => {
-    collectionClients.deleteOne(
-        { _id: ObjectId(req.params.id) },
-        (err, docs) => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
+// we do not delete clients 09.11.2022
+// app.delete(clientsURL + ':id', (req, res) => {
+//     collectionClients.deleteOne(
+//         { _id: ObjectId(req.params.id) },
+//         (err, docs) => {
+//             if (err) {
+//                 return res.sendStatus(500)
+//             }
+//             res.sendStatus(200)
+//         }
+//     )
+// })
 
 // translators api
 

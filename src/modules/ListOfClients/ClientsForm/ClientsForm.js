@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -17,13 +17,6 @@ import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_CLIENT } from '../../../constants/constants'
 import useModal from '../../../sharedHooks/useModal'
-import {
-    calculateBalanceDaySum,
-    getMiddleValueFromArray,
-    getSumFromArray,
-    getNumberWithHundredths,
-} from '../../../sharedFunctions/sharedFunctions'
-import moment from 'moment'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -70,19 +63,23 @@ const CssTextField = withStyles({
     },
 })(TextField)
 
-export default function ClientsForm({ translators }) {
+export default function ClientsForm({ translators, onClientsFormSubmit }) {
     const classes = useStyles()
     const [client, setClient] = useState(DEFAULT_CLIENT)
     const { handleClose, handleOpen, open } = useModal()
-    const [personName, setPersonName] = useState([])
     const [siteFilter, setSiteFilter] = useState('svadba')
     const [showPassword, setShowPassword] = useState(false)
-    const translatorsNames = translators
-        .filter(translator => !translator.suspended.status)
-        .map(translator => `${translator.name} ${translator.surname}`)
+    const [formErrors, setFormErrors] = useState({})
+    const arrayWithErrors = Object.keys(formErrors)
+    const regExpForInstagram = /[^a-zа-яё0-9]/gi
+    const regExpForCard = /[^0-9\s]/g
+    const regExpForEmail = /\S+@\S+\.\S+/
+
+    // const translatorsNames = translators
+    //     .filter(translator => !translator.suspended.status)
+    //     .map(translator => `${translator.name} ${translator.surname}`)
 
     const site = {
-        name: siteFilter === 'svadba' ? 'svadba' : 'dating',
         login:
             siteFilter === 'svadba' ? client.svadba.login : client.dating.login,
         password:
@@ -91,42 +88,93 @@ export default function ClientsForm({ translators }) {
                 : client.dating.password,
     }
 
-    const handleTranslatorsChange = event => {
-        const { value } = event.target
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value
-        )
-        setClient({ ...client, translators: personName })
+    const handleFormValidation = (values, key) => {
+        const { svadba, dating } = values
+        const errors = {}
+        const valueIsEmpy = values.length === 0
+        switch (key) {
+            case 'translators':
+                if (valueIsEmpy) {
+                    errors[key] = 'empty'
+                }
+                break
+            case 'link':
+                if (valueIsEmpy) {
+                    errors[key] = 'link is empty'
+                } else if (values[key].length < 5) {
+                    errors[key] = 'link is too short'
+                }
+                break
+            case 'bank':
+                if (valueIsEmpy) {
+                    errors[key] = 'enter credit card number'
+                } else if (values[key].length < 19) {
+                    errors[key] =
+                        'card number have to be at least 16 characters'
+                }
+                break
+            case 'svadba.login':
+                if (valueIsEmpy) {
+                    errors.login = 'enter login from top-dates'
+                } else if (svadba.login.length < 7) {
+                    errors.login = 'have to be  7 characters'
+                }
+                break
+            case 'dating.login':
+                if (valueIsEmpy) {
+                    errors.login = 'enter login for dating.com'
+                } else if (!regExpForEmail.test(dating.login)) {
+                    errors.login = 'loging for dating  have to look like email'
+                }
+                break
+            case 'dating.password' || 'svadba.password':
+                if (dating.password.length < 6) {
+                    errors.password = 'password is too short'
+                }
+                break
+            case 'svadba.password':
+                if (svadba.password.length < 6) {
+                    errors.password = 'password is too short'
+                }
+        }
+        return errors
     }
 
     const handleChange = e => {
         const { name, value } = e.target
-        console.log(name, value)
-        if (name === `${site.name}.login`) {
-            console.log('login works')
-            setClient({
+        if (name === `${siteFilter}.login`) {
+            const newState = {
                 ...client,
-                [site.name]: { ...[site.name], login: value },
-            })
-        } else if (name === `${site.name}.password`) {
-            console.log('password works ', name, site.name)
-            setClient({
+                [siteFilter]: { ...client[siteFilter], login: value },
+            }
+            setClient(newState)
+            setFormErrors(handleFormValidation(newState, name))
+        } else if (name === `${siteFilter}.password`) {
+            const newState = {
                 ...client,
-                [site.name]: { ...[site.name], password: value },
-            })
+                [siteFilter]: { ...client[siteFilter], password: value },
+            }
+            setClient(newState)
+            setFormErrors(handleFormValidation(newState, name))
         } else {
-            setClient({ ...client, [name]: value.trim() })
+            const newState = {
+                ...client,
+                [name]: value,
+            }
+            setClient(newState)
+            setFormErrors(handleFormValidation(newState, name))
         }
     }
+
     const handleRadioChange = e => {
-        console.log(e.target.value)
         setSiteFilter(e.target.value)
     }
 
     function onFormSubmit(e, client) {
         e.preventDefault()
-        console.log(client)
+        onClientsFormSubmit(client)
+        clearClient()
+        handleClose()
     }
 
     function clearClient() {
@@ -139,6 +187,35 @@ export default function ClientsForm({ translators }) {
 
     const handleMouseDownPassword = event => {
         event.preventDefault()
+    }
+
+    const handleCardNumberChange = event => {
+        const { name, value } = event.target
+        function changindValueToCardFormat(value) {
+            let arrayFromText = value.split('')
+            let textWIthoutSpaces = arrayFromText.filter(el => el !== ' ')
+            let fixedArray = textWIthoutSpaces.filter(
+                (el, index) => index % 4 === 0 && index !== 0
+            )
+            if (fixedArray.length === 1) {
+                textWIthoutSpaces.splice(4, 0, ' ')
+            } else if (fixedArray.length === 2) {
+                textWIthoutSpaces.splice(4, 0, ' ')
+                textWIthoutSpaces.splice(9, 0, ' ')
+            } else if (fixedArray.length === 3) {
+                textWIthoutSpaces.splice(4, 0, ' ')
+                textWIthoutSpaces.splice(9, 0, ' ')
+                textWIthoutSpaces.splice(14, 0, ' ')
+            }
+            return textWIthoutSpaces.join('')
+        }
+        const newState = {
+            ...client,
+            [name]: changindValueToCardFormat(value),
+        }
+        setClient(newState)
+
+        setFormErrors(handleFormValidation(newState, name))
     }
 
     return (
@@ -216,27 +293,46 @@ export default function ClientsForm({ translators }) {
                                 />
                                 <CssTextField
                                     name={'link'}
+                                    className="clients-form__body--big-field"
+                                    error={formErrors.link}
+                                    helperText={formErrors.link}
                                     onChange={handleChange}
-                                    value={client.link}
+                                    value={client.link.replace(
+                                        regExpForInstagram,
+                                        ''
+                                    )}
                                     variant="outlined"
                                     label={'instagram'}
                                     required
                                     InputProps={{
                                         startAdornment: (
-                                            <InputAdornment position="start">
-                                                <InstagramIcon />
-                                            </InputAdornment>
+                                            <>
+                                                <InputAdornment position="start">
+                                                    <InstagramIcon />
+                                                </InputAdornment>
+                                                <InputAdornment position="start">
+                                                    http://instagram.com/
+                                                </InputAdornment>
+                                            </>
                                         ),
                                     }}
                                 />
                                 <CssTextField
                                     name={'bank'}
-                                    onChange={handleChange}
-                                    type="number"
-                                    value={client.bank}
+                                    error={formErrors.bank}
+                                    helperText={formErrors.bank}
+                                    className="clients-form__body--big-field"
+                                    onChange={handleCardNumberChange}
+                                    value={client.bank.replace(
+                                        regExpForCard,
+                                        ''
+                                    )}
                                     variant="outlined"
                                     label={'card'}
                                     required
+                                    inputProps={{
+                                        maxlength: 19,
+                                    }}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -245,7 +341,8 @@ export default function ClientsForm({ translators }) {
                                         ),
                                     }}
                                 />
-                                <FormLabel className="clients-form__body--label">
+                                {/* we are not addding translators for now here 10.11.2022 */}
+                                {/* <FormLabel className="clients-form__body--label">
                                     Additional information
                                 </FormLabel>
                                 <FormControl
@@ -256,12 +353,15 @@ export default function ClientsForm({ translators }) {
                                         Translators
                                     </InputLabel>
                                     <Select
+                                        name="translators"
                                         labelId="demo-multiple-name-label"
                                         id="demo-multiple-name"
                                         label="translator"
+                                        required
+                                        error={formErrors.translators}
                                         multiple
-                                        value={personName}
-                                        onChange={handleTranslatorsChange}
+                                        value={client.translators}
+                                        onChange={handleChange}
                                         input={
                                             <OutlinedInput label="translator" />
                                         }
@@ -276,7 +376,7 @@ export default function ClientsForm({ translators }) {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                </FormControl>
+                                </FormControl> */}
                                 <FormLabel className="clients-form__body--label">
                                     Login information
                                 </FormLabel>
@@ -304,11 +404,11 @@ export default function ClientsForm({ translators }) {
                                             onChange={handleRadioChange}
                                         />
                                         <FormControlLabel
+                                            value="dating"
                                             style={{
                                                 justifySelf: 'end',
                                                 margin: '0',
                                             }}
-                                            value="dating"
                                             label="Dating"
                                             control={<Radio />}
                                             onChange={handleRadioChange}
@@ -316,12 +416,24 @@ export default function ClientsForm({ translators }) {
                                     </RadioGroup>
                                 </FormControl>
                                 <CssTextField
-                                    name={`${site.name}.login`}
+                                    name={`${siteFilter}.login`}
                                     onChange={handleChange}
+                                    type={
+                                        siteFilter === 'svadba'
+                                            ? 'number'
+                                            : 'email'
+                                    }
+                                    error={formErrors.login}
+                                    helperText={formErrors.login}
+                                    placeholder={
+                                        siteFilter === 'svadba'
+                                            ? 'Numbers only'
+                                            : 'Email like'
+                                    }
                                     value={site.login}
                                     variant="outlined"
                                     label={'Login'}
-                                    required
+                                    autoComplete="new-password"
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -336,14 +448,16 @@ export default function ClientsForm({ translators }) {
                                     </InputLabel>
                                     <OutlinedInput
                                         id="outlined-adornment-password"
-                                        name={`${site.name}.password`}
+                                        name={`${siteFilter}.password`}
                                         onChange={handleChange}
+                                        error={formErrors.password}
+                                        helperText={formErrors.password}
+                                        autoComplete="new-password"
                                         type={
                                             showPassword ? 'text' : 'password'
                                         }
                                         value={site.password}
                                         variant="outlined"
-                                        required
                                         endAdornment={
                                             <InputAdornment position="end">
                                                 <IconButton
@@ -371,6 +485,10 @@ export default function ClientsForm({ translators }) {
                             <Button
                                 type={'submit'}
                                 fullWidth
+                                disabled={
+                                    Object.values(client).includes('') ||
+                                    arrayWithErrors.length !== 0
+                                }
                                 variant={'outlined'}
                                 style={{ marginTop: '10px' }}
                             >
