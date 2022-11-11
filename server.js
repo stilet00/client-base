@@ -28,7 +28,7 @@ const {
     financeStatementsURL,
     tasksURL,
 } = require('./src/api/routes/routes')
-const { threeDaysTimeIntervalInMiliseconds } = require('./src/api/constants')
+const { twentyHoursInMiliseconds } = require('./src/api/constants')
 
 const PORT = process.env.PORT || 80
 
@@ -172,7 +172,7 @@ app.put(tasksURL + 'notifications/', (req, res) => {
     if (taskNotificationsAreAllowed) {
         outdatedTaskNotificationsInterval = setInterval(
             taskNotificationsMailout,
-            threeDaysTimeIntervalInMiliseconds
+            twentyHoursInMiliseconds
         )
     }
     if (!taskNotificationsAreAllowed) {
@@ -418,7 +418,7 @@ client.connect(function (err) {
             )
             outdatedTaskNotificationsInterval = setInterval(
                 taskNotificationsMailout,
-                threeDaysTimeIntervalInMiliseconds
+                twentyHoursInMiliseconds
             )
         }
     })
