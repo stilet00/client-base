@@ -50,8 +50,14 @@ export default function SingleClient({
             : 1
     }
 
-    const currentMonth = moment().format('MMMM')
-    const previousMonth = moment().subtract(1, 'month').format('MMMM')
+    const currentMonth =
+        moment().format('MMMM').length > '5'
+            ? moment().format('MMM')
+            : moment().format('MMMM')
+    const previousMonth =
+        moment().subtract(1, 'month').format('MMMM').length > '5'
+            ? moment().subtract(1, 'month').format('MMM')
+            : moment().subtract(1, 'month').format('MMMM')
     const progressPage =
         middleMonthSum >= prevousMiddleMonthSum ? (
             <span className={'green-text styled-text-numbers'}>
