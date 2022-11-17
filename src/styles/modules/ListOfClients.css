@@ -9,6 +9,7 @@
 .grid-template-container__title {
   -ms-grid-column: 1;
   grid-column: 1;
+  overflow-x: auto;
 }
 
 .grid-template-container__info {
@@ -23,5 +24,19 @@
   -ms-grid-column-span: 2;
   grid-column: 2 / 4;
   text-align: end;
+}
+
+.list-item__menu-button {
+  position: relative;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  -webkit-transition: 1s;
+  transition: 1s;
+}
+
+.list-item__menu-button .menu-button_delete {
+  position: absolute;
+  top: 30px;
+  right: 5px;
 }
 /*# sourceMappingURL=ListOfClients.css.map */

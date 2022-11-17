@@ -288,6 +288,37 @@ app.post(clientsURL + 'add', function (req, res, next) {
 
 // translators api
 
+app.put(clientsURL + ':id', (req, res) => {
+    collectionClients.updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+            $set: {
+                name: req.body.name,
+                surname: req.body.surname,
+                bankAccount: req.body.bankAccount,
+                instagramLink: req.body.instagramLink,
+                suspended: req.body.suspended,
+                svadba: {
+                    login: req.body.svadba.login,
+                    password: req.body.svadba.password,
+                },
+                dating: {
+                    login: req.body.dating.login,
+                    password: req.body.dating.password,
+                },
+            },
+        },
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            const message = 'Переводчик сохранен'
+            console.log(message)
+            res.send(message)
+        }
+    )
+})
+
 app.get(translatorsURL + 'get', (req, res) => {
     collectionTranslators.find().toArray((err, docs) => {
         if (err) {

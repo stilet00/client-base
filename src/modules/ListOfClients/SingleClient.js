@@ -13,6 +13,11 @@ import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import IconButton from '@mui/material/IconButton'
+import MenuSharpIcon from '@mui/icons-material/MenuSharp'
+import Button from '@mui/material/Button'
+import EditIcon from '@mui/icons-material/Edit'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faArrowAltCircleUp,
@@ -20,6 +25,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 export default function SingleClient({
+    _id,
     name,
     surname,
     currentMonthTotalAmount,
@@ -28,24 +34,25 @@ export default function SingleClient({
     prevousMiddleMonthSum,
     monthProgressPercent,
     translators,
-    bank,
-    link,
+    bankAccount,
+    instagramLink,
+    handleUpdatingClientsId,
+    svadba,
+    dating,
 }) {
     const [expanded, setExpanded] = useState(false)
-
+    const [displayMenu, setDisplayMenu] = useState(false)
     const handleChange = e => {
         setExpanded(!expanded)
     }
     function getClientsRating() {
-        const amount = currentMonthTotalAmount
-
-        return amount >= 1000
+        return middleMonthSum >= 100
             ? 5
-            : amount >= 75
+            : middleMonthSum >= 75
             ? 4
-            : amount >= 50
+            : middleMonthSum >= 50
             ? 3
-            : amount >= 30
+            : middleMonthSum >= 30
             ? 2
             : 1
     }
@@ -87,7 +94,32 @@ export default function SingleClient({
                         size="small"
                     />
                 }
+                action={
+                    <ClickAwayListener
+                        onClickAway={() => setDisplayMenu(false)}
+                    >
+                        <IconButton
+                            onClick={() => setDisplayMenu(!displayMenu)}
+                            className="list-item__menu-button"
+                        >
+                            <MenuSharpIcon />
+                            {displayMenu ? (
+                                <Button
+                                    className="menu-button_delete"
+                                    variant="contained"
+                                    aria-label="delete"
+                                    size="small"
+                                    startIcon={<EditIcon />}
+                                    onClick={() => handleUpdatingClientsId(_id)}
+                                >
+                                    Edit
+                                </Button>
+                            ) : null}
+                        </IconButton>
+                    </ClickAwayListener>
+                }
             />
+
             <CardContent>
                 <Typography variant="h5" component="div">
                     {`${name} ${surname}`}
@@ -132,7 +164,7 @@ export default function SingleClient({
                         Bank account:
                     </span>
                     <span className="grid-template-container__card">
-                        {bank}
+                        {bankAccount}
                     </span>
                 </Typography>
                 <Typography
@@ -156,10 +188,17 @@ export default function SingleClient({
                 </Typography>
             </CardContent>
             <CardActions
-                style={{ display: 'grid', gridTemplateColumns: '40px auto' }}
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: '40px auto',
+                }}
             >
                 <Typography align={'left'}>
-                    <Link variant="button" href={link} underline="none">
+                    <Link
+                        variant="button"
+                        href={instagramLink}
+                        underline="none"
+                    >
                         <InstagramIcon
                             fontSize="large"
                             sx={{ color: red[400] }}
@@ -177,7 +216,7 @@ export default function SingleClient({
                         id="panel1bh-header"
                     >
                         <Typography sx={{ flexShrink: 0 }}>
-                            Passwords
+                            Sites Access
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -187,10 +226,22 @@ export default function SingleClient({
                             className="grid-template-container"
                         >
                             <span className="grid-template-container__title">
-                                Svadba.com:
+                                Login: {svadba.login}
                             </span>
                             <span className="grid-template-container__card">
-                                P@42DC2B
+                                password: {svadba.password}
+                            </span>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Login: {dating.login}
+                            </span>
+                            <span className="grid-template-container__card">
+                                password: {dating.password}
                             </span>
                         </Typography>
                     </AccordionDetails>

@@ -14,3 +14,7 @@ export function addClient(client) {
 export function removeClient(id) {
     return axios.delete(clientsURL + id)
 }
+
+export function updateClient(editedClient) {
+    return axios.put(clientsURL + editedClient._id, editedClient)
+}

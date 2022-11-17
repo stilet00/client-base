@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getClients, addClient } from '../../services/clientsServices/services'
+import {
+    getClients,
+    addClient,
+    updateClient,
+} from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
@@ -10,10 +14,17 @@ import ClientsForm from './ClientsForm/ClientsForm'
 import { useClientsList } from './businessLogic'
 import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
+import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import useModal from '../../sharedHooks/useModal'
+import Button from '@material-ui/core/Button'
+import { faVenus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function ListOfClients({ user }) {
     const [clients, setClients] = useState([])
     const [translators, setTranslators] = useState([])
+    const [updatingClient, setUpdatingClient] = useState({})
+    const { handleClose, handleOpen, open } = useModal()
     const [alertInfo, setAlertInfo] = useState({
         mainTitle: 'no message had been put',
         status: true,
@@ -47,24 +58,108 @@ export default function ListOfClients({ user }) {
         }
     }, [user])
 
-    const handleClientsFormSubmit = useCallback(
+    const getUpdatingClient = _id => {
+        const clientWithID = clients.find(client => client._id === _id)
+        const clientWithFieldsForForm = {
+            _id: clientWithID._id,
+            name: clientWithID.name,
+            surname: clientWithID.surname,
+            bankAccount: clientWithID.bankAccount || 'PayPal',
+            svadba: {
+                login: clientWithID.svadba?.login || '',
+                password: clientWithID.svadba?.password || '',
+            },
+            dating: {
+                login: clientWithID.dating?.login || '',
+                password: clientWithID.dating?.password || '',
+            },
+            instagramLink: clientWithID.instagramLink || '',
+        }
+        setUpdatingClient(clientWithFieldsForForm)
+        handleOpen()
+    }
+
+    const clearEditedClient = () => {
+        setUpdatingClient({})
+    }
+
+    const editClientData = useCallback(
+        editedClient => {
+            updateClient(editedClient)
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log(
+                            'clients date had been successfully updated'
+                        )
+                        const message =
+                            'clients date had been successfully updated'
+                        setAlertInfo({
+                            ...alertInfo,
+                            mainTitle: message,
+                            status: true,
+                        })
+                        setClients(
+                            clients.map(item => {
+                                return item._id === editedClient._id
+                                    ? editedClient
+                                    : item
+                            })
+                        )
+                        openAlert(2000)
+                    } else {
+                        console.log(res.data)
+                    }
+                })
+                .catch(err => {
+                    const message = err.message
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert()
+                })
+        },
+        [clients, alertInfo, openAlert]
+    )
+
+    const addNewClient = useCallback(
         newClient => {
+            const message = 'clients date had been added'
             setAlertInfo({
                 ...alertInfo,
-                mainTitle: 'client had been added',
+                mainTitle: message,
                 status: true,
             })
             openAlert(2000)
-            addClient(newClient).then(res => {
-                if (res.status === 200) {
-                    setClients([...clients, { ...newClient, _id: res.data }])
-                } else {
-                    console.log(res.data)
-                }
-            })
+            addClient(newClient)
+                .then(res => {
+                    if (res.status === 200) {
+                        setClients([
+                            ...clients,
+                            { ...newClient, _id: res.data },
+                        ])
+                        setAlertInfo({
+                            ...alertInfo,
+                            mainTitle: 'client had been added',
+                            status: true,
+                        })
+                        openAlert(2000)
+                    }
+                })
+                .catch(err => {
+                    const message = err.message
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert(5000)
+                })
         },
-        [clients]
+        [clients, alertInfo, openAlert]
     )
+
     const getSortedClientsWithCalculations = clients => {
         const sortedClientsWithCalculations = clients
             .sort(sortBySum)
@@ -81,18 +176,25 @@ export default function ListOfClients({ user }) {
                     client._id,
                     moment().subtract(1, 'month')
                 )
-
                 const clientWithCalculations = {
-                    id: client._id,
+                    _id: client._id,
                     name: client.name,
                     surname: client.surname,
                     currentMonthTotalAmount: memorizedMonthSum,
                     translators: getAllAsignedTranslators(client._id),
                     rating: getClientsRating(client._id),
-                    bank: client.bank || 'PayPal',
-                    link:
-                        'https://www.instagram.com/' + client.link ||
-                        'https://www.instagram.com/erudaya/',
+                    bankAccount: client.bankAccount || 'PayPal',
+                    svadba: {
+                        login: client.svadba?.login || '',
+                        password: client.svadba?.password || '',
+                    },
+                    dating: {
+                        login: client.dating?.login || '',
+                        password: client.dating?.password || '',
+                    },
+                    instagramLink:
+                        'https://www.instagram.com/' + client.instagramLink ||
+                        'https://www.instagram.com/',
                     previousMonthTotalAmount: memorizedPreviousMonthSum,
                     middleMonthSum: memorizedMiddleMonthSum,
                     prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
@@ -106,21 +208,37 @@ export default function ListOfClients({ user }) {
         return sortedClientsWithCalculations
     }
 
-    return (
+    return user ? (
         <>
             <div className={'main-container scrolled-container  animated-box'}>
                 <Grid container spacing={2}>
                     {getSortedClientsWithCalculations(clients).map(client => (
-                        <Grid key={client.id} item xs={12} md={4} sm={6}>
-                            <SingleClient key={client.id} {...client} />
+                        <Grid key={client._id} item xs={12} md={4} sm={6}>
+                            <SingleClient
+                                key={client._id}
+                                {...client}
+                                handleUpdatingClientsId={getUpdatingClient}
+                            />
                         </Grid>
                     ))}
                 </Grid>
             </div>
             <div className="socials button-add-container bottom-button">
+                <Button
+                    type="button"
+                    onClick={handleOpen}
+                    fullWidth
+                    startIcon={<FontAwesomeIcon icon={faVenus} />}
+                >
+                    Add client
+                </Button>
                 <ClientsForm
-                    onClientsFormSubmit={handleClientsFormSubmit}
-                    translators={translators}
+                    editedClient={updatingClient}
+                    onAddNewClient={addNewClient}
+                    onEditClientData={editClientData}
+                    handleClose={handleClose}
+                    clearEditedClient={clearEditedClient}
+                    open={open}
                 />
             </div>
             <AlertMessage
@@ -131,5 +249,7 @@ export default function ListOfClients({ user }) {
                 status={alertInfo.status}
             />
         </>
+    ) : (
+        <Unauthorized />
     )
 }

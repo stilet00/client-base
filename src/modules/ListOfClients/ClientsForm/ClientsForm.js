@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -13,10 +13,7 @@ import InstagramIcon from '@mui/icons-material/Instagram'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import '../../../styles/modules/ClientsForm.css'
-import { faVenus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_CLIENT } from '../../../constants/constants'
-import useModal from '../../../sharedHooks/useModal'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -28,17 +25,17 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-}
+// needed for translators
+// const ITEM_HEIGHT = 48
+// const ITEM_PADDING_TOP = 8
+// const MenuProps = {
+//     PaperProps: {
+//         style: {
+//             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//             width: 250,
+//         },
+//     },
+// }
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -63,21 +60,33 @@ const CssTextField = withStyles({
     },
 })(TextField)
 
-export default function ClientsForm({ translators, onClientsFormSubmit }) {
+export default function ClientsForm({
+    editedClient,
+    onAddNewClient,
+    onEditClientData,
+    clearEditedClient,
+    handleClose,
+    open,
+}) {
     const classes = useStyles()
     const [client, setClient] = useState(DEFAULT_CLIENT)
-    const { handleClose, handleOpen, open } = useModal()
     const [siteFilter, setSiteFilter] = useState('svadba')
     const [showPassword, setShowPassword] = useState(false)
     const [formErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(formErrors)
-    const regExpForInstagram = /[^a-zа-яё0-9]/gi
+    const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
     const regExpForCard = /[^0-9\s]/g
     const regExpForEmail = /\S+@\S+\.\S+/
 
     // const translatorsNames = translators
     //     .filter(translator => !translator.suspended.status)
     //     .map(translator => `${translator.name} ${translator.surname}`)
+
+    useEffect(() => {
+        if (Object.keys(editedClient).length > 0) {
+            setClient(editedClient)
+        }
+    }, [editedClient])
 
     const site = {
         login:
@@ -98,14 +107,14 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
                     errors[key] = 'empty'
                 }
                 break
-            case 'link':
+            case 'instagramLink':
                 if (valueIsEmpy) {
-                    errors[key] = 'link is empty'
+                    errors[key] = 'instagram link is empty'
                 } else if (values[key].length < 5) {
-                    errors[key] = 'link is too short'
+                    errors[key] = 'instagram link is too short'
                 }
                 break
-            case 'bank':
+            case 'bankAccount':
                 if (valueIsEmpy) {
                     errors[key] = 'enter credit card number'
                 } else if (values[key].length < 19) {
@@ -172,7 +181,12 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
 
     function onFormSubmit(e, client) {
         e.preventDefault()
-        onClientsFormSubmit(client)
+        if (Object.keys(editedClient).length > 0) {
+            onEditClientData(client)
+            clearEditedClient()
+        } else {
+            onAddNewClient(client)
+        }
         clearClient()
         handleClose()
     }
@@ -220,22 +234,17 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
 
     return (
         <>
-            <Button
-                type="button"
-                onClick={handleOpen}
-                fullWidth
-                startIcon={<FontAwesomeIcon icon={faVenus} />}
-                className="translators-container__menu-button"
-            >
-                Add client
-            </Button>
             <Modal
                 disableEnforceFocus
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+                onClose={e => {
+                    handleClose()
+                    clearEditedClient()
+                    clearClient()
+                }}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -292,12 +301,12 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
                                     }}
                                 />
                                 <CssTextField
-                                    name={'link'}
+                                    name={'instagramLink'}
                                     className="clients-form__body--big-field"
-                                    error={formErrors.link}
-                                    helperText={formErrors.link}
+                                    error={formErrors.instagramLink}
+                                    helperText={formErrors.instagramLink}
                                     onChange={handleChange}
-                                    value={client.link.replace(
+                                    value={client.instagramLink.replace(
                                         regExpForInstagram,
                                         ''
                                     )}
@@ -318,20 +327,19 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
                                     }}
                                 />
                                 <CssTextField
-                                    name={'bank'}
-                                    error={formErrors.bank}
-                                    helperText={formErrors.bank}
+                                    name={'bankAccount'}
+                                    error={formErrors.bankAccount}
+                                    helperText={formErrors.bankAccount}
                                     className="clients-form__body--big-field"
                                     onChange={handleCardNumberChange}
-                                    value={client.bank.replace(
+                                    value={client.bankAccount.replace(
                                         regExpForCard,
                                         ''
                                     )}
                                     variant="outlined"
                                     label={'card'}
-                                    required
                                     inputProps={{
-                                        maxlength: 19,
+                                        maxLength: 19,
                                     }}
                                     InputProps={{
                                         startAdornment: (
@@ -451,7 +459,6 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
                                         name={`${siteFilter}.password`}
                                         onChange={handleChange}
                                         error={formErrors.password}
-                                        helperText={formErrors.password}
                                         autoComplete="new-password"
                                         type={
                                             showPassword ? 'text' : 'password'
@@ -482,18 +489,33 @@ export default function ClientsForm({ translators, onClientsFormSubmit }) {
                                     />
                                 </FormControl>
                             </div>
-                            <Button
-                                type={'submit'}
-                                fullWidth
-                                disabled={
-                                    Object.values(client).includes('') ||
-                                    arrayWithErrors.length !== 0
-                                }
-                                variant={'outlined'}
-                                style={{ marginTop: '10px' }}
-                            >
-                                Add client
-                            </Button>
+                            {Object.keys(editedClient).length > 0 ? (
+                                <Button
+                                    type={'submit'}
+                                    fullWidth
+                                    disabled={
+                                        Object.values(client).includes('') ||
+                                        arrayWithErrors.length !== 0
+                                    }
+                                    variant={'outlined'}
+                                    style={{ marginTop: '10px' }}
+                                >
+                                    Edit client
+                                </Button>
+                            ) : (
+                                <Button
+                                    type={'submit'}
+                                    fullWidth
+                                    disabled={
+                                        Object.values(client).includes('') ||
+                                        arrayWithErrors.length !== 0
+                                    }
+                                    variant={'outlined'}
+                                    style={{ marginTop: '10px' }}
+                                >
+                                    Add client
+                                </Button>
+                            )}
                         </form>
                     </div>
                 </Fade>
