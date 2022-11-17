@@ -231,10 +231,10 @@ export default function SingleClient({
                             className="grid-template-container"
                         >
                             <span className="grid-template-container__title">
-                                Login: {svadba.login}
+                                Logins:
                             </span>
                             <span className="grid-template-container__card">
-                                password: {svadba.password}
+                                Passwords:
                             </span>
                         </Typography>
                         <Typography
@@ -243,10 +243,22 @@ export default function SingleClient({
                             className="grid-template-container"
                         >
                             <span className="grid-template-container__title">
-                                Login: {dating.login}
+                                {svadba.login}
                             </span>
                             <span className="grid-template-container__card">
-                                password: {dating.password}
+                                {svadba.password}
+                            </span>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                {dating.login}
+                            </span>
+                            <span className="grid-template-container__card">
+                                {dating.password}
                             </span>
                         </Typography>
                     </AccordionDetails>
