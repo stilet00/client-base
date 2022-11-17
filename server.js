@@ -264,13 +264,12 @@ app.post(clientsURL + 'add', function (req, res, next) {
     if (!req.body) {
         res.send('Ошибка при загрузке клиентки')
     } else {
-        console.log(req.body)
-        // collectionClients.insertOne(req.body, (err, result) => {
-        //     if (err) {
-        //         return res.sendStatus(500)
-        //     }
-        //     res.send(result?.insertedId)
-        // })
+        collectionClients.insertOne(req.body, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.send(result?.insertedId)
+        })
     }
 })
 // we do not delete clients 09.11.2022
