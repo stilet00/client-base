@@ -19,11 +19,14 @@ import useModal from '../../sharedHooks/useModal'
 import Button from '@material-ui/core/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Loader from '../../sharedComponents/Loader/Loader'
 
 export default function ListOfClients({ user }) {
     const [clients, setClients] = useState([])
+    const [loading, setLoading] = useState(true)
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
+    const [search, setSearch] = useState('')
     const { handleClose, handleOpen, open } = useModal()
     const [alertInfo, setAlertInfo] = useState({
         mainTitle: 'no message had been put',
@@ -40,21 +43,40 @@ export default function ListOfClients({ user }) {
 
     useEffect(() => {
         if (user) {
-            getTranslators().then(res => {
-                if (res.status === 200) {
-                    setTranslators(res.data)
-                } else {
-                    console.log('No translators')
-                }
-            })
+            getTranslators()
+                .then(res => {
+                    if (res.status === 200) {
+                        setLoading(false)
+                        setTranslators(res.data)
+                    }
+                })
+                .catch(err => {
+                    const message = err.message
+                    setLoading(false)
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert(5000)
+                })
 
-            getClients().then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                } else {
-                    console.log('No clients')
-                }
-            })
+            getClients()
+                .then(res => {
+                    if (res.status === 200) {
+                        setClients(res.data)
+                    }
+                })
+                .catch(err => {
+                    const message = err.message
+                    setLoading(false)
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert(5000)
+                })
         }
     }, [user])
 
@@ -160,56 +182,83 @@ export default function ListOfClients({ user }) {
         [clients, alertInfo, openAlert]
     )
 
-    const getSortedClientsWithCalculations = clients => {
-        const sortedClientsWithCalculations = clients
-            .sort(sortBySum)
-            .map(client => {
-                const memorizedMiddleMonthSum = calculateMiddleMonthSum(
-                    client._id
-                )
-                const memorizedPreviousMiddleMonthSum = calculateMiddleMonthSum(
-                    client._id,
-                    moment().subtract(1, 'month')
-                )
-                const memorizedMonthSum = clientMonthSum(client._id)
-                const memorizedPreviousMonthSum = clientMonthSum(
-                    client._id,
-                    moment().subtract(1, 'month')
-                )
-                const clientWithCalculations = {
-                    _id: client._id,
-                    name: client.name,
-                    surname: client.surname,
-                    currentMonthTotalAmount: memorizedMonthSum,
-                    translators: getAllAsignedTranslators(client._id),
-                    rating: getClientsRating(client._id),
-                    bankAccount: client.bankAccount || 'PayPal',
-                    svadba: {
-                        login: client.svadba?.login || '',
-                        password: client.svadba?.password || '',
-                    },
-                    dating: {
-                        login: client.dating?.login || '',
-                        password: client.dating?.password || '',
-                    },
-                    instagramLink:
-                        'https://www.instagram.com/' + client.instagramLink ||
-                        'https://www.instagram.com/',
-                    previousMonthTotalAmount: memorizedPreviousMonthSum,
-                    middleMonthSum: memorizedMiddleMonthSum,
-                    prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
-                    monthProgressPercent: calculatePercentDifference(
-                        memorizedMiddleMonthSum,
-                        memorizedPreviousMiddleMonthSum
-                    ),
-                }
-                return clientWithCalculations
-            })
-        return sortedClientsWithCalculations
+    const getSortedClientsWithCalculations = useCallback(
+        clients => {
+            const sortedClientsWithCalculations = clients
+                .sort(sortBySum)
+                .map(client => {
+                    const memorizedMiddleMonthSum = calculateMiddleMonthSum(
+                        client._id
+                    )
+                    const memorizedPreviousMiddleMonthSum =
+                        calculateMiddleMonthSum(
+                            client._id,
+                            moment().subtract(1, 'month')
+                        )
+                    const memorizedMonthSum = clientMonthSum(client._id)
+                    const memorizedPreviousMonthSum = clientMonthSum(
+                        client._id,
+                        moment().subtract(1, 'month')
+                    )
+                    const clientWithCalculations = {
+                        _id: client._id,
+                        name: client.name,
+                        surname: client.surname,
+                        currentMonthTotalAmount: memorizedMonthSum,
+                        translators: getAllAsignedTranslators(client._id),
+                        rating: getClientsRating(client._id),
+                        bankAccount: client.bankAccount || 'PayPal',
+                        svadba: {
+                            login: client.svadba?.login || '',
+                            password: client.svadba?.password || '',
+                        },
+                        dating: {
+                            login: client.dating?.login || '',
+                            password: client.dating?.password || '',
+                        },
+                        instagramLink:
+                            'https://www.instagram.com/' +
+                                client.instagramLink ||
+                            'https://www.instagram.com/',
+                        previousMonthTotalAmount: memorizedPreviousMonthSum,
+                        middleMonthSum: memorizedMiddleMonthSum,
+                        prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
+                        monthProgressPercent: calculatePercentDifference(
+                            memorizedMiddleMonthSum,
+                            memorizedPreviousMiddleMonthSum
+                        ),
+                    }
+                    return clientWithCalculations
+                })
+            return sortedClientsWithCalculations.filter(client =>
+                `${client.name} ${client.surname}`
+                    .toLowerCase()
+                    .includes(search)
+            )
+        },
+        [
+            clients,
+            search,
+            calculateMiddleMonthSum(),
+            clientMonthSum(),
+            getAllAsignedTranslators(),
+            getClientsRating(),
+        ]
+    )
+
+    function onSearchChange(e) {
+        setSearch(e.target.value.toLowerCase())
     }
 
-    return user ? (
+    return user && !loading ? (
         <>
+            <input
+                className="search-input"
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={onSearchChange}
+            ></input>
             <div className={'main-container scrolled-container  animated-box'}>
                 <Grid container spacing={2}>
                     {getSortedClientsWithCalculations(clients).map(client => (
@@ -249,6 +298,10 @@ export default function ListOfClients({ user }) {
                 status={alertInfo.status}
             />
         </>
+    ) : user && loading ? (
+        <div className={'main-container scrolled-container  animated-box'}>
+            <Loader />
+        </div>
     ) : (
         <Unauthorized />
     )

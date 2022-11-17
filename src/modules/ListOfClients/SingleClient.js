@@ -193,7 +193,12 @@ export default function SingleClient({
                     gridTemplateColumns: '40px auto',
                 }}
             >
-                <Typography align={'left'}>
+                <Typography
+                    align={'left'}
+                    style={{
+                        alignSelf: 'end',
+                    }}
+                >
                     <Link
                         variant="button"
                         href={instagramLink}
