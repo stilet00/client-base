@@ -15,6 +15,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import IconButton from '@mui/material/IconButton'
 import MenuSharpIcon from '@mui/icons-material/MenuSharp'
+import QueryStatsIcon from '@mui/icons-material/QueryStats'
 import Button from '@mui/material/Button'
 import EditIcon from '@mui/icons-material/Edit'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
@@ -39,6 +40,7 @@ export default function SingleClient({
     handleUpdatingClientsId,
     svadba,
     dating,
+    handleSwitchToGraph,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
@@ -65,18 +67,30 @@ export default function SingleClient({
         moment().subtract(1, 'month').format('MMMM').length > '5'
             ? moment().subtract(1, 'month').format('MMM')
             : moment().subtract(1, 'month').format('MMMM')
-    const progressPage =
-        middleMonthSum >= prevousMiddleMonthSum ? (
-            <span className={'green-text styled-text-numbers'}>
+    const progressPage = (
+        <span
+            className={
+                middleMonthSum >= prevousMiddleMonthSum
+                    ? 'green-text styled-text-numbers'
+                    : 'red-text styled-text-numbers'
+            }
+        >
+            <IconButton
+                color="primary"
+                variant="contained"
+                size="small"
+                onClick={() => handleSwitchToGraph(_id)}
+            >
+                <QueryStatsIcon fontSize="small" />
+            </IconButton>
+            {middleMonthSum >= prevousMiddleMonthSum ? (
                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${monthProgressPercent} %`}
-            </span>
-        ) : (
-            <span className={'red-text styled-text-numbers'}>
+            ) : (
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${monthProgressPercent} %`}
-            </span>
-        )
+            )}
+            {` ${monthProgressPercent} %`}
+        </span>
+    )
 
     return (
         <Card
@@ -104,16 +118,19 @@ export default function SingleClient({
                         >
                             <MenuSharpIcon />
                             {displayMenu ? (
-                                <Button
-                                    className="menu-button_delete"
-                                    variant="contained"
-                                    aria-label="delete"
-                                    size="small"
-                                    startIcon={<EditIcon />}
-                                    onClick={() => handleUpdatingClientsId(_id)}
-                                >
-                                    Edit
-                                </Button>
+                                <div className="list-item__menu-button__content-holder">
+                                    <Button
+                                        variant="contained"
+                                        aria-label="delete"
+                                        size="small"
+                                        startIcon={<EditIcon />}
+                                        onClick={() =>
+                                            handleUpdatingClientsId(_id)
+                                        }
+                                    >
+                                        Edit
+                                    </Button>
+                                </div>
                             ) : null}
                         </IconButton>
                     </ClickAwayListener>

@@ -8,6 +8,7 @@ import { getTranslators } from '../../services/translatorsServices/services'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
+import ClientsChartsContainer from './ClientsCharts/ClientsChartContainer'
 import Grid from '@mui/material/Grid'
 import '../../styles/modules/ListOfClients.css'
 import ClientsForm from './ClientsForm/ClientsForm'
@@ -22,7 +23,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
 
 export default function ListOfClients({ user }) {
+    const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
+    const [graphData, setGraphData] = useState([])
     const [loading, setLoading] = useState(true)
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
@@ -39,6 +42,7 @@ export default function ListOfClients({ user }) {
         getClientsRating,
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
+        getArrayOfBalancePerDay,
     } = useClientsList(translators)
 
     useEffect(() => {
@@ -110,11 +114,7 @@ export default function ListOfClients({ user }) {
             updateClient(editedClient)
                 .then(res => {
                     if (res.status === 200) {
-                        console.log(
-                            'clients date had been successfully updated'
-                        )
-                        const message =
-                            'clients date had been successfully updated'
+                        const message = 'Client had been successfully updated'
                         setAlertInfo({
                             ...alertInfo,
                             mainTitle: message,
@@ -246,20 +246,39 @@ export default function ListOfClients({ user }) {
         ]
     )
 
+    const closeGraph = () => {
+        setShowGraph(false)
+    }
+
+    const switchToGraph = id => {
+        const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id)
+        setGraphData(pickedClientSumsPerMonth)
+        setShowGraph(true)
+    }
+
     function onSearchChange(e) {
         setSearch(e.target.value.toLowerCase())
     }
 
     return user && !loading ? (
         <>
-            <input
-                className="search-input"
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={onSearchChange}
-            ></input>
+            <div>
+                <input
+                    className="top-menu-button"
+                    type="text"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={onSearchChange}
+                ></input>
+            </div>
             <div className={'main-container scrolled-container  animated-box'}>
+                <ClientsChartsContainer
+                    user={user}
+                    values={graphData}
+                    open={showGraph}
+                    handleClose={closeGraph}
+                />
+
                 <Grid container spacing={2}>
                     {getSortedClientsWithCalculations(clients).map(client => (
                         <Grid key={client._id} item xs={12} md={4} sm={6}>
@@ -267,6 +286,7 @@ export default function ListOfClients({ user }) {
                                 key={client._id}
                                 {...client}
                                 handleUpdatingClientsId={getUpdatingClient}
+                                handleSwitchToGraph={switchToGraph}
                             />
                         </Grid>
                     ))}

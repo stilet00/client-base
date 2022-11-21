@@ -151,12 +151,55 @@ export const useClientsList = translators => {
             ? 1
             : 0
     }
+    function getArrayOfBalancePerDay(clientId, date = moment()) {
+        let monthSumArray = []
 
+        translators.forEach(translator => {
+            const thisYearStat = translator.statistics.find(
+                year => year.year === date.format('YYYY')
+            )
+
+            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+
+            thisMonthStat.forEach((day, index) => {
+                if (index === 0 || index < moment().format('D')) {
+                    const clientBalanceDay = day.clients.find(
+                        client => client.id === clientId
+                    )
+
+                    if (clientBalanceDay) {
+                        if (typeof monthSumArray[index] === 'undefined') {
+                            const dayArray = []
+                            monthSumArray[index] = [
+                                ...dayArray,
+                                getNumberWithHundredths(
+                                    calculateBalanceDaySum(clientBalanceDay)
+                                ),
+                            ]
+                        } else {
+                            monthSumArray[index] = [
+                                ...monthSumArray[index],
+                                getNumberWithHundredths(
+                                    calculateBalanceDaySum(clientBalanceDay)
+                                ),
+                            ]
+                        }
+                    }
+                }
+            })
+        })
+        monthSumArray = monthSumArray.map(day =>
+            Math.round(getSumFromArray(day))
+        )
+
+        return monthSumArray
+    }
     return {
         clientMonthSum,
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
+        getArrayOfBalancePerDay,
     }
 }
