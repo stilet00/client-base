@@ -51,4 +51,10 @@ p {
   border-bottom-left-radius: 5px;
   padding: 10px;
 }
+
+@media (max-width: 500px) {
+  .hide-on-mobile-portrait {
+    display: none;
+  }
+}
 /*# sourceMappingURL=SingleChart.css.map */

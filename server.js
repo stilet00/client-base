@@ -272,19 +272,51 @@ app.post(clientsURL + 'add', function (req, res, next) {
         })
     }
 })
-app.delete(clientsURL + ':id', (req, res) => {
-    collectionClients.deleteOne(
+// we do not delete clients 09.11.2022
+// app.delete(clientsURL + ':id', (req, res) => {
+//     collectionClients.deleteOne(
+//         { _id: ObjectId(req.params.id) },
+//         (err, docs) => {
+//             if (err) {
+//                 return res.sendStatus(500)
+//             }
+//             res.sendStatus(200)
+//         }
+//     )
+// })
+
+// translators api
+
+app.put(clientsURL + ':id', (req, res) => {
+    collectionClients.updateOne(
         { _id: ObjectId(req.params.id) },
-        (err, docs) => {
+        {
+            $set: {
+                name: req.body.name,
+                surname: req.body.surname,
+                bankAccount: req.body.bankAccount,
+                instagramLink: req.body.instagramLink,
+                suspended: req.body.suspended,
+                svadba: {
+                    login: req.body.svadba.login,
+                    password: req.body.svadba.password,
+                },
+                dating: {
+                    login: req.body.dating.login,
+                    password: req.body.dating.password,
+                },
+            },
+        },
+        err => {
             if (err) {
                 return res.sendStatus(500)
             }
-            res.sendStatus(200)
+            const message = 'Переводчик сохранен'
+            console.log(message)
+            res.send(message)
         }
     )
 })
-
-// translators api
 
 app.get(translatorsURL + 'get', (req, res) => {
     collectionTranslators.find().toArray((err, docs) => {
