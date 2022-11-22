@@ -15,12 +15,12 @@ export default function ClientsChartsContainer({
 }) {
     const { months } = useChartsContainer(user)
     const [arrayWithAmounts, setArrayWithAmounts] = useState([])
+
     useEffect(() => {
-        if (months.length > 0 && moment().format('DD') < 31) {
-            setArrayWithAmounts(values.slice(0, values.length - 1))
-        }
+        setArrayWithAmounts(values)
     }, [months, values])
 
+    console.log(months)
     return (
         <Modal
             open={open}

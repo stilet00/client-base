@@ -2,6 +2,7 @@ import React from 'react'
 import { Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
 import moment from 'moment'
+import { getSumFromArray } from '../../../sharedFunctions/sharedFunctions'
 
 export default function SingleChart({ graph, previousMonth, values }) {
     let dataSets = [
@@ -92,19 +93,13 @@ export default function SingleChart({ graph, previousMonth, values }) {
         <div className={'single-chart hide-on-mobile-portrait'}>
             <Line data={data} options={options} />
             <div className="total-sum">
-                <p className={'total-text'}>{`Total: ${values
-                    .reduce((sum, current) => {
-                        return sum + Number(current)
-                    }, 0)
-                    .toFixed(2)} $`}</p>
+                <p className={'total-text'}>{`Total: ${getSumFromArray(
+                    values
+                ).toFixed(2)} $`}</p>
                 <span className={'green-line'} />
                 <p className={'total-text'}>{`Middle: ${
                     values.length
-                        ? Math.floor(
-                              values.reduce((sum, current) => {
-                                  return sum + Number(current)
-                              }, 0) / values.length
-                          )
+                        ? Math.floor(getSumFromArray(values) / values.length)
                         : '0'
                 } $`}</p>
             </div>

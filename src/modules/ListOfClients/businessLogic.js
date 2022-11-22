@@ -162,16 +162,16 @@ export const useClientsList = translators => {
             const thisMonthStat = thisYearStat.months[date.format('M') - 1]
 
             thisMonthStat.forEach((day, index) => {
-                if (index === 0 || index < moment().format('D')) {
+                if (
+                    index === 0 ||
+                    index < moment().subtract(1, 'day').format('D')
+                ) {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId
                     )
-
                     if (clientBalanceDay) {
                         if (typeof monthSumArray[index] === 'undefined') {
-                            const dayArray = []
                             monthSumArray[index] = [
-                                ...dayArray,
                                 getNumberWithHundredths(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
