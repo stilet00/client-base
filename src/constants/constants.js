@@ -30,8 +30,17 @@ export const previousDay = moment().subtract(1, 'day').format('D')
 export const DEFAULT_CLIENT = {
     name: '',
     surname: '',
-    translators: [],
+    bankAccount: '',
+    instagramLink: '',
     suspended: false,
+    svadba: {
+        login: '',
+        password: '',
+    },
+    dating: {
+        login: '',
+        password: '',
+    },
 }
 
 export const DEFAULT_PENALTY = {

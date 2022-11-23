@@ -11,6 +11,12 @@
   border-radius: 10px;
 }
 
+@media (max-width: 690px) {
+  .form-container {
+    max-width: 90%;
+  }
+}
+
 .form-container_task-form {
   height: 250px;
 }
