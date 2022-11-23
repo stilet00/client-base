@@ -152,7 +152,12 @@ export const useClientsList = translators => {
             : 0
     }
     function getArrayOfBalancePerDay(clientId, date = moment()) {
-        let monthSumArray = []
+        let currentMonthSum = []
+        let previousMonthSum = []
+        let monthsSum = {
+            currentMonth: [],
+            previousMonth: [],
+        }
 
         translators.forEach(translator => {
             const thisYearStat = translator.statistics.find(
@@ -160,40 +165,64 @@ export const useClientsList = translators => {
             )
 
             const thisMonthStat = thisYearStat.months[date.format('M') - 1]
-
-            thisMonthStat.forEach((day, index) => {
-                if (
-                    index === 0 ||
-                    index < moment().subtract(1, 'day').format('D')
-                ) {
-                    const clientBalanceDay = day.clients.find(
-                        client => client.id === clientId
-                    )
-                    if (clientBalanceDay) {
-                        if (typeof monthSumArray[index] === 'undefined') {
-                            monthSumArray[index] = [
-                                getNumberWithHundredths(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        } else {
-                            monthSumArray[index] = [
-                                ...monthSumArray[index],
-                                getNumberWithHundredths(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        }
-                    }
-                }
-            })
+            const previousMonthStat = thisYearStat.months[date.format('M') - 2]
+            getArrayWithAmountsPerDayForPickedMonth(
+                clientId,
+                thisMonthStat,
+                currentMonthSum
+            )
+            getArrayWithAmountsPerDayForPickedMonth(
+                clientId,
+                previousMonthStat,
+                previousMonthSum,
+                31
+            )
         })
-        monthSumArray = monthSumArray.map(day =>
+        currentMonthSum = currentMonthSum.map(day =>
+            Math.round(getSumFromArray(day))
+        )
+        previousMonthSum = previousMonthSum.map(day =>
             Math.round(getSumFromArray(day))
         )
 
-        return monthSumArray
+        return (monthsSum = {
+            ...monthsSum,
+            currentMonth: currentMonthSum,
+            previousMonth: previousMonthSum,
+        })
     }
+
+    const getArrayWithAmountsPerDayForPickedMonth = (
+        clientId,
+        month,
+        sumHolder,
+        countUntilThisDateInMonth = moment().subtract(1, 'day').format('D')
+    ) => {
+        month.forEach((day, index) => {
+            if (index === 0 || index < countUntilThisDateInMonth) {
+                const clientBalanceDay = day.clients.find(
+                    client => client.id === clientId
+                )
+                if (clientBalanceDay) {
+                    if (typeof sumHolder[index] === 'undefined') {
+                        sumHolder[index] = [
+                            getNumberWithHundredths(
+                                calculateBalanceDaySum(clientBalanceDay)
+                            ),
+                        ]
+                    } else {
+                        sumHolder[index] = [
+                            ...sumHolder[index],
+                            getNumberWithHundredths(
+                                calculateBalanceDaySum(clientBalanceDay)
+                            ),
+                        ]
+                    }
+                }
+            }
+        })
+    }
+
     return {
         clientMonthSum,
         sortBySum,

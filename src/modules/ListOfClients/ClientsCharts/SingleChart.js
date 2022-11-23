@@ -5,6 +5,7 @@ import moment from 'moment'
 import { getSumFromArray } from '../../../sharedFunctions/sharedFunctions'
 
 export default function SingleChart({ graph, previousMonth, values }) {
+
     let dataSets = [
         {
             label: 'Current month',
@@ -12,13 +13,27 @@ export default function SingleChart({ graph, previousMonth, values }) {
             backgroundColor: ['rgba(255,255,255,0.7)'],
             borderColor: ['#ffffff'],
             borderWidth: 0.5,
-            data: values,
+            data: values.currentMonth,
             tension: 0.4,
             borderDash: [5, 2],
             cubicInterpolationMode: 'monotone',
             borderRadius: 4,
         },
     ]
+    if (previousMonth) {
+        dataSets.push({
+            label: 'Previous month',
+            fill: true,
+            backgroundColor: ['rgba(25,118,210,0.5)'],
+            borderColor: ['#1976d2'],
+            borderWidth: 0.5,
+            data: values.previousMonth,
+            tension: 0.4,
+            borderDash: [5, 1],
+            cubicInterpolationMode: 'monotone',
+            borderRadius: 4,
+        })
+    }
 
     const data = {
         _id: graph._id,
@@ -94,12 +109,15 @@ export default function SingleChart({ graph, previousMonth, values }) {
             <Line data={data} options={options} />
             <div className="total-sum">
                 <p className={'total-text'}>{`Total: ${getSumFromArray(
-                    values
+                    values.currentMonth
                 ).toFixed(2)} $`}</p>
                 <span className={'green-line'} />
                 <p className={'total-text'}>{`Middle: ${
-                    values.length
-                        ? Math.floor(getSumFromArray(values) / values.length)
+                    values.currentMonth.length
+                        ? Math.floor(
+                              getSumFromArray(values.currentMonth) /
+                                  values.currentMonth.length
+                          )
                         : '0'
                 } $`}</p>
             </div>
