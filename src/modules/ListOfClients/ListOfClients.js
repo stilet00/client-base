@@ -25,7 +25,7 @@ import Loader from '../../sharedComponents/Loader/Loader'
 export default function ListOfClients({ user }) {
     const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
-    const [graphData, setGraphData] = useState([])
+    const [graphData, setGraphData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})

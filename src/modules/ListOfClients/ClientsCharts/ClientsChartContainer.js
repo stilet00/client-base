@@ -14,11 +14,11 @@ export default function ClientsChartsContainer({
     handleClose,
 }) {
     const { months } = useChartsContainer(user)
-    const [monthSums, setMonthSums] = useState({})
+    const [monthsSums, setMonthsSums] = useState(null)
     const prevMonth = moment().subtract(1, 'month').format('MM')
 
     useEffect(() => {
-        setMonthSums(values)
+        setMonthsSums(values)
     }, [months, values])
 
     return (
@@ -32,10 +32,10 @@ export default function ClientsChartsContainer({
                 <div className={'rotate-on-mobile-portrait'}>
                     <h2>Rotate screen to see the graph</h2>
                 </div>
-                {monthSums ? (
+                {monthsSums === null ? (
                     <SingleChart
                         className={'test-div'}
-                        values={monthSums}
+                        values={monthsSums}
                         previousMonth={months.find(
                             month => month.month === prevMonth
                         )}
