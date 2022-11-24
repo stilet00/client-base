@@ -29,7 +29,7 @@ export default function ClientsChartsContainer({
         >
             <Box
                 className={'clients-chart-list'}
-                style={{
+                sx={{
                     padding: '10px',
                 }}
             >
