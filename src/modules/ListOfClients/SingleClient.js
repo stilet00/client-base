@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import IconButton from '@mui/material/IconButton'
 import MenuSharpIcon from '@mui/icons-material/MenuSharp'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
 import EditIcon from '@mui/icons-material/Edit'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
@@ -44,6 +45,7 @@ export default function SingleClient({
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
+    const [copied, setCopied] = useState(false)
     const handleChange = e => {
         setExpanded(!expanded)
     }
@@ -88,7 +90,7 @@ export default function SingleClient({
             ) : (
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
             )}
-            {` ${monthProgressPercent} %`}
+            {` ${monthProgressPercent}%`}
         </span>
     )
 
@@ -181,6 +183,19 @@ export default function SingleClient({
                         Bank account:
                     </span>
                     <span className="grid-template-container__card">
+                        <IconButton
+                            sx={{
+                                color: copied ? 'green' : 'gray',
+                            }}
+                            variant="contained"
+                            size="small"
+                            onClick={e => {
+                                setCopied(true)
+                                navigator.clipboard.writeText(bankAccount)
+                            }}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
                         {bankAccount}
                     </span>
                 </Typography>

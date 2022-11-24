@@ -264,9 +264,9 @@ export default function ListOfClients({ user }) {
         <>
             <div>
                 <input
-                    className="top-menu-button"
+                    className="search-input"
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Search for..."
                     value={search}
                     onChange={onSearchChange}
                 ></input>
