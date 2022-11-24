@@ -88,7 +88,7 @@ export default function SingleClient({
             ) : (
                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
             )}
-            {` ${monthProgressPercent} %`}
+            {` ${monthProgressPercent}%`}
         </span>
     )
 
