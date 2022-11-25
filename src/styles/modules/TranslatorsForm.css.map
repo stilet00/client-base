@@ -1,6 +1,6 @@
 {
     "version": 3,
-    "mappings": "AAAA,AAAA,sBAAsB,CAAC;EACrB,aAAa,EAAE,GAAG;CAAG;;AAEvB,AAAA,cAAc,CAAC;EACb,sBAAsB,EAAE,CAAC;EACzB,uBAAuB,EAAE,CAAC;CAAG",
+    "mappings": "AAAA,AAAA,sBAAsB,CAAC;EACrB,aAAa,EAAE,GAAG;CAAG",
     "sources": [
         "TranslatorsForm.sass"
     ],

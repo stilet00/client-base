@@ -9,11 +9,6 @@
   border-radius: 0;
 }
 
-.bottom-button {
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-
 .translators-container {
   -ms-flex-line-pack: start;
       align-content: flex-start;
