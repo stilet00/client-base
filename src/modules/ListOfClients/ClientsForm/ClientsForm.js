@@ -189,6 +189,7 @@ export default function ClientsForm({
         }
         clearClient()
         handleClose()
+        setSiteFilter('svadba')
     }
 
     function clearClient() {
@@ -232,6 +233,13 @@ export default function ClientsForm({
         setFormErrors(handleFormValidation(newState, name))
     }
 
+    const checkEmptyFields =
+        client.name === '' &&
+        client.surname === '' &&
+        client.instagramLink === ''
+            ? true
+            : false
+
     return (
         <>
             <Modal
@@ -244,6 +252,7 @@ export default function ClientsForm({
                     handleClose()
                     clearEditedClient()
                     clearClient()
+                    setSiteFilter('svadba')
                 }}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
@@ -489,33 +498,20 @@ export default function ClientsForm({
                                     />
                                 </FormControl>
                             </div>
-                            {Object.keys(editedClient).length > 0 ? (
-                                <Button
-                                    type={'submit'}
-                                    fullWidth
-                                    disabled={
-                                        Object.values(client).includes('') ||
-                                        arrayWithErrors.length !== 0
-                                    }
-                                    variant={'outlined'}
-                                    style={{ marginTop: '10px' }}
-                                >
-                                    Edit client
-                                </Button>
-                            ) : (
-                                <Button
-                                    type={'submit'}
-                                    fullWidth
-                                    disabled={
-                                        Object.values(client).includes('') ||
-                                        arrayWithErrors.length !== 0
-                                    }
-                                    variant={'outlined'}
-                                    style={{ marginTop: '10px' }}
-                                >
-                                    Add client
-                                </Button>
-                            )}
+                            <Button
+                                type={'submit'}
+                                fullWidth
+                                disabled={
+                                    checkEmptyFields ||
+                                    arrayWithErrors.length !== 0
+                                }
+                                variant={'outlined'}
+                                style={{ marginTop: '10px' }}
+                            >
+                                {Object.keys(editedClient).length > 0
+                                    ? 'Edit client'
+                                    : 'Add client'}
+                            </Button>
                         </form>
                     </div>
                 </Fade>
