@@ -74,7 +74,7 @@ function TaskList({ user }) {
             >
                 {page}
             </div>
-            <div className="socials button-add-container bottom-button">
+            <div className="socials button-add-container">
                 <Form addTask={newTask} />
             </div>
             <AlertMessage

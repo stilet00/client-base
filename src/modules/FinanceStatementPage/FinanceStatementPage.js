@@ -166,7 +166,7 @@ export default function FinanceStatementPage() {
             <div className={'main-container scrolled-container  animated-box'}>
                 <div className={'finances-inner-wrapper'}>{page}</div>
             </div>
-            <div className="socials button-add-container bottom-button">
+            <div className="socials button-add-container">
                 <FinancesForm handleNewPayment={createNewPayment} />
             </div>
             <AlertMessageConfirmation

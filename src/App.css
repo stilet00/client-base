@@ -331,10 +331,10 @@ main {
       -ms-flex-direction: column;
           flex-direction: column;
   margin-top: auto;
+  margin-bottom: auto;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-bottom: 50px;
 }
 
 .App-link {

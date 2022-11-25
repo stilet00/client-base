@@ -292,7 +292,7 @@ export default function ListOfClients({ user }) {
                     ))}
                 </Grid>
             </div>
-            <div className="socials button-add-container bottom-button">
+            <div className="socials button-add-container">
                 <Button
                     type="button"
                     onClick={handleOpen}
