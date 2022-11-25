@@ -119,8 +119,6 @@ export function getSumFromArray(arrayOfNumbers) {
 
 export function getMiddleValueFromArray(arrayOfNumbers) {
     const sum = getSumFromArray(arrayOfNumbers)
-
-    arrayOfNumbers.length === 0
     if (arrayOfNumbers.length === 0) {
         return 0
     }

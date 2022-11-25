@@ -234,8 +234,8 @@ export default function ClientsForm({
     }
 
     const checkEmptyFields =
-        client.name === '' &&
-        client.surname === '' &&
+        client.name === '' ||
+        client.surname === '' ||
         client.instagramLink === ''
             ? true
             : false
@@ -253,6 +253,7 @@ export default function ClientsForm({
                     clearEditedClient()
                     clearClient()
                     setSiteFilter('svadba')
+                    setFormErrors({})
                 }}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
