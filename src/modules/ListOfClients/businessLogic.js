@@ -126,7 +126,6 @@ export const useClientsList = translators => {
         })
 
         monthSumArray = monthSumArray.map(day => getSumFromArray(day))
-
         return Math.round(getMiddleValueFromArray(monthSumArray))
     }
 

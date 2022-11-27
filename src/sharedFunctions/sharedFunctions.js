@@ -119,8 +119,10 @@ export function getSumFromArray(arrayOfNumbers) {
 
 export function getMiddleValueFromArray(arrayOfNumbers) {
     const sum = getSumFromArray(arrayOfNumbers)
-
-    return Math.round(sum / arrayOfNumbers.length)
+    if (arrayOfNumbers.length === 0) {
+        return 0
+    }
+      return Math.round(sum / arrayOfNumbers.length)
 }
 
 export function calculatePercentDifference(currentSum, previousSum) {

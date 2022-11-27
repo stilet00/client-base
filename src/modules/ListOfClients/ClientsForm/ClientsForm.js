@@ -74,6 +74,7 @@ export default function ClientsForm({
     const [showPassword, setShowPassword] = useState(false)
     const [formErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(formErrors)
+    const arrayOfEditedClientsFields = Object.keys(editedClient)
     const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
     const regExpForCard = /[^0-9\s]/g
     const regExpForEmail = /\S+@\S+\.\S+/
@@ -83,7 +84,7 @@ export default function ClientsForm({
     //     .map(translator => `${translator.name} ${translator.surname}`)
 
     useEffect(() => {
-        if (Object.keys(editedClient).length > 0) {
+        if (arrayOfEditedClientsFields.length > 0) {
             setClient(editedClient)
         }
     }, [editedClient])
@@ -181,7 +182,7 @@ export default function ClientsForm({
 
     function onFormSubmit(e, client) {
         e.preventDefault()
-        if (Object.keys(editedClient).length > 0) {
+        if (arrayOfEditedClientsFields.length > 0) {
             onEditClientData(client)
             clearEditedClient()
         } else {
@@ -189,6 +190,7 @@ export default function ClientsForm({
         }
         clearClient()
         handleClose()
+        setSiteFilter('svadba')
     }
 
     function clearClient() {
@@ -232,6 +234,13 @@ export default function ClientsForm({
         setFormErrors(handleFormValidation(newState, name))
     }
 
+    const fieldsAreEmpty =
+        client.name === '' ||
+        client.surname === '' ||
+        client.instagramLink === ''
+            ? true
+            : false
+
     return (
         <>
             <Modal
@@ -244,6 +253,8 @@ export default function ClientsForm({
                     handleClose()
                     clearEditedClient()
                     clearClient()
+                    setSiteFilter('svadba')
+                    setFormErrors({})
                 }}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
@@ -489,33 +500,20 @@ export default function ClientsForm({
                                     />
                                 </FormControl>
                             </div>
-                            {Object.keys(editedClient).length > 0 ? (
-                                <Button
-                                    type={'submit'}
-                                    fullWidth
-                                    disabled={
-                                        Object.values(client).includes('') ||
-                                        arrayWithErrors.length !== 0
-                                    }
-                                    variant={'outlined'}
-                                    style={{ marginTop: '10px' }}
-                                >
-                                    Edit client
-                                </Button>
-                            ) : (
-                                <Button
-                                    type={'submit'}
-                                    fullWidth
-                                    disabled={
-                                        Object.values(client).includes('') ||
-                                        arrayWithErrors.length !== 0
-                                    }
-                                    variant={'outlined'}
-                                    style={{ marginTop: '10px' }}
-                                >
-                                    Add client
-                                </Button>
-                            )}
+                            <Button
+                                type={'submit'}
+                                fullWidth
+                                disabled={
+                                    fieldsAreEmpty ||
+                                    arrayWithErrors.length !== 0
+                                }
+                                variant={'outlined'}
+                                style={{ marginTop: '10px' }}
+                            >
+                                {arrayOfEditedClientsFields.length > 0
+                                    ? 'Edit client'
+                                    : 'Add client'}
+                            </Button>
                         </form>
                     </div>
                 </Fade>
