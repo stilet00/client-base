@@ -70,28 +70,34 @@ export default function SingleClient({
             ? moment().subtract(1, 'month').format('MMM')
             : moment().subtract(1, 'month').format('MMMM')
     const progressPage = (
-        <span
-            className={
-                middleMonthSum >= prevousMiddleMonthSum
-                    ? 'green-text styled-text-numbers'
-                    : 'red-text styled-text-numbers'
-            }
-        >
+        <div className="grid-template-container__info">
             <IconButton
                 color="primary"
                 variant="contained"
                 size="small"
+                sx={{
+                    padding: 0,
+                }}
                 onClick={() => handleSwitchToGraph(_id)}
             >
                 <QueryStatsIcon fontSize="small" />
             </IconButton>
-            {middleMonthSum >= prevousMiddleMonthSum ? (
-                <FontAwesomeIcon icon={faArrowAltCircleUp} />
-            ) : (
-                <FontAwesomeIcon icon={faArrowAltCircleDown} />
-            )}
-            {` ${monthProgressPercent}%`}
-        </span>
+            <span
+                className={
+                    middleMonthSum >= prevousMiddleMonthSum
+                        ? ' green-text styled-text-numbers'
+                        : ' red-text styled-text-numbers'
+                }
+            >
+                {middleMonthSum >= prevousMiddleMonthSum ? (
+                    <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                ) : (
+                    <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                )}
+                {` ${monthProgressPercent}%`}
+            </span>
+            <b> {middleMonthSum}$</b>
+        </div>
     )
 
     return (
@@ -172,7 +178,6 @@ export default function SingleClient({
                         Middle for {currentMonth}:
                     </span>
                     {progressPage}
-                    <b className="styled-text-numbers grid-template-container__info">{`${middleMonthSum} $`}</b>
                 </Typography>
                 <Typography
                     variant="body2"

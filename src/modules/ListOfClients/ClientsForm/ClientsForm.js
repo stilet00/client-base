@@ -74,6 +74,7 @@ export default function ClientsForm({
     const [showPassword, setShowPassword] = useState(false)
     const [formErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(formErrors)
+    const arrayOfEditedClientsFields = Object.keys(editedClient)
     const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
     const regExpForCard = /[^0-9\s]/g
     const regExpForEmail = /\S+@\S+\.\S+/
@@ -83,7 +84,7 @@ export default function ClientsForm({
     //     .map(translator => `${translator.name} ${translator.surname}`)
 
     useEffect(() => {
-        if (Object.keys(editedClient).length > 0) {
+        if (arrayOfEditedClientsFields.length > 0) {
             setClient(editedClient)
         }
     }, [editedClient])
@@ -181,7 +182,7 @@ export default function ClientsForm({
 
     function onFormSubmit(e, client) {
         e.preventDefault()
-        if (Object.keys(editedClient).length > 0) {
+        if (arrayOfEditedClientsFields.length > 0) {
             onEditClientData(client)
             clearEditedClient()
         } else {
@@ -233,7 +234,7 @@ export default function ClientsForm({
         setFormErrors(handleFormValidation(newState, name))
     }
 
-    const checkEmptyFields =
+    const fieldsAreEmpty =
         client.name === '' ||
         client.surname === '' ||
         client.instagramLink === ''
@@ -503,13 +504,13 @@ export default function ClientsForm({
                                 type={'submit'}
                                 fullWidth
                                 disabled={
-                                    checkEmptyFields ||
+                                    fieldsAreEmpty ||
                                     arrayWithErrors.length !== 0
                                 }
                                 variant={'outlined'}
                                 style={{ marginTop: '10px' }}
                             >
-                                {Object.keys(editedClient).length > 0
+                                {arrayOfEditedClientsFields.length > 0
                                     ? 'Edit client'
                                     : 'Add client'}
                             </Button>
