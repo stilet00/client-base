@@ -72,6 +72,13 @@ function SingleTranslator({
         false,
         previousMonth
     )
+    const translatorSalaryForPickedMonth = Math.floor(
+        calculateTranslatorMonthTotal(
+            statistics,
+            true,
+            selectedDate.format('M')
+        ) * 0.45
+    )
 
     const progressPage =
         translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
@@ -381,6 +388,12 @@ function SingleTranslator({
                                         true,
                                         selectedDate.format('M')
                                     )} $`}</b>
+                                </Typography>
+                                <Typography variant="body2">
+                                    {`Salary for ${selectedDate.format(
+                                        'MMMM'
+                                    )}: `}
+                                    <b>{`${translatorSalaryForPickedMonth} $`}</b>
                                 </Typography>
                                 {calculatePersonalPenalties()
                                     ?.selectedDatePenaltiesArray.length ? (
