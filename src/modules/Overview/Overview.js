@@ -79,7 +79,7 @@ function Overview({ user }) {
 
     const statementsGroupedByComment =
         getStatementsGroupedByCommentAndYear(statements)
-    const yearTotalSum = Math.round(calculateYearTotal())
+    const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
     const previousMonthTotal = calculateMonthTotal(previousMonth, false)
     const svadbaMonthTotal = calculateMonthTotal(currentMonth, true, true)
