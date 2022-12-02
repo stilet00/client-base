@@ -10,6 +10,10 @@ import {
 import EditBalanceForm from '../EditBalanceForm/EditBalanceForm'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Typography } from '@material-ui/core'
+import {
+    TRANSLATORS_SALARY_PERCENT,
+    PAYONEER_COMISSION,
+} from '../../../constants/constants'
 import moment from 'moment'
 import { useSingleTranslator } from '../businessLogic'
 import {
@@ -55,6 +59,7 @@ function SingleTranslator({
     email,
     updateTranslatorEmail,
     wantsToReceiveEmails,
+    dollarToUahRate,
 }) {
     const {
         calculateSumByClient,
@@ -77,7 +82,19 @@ function SingleTranslator({
             statistics,
             true,
             selectedDate.format('M')
-        ) * 0.45
+        ) * TRANSLATORS_SALARY_PERCENT
+    )
+
+    const getTranslatorSalaryInUah = (salary = 100) => {
+        const currentCurrencyRate = Number(dollarToUahRate.value.toFixed(2))
+        const salaryInUahIncludingComissinos =
+            (currentCurrencyRate - currentCurrencyRate * PAYONEER_COMISSION) *
+            salary
+        return salaryInUahIncludingComissinos
+    }
+
+    const translatorSalaryForPickedMonthInUah = Math.floor(
+        getTranslatorSalaryInUah(translatorSalaryForPickedMonth)
     )
 
     const progressPage =
@@ -394,6 +411,10 @@ function SingleTranslator({
                                         'MMMM'
                                     )}: `}
                                     <b>{`${translatorSalaryForPickedMonth} $`}</b>
+                                </Typography>
+                                <Typography variant="body2">
+                                    {`Salary in UAH: `}
+                                    <b>{`${translatorSalaryForPickedMonthInUah}`}</b>
                                 </Typography>
                                 {calculatePersonalPenalties()
                                     ?.selectedDatePenaltiesArray.length ? (
