@@ -101,7 +101,7 @@ export const useOverview = user => {
             yearSum = yearSum + calculateMonthTotal(monthNumber)
         }
 
-        return yearSum
+        return Math.round(yearSum)
     }, [calculateMonthTotal])
 
     return {
