@@ -7,8 +7,8 @@ import {
     removeTranslator,
     updateTranslator,
     sendNotificationEmailsRequest,
-    getCurrency,
 } from '../../services/translatorsServices/services'
+import { getCurrency } from '../../services/currencyServices'
 import {
     currentMonth,
     currentYear,

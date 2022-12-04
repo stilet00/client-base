@@ -86,10 +86,9 @@ function SingleTranslator({
     )
 
     const getTranslatorSalaryInUah = (salary = 100) => {
-        const currentCurrencyRate = Number(dollarToUahRate.value.toFixed(2))
+        const currentCurrencyRate = Number(dollarToUahRate.value).toFixed(2)
         const salaryInUahIncludingComissinos =
-            (currentCurrencyRate - currentCurrencyRate * PAYONEER_COMISSION) *
-            salary
+            currentCurrencyRate * PAYONEER_COMISSION * salary
         return salaryInUahIncludingComissinos
     }
 

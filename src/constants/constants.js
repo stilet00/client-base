@@ -179,4 +179,4 @@ export const BOT_LIST = ['Chat4me', 'Sender']
 
 export const TRANSLATORS_SALARY_PERCENT = 0.45
 
-export const PAYONEER_COMISSION = 0.04
+export const PAYONEER_COMISSION = 0.96
