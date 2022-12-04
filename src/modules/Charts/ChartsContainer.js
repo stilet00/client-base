@@ -8,6 +8,11 @@ import moment from 'moment'
 import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
 import '../../styles/modules/Chart.css'
+import Box from '@mui/material/Box'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 function ChartsContainer({ user }) {
     const {
@@ -25,7 +30,13 @@ function ChartsContainer({ user }) {
         months,
         openAlertConfirmation,
         selectedYear,
+        category,
+        setCategory,
     } = useChartsContainer(user)
+
+    const handleCategoryChange = e => {
+        setCategory(e.target.value)
+    }
 
     return user ? (
         <>
@@ -38,6 +49,37 @@ function ChartsContainer({ user }) {
                 />
             </div> */}
             <div className={'main-container  scrolled-container animated-box'}>
+                <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                            Category
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={category}
+                            label="Category"
+                            onChange={handleCategoryChange}
+                        >
+                            <MenuItem value={'chats'}>Chats</MenuItem>
+                            <MenuItem value={'letters'}>Letters</MenuItem>
+                            <MenuItem value={'dating'}>Dating</MenuItem>
+                            <MenuItem value={'phoneCalls'}>
+                                Phone Calls
+                            </MenuItem>
+                            <MenuItem value={'virtualGiftsSvadba'}>
+                                Virtual Gifts Svadba
+                            </MenuItem>
+                            <MenuItem value={'virtualGiftsDating'}>
+                                Virtual Gifts Dating
+                            </MenuItem>
+                            <MenuItem value={'photoAttachments'}>
+                                Photo Attachments
+                            </MenuItem>
+                            <MenuItem value={'penalties'}>Penalties</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
                 {months.length > 0 ? (
                     <ul className={'chart-list'}>
                         {months.map((month, index) => (

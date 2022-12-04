@@ -41,10 +41,10 @@ export function calculateBalanceDaySum(
     }
 }
 
-export function calculateBalanceDayAllClients(day) {
+export function calculateBalanceDayAllClients(day, category = null) {
     return day.clients
         .reduce((sum, current) => {
-            return sum + calculateBalanceDaySum(current)
+            return sum + calculateBalanceDaySum(current, false, category)
         }, 0)
         .toFixed(2)
 }

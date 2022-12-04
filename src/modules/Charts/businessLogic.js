@@ -31,6 +31,7 @@ export const useChartsContainer = user => {
     const [arrayOfYears, setArrayOfYears] = useState([])
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
+    const [category, setCategory] = useState(null)
 
     const {
         alertStatusConfirmation,
@@ -91,6 +92,10 @@ export const useChartsContainer = user => {
                                 `${dayCount}-${monthCount}-${selectedYear}`,
                                 'D-M-YYYY'
                             ).format('DD MM YYYY')
+                            let singleDay = {
+                                daySum: 0,
+                                virtualGifts: 0,
+                            }
                             let daySum = 0
                             statisticsYearsArray.forEach(
                                 translatorStatistics => {
@@ -102,7 +107,8 @@ export const useChartsContainer = user => {
                                                         daySum +
                                                         Number(
                                                             calculateBalanceDayAllClients(
-                                                                day
+                                                                day,
+                                                                category
                                                             )
                                                         )
                                                 }
@@ -130,7 +136,7 @@ export const useChartsContainer = user => {
                 }
             })
         }
-    }, [selectedYear, user])
+    }, [selectedYear, category, user])
 
     const handleChange = useCallback(e => {
         setSelectedYear(e.target.value)
@@ -209,6 +215,8 @@ export const useChartsContainer = user => {
         openAlertConfirmation,
         cancelDeleteGraphClicked,
         deleteGraphClicked,
+        category,
+        setCategory,
     }
 }
 
