@@ -61,6 +61,7 @@ function Translators({ user }) {
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
+        dollarToUahRate,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -358,6 +359,7 @@ function Translators({ user }) {
                         <SingleTranslator
                             {...item}
                             key={item._id}
+                            dollarToUahRate={dollarToUahRate}
                             dragOverHandler={dragOverHandler}
                             onBoardDrop={onBoardDrop}
                             dragLeaveHandler={dragLeaveHandler}

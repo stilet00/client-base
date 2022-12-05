@@ -8,6 +8,7 @@ import {
     updateTranslator,
     sendNotificationEmailsRequest,
 } from '../../services/translatorsServices/services'
+import { getCurrency } from '../../services/currencyServices'
 import {
     currentMonth,
     currentYear,
@@ -40,6 +41,7 @@ export const useTranslators = user => {
     const [translators, setTranslators] = useState([])
 
     const [currentClient, setCurrentClient] = useState(null)
+    const [dollarToUahRate, setDollarToUahRate] = useState(null)
 
     const [state, setState] = useState({
         left: false,
@@ -93,6 +95,11 @@ export const useTranslators = user => {
 
     useEffect(() => {
         if (user) {
+            getCurrency().then(res => {
+                if (res.status === 200) {
+                    setDollarToUahRate(res.data.data.UAH)
+                }
+            })
             getTranslators().then(res => {
                 if (res.status === 200) {
                     setLoading(false)
@@ -546,6 +553,7 @@ export const useTranslators = user => {
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
+        dollarToUahRate,
     }
 }
 
