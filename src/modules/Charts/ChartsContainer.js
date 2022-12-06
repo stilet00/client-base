@@ -61,6 +61,7 @@ function ChartsContainer({ user }) {
                             label="Category"
                             onChange={handleCategoryChange}
                         >
+                            <MenuItem value={null}>All</MenuItem>
                             <MenuItem value={'chats'}>Chats</MenuItem>
                             <MenuItem value={'letters'}>Letters</MenuItem>
                             <MenuItem value={'dating'}>Dating</MenuItem>
