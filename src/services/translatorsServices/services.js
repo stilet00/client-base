@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { rootURL } from '../rootURL'
+
 const translatorsURL = rootURL + 'translators/'
 
 export function getTranslators() {
@@ -18,3 +19,4 @@ export function updateTranslator(translator) {
 export function sendNotificationEmailsRequest() {
     return axios.get(translatorsURL + 'send-emails')
 }
+
