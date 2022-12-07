@@ -12,7 +12,8 @@ import Box from '@mui/material/Box'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select from '@mui/material/Select'
+import { CHARTS_CATEGORIES } from '../../constants/constants'
 
 function ChartsContainer({ user }) {
     const {
@@ -61,23 +62,11 @@ function ChartsContainer({ user }) {
                             label="Category"
                             onChange={handleCategoryChange}
                         >
-                            <MenuItem value={null}>All</MenuItem>
-                            <MenuItem value={'chats'}>Chats</MenuItem>
-                            <MenuItem value={'letters'}>Letters</MenuItem>
-                            <MenuItem value={'dating'}>Dating</MenuItem>
-                            <MenuItem value={'phoneCalls'}>
-                                Phone Calls
-                            </MenuItem>
-                            <MenuItem value={'virtualGiftsSvadba'}>
-                                Virtual Gifts Svadba
-                            </MenuItem>
-                            <MenuItem value={'virtualGiftsDating'}>
-                                Virtual Gifts Dating
-                            </MenuItem>
-                            <MenuItem value={'photoAttachments'}>
-                                Photo Attachments
-                            </MenuItem>
-                            <MenuItem value={'penalties'}>Penalties</MenuItem>
+                            {CHARTS_CATEGORIES.map(singleCategory => (
+                                <MenuItem value={singleCategory.value}>
+                                    {singleCategory.name}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Box>

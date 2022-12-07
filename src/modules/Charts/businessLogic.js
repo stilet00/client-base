@@ -92,10 +92,6 @@ export const useChartsContainer = user => {
                                 `${dayCount}-${monthCount}-${selectedYear}`,
                                 'D-M-YYYY'
                             ).format('DD MM YYYY')
-                            let singleDay = {
-                                daySum: 0,
-                                virtualGifts: 0,
-                            }
                             let daySum = 0
                             statisticsYearsArray.forEach(
                                 translatorStatistics => {

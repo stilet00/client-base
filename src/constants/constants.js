@@ -177,3 +177,41 @@ export const DEFAULT_STATEMENT = {
 }
 export const BOT_LIST = ['Chat4me', 'Sender']
 
+export const CHARTS_CATEGORIES = [
+    {
+        name: 'All',
+        value: null,
+    },
+    {
+        name: 'Chats',
+        value: 'chats',
+    },
+    {
+        name: 'Letters',
+        value: 'letters',
+    },
+    {
+        name: 'Dating',
+        value: 'dating',
+    },
+    {
+        name: 'Phone Calls',
+        value: 'phoneCalls',
+    },
+    {
+        name: 'Virtual Gifts Svadba',
+        value: 'virtualGiftsSvadba',
+    },
+    {
+        name: 'Virtual Gifts Dating',
+        value: 'virtualGiftsDating',
+    },
+    {
+        name: 'Photo Attachments',
+        value: 'photoAttachments',
+    },
+    {
+        name: 'Penalties',
+        value: 'penalties',
+    },
+]
