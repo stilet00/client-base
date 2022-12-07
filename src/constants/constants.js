@@ -135,6 +135,7 @@ function fillDays(month, year) {
     }
     return totalDays
 }
+
 export const TASKS_BACKGROUNDS = [
     background1,
     background2,
@@ -153,21 +154,25 @@ export const FINANCE_SENDERS = {
     agency: 'Agency',
     oleksandr: 'Oleksandr',
 }
+
 export const FINANCE_AVATARS = {
     anton: Anton_avatar,
     oleksandr: Oleksandr_avatar,
     agency: Agency_avatar,
 }
+
 export const FINANCE_IMAGES = {
     salary: <MonetizationOnIcon sx={{ fontSize: 40, color: green[400] }} />,
     paymentToScout: <CreditScoreIcon sx={{ fontSize: 40, color: blue[500] }} />,
     paymentToBot: <AdUnitsIcon sx={{ fontSize: 40, color: purple[500] }} />,
 }
+
 export const FINANCE_COMMENTS = {
     salary: 'salary',
     paymentToScout: 'Payment to scout',
     paymentToBot: 'Payment to bot',
 }
+
 export const DEFAULT_STATEMENT = {
     receiver: '',
     amount: 0,
@@ -175,7 +180,47 @@ export const DEFAULT_STATEMENT = {
     comment: FINANCE_COMMENTS.salary,
     date: moment(),
 }
+
 export const BOT_LIST = ['Chat4me', 'Sender']
+
+export const CHARTS_CATEGORIES = [
+    {
+        name: 'All',
+        value: null,
+    },
+    {
+        name: 'Chats',
+        value: 'chats',
+    },
+    {
+        name: 'Letters',
+        value: 'letters',
+    },
+    {
+        name: 'Dating',
+        value: 'dating',
+    },
+    {
+        name: 'Phone Calls',
+        value: 'phoneCalls',
+    },
+    {
+        name: 'Virtual Gifts Svadba',
+        value: 'virtualGiftsSvadba',
+    },
+    {
+        name: 'Virtual Gifts Dating',
+        value: 'virtualGiftsDating',
+    },
+    {
+        name: 'Photo Attachments',
+        value: 'photoAttachments',
+    },
+    {
+        name: 'Penalties',
+        value: 'penalties',
+    },
+]
 
 export const TRANSLATORS_SALARY_PERCENT = 0.45
 

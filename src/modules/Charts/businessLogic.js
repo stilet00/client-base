@@ -31,6 +31,7 @@ export const useChartsContainer = user => {
     const [arrayOfYears, setArrayOfYears] = useState([])
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
+    const [category, setCategory] = useState(null)
 
     const {
         alertStatusConfirmation,
@@ -102,7 +103,8 @@ export const useChartsContainer = user => {
                                                         daySum +
                                                         Number(
                                                             calculateBalanceDayAllClients(
-                                                                day
+                                                                day,
+                                                                category
                                                             )
                                                         )
                                                 }
@@ -130,7 +132,7 @@ export const useChartsContainer = user => {
                 }
             })
         }
-    }, [selectedYear, user])
+    }, [selectedYear, category, user])
 
     const handleChange = useCallback(e => {
         setSelectedYear(e.target.value)
@@ -209,6 +211,8 @@ export const useChartsContainer = user => {
         openAlertConfirmation,
         cancelDeleteGraphClicked,
         deleteGraphClicked,
+        category,
+        setCategory,
     }
 }
 
