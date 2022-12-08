@@ -21,7 +21,6 @@ import {
     calculateTranslatorMonthTotal,
 } from '../../../sharedFunctions/sharedFunctions'
 import {
-    currentMonth,
     currentYear,
     previousDay,
     previousMonth,

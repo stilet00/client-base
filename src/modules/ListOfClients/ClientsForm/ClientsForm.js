@@ -16,26 +16,13 @@ import '../../../styles/modules/ClientsForm.css'
 import { DEFAULT_CLIENT } from '../../../constants/constants'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
-// needed for translators
-// const ITEM_HEIGHT = 48
-// const ITEM_PADDING_TOP = 8
-// const MenuProps = {
-//     PaperProps: {
-//         style: {
-//             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//             width: 250,
-//         },
-//     },
-// }
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -78,10 +65,6 @@ export default function ClientsForm({
     const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
     const regExpForCard = /[^0-9\s]/g
     const regExpForEmail = /\S+@\S+\.\S+/
-
-    // const translatorsNames = translators
-    //     .filter(translator => !translator.suspended.status)
-    //     .map(translator => `${translator.name} ${translator.surname}`)
 
     useEffect(() => {
         if (arrayOfEditedClientsFields.length > 0) {
@@ -146,6 +129,9 @@ export default function ClientsForm({
                 if (svadba.password.length < 6) {
                     errors.password = 'password is too short'
                 }
+                break
+            default:
+                break
         }
         return errors
     }
