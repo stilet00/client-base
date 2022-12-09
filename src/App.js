@@ -36,7 +36,7 @@ function App() {
     const [isLoaded, setIsLoaded] = useState(true)
 
     const stopLoading = () => {
-        setIsLoaded(true)
+        setIsLoaded(false)
     }
 
     return (
