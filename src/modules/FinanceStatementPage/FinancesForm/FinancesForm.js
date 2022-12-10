@@ -43,9 +43,12 @@ export default function FinancesForm({ handleNewPayment }) {
         getClients().then(res => {
             if (res.status === 200) {
                 setReceivers(
-                    res.data.map(
-                        clients => `${clients.name} ${clients.surname}`
-                    )
+                    res.data.map(client => {
+                        return {
+                            _id: client._id,
+                            label: `${client.name} ${client.surname}`,
+                        }
+                    })
                 )
             }
         })
@@ -83,7 +86,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const handleFormValidation = values => {
         const errors = {}
         if (!values.receiver) {
-            errors.reciever = `Please choose a receiver`
+            errors.receiver = `Please choose a receiver`
         }
         if (
             (values.comment !== 'Payment to bot' &&
@@ -91,7 +94,7 @@ export default function FinancesForm({ handleNewPayment }) {
             (values.comment === 'Payment to bot' &&
                 receivers.includes(values.receiver))
         ) {
-            errors.reciever = `Please change reciever`
+            errors.receiver = `Please change reciever`
         }
         if (!values.amount || values.amount === 0) {
             errors.amount = `Enter the amount`
@@ -166,15 +169,15 @@ export default function FinancesForm({ handleNewPayment }) {
                                 focused
                                 value={paymentData.receiver}
                                 onChange={handleSelectedFieldsChange}
-                                error={fromErrors.reciever}
-                                helperText={fromErrors.reciever}
+                                error={fromErrors.receiver}
+                                helperText={fromErrors.receiver}
                             >
                                 {listOfReceivers.map((receiver, index) => (
                                     <MenuItem
-                                        key={receiver + index}
+                                        key={receiver._id + index}
                                         value={receiver}
                                     >
-                                        {receiver}
+                                        {receiver.label}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -232,7 +235,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 helperText={fromErrors.amount}
                                 fullWidth
                                 name={'amount'}
-                                minValue={0}
+                                minvalue={0}
                                 onChange={onInputChange}
                             />
                             <Button

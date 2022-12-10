@@ -87,4 +87,13 @@
   color: white;
   opacity: 1;
 }
+
+.balance-menu_item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
 /*# sourceMappingURL=ListOfClients.css.map */

@@ -18,8 +18,11 @@ import MenuSharpIcon from '@mui/icons-material/MenuSharp'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 import EditIcon from '@mui/icons-material/Edit'
+import { TRANSLATORS_SALARY_PERCENT } from '../../constants/constants'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faArrowAltCircleUp,
@@ -42,9 +45,12 @@ export default function SingleClient({
     svadba,
     dating,
     handleSwitchToGraph,
+    lesion,
+    currentYearProfit,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
+    const [displayProfit, setDisplayProfit] = useState(false)
     const [copied, setCopied] = useState(false)
     const handleChange = e => {
         setExpanded(!expanded)
@@ -60,7 +66,12 @@ export default function SingleClient({
             ? 2
             : 1
     }
-
+    const payedToTranslators = Math.round(
+        currentYearProfit * TRANSLATORS_SALARY_PERCENT
+    )
+    const profileProfit = Math.round(
+        currentYearProfit - payedToTranslators - lesion
+    )
     const currentMonth =
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
@@ -146,9 +157,7 @@ export default function SingleClient({
             />
 
             <CardContent>
-                <Typography variant="h5" component="div">
-                    {`${name} ${surname}`}
-                </Typography>
+                <Typography variant="h5">{`${name} ${surname}`}</Typography>
                 <Typography
                     variant="body2"
                     align={'left'}
@@ -178,6 +187,81 @@ export default function SingleClient({
                         Middle for {currentMonth}:
                     </span>
                     {progressPage}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    component="div"
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Profile profit:
+                    </span>
+                    <ClickAwayListener
+                        onClickAway={() => setDisplayProfit(false)}
+                    >
+                        <Box
+                            className="grid-template-container__info"
+                            sx={{ position: 'relative' }}
+                        >
+                            <Button
+                                variant="text"
+                                size="small"
+                                sx={{
+                                    padding: 0,
+                                    letterSpacing: 1,
+                                    color: 'black',
+                                    textShadow: '1px 1px 1px rgb(0 0 0 / 20%)',
+                                }}
+                                startIcon={
+                                    <AccountBalanceIcon
+                                        sx={{
+                                            color:
+                                                profileProfit < 0
+                                                    ? 'red'
+                                                    : 'green',
+                                        }}
+                                    />
+                                }
+                                onClick={() => setDisplayProfit(!displayProfit)}
+                            >
+                                <b className="styled-text-numbers">
+                                    {profileProfit} $
+                                </b>
+                            </Button>
+                            {displayProfit ? (
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        minWidth: 200,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        top: 28,
+                                        right: '5px',
+                                        zIndex: 1,
+                                        border: '1px solid',
+                                        p: 1,
+                                        bgcolor: 'background.paper',
+                                    }}
+                                >
+                                    {lesion === 0 ? null : (
+                                        <span className="balance-menu_item">
+                                            Client's spends:
+                                            <b>{`-${lesion} $`}</b>
+                                        </span>
+                                    )}
+                                    <span className="balance-menu_item">
+                                        Total profit:{' '}
+                                        <b>{`${currentYearProfit} $`}</b>
+                                    </span>
+                                    <span className="balance-menu_item">
+                                        Payed to translators:
+                                        <b>{`${payedToTranslators} $`}</b>
+                                    </span>
+                                </Box>
+                            ) : null}
+                        </Box>
+                    </ClickAwayListener>
                 </Typography>
                 <Typography
                     variant="body2"

@@ -161,7 +161,7 @@ export default function Navigation({ user }) {
                                 value={'/finances'}
                             />
                             <BottomNavigationAction
-                                label="List of Clients"
+                                label="Clients"
                                 icon={<GroupIcon />}
                                 value={'/clients'}
                             />

@@ -63,6 +63,8 @@ export default function FinanceStatementPage() {
         const newPayment = {
             ...payment,
             date: payment.date.format('DD.MM.YYYY'),
+            receiverID: payment.receiver._id,
+            receiver: payment.receiver.label,
         }
         addPaymentRequest(newPayment)
             .then(res => {
@@ -159,6 +161,7 @@ export default function FinanceStatementPage() {
     ) : (
         <h1>No payments yet</h1>
     )
+
     return loading ? (
         <Loader />
     ) : (
