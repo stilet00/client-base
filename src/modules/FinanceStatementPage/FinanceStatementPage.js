@@ -63,7 +63,7 @@ export default function FinanceStatementPage() {
         const newPayment = {
             ...payment,
             date: payment.date.format('DD.MM.YYYY'),
-            receiverID: payment.receiver._id,
+            receiverID: payment.receiver.id,
             receiver: payment.receiver.label,
         }
         addPaymentRequest(newPayment)

@@ -30,7 +30,7 @@ import {
     calculateBalanceDaySum,
     calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
@@ -423,7 +423,7 @@ export const useTranslators = user => {
                         )
                 })
             }
-            return getNumberWithHundredths(sum)
+            return getNumberWithHundreds(sum)
         },
         [translators]
     )

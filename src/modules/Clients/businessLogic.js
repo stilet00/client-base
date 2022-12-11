@@ -5,7 +5,7 @@ import {
     calculateBalanceDaySum,
     getMiddleValueFromArray,
     getSumFromArray,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
 
@@ -59,7 +59,7 @@ export const useClientsList = translators => {
             })
         })
 
-        return getNumberWithHundredths(totalClientBalance)
+        return getNumberWithHundreds(totalClientBalance)
     }
 
     function getAllAsignedTranslators(clientId, date = moment()) {
@@ -105,14 +105,14 @@ export const useClientsList = translators => {
                             const dayArray = []
                             monthSumArray[index] = [
                                 ...dayArray,
-                                getNumberWithHundredths(
+                                getNumberWithHundreds(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]
                         } else {
                             monthSumArray[index] = [
                                 ...monthSumArray[index],
-                                getNumberWithHundredths(
+                                getNumberWithHundreds(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]

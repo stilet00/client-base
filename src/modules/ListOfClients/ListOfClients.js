@@ -224,13 +224,19 @@ export default function ListOfClients({ user }) {
                         client._id,
                         moment().subtract(1, 'month')
                     )
-                    const paymentsMadeToClient = paymentsList
-                        .filter(payment => payment.receiverID === client._id)
-                        .map(payment => payment.amount)
-                    const spendsOnClient = getSumFromArray(paymentsMadeToClient)
+                    const arrayOfPaymentsMadeToClient = paymentsList.filter(
+                        payment => payment.receiverID === client._id
+                    )
+                    const getArrayOfPaymentsMadeToClientWithAmounts =
+                        arrayOfPaymentsMadeToClient.map(
+                            payment => payment.amount
+                        )
+                    const spendsOnClient = getSumFromArray(
+                        getArrayOfPaymentsMadeToClientWithAmounts
+                    )
 
                     const clientProfit = getTotalProfitPerClient(client._id)
-                    const clientWithCalculations = {
+                    const clientWithPersonalAndFinancialData = {
                         _id: client._id,
                         name: client.name,
                         surname: client.surname,
@@ -250,9 +256,9 @@ export default function ListOfClients({ user }) {
                             'https://www.instagram.com/' +
                                 client.instagramLink ||
                             'https://www.instagram.com/',
-                        lesion: spendsOnClient,
+                        loss: spendsOnClient,
                         currentYearProfit: clientProfit.currentYearProfit,
-                        allYearsProfit: clientProfit.allYearsProfit,
+                        absoluteProfit: clientProfit.allYearsProfit,
                         previousMonthTotalAmount: memorizedPreviousMonthSum,
                         middleMonthSum: memorizedMiddleMonthSum,
                         prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
@@ -261,7 +267,7 @@ export default function ListOfClients({ user }) {
                             memorizedPreviousMiddleMonthSum
                         ),
                     }
-                    return clientWithCalculations
+                    return clientWithPersonalAndFinancialData
                 })
             return sortedClientsWithCalculations.filter(client =>
                 `${client.name} ${client.surname}`

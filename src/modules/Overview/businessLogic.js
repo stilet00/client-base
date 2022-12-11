@@ -4,7 +4,7 @@ import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, currentYear } from '../../constants/constants'
 
@@ -89,7 +89,7 @@ export const useOverview = user => {
                         )
                 })
             }
-            return getNumberWithHundredths(sum)
+            return getNumberWithHundreds(sum)
         },
         [translators]
     )

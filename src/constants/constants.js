@@ -182,8 +182,8 @@ export const DEFAULT_STATEMENT = {
 }
 
 export const BOT_LIST = [
-    { _id: 'Chat4me7210Sunrise', label: 'Chat4me' },
-    { _id: 'Sender7210Sunrise', label: 'Sender' },
+    { id: 'Chat4me7210Sunrise', label: 'Chat4me' },
+    { id: 'Sender7210Sunrise', label: 'Sender' },
 ]
 
 export const CHARTS_CATEGORIES = [

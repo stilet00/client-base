@@ -45,7 +45,7 @@ export default function SingleClient({
     svadba,
     dating,
     handleSwitchToGraph,
-    lesion,
+    loss,
     currentYearProfit,
 }) {
     const [expanded, setExpanded] = useState(false)
@@ -69,8 +69,8 @@ export default function SingleClient({
     const payedToTranslators = Math.round(
         currentYearProfit * TRANSLATORS_SALARY_PERCENT
     )
-    const profileProfit = Math.round(
-        currentYearProfit - payedToTranslators - lesion
+    const clientProfit = Math.round(
+        currentYearProfit - payedToTranslators - loss
     )
     const currentMonth =
         moment().format('MMMM').length > '5'
@@ -136,7 +136,7 @@ export default function SingleClient({
                             className="list-item__menu-button"
                         >
                             <MenuSharpIcon />
-                            {displayMenu ? (
+                            {displayMenu && (
                                 <div className="list-item__menu-button__content-holder">
                                     <Button
                                         variant="contained"
@@ -150,7 +150,7 @@ export default function SingleClient({
                                         Edit
                                     </Button>
                                 </div>
-                            ) : null}
+                            )}
                         </IconButton>
                     </ClickAwayListener>
                 }
@@ -217,7 +217,7 @@ export default function SingleClient({
                                     <AccountBalanceIcon
                                         sx={{
                                             color:
-                                                profileProfit < 0
+                                                clientProfit < 0
                                                     ? 'red'
                                                     : 'green',
                                         }}
@@ -226,10 +226,10 @@ export default function SingleClient({
                                 onClick={() => setDisplayProfit(!displayProfit)}
                             >
                                 <b className="styled-text-numbers">
-                                    {profileProfit} $
+                                    {clientProfit} $
                                 </b>
                             </Button>
-                            {displayProfit ? (
+                            {displayProfit && (
                                 <Box
                                     sx={{
                                         position: 'absolute',
@@ -244,10 +244,10 @@ export default function SingleClient({
                                         bgcolor: 'background.paper',
                                     }}
                                 >
-                                    {lesion === 0 ? null : (
+                                    {loss > 0 && (
                                         <span className="balance-menu_item">
                                             Client's spends:
-                                            <b>{`-${lesion} $`}</b>
+                                            <b>{`-${loss} $`}</b>
                                         </span>
                                     )}
                                     <span className="balance-menu_item">
@@ -259,7 +259,7 @@ export default function SingleClient({
                                         <b>{`${payedToTranslators} $`}</b>
                                     </span>
                                 </Box>
-                            ) : null}
+                            )}
                         </Box>
                     </ClickAwayListener>
                 </Typography>

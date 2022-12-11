@@ -45,7 +45,7 @@ export default function FinancesForm({ handleNewPayment }) {
                 setReceivers(
                     res.data.map(client => {
                         return {
-                            _id: client._id,
+                            id: client._id,
                             label: `${client.name} ${client.surname}`,
                         }
                     })
@@ -174,7 +174,7 @@ export default function FinancesForm({ handleNewPayment }) {
                             >
                                 {listOfReceivers.map((receiver, index) => (
                                     <MenuItem
-                                        key={receiver._id + index}
+                                        key={receiver.id + index}
                                         value={receiver}
                                     >
                                         {receiver.label}
