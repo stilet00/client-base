@@ -41,12 +41,12 @@ export const useClientsList = translators => {
         let totalProfitForAllYears = 0
         let profitForCurrentYear = 0
 
-        function getProfits(translator, id, date) {
+        function getProfits(translator) {
             translator.statistics.forEach(year => {
                 year.months.forEach(month => {
                     month.forEach(day => {
                         const clientBalanceDay = day.clients.find(
-                            client => client.id === id
+                            client => client.id === clientId
                         )
                         if (clientBalanceDay) {
                             totalProfitForAllYears =
@@ -62,7 +62,7 @@ export const useClientsList = translators => {
             thisYearStat.months.forEach(month => {
                 month.forEach(day => {
                     const clientBalanceDay = day.clients.find(
-                        client => client.id === id
+                        client => client.id === clientId
                     )
                     if (clientBalanceDay) {
                         profitForCurrentYear =
@@ -72,9 +72,7 @@ export const useClientsList = translators => {
                 })
             })
         }
-        translators.forEach(translator =>
-            getProfits(translator, clientId, date)
-        )
+        translators.forEach(getProfits)
         const clientsProfit = {
             currentYearProfit: getNumberWithHundreds(profitForCurrentYear),
             allYearsProfit: getNumberWithHundreds(totalProfitForAllYears),
