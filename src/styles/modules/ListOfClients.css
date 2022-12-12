@@ -88,6 +88,24 @@
   opacity: 1;
 }
 
+@-webkit-keyframes rotate {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .balance-menu_item {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -95,5 +113,7 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -webkit-animation: rotate 2s linear;
+          animation: rotate 2s linear;
 }
 /*# sourceMappingURL=ListOfClients.css.map */

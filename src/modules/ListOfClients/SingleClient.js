@@ -239,7 +239,7 @@ export default function SingleClient({
                                         top: 28,
                                         right: '5px',
                                         zIndex: 1,
-                                        border: '1px solid',
+                                        borderRadius: '8px',
                                         p: 1,
                                         bgcolor: 'background.paper',
                                     }}
