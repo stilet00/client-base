@@ -10,7 +10,7 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import useModal from '../../sharedHooks/useModal'
 import {
     calculateBalanceDayAllClients,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import { getTranslators } from '../../services/translatorsServices/services'
 import {
@@ -115,7 +115,7 @@ export const useChartsContainer = user => {
                             )
                             if (daySum) {
                                 defaultMonth.values[dayCount - 1] =
-                                    getNumberWithHundredths(daySum)
+                                    getNumberWithHundreds(daySum)
                             }
                         }
                         if (

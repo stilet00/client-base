@@ -5,7 +5,7 @@ import {
     calculateBalanceDaySum,
     getMiddleValueFromArray,
     getSumFromArray,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
 
@@ -37,6 +37,49 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 }
 
 export const useClientsList = translators => {
+    const getTotalProfitPerClient = (clientId, date = moment()) => {
+        let totalProfitForAllYears = 0
+        let profitForCurrentYear = 0
+
+        function getProfits(translator) {
+            translator.statistics.forEach(year => {
+                year.months.forEach(month => {
+                    month.forEach(day => {
+                        const clientBalanceDay = day.clients.find(
+                            client => client.id === clientId
+                        )
+                        if (clientBalanceDay) {
+                            totalProfitForAllYears =
+                                totalProfitForAllYears +
+                                calculateBalanceDaySum(clientBalanceDay)
+                        }
+                    })
+                })
+            })
+            const thisYearStat = translator.statistics.find(
+                year => year.year === date.format('YYYY')
+            )
+            thisYearStat.months.forEach(month => {
+                month.forEach(day => {
+                    const clientBalanceDay = day.clients.find(
+                        client => client.id === clientId
+                    )
+                    if (clientBalanceDay) {
+                        profitForCurrentYear =
+                            profitForCurrentYear +
+                            calculateBalanceDaySum(clientBalanceDay)
+                    }
+                })
+            })
+        }
+        translators.forEach(getProfits)
+        const clientsProfit = {
+            currentYearProfit: getNumberWithHundreds(profitForCurrentYear),
+            allYearsProfit: getNumberWithHundreds(totalProfitForAllYears),
+        }
+        return clientsProfit
+    }
+
     function clientMonthSum(clientId, date = moment()) {
         let totalClientBalance = 0
 
@@ -44,7 +87,6 @@ export const useClientsList = translators => {
             const thisYearStat = translator.statistics.find(
                 year => year.year === date.format('YYYY')
             )
-
             const thisMonthStat = thisYearStat.months[date.format('M') - 1]
 
             thisMonthStat.forEach(day => {
@@ -58,8 +100,7 @@ export const useClientsList = translators => {
                 }
             })
         })
-
-        return getNumberWithHundredths(totalClientBalance)
+        return getNumberWithHundreds(totalClientBalance)
     }
 
     function getAllAsignedTranslators(clientId, date = moment()) {
@@ -105,14 +146,14 @@ export const useClientsList = translators => {
                             const dayArray = []
                             monthSumArray[index] = [
                                 ...dayArray,
-                                getNumberWithHundredths(
+                                getNumberWithHundreds(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]
                         } else {
                             monthSumArray[index] = [
                                 ...monthSumArray[index],
-                                getNumberWithHundredths(
+                                getNumberWithHundreds(
                                     calculateBalanceDaySum(clientBalanceDay)
                                 ),
                             ]
@@ -205,14 +246,14 @@ export const useClientsList = translators => {
                 if (clientBalanceDay) {
                     if (typeof sumHolder[index] === 'undefined') {
                         sumHolder[index] = [
-                            getNumberWithHundredths(
+                            getNumberWithHundreds(
                                 calculateBalanceDaySum(clientBalanceDay)
                             ),
                         ]
                     } else {
                         sumHolder[index] = [
                             ...sumHolder[index],
-                            getNumberWithHundredths(
+                            getNumberWithHundreds(
                                 calculateBalanceDaySum(clientBalanceDay)
                             ),
                         ]
@@ -229,5 +270,6 @@ export const useClientsList = translators => {
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
+        getTotalProfitPerClient,
     }
 }

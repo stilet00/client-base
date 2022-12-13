@@ -230,18 +230,6 @@ function ClientsList({
                                             }
                                             secondary={previousTotalPage}
                                         />
-                                        <ListItemText
-                                            className={
-                                                'side-clients-menu__client__balance-container'
-                                            }
-                                            secondary={`Assigned at ${
-                                                getAllAsignedTranslators(
-                                                    client._id
-                                                ).length
-                                            } translators: ${getAllAsignedTranslators(
-                                                client._id
-                                            ).join(', ')}`}
-                                        />
                                     </li>
                                 )
                             })}

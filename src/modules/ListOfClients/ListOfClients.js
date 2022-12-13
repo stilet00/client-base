@@ -4,6 +4,7 @@ import {
     addClient,
     updateClient,
 } from '../../services/clientsServices/services'
+import { getPaymentsRequest } from '../../services/financesStatement/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
@@ -13,7 +14,10 @@ import Grid from '@mui/material/Grid'
 import '../../styles/modules/ListOfClients.css'
 import ClientsForm from './ClientsForm/ClientsForm'
 import { useClientsList } from './businessLogic'
-import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculatePercentDifference,
+    getSumFromArray,
+} from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import useModal from '../../sharedHooks/useModal'
@@ -23,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
 
 export default function ListOfClients({ user }) {
+    const [paymentsList, setPaymentsList] = useState([])
     const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
     const [graphData, setGraphData] = useState(null)
@@ -43,6 +48,7 @@ export default function ListOfClients({ user }) {
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
+        getTotalProfitPerClient,
     } = useClientsList(translators)
 
     useEffect(() => {
@@ -82,6 +88,24 @@ export default function ListOfClients({ user }) {
                     openAlert(5000)
                 })
         }
+
+        getPaymentsRequest()
+            .then(res => {
+                if (res.status === 200) {
+                    setLoading(false)
+                    setPaymentsList(res.data)
+                }
+            })
+            .catch(err => {
+                const message = err.message
+                setLoading(false)
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert(5000)
+            })
     }, [user])
 
     const getUpdatingClient = _id => {
@@ -200,7 +224,19 @@ export default function ListOfClients({ user }) {
                         client._id,
                         moment().subtract(1, 'month')
                     )
-                    const clientWithCalculations = {
+                    const arrayOfPaymentsMadeToClient = paymentsList.filter(
+                        payment => payment.receiverID === client._id
+                    )
+                    const getArrayOfPaymentsMadeToClientWithAmounts =
+                        arrayOfPaymentsMadeToClient.map(
+                            payment => payment.amount
+                        )
+                    const spendsOnClient = getSumFromArray(
+                        getArrayOfPaymentsMadeToClientWithAmounts
+                    )
+
+                    const clientProfit = getTotalProfitPerClient(client._id)
+                    const clientWithPersonalAndFinancialData = {
                         _id: client._id,
                         name: client.name,
                         surname: client.surname,
@@ -220,6 +256,9 @@ export default function ListOfClients({ user }) {
                             'https://www.instagram.com/' +
                                 client.instagramLink ||
                             'https://www.instagram.com/',
+                        loss: spendsOnClient,
+                        currentYearProfit: clientProfit.currentYearProfit,
+                        absoluteProfit: clientProfit.allYearsProfit,
                         previousMonthTotalAmount: memorizedPreviousMonthSum,
                         middleMonthSum: memorizedMiddleMonthSum,
                         prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
@@ -228,7 +267,7 @@ export default function ListOfClients({ user }) {
                             memorizedPreviousMiddleMonthSum
                         ),
                     }
-                    return clientWithCalculations
+                    return clientWithPersonalAndFinancialData
                 })
             return sortedClientsWithCalculations.filter(client =>
                 `${client.name} ${client.surname}`

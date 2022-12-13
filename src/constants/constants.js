@@ -181,7 +181,10 @@ export const DEFAULT_STATEMENT = {
     date: moment(),
 }
 
-export const BOT_LIST = ['Chat4me', 'Sender']
+export const BOT_LIST = [
+    { id: 'Chat4me7210Sunrise', label: 'Chat4me' },
+    { id: 'Sender7210Sunrise', label: 'Sender' },
+]
 
 export const CHARTS_CATEGORIES = [
     {

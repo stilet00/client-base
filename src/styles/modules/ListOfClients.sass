@@ -40,4 +40,15 @@
     box-sizing: border-box
     &::placeholder
         color: white
-        opacity: 1 
+        opacity: 1
+@keyframes rotate
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+.balance-menu_item
+    display: flex
+    justify-content: space-between
+    animation: rotate 2s linear
+
