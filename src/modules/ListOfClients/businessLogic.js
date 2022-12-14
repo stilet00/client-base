@@ -191,7 +191,11 @@ export const useClientsList = translators => {
             ? 1
             : 0
     }
-    function getArrayOfBalancePerDay(clientId, date = moment()) {
+    function getArrayOfBalancePerDay(
+        clientId,
+        category = null,
+        date = moment()
+    ) {
         let currentMonthSum = []
         let previousMonthSum = []
         let monthsSum = {
@@ -209,12 +213,14 @@ export const useClientsList = translators => {
             getArrayWithAmountsPerDayForPickedMonth(
                 clientId,
                 thisMonthStat,
-                currentMonthSum
+                currentMonthSum,
+                category
             )
             getArrayWithAmountsPerDayForPickedMonth(
                 clientId,
                 previousMonthStat,
                 previousMonthSum,
+                category,
                 31
             )
         })
@@ -236,6 +242,7 @@ export const useClientsList = translators => {
         clientId,
         month,
         sumHolder,
+        category,
         countUntilThisDateInMonth = moment().subtract(1, 'day').format('D')
     ) => {
         month.forEach((day, index) => {
@@ -247,14 +254,22 @@ export const useClientsList = translators => {
                     if (typeof sumHolder[index] === 'undefined') {
                         sumHolder[index] = [
                             getNumberWithHundreds(
-                                calculateBalanceDaySum(clientBalanceDay)
+                                calculateBalanceDaySum(
+                                    clientBalanceDay,
+                                    false,
+                                    category
+                                )
                             ),
                         ]
                     } else {
                         sumHolder[index] = [
                             ...sumHolder[index],
                             getNumberWithHundreds(
-                                calculateBalanceDaySum(clientBalanceDay)
+                                calculateBalanceDaySum(
+                                    clientBalanceDay,
+                                    false,
+                                    category
+                                )
                             ),
                         ]
                     }

@@ -289,8 +289,8 @@ export default function ListOfClients({ user }) {
         setShowGraph(false)
     }
 
-    const switchToGraph = id => {
-        const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id)
+    const switchToGraph = (id, category) => {
+        const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id, category)
         setGraphData(pickedClientSumsPerMonth)
         setShowGraph(true)
     }

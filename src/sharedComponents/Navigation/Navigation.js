@@ -99,7 +99,7 @@ export default function Navigation({ user }) {
                     <ListItemIcon>
                         <GroupIcon />
                     </ListItemIcon>
-                    <ListItemText primary={'List of Clients'} />
+                    <ListItemText primary={'Clients'} />
                 </ListItem>
                 <ListItem button onClick={() => history.push('/translators')}>
                     <ListItemIcon>

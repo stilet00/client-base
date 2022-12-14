@@ -1,3 +1,12 @@
+@mixin categoryPosition($topProperty, $top-value, $rightProperty, $right-value, $animationDelay)
+  border: none
+  background: none
+  position: absolute
+  opacity: 0
+  animation: category-moves 500ms forwards
+  animation-delay: $animationDelay
+  #{$topProperty}: $top-value
+  #{$rightProperty}: $right-value
 .grid-template-container
     display: grid
     width: 100%
@@ -41,14 +50,44 @@
     &::placeholder
         color: white
         opacity: 1
-@keyframes rotate
+@keyframes opacity-change
   0%
     opacity: 0
   100%
     opacity: 1
 
+@keyframes category-moves
+  0%
+   opacity: 0
+   transform: translate(100%, 100%)
+  100%
+   opacity: 1
+   transform: translate(0%, 0%)
+
 .balance-menu_item
     display: flex
     justify-content: space-between
-    animation: rotate 2s linear
+    animation: opacity-change 1s linear
+.category
+    &-chats
+        @include categoryPosition(top,-55px,right,30px, 0ms)
+    &-letters
+        @include categoryPosition(top,-40px,right,70px, 300ms)
+    &-dating
+        @include categoryPosition(top,-40px,right,-10px, 600ms)
+    &-phoneCalls
+        @include categoryPosition(top,0px,right,70px, 900ms)
+    &-virtualGiftsSvadba
+        @include categoryPosition(top,20px,right,30px, 1200ms)
+    &-virtualGiftsDating
+        @include categoryPosition(top,0px,right,-10px, 1500ms)
+    &-all
+        @include categoryPosition(top,-20px,right, 30px, 1800ms)    
+.category-select
+    width: 20px
+    height: 20px
+    appearance: none
+    margin: 0
+    border: none
+
 

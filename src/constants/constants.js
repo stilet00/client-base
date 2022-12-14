@@ -20,6 +20,12 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import AdUnitsIcon from '@mui/icons-material/AdUnits'
 import { purple, blue, green } from '@mui/material/colors'
+import ChatIcon from '@mui/icons-material/Chat'
+import EmailIcon from '@mui/icons-material/Email'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg'
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -190,30 +196,37 @@ export const CHARTS_CATEGORIES = [
     {
         name: 'All',
         value: null,
+        icon: <SignalCellularAltIcon />,
     },
     {
         name: 'Chats',
         value: 'chats',
+        icon: <ChatIcon />,
     },
     {
         name: 'Letters',
         value: 'letters',
+        icon: <EmailIcon />,
     },
     {
         name: 'Dating',
         value: 'dating',
+        icon: <FavoriteIcon sx={{ color: 'red' }} />,
     },
     {
         name: 'Phone Calls',
         value: 'phoneCalls',
+        icon: <PermPhoneMsgIcon />,
     },
     {
         name: 'Virtual Gifts Svadba',
         value: 'virtualGiftsSvadba',
+        icon: <CardGiftcardIcon />,
     },
     {
         name: 'Virtual Gifts Dating',
         value: 'virtualGiftsDating',
+        icon: <CardGiftcardIcon sx={{ color: 'red' }} />,
     },
     {
         name: 'Photo Attachments',

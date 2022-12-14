@@ -88,7 +88,7 @@
   opacity: 1;
 }
 
-@-webkit-keyframes rotate {
+@-webkit-keyframes opacity-change {
   0% {
     opacity: 0;
   }
@@ -97,12 +97,38 @@
   }
 }
 
-@keyframes rotate {
+@keyframes opacity-change {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
+  }
+}
+
+@-webkit-keyframes category-moves {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(100%, 100%);
+            transform: translate(100%, 100%);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0%, 0%);
+            transform: translate(0%, 0%);
+  }
+}
+
+@keyframes category-moves {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(100%, 100%);
+            transform: translate(100%, 100%);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0%, 0%);
+            transform: translate(0%, 0%);
   }
 }
 
@@ -113,7 +139,108 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  -webkit-animation: rotate 2s linear;
-          animation: rotate 2s linear;
+  -webkit-animation: opacity-change 1s linear;
+          animation: opacity-change 1s linear;
+}
+
+.category-chats {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 0ms;
+          animation-delay: 0ms;
+  top: -55px;
+  right: 30px;
+}
+
+.category-letters {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 300ms;
+          animation-delay: 300ms;
+  top: -40px;
+  right: 70px;
+}
+
+.category-dating {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 600ms;
+          animation-delay: 600ms;
+  top: -40px;
+  right: -10px;
+}
+
+.category-phoneCalls {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 900ms;
+          animation-delay: 900ms;
+  top: 0px;
+  right: 70px;
+}
+
+.category-virtualGiftsSvadba {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 1200ms;
+          animation-delay: 1200ms;
+  top: 20px;
+  right: 30px;
+}
+
+.category-virtualGiftsDating {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 1500ms;
+          animation-delay: 1500ms;
+  top: 0px;
+  right: -10px;
+}
+
+.category-all {
+  border: none;
+  background: none;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 1800ms;
+          animation-delay: 1800ms;
+  top: -20px;
+  right: 30px;
+}
+
+.category-select {
+  width: 20px;
+  height: 20px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  margin: 0;
+  border: none;
 }
 /*# sourceMappingURL=ListOfClients.css.map */
