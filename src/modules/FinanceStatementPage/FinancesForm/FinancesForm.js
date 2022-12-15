@@ -77,7 +77,7 @@ export default function FinancesForm({ handleNewPayment }) {
         const { name, value } = e.target
         const newState = { ...paymentData, [name]: Number(value) }
         setPaymentData(newState)
-        setFormErrors(handleFormValidation(newState, listOfReceivers))
+        setFormErrors(handleFormValidation(newState))
     }
 
     function submitNewPayment(e) {
@@ -111,7 +111,7 @@ export default function FinancesForm({ handleNewPayment }) {
         } else {
             const newState = { ...paymentData, [name]: value }
             setPaymentData(newState)
-            setFormErrors(handleFormValidation(newState, listOfReceivers))
+            setFormErrors(handleFormValidation(newState))
         }
     }
 
@@ -119,7 +119,7 @@ export default function FinancesForm({ handleNewPayment }) {
         setPaymentData(DEFAULT_STATEMENT)
     }
 
-    const handleFormValidation = (values, recieversList) => {
+    const handleFormValidation = (values, recieversList = listOfReceivers) => {
         const errors = {}
         if (!values.receiver) {
             errors.receiver = `Please choose a receiver`
