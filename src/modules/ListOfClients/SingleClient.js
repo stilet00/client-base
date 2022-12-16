@@ -106,8 +106,8 @@ export default function SingleClient({
                         onClickAway={() => setOpenCategorySelect(false)}
                     >
                         <Box sx={{ position: 'relative' }}>
-                            {catergoriesWithIcons.map(category => (
-                                <>
+                            {catergoriesWithIcons.map((category, index) => (
+                                <React.Fragment key={category + index}>
                                     <label
                                         for={category.name}
                                         className={
@@ -127,14 +127,17 @@ export default function SingleClient({
                                                 : `category-${category.value} category-select`
                                         }
                                         value={category.value}
-                                        onChange={e =>
+                                        onChange={e => {
+                                            const argsForHandleSwitchToGraph = {
+                                                id: _id,
+                                                category: e.target.value,
+                                            }
                                             handleSwitchToGraph(
-                                                _id,
-                                                e.target.value
+                                                argsForHandleSwitchToGraph
                                             )
-                                        }
+                                        }}
                                     ></input>
-                                </>
+                                </React.Fragment>
                             ))}
                         </Box>
                     </ClickAwayListener>
