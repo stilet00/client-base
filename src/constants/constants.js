@@ -17,9 +17,10 @@ import Agency_avatar from '../images/logo.png'
 import Anton_avatar from '../images/avatars/anton-avatar.png'
 import Oleksandr_avatar from '../images/avatars/sasha-avatar.png'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import AdUnitsIcon from '@mui/icons-material/AdUnits'
-import { purple, blue, green } from '@mui/material/colors'
+import { purple, blue, green, cyan } from '@mui/material/colors'
 import ChatIcon from '@mui/icons-material/Chat'
 import EmailIcon from '@mui/icons-material/Email'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -171,12 +172,16 @@ export const FINANCE_IMAGES = {
     salary: <MonetizationOnIcon sx={{ fontSize: 40, color: green[400] }} />,
     paymentToScout: <CreditScoreIcon sx={{ fontSize: 40, color: blue[500] }} />,
     paymentToBot: <AdUnitsIcon sx={{ fontSize: 40, color: purple[500] }} />,
+    paymentToTranslator: (
+        <FaceRetouchingNaturalIcon sx={{ fontSize: 40, color: cyan[500] }} />
+    ),
 }
 
 export const FINANCE_COMMENTS = {
     salary: 'salary',
     paymentToScout: 'Payment to scout',
     paymentToBot: 'Payment to bot',
+    paymentToTranslator: 'Payment to translator',
 }
 
 export const DEFAULT_STATEMENT = {

@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
 import { getClients } from '../../../services/clientsServices/services'
+import { getTranslators } from '../../../services/translatorsServices/services'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -37,6 +38,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [fromErrors, setFormErrors] = useState({})
+    const [translators, setTranslators] = useState([])
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
@@ -47,6 +49,21 @@ export default function FinancesForm({ handleNewPayment }) {
                         return {
                             id: client._id,
                             label: `${client.name} ${client.surname}`,
+                        }
+                    })
+                )
+            }
+        })
+        getTranslators().then(res => {
+            if (res.status === 200) {
+                const notSuspendedTranslators = res.data.filter(
+                    translator => !translator.suspended.status
+                )
+                setTranslators(
+                    notSuspendedTranslators.map(translator => {
+                        return {
+                            id: translator._id,
+                            label: `${translator.name} ${translator.surname}`,
                         }
                     })
                 )
@@ -72,29 +89,43 @@ export default function FinancesForm({ handleNewPayment }) {
         setPaymentData({ ...paymentData, date: newDate })
     }
 
+    const getListofRecievers = comment => {
+        if (comment === 'Payment to bot') {
+            return BOT_LIST
+        } else if (comment === 'Payment to translator') {
+            return translators
+        } else {
+            return receivers
+        }
+    }
+
+    const listOfReceivers = getListofRecievers(paymentData.comment)
+
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
-        const newState = { ...paymentData, [name]: value }
-        setPaymentData(newState)
-        setFormErrors(handleFormValidation(newState))
+        if (name === 'comment') {
+            const newState = { ...paymentData, [name]: value }
+            const newListOfRecievers = getListofRecievers(value)
+            setPaymentData(newState)
+            setFormErrors(handleFormValidation(newState, newListOfRecievers))
+        } else {
+            const newState = { ...paymentData, [name]: value }
+            setPaymentData(newState)
+            setFormErrors(handleFormValidation(newState))
+        }
     }
 
     function clearPaymentsData() {
         setPaymentData(DEFAULT_STATEMENT)
     }
 
-    const handleFormValidation = values => {
+    const handleFormValidation = (values, recieversList = listOfReceivers) => {
         const errors = {}
         if (!values.receiver) {
             errors.receiver = `Please choose a receiver`
         }
-        if (
-            (values.comment !== 'Payment to bot' &&
-                BOT_LIST.includes(values.receiver)) ||
-            (values.comment === 'Payment to bot' &&
-                receivers.includes(values.receiver))
-        ) {
-            errors.receiver = `Please change reciever`
+        if (!recieversList.includes(values.receiver)) {
+            errors.receiver = `Please change a receiver`
         }
         if (!values.amount || values.amount === 0) {
             errors.amount = `Enter the amount`
@@ -107,9 +138,6 @@ export default function FinancesForm({ handleNewPayment }) {
         }
         return errors
     }
-
-    const listOfReceivers =
-        paymentData.comment === 'Payment to bot' ? BOT_LIST : receivers
 
     return (
         <div className={'modal-wrapper down-add-button'}>
