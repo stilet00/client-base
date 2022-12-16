@@ -20,7 +20,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import EditIcon from '@mui/icons-material/Edit'
-import { TRANSLATORS_SALARY_PERCENT } from '../../constants/constants'
+import {
+    TRANSLATORS_SALARY_PERCENT,
+    CHARTS_CATEGORIES,
+} from '../../constants/constants'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -52,6 +55,8 @@ export default function SingleClient({
     const [displayMenu, setDisplayMenu] = useState(false)
     const [displayProfit, setDisplayProfit] = useState(false)
     const [copied, setCopied] = useState(false)
+    const [openCategorySelect, setOpenCategorySelect] = useState(false)
+
     const handleChange = e => {
         setExpanded(!expanded)
     }
@@ -66,6 +71,11 @@ export default function SingleClient({
             ? 2
             : 1
     }
+
+    const catergoriesWithIcons = CHARTS_CATEGORIES.filter(
+        category => category.icon
+    )
+
     const payedToTranslators = Math.round(
         currentYearProfit * TRANSLATORS_SALARY_PERCENT
     )
@@ -89,9 +99,51 @@ export default function SingleClient({
                 sx={{
                     padding: 0,
                 }}
-                onClick={() => handleSwitchToGraph(_id)}
+                onClick={() => setOpenCategorySelect(!openCategorySelect)}
             >
-                <QueryStatsIcon fontSize="small" />
+                {openCategorySelect ? (
+                    <ClickAwayListener
+                        onClickAway={() => setOpenCategorySelect(false)}
+                    >
+                        <Box sx={{ position: 'relative' }}>
+                            {catergoriesWithIcons.map((category, index) => (
+                                <React.Fragment key={category + index}>
+                                    <label
+                                        for={category.name}
+                                        className={
+                                            category.value === null
+                                                ? 'category-all'
+                                                : `category-${category.value}`
+                                        }
+                                    >
+                                        {category.icon}
+                                    </label>
+                                    <input
+                                        type="radio"
+                                        id={category.name}
+                                        className={
+                                            category.value === null
+                                                ? 'category-all category-select'
+                                                : `category-${category.value} category-select`
+                                        }
+                                        value={category.value}
+                                        onChange={e => {
+                                            const argsForHandleSwitchToGraph = {
+                                                id: _id,
+                                                category: e.target.value,
+                                            }
+                                            handleSwitchToGraph(
+                                                argsForHandleSwitchToGraph
+                                            )
+                                        }}
+                                    ></input>
+                                </React.Fragment>
+                            ))}
+                        </Box>
+                    </ClickAwayListener>
+                ) : (
+                    <QueryStatsIcon fontSize="small" />
+                )}
             </IconButton>
             <span
                 className={
