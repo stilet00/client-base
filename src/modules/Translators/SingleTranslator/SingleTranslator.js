@@ -410,10 +410,13 @@ function SingleTranslator({
                                     )}: `}
                                     <b>{`${translatorSalaryForPickedMonth} $`}</b>
                                 </Typography>
-                                <Typography variant="body2">
-                                    {`Salary: `}
-                                    <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
-                                </Typography>
+                                {translatorSalaryForPickedMonthInUah ? (
+                                    <Typography variant="body2">
+                                        {`Salary: `}
+                                        <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                    </Typography>
+                                ) : null}
+
                                 {calculatePersonalPenalties()
                                     ?.selectedDatePenaltiesArray.length ? (
                                     <Typography variant="body2" align={'left'}>

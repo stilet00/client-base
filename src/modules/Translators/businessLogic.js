@@ -15,6 +15,7 @@ import {
     DEFAULT_DAY_CLIENT,
     previousMonth,
     previousYear,
+    DEFAULT_CURRENCY_RATE,
 } from '../../constants/constants'
 
 import {
@@ -41,7 +42,9 @@ export const useTranslators = user => {
     const [translators, setTranslators] = useState([])
 
     const [currentClient, setCurrentClient] = useState(null)
-    const [dollarToUahRate, setDollarToUahRate] = useState(null || 36.57)
+    const [dollarToUahRate, setDollarToUahRate] = useState(
+        null || DEFAULT_CURRENCY_RATE
+    )
 
     const [state, setState] = useState({
         left: false,

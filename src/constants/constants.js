@@ -244,5 +244,6 @@ export const CHARTS_CATEGORIES = [
 ]
 
 export const TRANSLATORS_SALARY_PERCENT = 0.45
+export const DEFAULT_CURRENCY_RATE = 36.5
 
 export const PAYONEER_COMISSION = 0.96
