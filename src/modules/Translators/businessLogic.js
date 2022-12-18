@@ -100,14 +100,16 @@ export const useTranslators = user => {
                     setDollarToUahRate(res.data.data.UAH)
                 }
             })
-            getTranslators().then(res => {
-                if (res.status === 200) {
-                    setLoading(false)
-                    setTranslators(res.data)
-                } else {
-                    console.log('No translators')
-                }
-            })
+            getTranslators()
+                .then(res => {
+                    if (res.status === 200) {
+                        setLoading(false)
+                        setTranslators(res.data)
+                    } else {
+                        console.log('No translators')
+                    }
+                })
+                .catch(err => console.log(err.message))
 
             getClients().then(res => {
                 if (res.status === 200) {
@@ -118,7 +120,6 @@ export const useTranslators = user => {
             })
         }
     }, [user])
-
     const showAlertMessage = useCallback(
         (alertMessage, duration) => {
             setMessage(alertMessage)
@@ -517,7 +518,36 @@ export const useTranslators = user => {
         },
         [translators]
     )
-
+    // const checkTranslatorsClientsNamesDifference = () => {
+    //     const arrayOfTranslatorsWithChangedClientsNames = translators.map(
+    //         translator => {
+    //             const translatorWithChangedClientsNames = {
+    //                 ...translator,
+    //                 clients: translator.clients.map(translatorClient => {
+    //                     const searchedClient = clients.find(client => {
+    //                         if (
+    //                             client._id === translatorClient._id &&
+    //                             client.name !== translatorClient.name &&
+    //                             client.surname !== translatorClient.surname
+    //                         ) {
+    //                             return client
+    //                         }
+    //                     })
+    //                     if (searchedClient) {
+    //                         const changedClient = {
+    //                             ...translatorClient,
+    //                             name: searchedClient.name,
+    //                             surname: searchedClient.surname,
+    //                         }
+    //                         return changedClient
+    //                     } else return translatorClient
+    //                 }),
+    //             }
+    //             return translatorWithChangedClientsNames
+    //         }
+    //     )
+    //     return arrayOfTranslatorsWithChangedClientsNames
+    // }
     return {
         translators,
         startTranslatorDelete,
@@ -656,7 +686,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     function onSavePressed() {
         balanceDaySubmit(currentBalanceDay)
     }
-
     return {
         handleOpen,
         open,

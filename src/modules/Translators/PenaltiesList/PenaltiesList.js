@@ -78,11 +78,17 @@ export default function PenaltiesList({ penaltiesArray }) {
                                         },
                                     }}
                                 >
-                                    <TableCell component="th" scope="row">
+                                    <TableCell
+                                        key={penalty.id}
+                                        component="th"
+                                        scope="row"
+                                    >
                                         {penalty.date}
                                     </TableCell>
-                                    <TableCell>{penalty.description}</TableCell>
-                                    <TableCell align="right">
+                                    <TableCell key={penalty.id}>
+                                        {penalty.description}
+                                    </TableCell>
+                                    <TableCell key={penalty.id} align="right">
                                         {`${penalty.amount} $`}
                                     </TableCell>
                                 </TableRow>
