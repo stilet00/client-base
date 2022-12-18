@@ -95,11 +95,16 @@ export const useTranslators = user => {
 
     useEffect(() => {
         if (user) {
-            getCurrency().then(res => {
-                if (res.status === 200) {
-                    setDollarToUahRate(res.data.data.UAH)
-                }
-            })
+            getCurrency()
+                .then(res => {
+                    if (res.status === 200) {
+                        setDollarToUahRate(res.data.data.UAH)
+                    }
+                })
+                .catch(err => {
+                    setLoading(false)
+                    console.log(err.message)
+                })
             getTranslators().then(res => {
                 if (res.status === 200) {
                     setLoading(false)

@@ -85,7 +85,9 @@ function SingleTranslator({
     )
 
     const getTranslatorSalaryInUah = (salary = 100) => {
-        const currentCurrencyRate = Number(dollarToUahRate.value).toFixed(2)
+        const currentCurrencyRate = dollarToUahRate
+            ? Number(dollarToUahRate.value).toFixed(2)
+            : 0
         const salaryInUahIncludingComissinos =
             currentCurrencyRate * PAYONEER_COMISSION * salary
         return salaryInUahIncludingComissinos
@@ -117,7 +119,6 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
-
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -410,10 +411,13 @@ function SingleTranslator({
                                     )}: `}
                                     <b>{`${translatorSalaryForPickedMonth} $`}</b>
                                 </Typography>
-                                <Typography variant="body2">
-                                    {`Salary: `}
-                                    <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
-                                </Typography>
+                                {dollarToUahRate ? (
+                                    <Typography variant="body2">
+                                        {`Salary: `}
+                                        <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                    </Typography>
+                                ) : null}
+
                                 {calculatePersonalPenalties()
                                     ?.selectedDatePenaltiesArray.length ? (
                                     <Typography variant="body2" align={'left'}>
