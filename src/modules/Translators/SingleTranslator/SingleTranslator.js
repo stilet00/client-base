@@ -85,7 +85,9 @@ function SingleTranslator({
     )
 
     const getTranslatorSalaryInUah = (salary = 100) => {
-        const currentCurrencyRate = Number(dollarToUahRate.value).toFixed(2)
+        const currentCurrencyRate = dollarToUahRate
+            ? Number(dollarToUahRate.value).toFixed(2)
+            : 0
         const salaryInUahIncludingComissinos =
             currentCurrencyRate * PAYONEER_COMISSION * salary
         return salaryInUahIncludingComissinos
@@ -118,6 +120,7 @@ function SingleTranslator({
             ? moment().format('MMM')
             : moment().format('MMMM')
 
+    console.log(dollarToUahRate)
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -410,7 +413,7 @@ function SingleTranslator({
                                     )}: `}
                                     <b>{`${translatorSalaryForPickedMonth} $`}</b>
                                 </Typography>
-                                {translatorSalaryForPickedMonthInUah ? (
+                                {dollarToUahRate ? (
                                     <Typography variant="body2">
                                         {`Salary: `}
                                         <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>

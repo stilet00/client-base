@@ -15,7 +15,6 @@ import {
     DEFAULT_DAY_CLIENT,
     previousMonth,
     previousYear,
-    DEFAULT_CURRENCY_RATE,
 } from '../../constants/constants'
 
 import {
@@ -42,9 +41,7 @@ export const useTranslators = user => {
     const [translators, setTranslators] = useState([])
 
     const [currentClient, setCurrentClient] = useState(null)
-    const [dollarToUahRate, setDollarToUahRate] = useState(
-        null || DEFAULT_CURRENCY_RATE
-    )
+    const [dollarToUahRate, setDollarToUahRate] = useState(null)
 
     const [state, setState] = useState({
         left: false,
@@ -98,11 +95,16 @@ export const useTranslators = user => {
 
     useEffect(() => {
         if (user) {
-            getCurrency().then(res => {
-                if (res.status === 200) {
-                    setDollarToUahRate(res.data.data.UAH)
-                }
-            })
+            getCurrency()
+                .then(res => {
+                    if (res.status === 200) {
+                        setDollarToUahRate(res.data.data.UAH)
+                    }
+                })
+                .catch(err => {
+                    setLoading(false)
+                    console.log(err.message)
+                })
             getTranslators().then(res => {
                 if (res.status === 200) {
                     setLoading(false)
