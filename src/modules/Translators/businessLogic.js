@@ -41,7 +41,7 @@ export const useTranslators = user => {
     const [translators, setTranslators] = useState([])
 
     const [currentClient, setCurrentClient] = useState(null)
-    const [dollarToUahRate, setDollarToUahRate] = useState(null)
+    const [dollarToUahRate, setDollarToUahRate] = useState(null || 36.57)
 
     const [state, setState] = useState({
         left: false,
