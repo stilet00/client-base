@@ -119,8 +119,6 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
-
-    console.log(dollarToUahRate)
     return (
         <Card
             sx={{ minWidth: 275 }}
