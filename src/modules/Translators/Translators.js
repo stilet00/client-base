@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import Button from '@material-ui/core/Button'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
@@ -30,6 +31,7 @@ function Translators({ user }) {
     const { screenIsSmall } = useWindowDimensions()
     const {
         translators,
+        setTranslators,
         clients,
         dragLeaveHandler,
         dragOverHandler,
@@ -62,9 +64,17 @@ function Translators({ user }) {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        checkTranslatorsClientsNamesDifference,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
+    useEffect(() => {
+        if (translators.length > 0) {
+            checkTranslatorsClientsNamesDifference()
+        } else {
+            console.log('no translators yet')
+        }
+    }, [user, clients])
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget)

@@ -1,11 +1,10 @@
 import axios from 'axios'
 
 const currencyURL =
-    'https://api.currencyapi.com/v3/latest?apikey=KmA41cfqr82rJ9izxT07gnVXImqmTC9cE86a4x06'
-
+    'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11'
+// using Proxi otherwise privatBank link will not work
 export function getCurrency() {
-    return axios.get(currencyURL, {
-        headers: { 'Access-Control-Allow-Origin': 'origin-list' },
-        responseType: 'json',
-    })
+    return axios.get(
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(currencyURL)}`
+    )
 }

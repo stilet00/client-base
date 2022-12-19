@@ -93,31 +93,32 @@ export const useTranslators = user => {
         }
     }, [translators, translatorFilter])
 
-    useEffect(() => {
+    useEffect(async () => {
         if (user) {
-            getCurrency().then(res => {
-                if (res.status === 200) {
-                    setDollarToUahRate(res.data.data.UAH)
-                }
-            })
-            getTranslators()
+            getCurrency()
                 .then(res => {
                     if (res.status === 200) {
-                        setLoading(false)
-                        setTranslators(res.data)
-                    } else {
-                        console.log('No translators')
+                        const privatBankDollarRate = res.data[1].buy
+                        setDollarToUahRate(privatBankDollarRate)
                     }
                 })
-                .catch(err => console.log(err.message))
-
-            getClients().then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                } else {
-                    console.log('No clients')
-                }
-            })
+                .catch(err => {
+                    showAlertMessage(err.message)
+                })
+            const responseTranslators = await getTranslators()
+            if (responseTranslators.status === 200) {
+                setLoading(false)
+                setTranslators(responseTranslators.data)
+            } else {
+                showAlertMessage(MESSAGES.somethingWrong)
+            }
+            const responseClients = await getClients()
+            if (responseClients.status === 200) {
+                setLoading(false)
+                setClients(responseClients.data)
+            } else {
+                showAlertMessage(MESSAGES.somethingWrong)
+            }
         }
     }, [user])
     const showAlertMessage = useCallback(
@@ -518,38 +519,36 @@ export const useTranslators = user => {
         },
         [translators]
     )
-    // const checkTranslatorsClientsNamesDifference = () => {
-    //     const arrayOfTranslatorsWithChangedClientsNames = translators.map(
-    //         translator => {
-    //             const translatorWithChangedClientsNames = {
-    //                 ...translator,
-    //                 clients: translator.clients.map(translatorClient => {
-    //                     const searchedClient = clients.find(client => {
-    //                         if (
-    //                             client._id === translatorClient._id &&
-    //                             client.name !== translatorClient.name &&
-    //                             client.surname !== translatorClient.surname
-    //                         ) {
-    //                             return client
-    //                         }
-    //                     })
-    //                     if (searchedClient) {
-    //                         const changedClient = {
-    //                             ...translatorClient,
-    //                             name: searchedClient.name,
-    //                             surname: searchedClient.surname,
-    //                         }
-    //                         return changedClient
-    //                     } else return translatorClient
-    //                 }),
-    //             }
-    //             return translatorWithChangedClientsNames
-    //         }
-    //     )
-    //     return arrayOfTranslatorsWithChangedClientsNames
-    // }
+    const checkTranslatorsClientsNamesDifference = () => {
+        const arrayOfTranslatorsWithChangedClientsNames = translators.map(
+            translator => {
+                const translatorWithChangedClientsNames = {
+                    ...translator,
+                    clients: translator.clients.map(translatorClient => {
+                        const searchedClient = clients.find(
+                            client =>
+                                client._id === translatorClient._id &&
+                                client.name !== translatorClient.name &&
+                                client.surname !== translatorClient.surname
+                        )
+                        if (searchedClient) {
+                            const changedClient = {
+                                ...translatorClient,
+                                name: searchedClient.name,
+                                surname: searchedClient.surname,
+                            }
+                            return changedClient
+                        } else return translatorClient
+                    }),
+                }
+                return translatorWithChangedClientsNames
+            }
+        )
+        setTranslators(arrayOfTranslatorsWithChangedClientsNames)
+    }
     return {
         translators,
+        setTranslators,
         startTranslatorDelete,
         dragOverHandler,
         onBoardDrop,
@@ -584,6 +583,7 @@ export const useTranslators = user => {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        checkTranslatorsClientsNamesDifference,
     }
 }
 
