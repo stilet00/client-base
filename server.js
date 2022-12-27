@@ -76,6 +76,63 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
 
+//Synchronizing translators names
+const checkTranslatorsClientsNamesDifference = async (
+    translators,
+    collectionClients
+) => {
+    for (let translator of translators) {
+        const translatorWithChangedClientsNames = {
+            ...translator,
+            clients: translator.clients.map(translatorClient => {
+                const searchedClient = collectionClients.find(
+                    client =>
+                        client._id == translatorClient._id &&
+                        (client.name !== translatorClient.name ||
+                            client.surname !== translatorClient.surname)
+                )
+
+                if (searchedClient) {
+                    const changedClient = {
+                        ...translatorClient,
+                        name: searchedClient.name,
+                        surname: searchedClient.surname,
+                    }
+                    return changedClient
+                } else return translatorClient
+            }),
+        }
+        await collectionTranslators.updateOne(
+            { _id: ObjectId(translator._id) },
+            {
+                $set: {
+                    clients: translatorWithChangedClientsNames.clients,
+                },
+            }
+        )
+    }
+}
+
+async function synchronizeNames() {
+    try {
+        const translatorsCollection = await collectionTranslators
+            .find()
+            .toArray()
+        const clientsCollection = await collectionClients.find().toArray()
+        if (translatorsCollection.length > 0 && clientsCollection.length > 0) {
+            await checkTranslatorsClientsNamesDifference(
+                translatorsCollection,
+                clientsCollection
+            )
+        } else {
+            return 'something went wrong'
+        }
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
 //email api
 async function balanceMailout() {
     try {
@@ -327,6 +384,10 @@ app.get(translatorsURL + 'get', (req, res) => {
     })
 })
 
+app.get(translatorsURL + 'synchronize', (req, res) => {
+    synchronizeNames()
+})
+
 app.get(translatorsURL + 'send-emails', (req, res) => {
     balanceMailout().then(emailsWereSentSuccessfully => {
         if (emailsWereSentSuccessfully.length) {
@@ -434,6 +495,10 @@ client.connect(function (err) {
     collectionClients = client.db('clientsDB').collection('clients')
     collectionTranslators = client.db('translatorsDB').collection('translators')
     collectionStatements = client.db('statementsDB').collection('statements')
+    // collectionTranslators = client
+    //     .db('testDB')
+    //     .collection('testTranslatorsCollection')
+    // collectionClients = client.db('testDB').collection('testClientCollection')
     console.log('Connected successfully to server...')
     app.listen(PORT, () => {
         console.log('API started at port', PORT)

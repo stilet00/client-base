@@ -519,33 +519,7 @@ export const useTranslators = user => {
         },
         [translators]
     )
-    const checkTranslatorsClientsNamesDifference = () => {
-        const arrayOfTranslatorsWithChangedClientsNames = translators.map(
-            translator => {
-                const translatorWithChangedClientsNames = {
-                    ...translator,
-                    clients: translator.clients.map(translatorClient => {
-                        const searchedClient = clients.find(
-                            client =>
-                                client._id === translatorClient._id &&
-                                client.name !== translatorClient.name &&
-                                client.surname !== translatorClient.surname
-                        )
-                        if (searchedClient) {
-                            const changedClient = {
-                                ...translatorClient,
-                                name: searchedClient.name,
-                                surname: searchedClient.surname,
-                            }
-                            return changedClient
-                        } else return translatorClient
-                    }),
-                }
-                return translatorWithChangedClientsNames
-            }
-        )
-        setTranslators(arrayOfTranslatorsWithChangedClientsNames)
-    }
+
     return {
         translators,
         setTranslators,
@@ -583,7 +557,6 @@ export const useTranslators = user => {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        checkTranslatorsClientsNamesDifference,
     }
 }
 
