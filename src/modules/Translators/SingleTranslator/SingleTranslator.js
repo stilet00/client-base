@@ -119,7 +119,6 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
-
     return (
         <Card
             sx={{ minWidth: 275 }}
