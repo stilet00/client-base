@@ -693,7 +693,7 @@ export const useSingleTranslator = (
             .find(
                 year => year.year === moment().subtract(1, 'day').format('YYYY')
             )
-            .months.find(
+            ?.months.find(
                 (month, index) =>
                     index + 1 ===
                     Number(moment().subtract(1, 'day').format('M'))
@@ -732,7 +732,7 @@ export const useSingleTranslator = (
     const calculateTranslatorDayTotal = statistics => {
         const day = statistics
             .find(year => year.year === selectedDate.format('YYYY'))
-            .months.find(
+            ?.months.find(
                 (month, index) => index + 1 === Number(selectedDate.format('M'))
             )
             .find(day => {
@@ -766,7 +766,7 @@ export const useSingleTranslator = (
     }
 
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayStatisticObject().clients.find(
+        const clientObject = findYesterdayStatisticObject()?.clients.find(
             item => item.id === clientId
         )
         return clientObject
@@ -801,7 +801,7 @@ export const useSingleTranslator = (
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayStatisticObject().clients.find(
+        const clientObject = findYesterdayStatisticObject()?.clients.find(
             item => item.id === clientId
         )
 
