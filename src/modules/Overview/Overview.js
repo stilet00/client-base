@@ -148,6 +148,9 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    const totalPayments = statementsGroupedByComment
+        .map(el => el.amount)
+        .reduce((sum, current) => sum + current, 0)
     const datingMonthProgress =
         monthTotalSum - svadbaMonthTotal >
         previousMonthTotal - svadbaPreviousMonthTotal ? (
@@ -177,7 +180,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-    
+
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
@@ -222,7 +225,7 @@ function Overview({ user }) {
                                                     Month balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {yearTotalSum ? (
+                                                    {(
                                                         <>
                                                             <span
                                                                 className={
@@ -243,9 +246,7 @@ function Overview({ user }) {
                                                             </span>
                                                             {monthProgress}
                                                         </>
-                                                    ) : (
-                                                        <SmallLoader />
-                                                    )}
+                                                    ) ?? <SmallLoader />}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -253,7 +254,7 @@ function Overview({ user }) {
                                                     Svadba balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {yearTotalSum ? (
+                                                    {(
                                                         <>
                                                             <span
                                                                 className={
@@ -276,9 +277,7 @@ function Overview({ user }) {
                                                                 svadbaMonthProgress
                                                             }
                                                         </>
-                                                    ) : (
-                                                        <SmallLoader />
-                                                    )}
+                                                    ) ?? <SmallLoader />}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -286,7 +285,7 @@ function Overview({ user }) {
                                                     Dating balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {yearTotalSum ? (
+                                                    {(
                                                         <>
                                                             <span
                                                                 className={
@@ -310,9 +309,7 @@ function Overview({ user }) {
                                                                 datingMonthProgress
                                                             }
                                                         </>
-                                                    ) : (
-                                                        <SmallLoader />
-                                                    )}
+                                                    ) ?? <SmallLoader />}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -352,9 +349,7 @@ function Overview({ user }) {
                                             Year's balance
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {yearTotalSum ? (
-                                                yearTotalSum + ' $'
-                                            ) : (
+                                            {yearTotalSum + ' $' ?? (
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
@@ -364,7 +359,7 @@ function Overview({ user }) {
                                             Salary payed
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {yearTotalSum ? (
+                                            {(
                                                 <span
                                                     className={
                                                         'blue-text styled-text-numbers'
@@ -375,12 +370,10 @@ function Overview({ user }) {
                                                         yearTotalSum * 0.45
                                                     ) + ' $'}{' '}
                                                 </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
+                                            ) ?? <SmallLoader />}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                    {statementsGroupedByComment.length
+                                    {statementsGroupedByComment.length > 0
                                         ? statementsGroupedByComment.map(
                                               statement => (
                                                   <StyledTableRow>
@@ -391,7 +384,7 @@ function Overview({ user }) {
                                                               : statement.comment}
                                                       </StyledTableCell>
                                                       <StyledTableCell>
-                                                          {yearTotalSum ? (
+                                                          {(
                                                               <span
                                                                   className={
                                                                       'blue-text styled-text-numbers'
@@ -400,9 +393,7 @@ function Overview({ user }) {
                                                                   {statement.amount +
                                                                       ' $'}
                                                               </span>
-                                                          ) : (
-                                                              <SmallLoader />
-                                                          )}
+                                                          ) ?? <SmallLoader />}
                                                       </StyledTableCell>
                                                   </StyledTableRow>
                                               )
@@ -414,7 +405,7 @@ function Overview({ user }) {
                                         </StyledTableCell>
                                         <StyledTableCell>
                                             <b>
-                                                {yearTotalSum ? (
+                                                {(
                                                     <span
                                                         className={
                                                             'green-text styled-text-numbers'
@@ -429,25 +420,10 @@ function Overview({ user }) {
                                                                 yearTotalSum *
                                                                     0.45
                                                             ) -
-                                                            statements
-                                                                .map(
-                                                                    statement =>
-                                                                        statement.amount
-                                                                )
-                                                                .reduce(
-                                                                    (
-                                                                        sum,
-                                                                        current
-                                                                    ) =>
-                                                                        sum +
-                                                                        current,
-                                                                    0
-                                                                ) +
+                                                            totalPayments +
                                                             ' $'}{' '}
                                                     </span>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
+                                                ) ?? <SmallLoader />}
                                             </b>
                                         </StyledTableCell>
                                     </StyledTableRow>

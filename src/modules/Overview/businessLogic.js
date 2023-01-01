@@ -25,17 +25,6 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            // getBalance().then((res) => {
-            //   if (res.status === 200) {
-            //     let byYearFilteredArray = res.data.filter(
-            //       (item) => item.year === selectedYear
-            //     );
-            //     let sumSortedArray =
-            //       getArrayWithSums(byYearFilteredArray).sort(compareSums);
-            //     setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-            //   }
-            // });
-
             getClients().then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
