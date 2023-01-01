@@ -1,4 +1,27 @@
+const { months } = require('moment')
 const moment = require('moment')
+
+class DEFAULT_DAY_BALANCE {
+    constructor(year, month, day) {
+        this.id = moment(year + month + day, 'YYYYMMDD').format('DD MM YYYY')
+        this.clients = []
+    }
+}
+
+class DEFAULT_DAY_CLIENT {
+    constructor(clientId) {
+        this.id = clientId
+        this.chats = 0
+        this.letters = 0
+        this.dating = 0
+        this.virtualGiftsSvadba = 0
+        this.virtualGiftsDating = 0
+        this.photoAttachments = 0
+        this.phoneCalls = 0
+        this.penalties = 0
+        this.comments = ''
+    }
+}
 
 const calculateTranslatorYesterdayTotal = (
     statistics,
@@ -7,8 +30,8 @@ const calculateTranslatorYesterdayTotal = (
     clientId = null
 ) => {
     const day = statistics
-        .find(year => year.year === moment().subtract(1, 'day').format('YYYY'))
-        .months.find(
+        .find(year => year?.year === moment().subtract(1, 'day').format('YYYY'))
+        ?.months.find(
             (month, index) =>
                 index + 1 === Number(moment().subtract(1, 'day').format('M'))
         )
@@ -52,7 +75,7 @@ const calculateTranslatorMonthTotal = (
 ) => {
     const month = statistics
         .find(year => year.year === yearFilter)
-        .months.find((month, index) => index + 1 === Number(monthFilter))
+        ?.months.find((month, index) => index + 1 === Number(monthFilter))
     let total
     if (forFullMonth) {
         total = month.reduce((sum, current) => {
@@ -141,8 +164,55 @@ const calculatePercentDifference = (currentSum, previousSum) => {
     }
 }
 
+const fillDaysForStatistics = (month, year) => {
+    const stringMonth = month < 10 ? '0' + month : month
+    let totalDays = []
+    for (
+        let i = 1;
+        i <= moment(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
+        i++
+    ) {
+        let data = new DEFAULT_DAY_BALANCE(year, stringMonth, i)
+        totalDays.push(data)
+    }
+    return totalDays
+}
+
+const fillMonthsForStatistics = year => {
+    let monthArray = []
+    for (let i = 1; i < 13; i++) {
+        let month = fillDaysForStatistics(i, year)
+        monthArray.push(month)
+    }
+    return monthArray
+}
+
+const createYearStatisticsForTranslator = () => {
+    const currentYear = moment().format('YYYY')
+    const yearStatisticsObject = {
+        year: currentYear,
+        months: fillMonthsForStatistics(currentYear),
+    }
+
+    return yearStatisticsObject
+}
+
+const insertClientToTranslatorBalanceDays = (balanceYearToUpdate, clientId) => {
+    const clientBalanceDay = new DEFAULT_DAY_CLIENT(clientId)
+
+    balanceYearToUpdate.months.forEach((month, monthIndex) =>
+        month.forEach((day, dayIndex) => {
+            balanceYearToUpdate.months[monthIndex][dayIndex].clients.push(
+                clientBalanceDay
+            )
+        })
+    )
+}
+
 module.exports = {
     calculateTranslatorYesterdayTotal,
     calculateTranslatorMonthTotal,
     calculatePercentDifference,
+    createYearStatisticsForTranslator,
+    insertClientToTranslatorBalanceDays,
 }
