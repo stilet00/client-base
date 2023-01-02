@@ -158,10 +158,12 @@ export default function EditBalanceForm({
                                                 value={selectedYear}
                                                 onChange={handleYear}
                                                 label="Year"
-                                                disabled
                                             >
-                                                <MenuItem value={selectedYear}>
-                                                    {selectedYear}
+                                                <MenuItem value={'2023'}>
+                                                    {'2023'}
+                                                </MenuItem>
+                                                <MenuItem value={'2022'}>
+                                                    {'2022'}
                                                 </MenuItem>
                                             </Select>
                                         </FormControl>

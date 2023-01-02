@@ -47,7 +47,6 @@ function ClientsList({
         sortBySum,
         getClientsRating,
         calculateMiddleMonthSum,
-        getAllAsignedTranslators,
     } = useClientsList(translators)
     const [search, setSearch] = useState('')
     function onSearchChange(e) {
