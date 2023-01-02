@@ -41,21 +41,6 @@ export const useChartsContainer = user => {
 
     useEffect(() => {
         if (user) {
-            // getBalance().then((res) => {
-            //   if (res.status === 200) {
-            //     const yearList = res.data.map((item) => item.year);
-            //     setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-            //     let filteredArray = res.data
-            //       .filter((item) => item.year === selectedYear)
-            //       .sort(compareNumeric)
-            //       .reverse();
-            //     setMonths(filteredArray);
-            //     setEmptyStatus(filteredArray.length <= 0);
-            //   } else {
-            //     console.log(res.status);
-            //   }
-            // });
-
             getTranslators().then(res => {
                 if (res.status === 200) {
                     const statisticsYearsArray = res.data.map(item =>

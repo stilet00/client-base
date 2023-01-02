@@ -4,7 +4,10 @@ import SmallLoader from '../../sharedComponents/SmallLoader/SmallLoader'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import { useOverview } from './businessLogic'
-import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculatePercentDifference,
+    getSumFromArray,
+} from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, previousMonth } from '../../constants/constants'
 import {
     faArrowAltCircleUp,
@@ -148,6 +151,9 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    const totalPayments = getSumFromArray(
+        statementsGroupedByComment.map(el => el.amount)
+    )
     const datingMonthProgress =
         monthTotalSum - svadbaMonthTotal >
         previousMonthTotal - svadbaPreviousMonthTotal ? (
@@ -177,7 +183,7 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-    
+
     return (
         <FirebaseAuthConsumer>
             {({ user }) => {
@@ -380,7 +386,7 @@ function Overview({ user }) {
                                             )}
                                         </StyledTableCell>
                                     </StyledTableRow>
-                                    {statementsGroupedByComment.length
+                                    {statementsGroupedByComment.length > 0
                                         ? statementsGroupedByComment.map(
                                               statement => (
                                                   <StyledTableRow>
@@ -391,7 +397,7 @@ function Overview({ user }) {
                                                               : statement.comment}
                                                       </StyledTableCell>
                                                       <StyledTableCell>
-                                                          {yearTotalSum ? (
+                                                          {(
                                                               <span
                                                                   className={
                                                                       'blue-text styled-text-numbers'
@@ -400,9 +406,7 @@ function Overview({ user }) {
                                                                   {statement.amount +
                                                                       ' $'}
                                                               </span>
-                                                          ) : (
-                                                              <SmallLoader />
-                                                          )}
+                                                          ) ?? <SmallLoader />}
                                                       </StyledTableCell>
                                                   </StyledTableRow>
                                               )
@@ -414,7 +418,7 @@ function Overview({ user }) {
                                         </StyledTableCell>
                                         <StyledTableCell>
                                             <b>
-                                                {yearTotalSum ? (
+                                                {(
                                                     <span
                                                         className={
                                                             'green-text styled-text-numbers'
@@ -429,25 +433,10 @@ function Overview({ user }) {
                                                                 yearTotalSum *
                                                                     0.45
                                                             ) -
-                                                            statements
-                                                                .map(
-                                                                    statement =>
-                                                                        statement.amount
-                                                                )
-                                                                .reduce(
-                                                                    (
-                                                                        sum,
-                                                                        current
-                                                                    ) =>
-                                                                        sum +
-                                                                        current,
-                                                                    0
-                                                                ) +
+                                                            totalPayments +
                                                             ' $'}{' '}
                                                     </span>
-                                                ) : (
-                                                    <SmallLoader />
-                                                )}
+                                                ) ?? <SmallLoader />}
                                             </b>
                                         </StyledTableCell>
                                     </StyledTableRow>

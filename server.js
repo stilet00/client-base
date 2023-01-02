@@ -29,6 +29,9 @@ const {
     tasksURL,
 } = require('./src/api/routes/routes')
 const { twentyHoursInMiliseconds } = require('./src/api/constants')
+const {
+    createCurrentYearStatisticsForEveryTranslator,
+} = require('./src/api/database-api/createCurrentYearStatisticsForEveryTranslator')
 
 const PORT = process.env.PORT || 80
 
@@ -503,6 +506,7 @@ client.connect(function (err) {
     app.listen(PORT, () => {
         console.log('API started at port', PORT)
     })
+    createCurrentYearStatisticsForEveryTranslator(collectionTranslators)
 
     collectionTaskNotifications.find().toArray((err, docs) => {
         if (err) {

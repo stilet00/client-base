@@ -45,9 +45,9 @@ export const useClientsList = translators => {
                 year => year.year === date.format('YYYY')
             )
 
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat.forEach(day => {
+            thisMonthStat?.forEach(day => {
                 const clientBalanceDay = day.clients.find(
                     client => client.id === clientId
                 )
@@ -92,9 +92,9 @@ export const useClientsList = translators => {
                 year => year.year === date.format('YYYY')
             )
 
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat.forEach((day, index) => {
+            thisMonthStat?.forEach((day, index) => {
                 if (index === 0 || index < moment().format('D')) {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId

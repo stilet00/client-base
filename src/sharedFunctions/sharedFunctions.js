@@ -42,7 +42,7 @@ export function calculateBalanceDaySum(
 }
 
 export function calculateBalanceDayAllClients(day, category = null) {
-    return day.clients
+    return day?.clients
         .reduce((sum, balanceDay) => {
             return sum + calculateBalanceDaySum(balanceDay, false, category)
         }, 0)
@@ -72,12 +72,12 @@ export const calculateTranslatorMonthTotal = (
 ) => {
     const month = statistics
         .find(year => year.year === yearFilter)
-        .months.find((month, index) => index + 1 === Number(monthFilter))
+        ?.months.find((month, index) => index + 1 === Number(monthFilter))
 
     let total
 
     if (forFullMonth) {
-        total = month.reduce((sum, current) => {
+        total = month?.reduce((sum, current) => {
             return (
                 sum +
                 current.clients.reduce((sum, current) => {
@@ -138,5 +138,5 @@ export function calculatePercentDifference(currentSum, previousSum) {
 }
 
 export function getNumberWithHundreds(number) {
-    return Number(number.toFixed(2))
+    return Number(number?.toFixed(2))
 }

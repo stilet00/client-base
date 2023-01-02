@@ -59,7 +59,7 @@ export const useClientsList = translators => {
             const thisYearStat = translator.statistics.find(
                 year => year.year === date.format('YYYY')
             )
-            thisYearStat.months.forEach(month => {
+            thisYearStat?.months.forEach(month => {
                 month.forEach(day => {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId
@@ -87,9 +87,9 @@ export const useClientsList = translators => {
             const thisYearStat = translator.statistics.find(
                 year => year.year === date.format('YYYY')
             )
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat.forEach(day => {
+            thisMonthStat?.forEach(day => {
                 const clientBalanceDay = day.clients.find(
                     client => client.id === clientId
                 )
@@ -133,9 +133,9 @@ export const useClientsList = translators => {
                 year => year.year === date.format('YYYY')
             )
 
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
+            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat.forEach((day, index) => {
+            thisMonthStat?.forEach((day, index) => {
                 if (index === 0 || index < moment().format('D')) {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId
@@ -208,8 +208,27 @@ export const useClientsList = translators => {
                 year => year.year === date.format('YYYY')
             )
 
-            const thisMonthStat = thisYearStat.months[date.format('M') - 1]
-            const previousMonthStat = thisYearStat.months[date.format('M') - 2]
+            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
+            const findPreviousMonthStat = date => {
+                if (date.format('M') === '1') {
+                    const previousYearStat = translator.statistics.find(
+                        year =>
+                            year.year ===
+                            moment().subtract(1, 'year').format('YYYY')
+                    )
+                    const previousMonth =
+                        previousYearStat.months[
+                            moment().subtract(2, 'month').format('M')
+                        ]
+
+                    return previousMonth
+                } else {
+                    const previousMonth =
+                        thisYearStat?.months[date.format('M') - 2]
+                    return previousMonth
+                }
+            }
+            const previousMonthStat = findPreviousMonthStat(date)
             getArrayWithAmountsPerDayForPickedMonth(
                 clientId,
                 thisMonthStat,

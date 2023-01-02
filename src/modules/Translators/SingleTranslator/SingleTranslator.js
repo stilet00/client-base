@@ -80,7 +80,8 @@ function SingleTranslator({
         calculateTranslatorMonthTotal(
             statistics,
             true,
-            selectedDate.format('M')
+            selectedDate.format('M'),
+            selectedDate.format('YYYY')
         ) * TRANSLATORS_SALARY_PERCENT
     )
 
@@ -119,7 +120,6 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
-
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -403,7 +403,8 @@ function SingleTranslator({
                                     <b>{`${calculateTranslatorMonthTotal(
                                         statistics,
                                         true,
-                                        selectedDate.format('M')
+                                        selectedDate.format('M'),
+                                        selectedDate.format('YYYY')
                                     )} $`}</b>
                                 </Typography>
                                 <Typography variant="body2">
