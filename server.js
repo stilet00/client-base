@@ -79,40 +79,55 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
 
-//Synchronizing translators names
-const checkTranslatorsClientsNamesDifference = async (
+const updateTranslatorDatabaseWithChangedClientName = async (
+    id,
+    arrayWithChangedNames
+) => {
+    await collectionTranslators.updateOne(
+        { _id: ObjectId(id) },
+        {
+            $set: {
+                clients: arrayWithChangedNames,
+            },
+        }
+    )
+}
+const changeTranslatorsAndClientsNameDifference = async (
     translators,
     collectionClients
 ) => {
     for (let translator of translators) {
+        const arrayOfChangedClientsNames = []
         const translatorWithChangedClientsNames = {
             ...translator,
-            clients: translator.clients.map(translatorClient => {
-                const searchedClient = collectionClients.find(
+            clients: translator.clients.map(clientOnTranslator => {
+                const clientWithDifferentData = collectionClients.find(
                     client =>
-                        client._id == translatorClient._id &&
-                        (client.name !== translatorClient.name ||
-                            client.surname !== translatorClient.surname)
+                        client._id == clientOnTranslator._id &&
+                        (client.name !== clientOnTranslator.name ||
+                            client.surname !== clientOnTranslator.surname)
                 )
 
-                if (searchedClient) {
+                if (clientWithDifferentData) {
+                    arrayOfChangedClientsNames.push(clientWithDifferentData)
                     const changedClient = {
-                        ...translatorClient,
-                        name: searchedClient.name,
-                        surname: searchedClient.surname,
+                        ...clientOnTranslator,
+                        name: clientWithDifferentData.name,
+                        surname: clientWithDifferentData.surname,
                     }
                     return changedClient
-                } else return translatorClient
+                }
+                return clientOnTranslator
             }),
         }
-        await collectionTranslators.updateOne(
-            { _id: ObjectId(translator._id) },
-            {
-                $set: {
-                    clients: translatorWithChangedClientsNames.clients,
-                },
-            }
-        )
+        if (arrayOfChangedClientsNames.length > 0) {
+            await updateTranslatorDatabaseWithChangedClientName(
+                translator._id,
+                translatorWithChangedClientsNames.clients
+            )
+        } else {
+            console.log('no changed clients')
+        }
     }
 }
 
@@ -123,12 +138,12 @@ async function synchronizeNames() {
             .toArray()
         const clientsCollection = await collectionClients.find().toArray()
         if (translatorsCollection.length > 0 && clientsCollection.length > 0) {
-            await checkTranslatorsClientsNamesDifference(
+            await changeTranslatorsAndClientsNameDifference(
                 translatorsCollection,
                 clientsCollection
             )
         } else {
-            return 'something went wrong'
+            return 'No clients or translators in dataBase'
         }
     } catch (error) {
         console.log(error)
@@ -498,10 +513,6 @@ client.connect(function (err) {
     collectionClients = client.db('clientsDB').collection('clients')
     collectionTranslators = client.db('translatorsDB').collection('translators')
     collectionStatements = client.db('statementsDB').collection('statements')
-    // collectionTranslators = client
-    //     .db('testDB')
-    //     .collection('testTranslatorsCollection')
-    // collectionClients = client.db('testDB').collection('testClientCollection')
     console.log('Connected successfully to server...')
     app.listen(PORT, () => {
         console.log('API started at port', PORT)

@@ -98,7 +98,8 @@ export const useTranslators = user => {
             getCurrency()
                 .then(res => {
                     if (res.status === 200) {
-                        const privatBankDollarRate = res.data[1].buy || '36.57'
+                        const privatBankDollarRate =
+                            res?.data[1]?.buy ?? '36.57'
                         setDollarToUahRate(privatBankDollarRate)
                     }
                 })
@@ -107,18 +108,17 @@ export const useTranslators = user => {
                 })
             const responseTranslators = await getTranslators()
             if (responseTranslators.status === 200) {
-                setLoading(false)
                 setTranslators(responseTranslators.data)
             } else {
                 showAlertMessage(MESSAGES.somethingWrong)
             }
             const responseClients = await getClients()
             if (responseClients.status === 200) {
-                setLoading(false)
                 setClients(responseClients.data)
             } else {
                 showAlertMessage(MESSAGES.somethingWrong)
             }
+            setLoading(false)
         }
     }, [user])
     const showAlertMessage = useCallback(
