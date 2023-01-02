@@ -209,7 +209,23 @@ export const useClientsList = translators => {
             )
 
             const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
-            const previousMonthStat = thisYearStat?.months[date.format('M') - 2]
+            const findPreviousMonthStat = date => {
+                if (date.format('M') === '1') {
+                    const previousYearStat = translator.statistics.find(
+                        year =>
+                            year.year ===
+                            moment().subtract(1, 'year').format('YYYY')
+                    )
+                    const previousMonth = previousYearStat.months[11]
+
+                    return previousMonth
+                } else {
+                    const previousMonth =
+                        thisYearStat?.months[date.format('M') - 2]
+                    return previousMonth
+                }
+            }
+            const previousMonthStat = findPreviousMonthStat(date)
             getArrayWithAmountsPerDayForPickedMonth(
                 clientId,
                 thisMonthStat,

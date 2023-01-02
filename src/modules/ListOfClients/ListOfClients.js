@@ -291,7 +291,6 @@ export default function ListOfClients({ user }) {
 
     const switchToGraph = argsFromHandleSwitchToGraph => {
         const { id, category } = argsFromHandleSwitchToGraph
-        console.log(id, category)
         const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id, category)
         setGraphData(pickedClientSumsPerMonth)
         setShowGraph(true)

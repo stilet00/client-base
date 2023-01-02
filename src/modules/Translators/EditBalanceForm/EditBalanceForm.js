@@ -107,474 +107,443 @@ export default function EditBalanceForm({
             backgroundColor: red[700],
         },
     }))
-
-    return (
-        <>
-            <FormMainButton
-                type="button"
-                size={'small'}
-                variant={'contained'}
-                onClick={handleOpen}
-                startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
-            >
-                Edit balance
-            </FormMainButton>
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    <div className={'form-container balance-form gradient-box'}>
-                        <form>
-                            <h2 id="transition-modal-title">
-                                {name + ' ' + surname}
-                            </h2>
-                            <div className={'balance-form__date'}>
-                                <Accordion
-                                    className={'balance-form__date__accordion'}
+console.log(selectedYear)
+return (
+    <>
+        <FormMainButton
+            type="button"
+            size={'small'}
+            variant={'contained'}
+            onClick={handleOpen}
+            startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
+        >
+            Edit balance
+        </FormMainButton>
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={open}>
+                <div className={'form-container balance-form gradient-box'}>
+                    <form>
+                        <h2 id="transition-modal-title">
+                            {name + ' ' + surname}
+                        </h2>
+                        <div className={'balance-form__date'}>
+                            <Accordion
+                                className={'balance-form__date__accordion'}
+                            >
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
                                 >
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
+                                    <Typography>Date filter</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
                                     >
-                                        <Typography>Date filter</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
+                                        <InputLabel>Year</InputLabel>
+                                        <Select
+                                            value={selectedYear}
+                                            onChange={handleYear}
+                                            label="Year"
                                         >
-                                            <InputLabel>Year</InputLabel>
-                                            <Select
-                                                value={selectedYear}
-                                                onChange={handleYear}
-                                                label="Year"
-                                                disabled
-                                            >
-                                                <MenuItem value={selectedYear}>
-                                                    {selectedYear}
-                                                </MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        >
-                                            <InputLabel htmlFor={'Month'}>
-                                                Month
-                                            </InputLabel>
-                                            <Select
-                                                value={selectedMonth}
-                                                onChange={handleMonth}
-                                                label="Month"
-                                            >
-                                                {findYear().months.map(
-                                                    (item, index) => (
-                                                        <MenuItem
-                                                            value={index + 1}
-                                                            key={index}
-                                                        >
-                                                            {moment(
-                                                                index + 1,
-                                                                'M'
-                                                            ).format('MMMM')}
-                                                        </MenuItem>
-                                                    )
-                                                )}
-                                            </Select>
-                                        </FormControl>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        >
-                                            <InputLabel htmlFor={'Day'}>
-                                                Day
-                                            </InputLabel>
-                                            <Select
-                                                value={selectedDay}
-                                                onChange={handleDay}
-                                                label="Day"
-                                            >
-                                                {findMonth().map(
-                                                    (item, index) => (
-                                                        <MenuItem
-                                                            value={index + 1}
-                                                            key={item.id}
-                                                        >
-                                                            {index + 1}
-                                                        </MenuItem>
-                                                    )
-                                                )}
-                                            </Select>
-                                        </FormControl>
-                                    </AccordionDetails>
-                                </Accordion>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                >
-                                    <InputLabel>Client</InputLabel>
-                                    <Select
-                                        value={selectedClient}
-                                        onChange={handleClient}
-                                        label="Client"
-                                        style={{
-                                            height: 40,
-                                        }}
+                                            <MenuItem value={'2023'}>
+                                                {'2023'}
+                                            </MenuItem>
+                                            <MenuItem value={'2022'}>
+                                                {'2022'}
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
                                     >
-                                        {clients
-                                            .filter(client => !client.suspended)
-                                            .map(item => (
+                                        <InputLabel htmlFor={'Month'}>
+                                            Month
+                                        </InputLabel>
+                                        <Select
+                                            value={selectedMonth}
+                                            onChange={handleMonth}
+                                            label="Month"
+                                        >
+                                            {findYear().months.map(
+                                                (item, index) => (
+                                                    <MenuItem
+                                                        value={index + 1}
+                                                        key={index}
+                                                    >
+                                                        {moment(
+                                                            index + 1,
+                                                            'M'
+                                                        ).format('MMMM')}
+                                                    </MenuItem>
+                                                )
+                                            )}
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
+                                    >
+                                        <InputLabel htmlFor={'Day'}>
+                                            Day
+                                        </InputLabel>
+                                        <Select
+                                            value={selectedDay}
+                                            onChange={handleDay}
+                                            label="Day"
+                                        >
+                                            {findMonth().map((item, index) => (
                                                 <MenuItem
-                                                    value={item._id}
-                                                    key={item._id}
+                                                    value={index + 1}
+                                                    key={item.id}
                                                 >
-                                                    {`${item.name} ${item.surname}`}
+                                                    {index + 1}
                                                 </MenuItem>
                                             ))}
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            {findClientById() ? (
-                                <>
-                                    <p>Finances:</p>
-                                    <div className="balance-form__finances">
-                                        <div className="balance-form__finances__svadba">
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'chats'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().chats
-                                                    }
-                                                    variant="outlined"
-                                                    label={'Chats'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    size="small"
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <ForumIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'letters'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().letters
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Letters'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <DraftsIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'virtualGiftsSvadba'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .virtualGiftsSvadba
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Virtual gifts'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <CardGiftcardIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'penalties'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .penalties
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Penalties'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <MoneyOffIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            {id === SUNRISE_TRANSLATOR_ID && (
-                                                <div className="balance-form__finances-input">
-                                                    <TextField
-                                                        name={
-                                                            'photoAttachments'
-                                                        }
-                                                        onChange={handleChange}
-                                                        onClick={e =>
-                                                            e.target.select()
-                                                        }
-                                                        value={
-                                                            findClientById()
-                                                                .photoAttachments
-                                                        }
-                                                        size="small"
-                                                        variant="outlined"
-                                                        label={
-                                                            'Photo attachments'
-                                                        }
-                                                        type={'number'}
-                                                        step="0.01"
-                                                        fullWidth
-                                                        required
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <AddPhotoAlternateIcon />
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="balance-form__finances__dating">
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'dating'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().dating
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Dating'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <ForumIcon />{' '}
-                                                                Dating
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'phoneCalls'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .phoneCalls
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Phone calls'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <PhoneCallbackIcon />{' '}
-                                                                Phone
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'virtualGiftsDating'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .virtualGiftsDating
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={
-                                                        'Virtual gifts dating'
-                                                    }
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <CardGiftcardIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <Accordion
-                                                className={
-                                                    'balance-form__finances--accordion'
-                                                }
+                                        </Select>
+                                    </FormControl>
+                                </AccordionDetails>
+                            </Accordion>
+                            <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                            >
+                                <InputLabel>Client</InputLabel>
+                                <Select
+                                    value={selectedClient}
+                                    onChange={handleClient}
+                                    label="Client"
+                                    style={{
+                                        height: 40,
+                                    }}
+                                >
+                                    {clients
+                                        .filter(client => !client.suspended)
+                                        .map(item => (
+                                            <MenuItem
+                                                value={item._id}
+                                                key={item._id}
                                             >
-                                                <AccordionSummary
-                                                    expandIcon={
-                                                        <ExpandMoreIcon />
-                                                    }
-                                                    aria-controls="panel1a-content"
-                                                    id="panel1a-header"
-                                                >
-                                                    <Typography>
-                                                        Comments
-                                                    </Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    <TextField
-                                                        id="outlined-multiline-flexible"
-                                                        label={'Edit here'}
-                                                        name={'comments'}
-                                                        type={'text'}
-                                                        multiline
-                                                        fullWidth
-                                                        size="small"
-                                                        maxRows={4}
-                                                        value={
-                                                            findClientById()
-                                                                .comments || ''
-                                                        }
-                                                        onChange={handleChange}
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <ContactSupportIcon />
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
-                                                    />
-                                                </AccordionDetails>
-                                            </Accordion>
+                                                {`${item.name} ${item.surname}`}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        {findClientById() ? (
+                            <>
+                                <p>Finances:</p>
+                                <div className="balance-form__finances">
+                                    <div className="balance-form__finances__svadba">
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'chats'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={findClientById().chats}
+                                                variant="outlined"
+                                                label={'Chats'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                size="small"
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <ForumIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
                                         </div>
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'letters'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={findClientById().letters}
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Letters'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <DraftsIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'virtualGiftsSvadba'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={
+                                                    findClientById()
+                                                        .virtualGiftsSvadba
+                                                }
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Virtual gifts'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <CardGiftcardIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'penalties'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={
+                                                    findClientById().penalties
+                                                }
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Penalties'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <MoneyOffIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        {id === SUNRISE_TRANSLATOR_ID && (
+                                            <div className="balance-form__finances-input">
+                                                <TextField
+                                                    name={'photoAttachments'}
+                                                    onChange={handleChange}
+                                                    onClick={e =>
+                                                        e.target.select()
+                                                    }
+                                                    value={
+                                                        findClientById()
+                                                            .photoAttachments
+                                                    }
+                                                    size="small"
+                                                    variant="outlined"
+                                                    label={'Photo attachments'}
+                                                    type={'number'}
+                                                    step="0.01"
+                                                    fullWidth
+                                                    required
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <AddPhotoAlternateIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
+                                    <div className="balance-form__finances__dating">
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'dating'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={findClientById().dating}
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Dating'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <ForumIcon /> Dating
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'phoneCalls'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={
+                                                    findClientById().phoneCalls
+                                                }
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Phone calls'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <PhoneCallbackIcon />{' '}
+                                                            Phone
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="balance-form__finances-input">
+                                            <TextField
+                                                name={'virtualGiftsDating'}
+                                                onChange={handleChange}
+                                                onClick={e => e.target.select()}
+                                                value={
+                                                    findClientById()
+                                                        .virtualGiftsDating
+                                                }
+                                                size="small"
+                                                variant="outlined"
+                                                label={'Virtual gifts dating'}
+                                                type={'number'}
+                                                step="0.01"
+                                                fullWidth
+                                                required
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <CardGiftcardIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                        <Accordion
+                                            className={
+                                                'balance-form__finances--accordion'
+                                            }
+                                        >
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Typography>
+                                                    Comments
+                                                </Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <TextField
+                                                    id="outlined-multiline-flexible"
+                                                    label={'Edit here'}
+                                                    name={'comments'}
+                                                    type={'text'}
+                                                    multiline
+                                                    fullWidth
+                                                    size="small"
+                                                    maxRows={4}
+                                                    value={
+                                                        findClientById()
+                                                            .comments || ''
+                                                    }
+                                                    onChange={handleChange}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <ContactSupportIcon />
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </div>
+                                </div>
+                                <p
+                                    style={{
+                                        margin: '0 8px',
+                                    }}
+                                >
+                                    <strong>Day balance: </strong>
+                                    {calculateBalanceDaySum(
+                                        findClientById()
+                                    ).toFixed(2) + ' $'}
+                                </p>
+                                {findClientById().comments ? (
                                     <p
                                         style={{
                                             margin: '0 8px',
                                         }}
                                     >
-                                        <strong>Day balance: </strong>
-                                        {calculateBalanceDaySum(
-                                            findClientById()
-                                        ).toFixed(2) + ' $'}
+                                        <strong>Day comment: </strong>
+                                        {` ${findClientById().comments}.`}
                                     </p>
-                                    {findClientById().comments ? (
-                                        <p
-                                            style={{
-                                                margin: '0 8px',
-                                            }}
-                                        >
-                                            <strong>Day comment: </strong>
-                                            {` ${findClientById().comments}.`}
-                                        </p>
-                                    ) : null}
-                                    <div className="balance-form__actions">
-                                        <SubmitButton
-                                            type={'button'}
-                                            variant={'outlined'}
-                                            onClick={onSavePressed}
-                                            className={
-                                                'balance-form__actions--button'
-                                            }
-                                            startIcon={<SaveAsIcon />}
-                                        >
-                                            Save
-                                        </SubmitButton>
-                                        <CloseButton
-                                            type={'button'}
-                                            variant={'outlined'}
-                                            onClick={handleClose}
-                                            className={
-                                                'balance-form__actions--button'
-                                            }
-                                            startIcon={<CloseIcon />}
-                                        >
-                                            Close
-                                        </CloseButton>
-                                    </div>
-                                </>
-                            ) : (
-                                <Typography
-                                    className={'balance-form__no-data'}
-                                    variant="h5"
-                                    align={'center'}
-                                >
-                                    Client wasn't assigned at this date.
-                                </Typography>
-                            )}
-                        </form>
-                    </div>
-                </Fade>
-            </Modal>
-        </>
-    )
+                                ) : null}
+                                <div className="balance-form__actions">
+                                    <SubmitButton
+                                        type={'button'}
+                                        variant={'outlined'}
+                                        onClick={onSavePressed}
+                                        className={
+                                            'balance-form__actions--button'
+                                        }
+                                        startIcon={<SaveAsIcon />}
+                                    >
+                                        Save
+                                    </SubmitButton>
+                                    <CloseButton
+                                        type={'button'}
+                                        variant={'outlined'}
+                                        onClick={handleClose}
+                                        className={
+                                            'balance-form__actions--button'
+                                        }
+                                        startIcon={<CloseIcon />}
+                                    >
+                                        Close
+                                    </CloseButton>
+                                </div>
+                            </>
+                        ) : (
+                            <Typography
+                                className={'balance-form__no-data'}
+                                variant="h5"
+                                align={'center'}
+                            >
+                                Client wasn't assigned at this date.
+                            </Typography>
+                        )}
+                    </form>
+                </div>
+            </Fade>
+        </Modal>
+    </>
+)
 }
