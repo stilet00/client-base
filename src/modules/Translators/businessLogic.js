@@ -121,6 +121,7 @@ export const useTranslators = user => {
             setLoading(false)
         }
     }, [user])
+    
     const showAlertMessage = useCallback(
         (alertMessage, duration) => {
             setMessage(alertMessage)
