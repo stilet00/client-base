@@ -98,9 +98,8 @@ const changeTranslatorsAndClientsNameDifference = async (
 ) => {
     for (let translator of translators) {
         const arrayOfChangedClientsNames = []
-        const translatorWithChangedClientsNames = {
-            ...translator,
-            clients: translator.clients.map(clientOnTranslator => {
+        const newArrayOfClientsOnTranslator = translator.clients.map(
+            clientOnTranslator => {
                 const clientWithDifferentData = collectionClients.find(
                     client =>
                         client._id == clientOnTranslator._id &&
@@ -118,15 +117,17 @@ const changeTranslatorsAndClientsNameDifference = async (
                     return changedClient
                 }
                 return clientOnTranslator
-            }),
-        }
+            }
+        )
         if (arrayOfChangedClientsNames.length > 0) {
             await updateTranslatorDatabaseWithChangedClientName(
                 translator._id,
-                translatorWithChangedClientsNames.clients
+                newArrayOfClientsOnTranslator
             )
         } else {
-            console.log('no changed clients')
+            console.log(
+                `${translator.name} ${translator.surname} has no changed clients`
+            )
         }
     }
 }
