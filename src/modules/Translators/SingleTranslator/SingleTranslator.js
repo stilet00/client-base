@@ -80,7 +80,8 @@ function SingleTranslator({
         calculateTranslatorMonthTotal(
             statistics,
             true,
-            selectedDate.format('M')
+            selectedDate.format('M'),
+            selectedDate.format('YYYY')
         ) * TRANSLATORS_SALARY_PERCENT
     )
 
@@ -402,7 +403,8 @@ function SingleTranslator({
                                     <b>{`${calculateTranslatorMonthTotal(
                                         statistics,
                                         true,
-                                        selectedDate.format('M')
+                                        selectedDate.format('M'),
+                                        selectedDate.format('YYYY')
                                     )} $`}</b>
                                 </Typography>
                                 <Typography variant="body2">
