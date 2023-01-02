@@ -216,7 +216,10 @@ export const useClientsList = translators => {
                             year.year ===
                             moment().subtract(1, 'year').format('YYYY')
                     )
-                    const previousMonth = previousYearStat.months[11]
+                    const previousMonth =
+                        previousYearStat.months[
+                            moment().subtract(2, 'month').format('M')
+                        ]
 
                     return previousMonth
                 } else {

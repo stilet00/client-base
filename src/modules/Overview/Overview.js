@@ -4,7 +4,10 @@ import SmallLoader from '../../sharedComponents/SmallLoader/SmallLoader'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import { useOverview } from './businessLogic'
-import { calculatePercentDifference } from '../../sharedFunctions/sharedFunctions'
+import {
+    calculatePercentDifference,
+    getSumFromArray,
+} from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, previousMonth } from '../../constants/constants'
 import {
     faArrowAltCircleUp,
@@ -148,9 +151,9 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
-    const totalPayments = statementsGroupedByComment
-        .map(el => el.amount)
-        .reduce((sum, current) => sum + current, 0)
+    const totalPayments = getSumFromArray(
+        statementsGroupedByComment.map(el => el.amount)
+    )
     const datingMonthProgress =
         monthTotalSum - svadbaMonthTotal >
         previousMonthTotal - svadbaPreviousMonthTotal ? (
@@ -225,7 +228,7 @@ function Overview({ user }) {
                                                     Month balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {(
+                                                    {yearTotalSum ? (
                                                         <>
                                                             <span
                                                                 className={
@@ -246,7 +249,9 @@ function Overview({ user }) {
                                                             </span>
                                                             {monthProgress}
                                                         </>
-                                                    ) ?? <SmallLoader />}
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -254,7 +259,7 @@ function Overview({ user }) {
                                                     Svadba balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {(
+                                                    {yearTotalSum ? (
                                                         <>
                                                             <span
                                                                 className={
@@ -277,7 +282,9 @@ function Overview({ user }) {
                                                                 svadbaMonthProgress
                                                             }
                                                         </>
-                                                    ) ?? <SmallLoader />}
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -285,7 +292,7 @@ function Overview({ user }) {
                                                     Dating balance
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {(
+                                                    {yearTotalSum ? (
                                                         <>
                                                             <span
                                                                 className={
@@ -309,7 +316,9 @@ function Overview({ user }) {
                                                                 datingMonthProgress
                                                             }
                                                         </>
-                                                    ) ?? <SmallLoader />}
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
@@ -349,7 +358,9 @@ function Overview({ user }) {
                                             Year's balance
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {yearTotalSum + ' $' ?? (
+                                            {yearTotalSum ? (
+                                                yearTotalSum + ' $'
+                                            ) : (
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
@@ -359,7 +370,7 @@ function Overview({ user }) {
                                             Salary payed
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {(
+                                            {yearTotalSum ? (
                                                 <span
                                                     className={
                                                         'blue-text styled-text-numbers'
@@ -370,7 +381,9 @@ function Overview({ user }) {
                                                         yearTotalSum * 0.45
                                                     ) + ' $'}{' '}
                                                 </span>
-                                            ) ?? <SmallLoader />}
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     {statementsGroupedByComment.length > 0
