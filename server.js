@@ -79,6 +79,48 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
 
+const editArrayOfClientsInTranslators = async info => {
+    const { _id, name, surname } = info
+    const translatorsCollection = await collectionTranslators.find().toArray()
+    // const singleClient = await collectionClients.findOne({ _id: ObjectId(_id) })
+    // console.log(singleClient)
+    if (translatorsCollection.length > 0) {
+        const filteredCollection = translatorsCollection.filter(translator => {
+            const searchedClient = translator.clients.find(
+                client => client._id === _id
+            )
+            if (searchedClient) {
+                return translator
+            }
+        })
+        for (let translator of filteredCollection) {
+            const clientWithDifferentDatas = translator.clients.find(
+                client =>
+                    client._id === _id &&
+                    (client.name !== name || client.surname !== surname)
+            )
+            if (clientWithDifferentDatas) {
+                const indexOfClientWithDifferentDatas =
+                    translator.clients.indexOf(clientWithDifferentDatas)
+                const clientWithCorrectDatas = {
+                    ...clientWithDifferentDatas,
+                    name: name,
+                    surname: surname,
+                }
+                translator.clients[indexOfClientWithDifferentDatas] =
+                    clientWithCorrectDatas
+                updateTranslatorDatabaseWithChangedClientName(
+                    translator._id,
+                    translator.clients
+                )
+            } else {
+                console.log(
+                    `${translator.name} ${translator.surname} has no changed clients`
+                )
+            }
+        }
+    }
+}
 const updateTranslatorDatabaseWithChangedClientName = async (
     id,
     arrayWithChangedNames
@@ -390,6 +432,7 @@ app.put(clientsURL + ':id', (req, res) => {
             const message = 'Переводчик сохранен'
             console.log(message)
             res.send(message)
+            editArrayOfClientsInTranslators(req.body)
         }
     )
 })
@@ -511,8 +554,12 @@ client.connect(function (err) {
     collectionTaskNotifications = client
         .db('taskListDB')
         .collection('notificationSwitch')
-    collectionClients = client.db('clientsDB').collection('clients')
-    collectionTranslators = client.db('translatorsDB').collection('translators')
+    // collectionClients = client.db('clientsDB').collection('clients')
+    // collectionTranslators = client.db('translatorsDB').collection('translators')
+    collectionClients = client.db('testDB').collection('testClientCollection')
+    collectionTranslators = client
+        .db('testDB')
+        .collection('testTranslatorsCollection')
     collectionStatements = client.db('statementsDB').collection('statements')
     console.log('Connected successfully to server...')
     app.listen(PORT, () => {

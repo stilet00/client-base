@@ -7,6 +7,7 @@ import {
     removeTranslator,
     updateTranslator,
     sendNotificationEmailsRequest,
+    synchronizeTranslatorsClientsAndClientsNames,
 } from '../../services/translatorsServices/services'
 import { getCurrency } from '../../services/currencyServices'
 import {
@@ -121,7 +122,7 @@ export const useTranslators = user => {
             setLoading(false)
         }
     }, [user])
-    
+
     const showAlertMessage = useCallback(
         (alertMessage, duration) => {
             setMessage(alertMessage)
@@ -520,6 +521,9 @@ export const useTranslators = user => {
         },
         [translators]
     )
+    const synchronizeNames = () => {
+        synchronizeTranslatorsClientsAndClientsNames()
+    }
 
     return {
         translators,
@@ -558,6 +562,7 @@ export const useTranslators = user => {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        synchronizeNames,
     }
 }
 

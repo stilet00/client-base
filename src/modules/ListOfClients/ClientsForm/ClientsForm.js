@@ -54,7 +54,6 @@ export default function ClientsForm({
     clearEditedClient,
     handleClose,
     open,
-    synchronizeNames,
 }) {
     const classes = useStyles()
     const [client, setClient] = useState(DEFAULT_CLIENT)
@@ -177,7 +176,6 @@ export default function ClientsForm({
         }
         clearClient()
         handleClose()
-        synchronizeNames()
         setSiteFilter('svadba')
     }
 

@@ -5,10 +5,7 @@ import {
     updateClient,
 } from '../../services/clientsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
-import {
-    getTranslators,
-    synchronizeTranslatorsClientsAndClientsNames,
-} from '../../services/translatorsServices/services'
+import { getTranslators } from '../../services/translatorsServices/services'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
@@ -345,9 +342,6 @@ export default function ListOfClients({ user }) {
                     Add client
                 </Button>
                 <ClientsForm
-                    synchronizeNames={
-                        synchronizeTranslatorsClientsAndClientsNames
-                    }
                     editedClient={updatingClient}
                     onAddNewClient={addNewClient}
                     onEditClientData={editClientData}
