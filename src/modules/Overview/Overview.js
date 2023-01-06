@@ -8,7 +8,11 @@ import {
     calculatePercentDifference,
     getSumFromArray,
 } from '../../sharedFunctions/sharedFunctions'
-import { currentMonth, previousMonth } from '../../constants/constants'
+import {
+    currentMonth,
+    previousMonth,
+    arrayOfSelectedYears,
+} from '../../constants/constants'
 import {
     faArrowAltCircleUp,
     faArrowAltCircleDown,
@@ -24,6 +28,10 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { FINANCE_COMMENTS } from '../../constants/constants'
+import Box from '@mui/material/Box'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -53,6 +61,7 @@ function Overview({ user }) {
         calculateMonthTotal,
         calculateYearTotal,
         statements,
+        handleChange,
     } = useOverview(user)
 
     const getStatementsGroupedByCommentAndYear = statements => {
@@ -203,9 +212,44 @@ function Overview({ user }) {
                                             Statistic's type
                                         </StyledTableCell>
                                         <StyledTableCell
-                                            style={{ fontWeight: 'bold' }}
+                                            style={{
+                                                fontWeight: 'bold',
+                                            }}
                                         >
                                             Data
+                                        </StyledTableCell>
+                                        <StyledTableCell
+                                            style={{
+                                                fontWeight: 'bold',
+                                                textAling: 'right',
+                                                width: '10%',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    maxWidth: 100,
+                                                }}
+                                            >
+                                                <FormControl size="small">
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={selectedYear}
+                                                        onChange={handleChange}
+                                                        className="selected-area"
+                                                    >
+                                                        {arrayOfSelectedYears.map(
+                                                            year => (
+                                                                <MenuItem
+                                                                    value={year}
+                                                                >
+                                                                    {year}
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 </TableHead>
@@ -218,10 +262,9 @@ function Overview({ user }) {
                                                     Current month
                                                 </StyledTableCell>
                                                 <StyledTableCell>
-                                                    {moment().format(
-                                                        'MMMM YYYY'
-                                                    )}
+                                                    {moment().format('MMMM')}
                                                 </StyledTableCell>
+                                                <StyledTableCell></StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
@@ -253,6 +296,7 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
@@ -286,6 +330,7 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
@@ -320,6 +365,7 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
@@ -332,6 +378,7 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
@@ -349,6 +396,7 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                         </>
                                     ) : null}
@@ -364,6 +412,7 @@ function Overview({ user }) {
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
+                                        <StyledTableCell />
                                     </StyledTableRow>
                                     <StyledTableRow>
                                         <StyledTableCell>
@@ -376,15 +425,21 @@ function Overview({ user }) {
                                                         'blue-text styled-text-numbers'
                                                     }
                                                 >
-                                                    {' '}
-                                                    {Math.floor(
-                                                        yearTotalSum * 0.45
-                                                    ) + ' $'}{' '}
+                                                    <CountUp
+                                                        duration={0.75}
+                                                        delay={2}
+                                                        end={Math.floor(
+                                                            yearTotalSum * 0.45
+                                                        )}
+                                                        separator=" "
+                                                        prefix="$"
+                                                    />
                                                 </span>
                                             ) : (
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
+                                        <StyledTableCell />
                                     </StyledTableRow>
                                     {statementsGroupedByComment.length > 0
                                         ? statementsGroupedByComment.map(
@@ -397,17 +452,29 @@ function Overview({ user }) {
                                                               : statement.comment}
                                                       </StyledTableCell>
                                                       <StyledTableCell>
-                                                          {(
+                                                          {yearTotalSum ? (
                                                               <span
                                                                   className={
                                                                       'blue-text styled-text-numbers'
                                                                   }
                                                               >
-                                                                  {statement.amount +
-                                                                      ' $'}
+                                                                  <CountUp
+                                                                      duration={
+                                                                          0.75
+                                                                      }
+                                                                      delay={2}
+                                                                      end={
+                                                                          statement.amount
+                                                                      }
+                                                                      separator=" "
+                                                                      prefix="$"
+                                                                  />
                                                               </span>
-                                                          ) ?? <SmallLoader />}
+                                                          ) : (
+                                                              <SmallLoader />
+                                                          )}
                                                       </StyledTableCell>
+                                                      <StyledTableCell />
                                                   </StyledTableRow>
                                               )
                                           )
@@ -439,6 +506,7 @@ function Overview({ user }) {
                                                 ) ?? <SmallLoader />}
                                             </b>
                                         </StyledTableCell>
+                                        <StyledTableCell />
                                     </StyledTableRow>
                                 </TableBody>
                             </Table>

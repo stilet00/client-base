@@ -33,6 +33,7 @@ export const previousYear = moment().subtract(1, 'year').format('YYYY')
 export const currentMonth = moment().format('M')
 export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
+export const arrayOfSelectedYears = ['2023', '2022']
 
 export const DEFAULT_CLIENT = {
     name: '',

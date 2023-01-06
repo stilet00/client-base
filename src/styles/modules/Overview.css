@@ -24,4 +24,9 @@
   letter-spacing: 1px;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
+
+.selected-area {
+  color: #000000;
+  background: #e0e0e0;
+}
 /*# sourceMappingURL=Overview.css.map */
