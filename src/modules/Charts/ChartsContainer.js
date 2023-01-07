@@ -1,5 +1,4 @@
 import SingleChart from './SingleChart/SingleChart'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import Loader from '../../sharedComponents/Loader/Loader'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
@@ -13,7 +12,10 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
-import { CHARTS_CATEGORIES } from '../../constants/constants'
+import {
+    CHARTS_CATEGORIES,
+    arrayOfSelectedYears,
+} from '../../constants/constants'
 
 function ChartsContainer({ user }) {
     const {
@@ -49,27 +51,87 @@ function ChartsContainer({ user }) {
                     handleChange={handleChange}
                 />
             </div> */}
+            <div
+                style={{
+                    width: '60%',
+                    margin: '0 auto',
+                    dislpay: 'flex',
+                    flexDirection: 'row',
+                }}
+            >
+                <FormControl
+                    sx={{
+                        minWidth: '50%',
+                        maxWidth: '70%',
+                        '& .MuiInputLabel-root': {
+                            color: 'white',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: '2px solid',
+                            borderColor: 'white',
+                            borderBottom: 'none',
+                            borderRight: 'none',
+                        },
+                    }}
+                >
+                    <InputLabel id="demo-simple-select-label">
+                        Category
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        variant="outlined"
+                        label="Category"
+                        value={category}
+                        sx={{
+                            borderRadius: '4px 0 0 0',
+                            color: 'white',
+                            '& .MuiSvgIcon-root': {
+                                color: 'white',
+                            },
+                        }}
+                        onChange={handleCategoryChange}
+                    >
+                        {CHARTS_CATEGORIES.map(singleCategory => (
+                            <MenuItem value={singleCategory.value}>
+                                {singleCategory.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl
+                    sx={{
+                        minWidth: '30%',
+                        maxWidth: '50%',
+                        '& .MuiInputLabel-root': {
+                            color: 'white',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: '2px solid',
+                            borderColor: 'white',
+                            borderBottom: 'none',
+                            borderLeft: 'none',
+                        },
+                    }}
+                >
+                    <Select
+                        value={selectedYear}
+                        sx={{
+                            borderRadius: '0 4px 0 0',
+                            color: 'white',
+                            '& .MuiSvgIcon-root': {
+                                color: 'white',
+                            },
+                        }}
+                        onChange={handleChange}
+                    >
+                        {arrayOfSelectedYears.map(year => (
+                            <MenuItem value={year}>{year}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
             <div className={'main-container  scrolled-container animated-box'}>
-                <Box sx={{ minWidth: 120 }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                            Category
-                        </InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={category}
-                            label="Category"
-                            onChange={handleCategoryChange}
-                        >
-                            {CHARTS_CATEGORIES.map(singleCategory => (
-                                <MenuItem value={singleCategory.value}>
-                                    {singleCategory.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Box>
                 {months.length > 0 ? (
                     <ul className={'chart-list'}>
                         {months.map((month, index) => (
