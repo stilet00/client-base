@@ -207,32 +207,15 @@ function Overview({ user }) {
                                 <TableHead>
                                     <StyledTableRow>
                                         <StyledTableCell
-                                            style={{ fontWeight: 'bold' }}
-                                        >
-                                            Statistic's type
-                                        </StyledTableCell>
-                                        <StyledTableCell
                                             style={{
                                                 fontWeight: 'bold',
+                                                maxWidth: '50%',
                                             }}
                                         >
-                                            Data
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{
-                                                fontWeight: 'bold',
-                                                textAling: 'right',
-                                                width: '10%',
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    maxWidth: 100,
-                                                }}
-                                            >
+                                            <div className="year-holder">
+                                                <span>Statistic's type</span>
                                                 <FormControl size="small">
                                                     <Select
-                                                        labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
                                                         value={selectedYear}
                                                         onChange={handleChange}
@@ -249,7 +232,10 @@ function Overview({ user }) {
                                                         )}
                                                     </Select>
                                                 </FormControl>
-                                            </Box>
+                                            </div>
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            Data
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 </TableHead>
@@ -261,16 +247,15 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Current month
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {moment().format('MMMM')}
                                                 </StyledTableCell>
-                                                <StyledTableCell></StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Month balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -296,13 +281,12 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Svadba balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -330,13 +314,12 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Dating balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -365,26 +348,24 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Total clients
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {clients.length ? (
                                                         clients.length
                                                     ) : (
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell />
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Active translators
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {translators.length ? (
                                                         translators.filter(
                                                             translator =>
@@ -396,7 +377,6 @@ function Overview({ user }) {
                                                         <SmallLoader />
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell />
                                             </StyledTableRow>
                                         </>
                                     ) : null}
@@ -405,20 +385,19 @@ function Overview({ user }) {
                                         <StyledTableCell>
                                             Year's balance
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             {yearTotalSum ? (
                                                 yearTotalSum + ' $'
                                             ) : (
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
-                                        <StyledTableCell />
                                     </StyledTableRow>
                                     <StyledTableRow>
                                         <StyledTableCell>
                                             Salary payed
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             {yearTotalSum ? (
                                                 <span
                                                     className={
@@ -439,7 +418,6 @@ function Overview({ user }) {
                                                 <SmallLoader />
                                             )}
                                         </StyledTableCell>
-                                        <StyledTableCell />
                                     </StyledTableRow>
                                     {statementsGroupedByComment.length > 0
                                         ? statementsGroupedByComment.map(
@@ -451,7 +429,7 @@ function Overview({ user }) {
                                                               ? 'Clients Salary'
                                                               : statement.comment}
                                                       </StyledTableCell>
-                                                      <StyledTableCell>
+                                                      <StyledTableCell className="td-with-info">
                                                           {yearTotalSum ? (
                                                               <span
                                                                   className={
@@ -474,7 +452,6 @@ function Overview({ user }) {
                                                               <SmallLoader />
                                                           )}
                                                       </StyledTableCell>
-                                                      <StyledTableCell />
                                                   </StyledTableRow>
                                               )
                                           )
@@ -483,7 +460,7 @@ function Overview({ user }) {
                                         <StyledTableCell>
                                             Total profit
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             <b>
                                                 {(
                                                     <span
@@ -506,7 +483,6 @@ function Overview({ user }) {
                                                 ) ?? <SmallLoader />}
                                             </b>
                                         </StyledTableCell>
-                                        <StyledTableCell />
                                     </StyledTableRow>
                                 </TableBody>
                             </Table>
