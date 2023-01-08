@@ -63,7 +63,6 @@ function Translators({ user }) {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        synchronizeNames,
     } = useTranslators(user)
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -243,15 +242,6 @@ function Translators({ user }) {
                         startIcon={<FontAwesomeIcon icon={faPaperPlane} />}
                     >
                         Send emails
-                    </Button>
-                    <Button
-                        aria-describedby={id}
-                        onClick={synchronizeNames}
-                        fullWidth={screenIsSmall}
-                        className="translators-container__menu-button"
-                        startIcon={<FontAwesomeIcon icon={faPaperPlane} />}
-                    >
-                        Synchronize names
                     </Button>
                     <Popover
                         id={id}

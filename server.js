@@ -81,117 +81,51 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
 
 const editArrayOfClientsInTranslators = async info => {
     const { _id, name, surname } = info
-    const translatorsCollection = await collectionTranslators.find().toArray()
-    // const singleClient = await collectionClients.findOne({ _id: ObjectId(_id) })
-    // console.log(singleClient)
-    if (translatorsCollection.length > 0) {
-        const filteredCollection = translatorsCollection.filter(translator => {
-            const searchedClient = translator.clients.find(
-                client => client._id === _id
-            )
-            if (searchedClient) {
-                return translator
-            }
+    const translatorsWithEditedClient = await collectionTranslators
+        .find({
+            clients: {
+                $elemMatch: {
+                    _id: _id,
+                },
+            },
         })
-        for (let translator of filteredCollection) {
-            const clientWithDifferentDatas = translator.clients.find(
-                client =>
-                    client._id === _id &&
-                    (client.name !== name || client.surname !== surname)
-            )
-            if (clientWithDifferentDatas) {
-                const indexOfClientWithDifferentDatas =
-                    translator.clients.indexOf(clientWithDifferentDatas)
-                const clientWithCorrectDatas = {
-                    ...clientWithDifferentDatas,
-                    name: name,
-                    surname: surname,
+        .toArray()
+    if (translatorsWithEditedClient.length > 0) {
+        for (let translator of translatorsWithEditedClient) {
+            const arrayWithChangedClientsNames = translator.clients.map(
+                client => {
+                    if (client._id === _id) {
+                        const clientWithChangedData = {
+                            ...client,
+                            name: name,
+                            surname: surname,
+                        }
+                        return clientWithChangedData
+                    } else {
+                        return client
+                    }
                 }
-                translator.clients[indexOfClientWithDifferentDatas] =
-                    clientWithCorrectDatas
-                updateTranslatorDatabaseWithChangedClientName(
-                    translator._id,
-                    translator.clients
-                )
-            } else {
-                console.log(
-                    `${translator.name} ${translator.surname} has no changed clients`
-                )
-            }
+            )
+            changeClientNameInTranslatorsDataBase(
+                translator._id,
+                arrayWithChangedClientsNames
+            )
         }
     }
 }
-const updateTranslatorDatabaseWithChangedClientName = async (
+
+const changeClientNameInTranslatorsDataBase = async (
     id,
-    arrayWithChangedNames
+    arrayWithChangedClientsNames
 ) => {
     await collectionTranslators.updateOne(
         { _id: ObjectId(id) },
         {
             $set: {
-                clients: arrayWithChangedNames,
+                clients: arrayWithChangedClientsNames,
             },
         }
     )
-}
-const changeTranslatorsAndClientsNameDifference = async (
-    translators,
-    collectionClients
-) => {
-    for (let translator of translators) {
-        const arrayOfChangedClientsNames = []
-        const newArrayOfClientsOnTranslator = translator.clients.map(
-            clientOnTranslator => {
-                const clientWithDifferentData = collectionClients.find(
-                    client =>
-                        client._id == clientOnTranslator._id &&
-                        (client.name !== clientOnTranslator.name ||
-                            client.surname !== clientOnTranslator.surname)
-                )
-
-                if (clientWithDifferentData) {
-                    arrayOfChangedClientsNames.push(clientWithDifferentData)
-                    const changedClient = {
-                        ...clientOnTranslator,
-                        name: clientWithDifferentData.name,
-                        surname: clientWithDifferentData.surname,
-                    }
-                    return changedClient
-                }
-                return clientOnTranslator
-            }
-        )
-        if (arrayOfChangedClientsNames.length > 0) {
-            await updateTranslatorDatabaseWithChangedClientName(
-                translator._id,
-                newArrayOfClientsOnTranslator
-            )
-        } else {
-            console.log(
-                `${translator.name} ${translator.surname} has no changed clients`
-            )
-        }
-    }
-}
-
-async function synchronizeNames() {
-    try {
-        const translatorsCollection = await collectionTranslators
-            .find()
-            .toArray()
-        const clientsCollection = await collectionClients.find().toArray()
-        if (translatorsCollection.length > 0 && clientsCollection.length > 0) {
-            await changeTranslatorsAndClientsNameDifference(
-                translatorsCollection,
-                clientsCollection
-            )
-        } else {
-            return 'No clients or translators in dataBase'
-        }
-    } catch (error) {
-        console.log(error)
-        return false
-    }
 }
 
 //email api
@@ -444,10 +378,6 @@ app.get(translatorsURL + 'get', (req, res) => {
         }
         res.send(docs)
     })
-})
-
-app.get(translatorsURL + 'synchronize', (req, res) => {
-    synchronizeNames()
 })
 
 app.get(translatorsURL + 'send-emails', (req, res) => {

@@ -19,9 +19,3 @@ export function updateTranslator(translator) {
 export function sendNotificationEmailsRequest() {
     return axios.get(translatorsURL + 'send-emails')
 }
-
-export function synchronizeTranslatorsClientsAndClientsNames() {
-    return axios.get(translatorsURL + 'synchronize')
-}
-
-
