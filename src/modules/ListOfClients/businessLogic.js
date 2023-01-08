@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { DEFAULT_CLIENT } from '../../constants/constants'
+import { DEFAULT_CLIENT, currentYear } from '../../constants/constants'
 import useModal from '../../sharedHooks/useModal'
 import {
     calculateBalanceDaySum,
@@ -305,5 +305,6 @@ export const useClientsList = translators => {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
+        currentYear,
     }
 }

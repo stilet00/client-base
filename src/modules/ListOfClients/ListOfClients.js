@@ -49,6 +49,7 @@ export default function ListOfClients({ user }) {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
+        currentYear,
     } = useClientsList(translators)
 
     useEffect(() => {
@@ -225,7 +226,9 @@ export default function ListOfClients({ user }) {
                         moment().subtract(1, 'month')
                     )
                     const arrayOfPaymentsMadeToClient = paymentsList.filter(
-                        payment => payment.receiverID === client._id
+                        payment =>
+                            payment.receiverID === client._id &&
+                            payment.date.substring(6, 10) === currentYear
                     )
                     const getArrayOfPaymentsMadeToClientWithAmounts =
                         arrayOfPaymentsMadeToClient.map(
