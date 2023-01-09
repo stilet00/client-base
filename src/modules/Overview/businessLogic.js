@@ -62,7 +62,7 @@ export const useOverview = user => {
                             translatorsStatistic,
                             forFullMonth,
                             monthNumber,
-                            currentYear,
+                            selectedYear,
                             onlySvadba
                         )
                 })
@@ -74,13 +74,14 @@ export const useOverview = user => {
                         calculateTranslatorMonthTotal(
                             translatorsStatistic,
                             forFullMonth,
-                            monthNumber
+                            monthNumber,
+                            selectedYear
                         )
                 })
             }
             return getNumberWithHundreds(sum)
         },
-        [translators]
+        [translators, selectedYear]
     )
 
     const calculateYearTotal = useCallback(() => {
@@ -91,7 +92,7 @@ export const useOverview = user => {
         }
 
         return Math.round(yearSum)
-    }, [calculateMonthTotal])
+    }, [calculateMonthTotal, selectedYear])
 
     return {
         selectedYear,

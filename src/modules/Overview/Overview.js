@@ -8,7 +8,11 @@ import {
     calculatePercentDifference,
     getSumFromArray,
 } from '../../sharedFunctions/sharedFunctions'
-import { currentMonth, previousMonth } from '../../constants/constants'
+import {
+    currentMonth,
+    previousMonth,
+    arrayOfSelectedYears,
+} from '../../constants/constants'
 import {
     faArrowAltCircleUp,
     faArrowAltCircleDown,
@@ -24,6 +28,10 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import { FINANCE_COMMENTS } from '../../constants/constants'
+import Box from '@mui/material/Box'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -53,6 +61,7 @@ function Overview({ user }) {
         calculateMonthTotal,
         calculateYearTotal,
         statements,
+        handleChange,
     } = useOverview(user)
 
     const getStatementsGroupedByCommentAndYear = statements => {
@@ -198,13 +207,34 @@ function Overview({ user }) {
                                 <TableHead>
                                     <StyledTableRow>
                                         <StyledTableCell
-                                            style={{ fontWeight: 'bold' }}
+                                            style={{
+                                                fontWeight: 'bold',
+                                                maxWidth: '50%',
+                                            }}
                                         >
-                                            Statistic's type
+                                            <div className="year-holder">
+                                                <span>Statistic's type</span>
+                                                <FormControl size="small">
+                                                    <Select
+                                                        id="demo-simple-select"
+                                                        value={selectedYear}
+                                                        onChange={handleChange}
+                                                        className="selected-area"
+                                                    >
+                                                        {arrayOfSelectedYears.map(
+                                                            year => (
+                                                                <MenuItem
+                                                                    value={year}
+                                                                >
+                                                                    {year}
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ fontWeight: 'bold' }}
-                                        >
+                                        <StyledTableCell className="td-with-info">
                                             Data
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -217,17 +247,15 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Current month
                                                 </StyledTableCell>
-                                                <StyledTableCell>
-                                                    {moment().format(
-                                                        'MMMM YYYY'
-                                                    )}
+                                                <StyledTableCell className="td-with-info">
+                                                    {moment().format('MMMM')}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             <StyledTableRow>
                                                 <StyledTableCell>
                                                     Month balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -258,7 +286,7 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Svadba balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -291,7 +319,7 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Dating balance
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {yearTotalSum ? (
                                                         <>
                                                             <span
@@ -325,7 +353,7 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Total clients
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {clients.length ? (
                                                         clients.length
                                                     ) : (
@@ -337,7 +365,7 @@ function Overview({ user }) {
                                                 <StyledTableCell>
                                                     Active translators
                                                 </StyledTableCell>
-                                                <StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
                                                     {translators.length ? (
                                                         translators.filter(
                                                             translator =>
@@ -357,7 +385,7 @@ function Overview({ user }) {
                                         <StyledTableCell>
                                             Year's balance
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             {yearTotalSum ? (
                                                 yearTotalSum + ' $'
                                             ) : (
@@ -369,17 +397,22 @@ function Overview({ user }) {
                                         <StyledTableCell>
                                             Salary payed
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             {yearTotalSum ? (
                                                 <span
                                                     className={
                                                         'blue-text styled-text-numbers'
                                                     }
                                                 >
-                                                    {' '}
-                                                    {Math.floor(
-                                                        yearTotalSum * 0.45
-                                                    ) + ' $'}{' '}
+                                                    <CountUp
+                                                        duration={0.75}
+                                                        delay={2}
+                                                        end={Math.floor(
+                                                            yearTotalSum * 0.45
+                                                        )}
+                                                        separator=" "
+                                                        prefix="$"
+                                                    />
                                                 </span>
                                             ) : (
                                                 <SmallLoader />
@@ -396,17 +429,28 @@ function Overview({ user }) {
                                                               ? 'Clients Salary'
                                                               : statement.comment}
                                                       </StyledTableCell>
-                                                      <StyledTableCell>
-                                                          {(
+                                                      <StyledTableCell className="td-with-info">
+                                                          {yearTotalSum ? (
                                                               <span
                                                                   className={
                                                                       'blue-text styled-text-numbers'
                                                                   }
                                                               >
-                                                                  {statement.amount +
-                                                                      ' $'}
+                                                                  <CountUp
+                                                                      duration={
+                                                                          0.75
+                                                                      }
+                                                                      delay={2}
+                                                                      end={
+                                                                          statement.amount
+                                                                      }
+                                                                      separator=" "
+                                                                      prefix="$"
+                                                                  />
                                                               </span>
-                                                          ) ?? <SmallLoader />}
+                                                          ) : (
+                                                              <SmallLoader />
+                                                          )}
                                                       </StyledTableCell>
                                                   </StyledTableRow>
                                               )
@@ -416,7 +460,7 @@ function Overview({ user }) {
                                         <StyledTableCell>
                                             Total profit
                                         </StyledTableCell>
-                                        <StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             <b>
                                                 {(
                                                     <span
