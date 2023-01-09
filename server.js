@@ -484,12 +484,8 @@ client.connect(function (err) {
     collectionTaskNotifications = client
         .db('taskListDB')
         .collection('notificationSwitch')
-    // collectionClients = client.db('clientsDB').collection('clients')
-    // collectionTranslators = client.db('translatorsDB').collection('translators')
-    collectionClients = client.db('testDB').collection('testClientCollection')
-    collectionTranslators = client
-        .db('testDB')
-        .collection('testTranslatorsCollection')
+    collectionClients = client.db('clientsDB').collection('clients')
+    collectionTranslators = client.db('translatorsDB').collection('translators')
     collectionStatements = client.db('statementsDB').collection('statements')
     console.log('Connected successfully to server...')
     app.listen(PORT, () => {
