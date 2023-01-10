@@ -19,4 +19,3 @@ export function updateTranslator(translator) {
 export function sendNotificationEmailsRequest() {
     return axios.get(translatorsURL + 'send-emails')
 }
-

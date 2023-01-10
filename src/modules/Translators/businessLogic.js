@@ -93,34 +93,32 @@ export const useTranslators = user => {
         }
     }, [translators, translatorFilter])
 
-    useEffect(() => {
+    useEffect(async () => {
         if (user) {
             getCurrency()
                 .then(res => {
                     if (res.status === 200) {
-                        setDollarToUahRate(res.data.data.UAH)
+                        const privatBankDollarRate =
+                            res?.data[1]?.buy ?? '36.57'
+                        setDollarToUahRate(privatBankDollarRate)
                     }
                 })
                 .catch(err => {
-                    setLoading(false)
-                    console.log(err.message)
+                    showAlertMessage(err.message)
                 })
-            getTranslators().then(res => {
-                if (res.status === 200) {
-                    setLoading(false)
-                    setTranslators(res.data)
-                } else {
-                    console.log('No translators')
-                }
-            })
-
-            getClients().then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                } else {
-                    console.log('No clients')
-                }
-            })
+            const responseTranslators = await getTranslators()
+            if (responseTranslators.status === 200) {
+                setTranslators(responseTranslators.data)
+            } else {
+                showAlertMessage(MESSAGES.somethingWrong)
+            }
+            const responseClients = await getClients()
+            if (responseClients.status === 200) {
+                setClients(responseClients.data)
+            } else {
+                showAlertMessage(MESSAGES.somethingWrong)
+            }
+            setLoading(false)
         }
     }, [user])
 
@@ -525,6 +523,7 @@ export const useTranslators = user => {
 
     return {
         translators,
+        setTranslators,
         startTranslatorDelete,
         dragOverHandler,
         onBoardDrop,
@@ -661,7 +660,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     function onSavePressed() {
         balanceDaySubmit(currentBalanceDay)
     }
-
     return {
         handleOpen,
         open,

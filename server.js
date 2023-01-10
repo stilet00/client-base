@@ -79,6 +79,55 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
 
+const editArrayOfClientsInTranslators = async info => {
+    const { _id, name, surname } = info
+    const translatorsWithEditedClient = await collectionTranslators
+        .find({
+            clients: {
+                $elemMatch: {
+                    _id: _id,
+                },
+            },
+        })
+        .toArray()
+    if (translatorsWithEditedClient.length > 0) {
+        for (let translator of translatorsWithEditedClient) {
+            const arrayWithChangedClientsNames = translator.clients.map(
+                client => {
+                    if (client._id === _id) {
+                        const clientWithChangedData = {
+                            ...client,
+                            name: name,
+                            surname: surname,
+                        }
+                        return clientWithChangedData
+                    } else {
+                        return client
+                    }
+                }
+            )
+            changeClientNameInTranslatorsDataBase(
+                translator._id,
+                arrayWithChangedClientsNames
+            )
+        }
+    }
+}
+
+const changeClientNameInTranslatorsDataBase = async (
+    id,
+    arrayWithChangedClientsNames
+) => {
+    await collectionTranslators.updateOne(
+        { _id: ObjectId(id) },
+        {
+            $set: {
+                clients: arrayWithChangedClientsNames,
+            },
+        }
+    )
+}
+
 //email api
 async function balanceMailout() {
     try {
@@ -317,6 +366,7 @@ app.put(clientsURL + ':id', (req, res) => {
             const message = 'Переводчик сохранен'
             console.log(message)
             res.send(message)
+            editArrayOfClientsInTranslators(req.body)
         }
     )
 })
