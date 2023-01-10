@@ -10,6 +10,7 @@ import {
 } from '../../sharedFunctions/sharedFunctions'
 import {
     currentMonth,
+    previousYear,
     previousMonth,
     arrayOfSelectedYears,
 } from '../../constants/constants'
@@ -93,13 +94,15 @@ function Overview({ user }) {
         getStatementsGroupedByCommentAndYear(statements)
     const yearTotalSum = calculateYearTotal()
     const monthTotalSum = calculateMonthTotal()
-    const previousMonthTotal = calculateMonthTotal(previousMonth, false)
+    const previousMonthTotal =
+        previousMonth === '12'
+            ? calculateMonthTotal(previousMonth, false, false, previousYear)
+            : calculateMonthTotal(previousMonth, false)
     const svadbaMonthTotal = calculateMonthTotal(currentMonth, true, true)
-    const svadbaPreviousMonthTotal = calculateMonthTotal(
-        previousMonth,
-        false,
-        true
-    )
+    const svadbaPreviousMonthTotal =
+        previousMonth === '12'
+            ? calculateMonthTotal(previousMonth, false, true, previousYear)
+            : calculateMonthTotal(previousMonth, false, true)
     const monthProgress =
         monthTotalSum > previousMonthTotal ? (
             <span className={'green-text styled-text-numbers'}>
