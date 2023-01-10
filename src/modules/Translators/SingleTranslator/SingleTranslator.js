@@ -22,6 +22,7 @@ import {
 } from '../../../sharedFunctions/sharedFunctions'
 import {
     currentYear,
+    previousYear,
     previousDay,
     previousMonth,
 } from '../../../constants/constants'
@@ -71,11 +72,15 @@ function SingleTranslator({
     } = useSingleTranslator(statistics, selectedDate, personalPenalties)
 
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
-    const translatorPreviousMonthTotalSum = calculateTranslatorMonthTotal(
-        statistics,
-        false,
-        previousMonth
-    )
+    const translatorPreviousMonthTotalSum =
+        previousMonth === '12'
+            ? calculateTranslatorMonthTotal(
+                  statistics,
+                  false,
+                  previousMonth,
+                  previousYear
+              )
+            : calculateTranslatorMonthTotal(statistics, false, previousMonth)
     const translatorSalaryForPickedMonth = Math.floor(
         calculateTranslatorMonthTotal(
             statistics,

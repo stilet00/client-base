@@ -49,10 +49,10 @@ export const useOverview = user => {
         (
             monthNumber = currentMonth,
             forFullMonth = true,
-            onlySvadba = false
+            onlySvadba = false,
+            year = selectedYear
         ) => {
             let sum = 0
-
             if (onlySvadba) {
                 translators.forEach(translator => {
                     let translatorsStatistic = translator.statistics
@@ -62,7 +62,7 @@ export const useOverview = user => {
                             translatorsStatistic,
                             forFullMonth,
                             monthNumber,
-                            selectedYear,
+                            year,
                             onlySvadba
                         )
                 })
@@ -75,7 +75,7 @@ export const useOverview = user => {
                             translatorsStatistic,
                             forFullMonth,
                             monthNumber,
-                            selectedYear
+                            year
                         )
                 })
             }
