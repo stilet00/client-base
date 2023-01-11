@@ -30,7 +30,6 @@ function Translators({ user }) {
     const { screenIsSmall } = useWindowDimensions()
     const {
         translators,
-        setTranslators,
         clients,
         dragLeaveHandler,
         dragOverHandler,

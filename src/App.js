@@ -1,3 +1,4 @@
+import * as React from 'react'
 import './App.css'
 import './styles/modules/karusell.css'
 import './styles/modules/Gallery.css'
@@ -114,7 +115,7 @@ function App() {
                         onLoadBg={() => {
                             setTimeout(stopLoading, 1000)
                         }}
-                        onError={err => console.log('error', err)}
+                        onError={(err: any) => console.log('error', err)}
                     />
                 </FirebaseAuthProvider>
             </LocalizationProvider>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
@@ -45,46 +45,43 @@ export const useOverview = user => {
         }
     }, [user])
 
-    const calculateMonthTotal = useCallback(
-        (
-            monthNumber = currentMonth,
-            forFullMonth = true,
-            onlySvadba = false,
-            year = selectedYear
-        ) => {
-            let sum = 0
-            if (onlySvadba) {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        calculateTranslatorMonthTotal(
-                            translatorsStatistic,
-                            forFullMonth,
-                            monthNumber,
-                            year,
-                            onlySvadba
-                        )
-                })
-            } else {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        calculateTranslatorMonthTotal(
-                            translatorsStatistic,
-                            forFullMonth,
-                            monthNumber,
-                            year
-                        )
-                })
-            }
-            return getNumberWithHundreds(sum)
-        },
-        [translators, selectedYear]
-    )
+    const calculateMonthTotal = (
+        monthNumber = currentMonth,
+        forFullMonth = true,
+        onlySvadba = false,
+        year = selectedYear
+    ) => {
+        let sum = 0
+        if (onlySvadba) {
+            translators.forEach(translator => {
+                let translatorsStatistic = translator.statistics
+                sum =
+                    sum +
+                    calculateTranslatorMonthTotal(
+                        translatorsStatistic,
+                        forFullMonth,
+                        monthNumber,
+                        year,
+                        onlySvadba
+                    )
+            })
+        } else {
+            translators.forEach(translator => {
+                let translatorsStatistic = translator.statistics
+                sum =
+                    sum +
+                    calculateTranslatorMonthTotal(
+                        translatorsStatistic,
+                        forFullMonth,
+                        monthNumber,
+                        year
+                    )
+            })
+        }
+        return getNumberWithHundreds(sum)
+    }
 
-    const calculateYearTotal = useCallback(() => {
+    const calculateYearTotal = () => {
         let yearSum = 0
 
         for (let monthNumber = 1; monthNumber < 13; monthNumber++) {
@@ -92,7 +89,7 @@ export const useOverview = user => {
         }
 
         return Math.round(yearSum)
-    }, [calculateMonthTotal, selectedYear])
+    }
 
     return {
         selectedYear,

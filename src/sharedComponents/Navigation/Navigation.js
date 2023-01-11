@@ -55,13 +55,13 @@ export default function Navigation({ user }) {
 
     useEffect(() => {
         setPage(pathname)
-    }, [user])
+    }, [user, pathname])
 
     useEffect(() => {
         return () => {
             setPage(pathname)
         }
-    })
+    }, [])
 
     const toggleDrawer = (anchor, open) => event => {
         if (

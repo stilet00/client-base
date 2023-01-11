@@ -93,33 +93,35 @@ export const useTranslators = user => {
         }
     }, [translators, translatorFilter])
 
-    useEffect(async () => {
-        if (user) {
-            getCurrency()
-                .then(res => {
-                    if (res.status === 200) {
-                        const privatBankDollarRate =
-                            res?.data[1]?.buy ?? '36.57'
-                        setDollarToUahRate(privatBankDollarRate)
-                    }
-                })
-                .catch(err => {
-                    showAlertMessage(err.message)
-                })
-            const responseTranslators = await getTranslators()
-            if (responseTranslators.status === 200) {
-                setTranslators(responseTranslators.data)
-            } else {
-                showAlertMessage(MESSAGES.somethingWrong)
+    useEffect(() => {
+        ;(async () => {
+            if (user) {
+                getCurrency()
+                    .then(res => {
+                        if (res.status === 200) {
+                            const privatBankDollarRate =
+                                res?.data[1]?.buy ?? '36.57'
+                            setDollarToUahRate(privatBankDollarRate)
+                        }
+                    })
+                    .catch(err => {
+                        showAlertMessage(err.message)
+                    })
+                const responseTranslators = await getTranslators()
+                if (responseTranslators.status === 200) {
+                    setTranslators(responseTranslators.data)
+                } else {
+                    showAlertMessage(MESSAGES.somethingWrong)
+                }
+                const responseClients = await getClients()
+                if (responseClients.status === 200) {
+                    setClients(responseClients.data)
+                } else {
+                    showAlertMessage(MESSAGES.somethingWrong)
+                }
+                setLoading(false)
             }
-            const responseClients = await getClients()
-            if (responseClients.status === 200) {
-                setClients(responseClients.data)
-            } else {
-                showAlertMessage(MESSAGES.somethingWrong)
-            }
-            setLoading(false)
-        }
+        })()
     }, [user])
 
     const showAlertMessage = useCallback(

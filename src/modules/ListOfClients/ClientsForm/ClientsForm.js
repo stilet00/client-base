@@ -70,7 +70,7 @@ export default function ClientsForm({
         if (arrayOfEditedClientsFields.length > 0) {
             setClient(editedClient)
         }
-    }, [editedClient])
+    }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)])
 
     const site = {
         login:

@@ -207,86 +207,70 @@ export default function ListOfClients({ user }) {
         [clients, alertInfo, openAlert]
     )
 
-    const getSortedClientsWithCalculations = useCallback(
-        clients => {
-            const sortedClientsWithCalculations = clients
-                .sort(sortBySum)
-                .map(client => {
-                    const memorizedMiddleMonthSum = calculateMiddleMonthSum(
-                        client._id
-                    )
-                    const memorizedPreviousMiddleMonthSum =
-                        calculateMiddleMonthSum(
-                            client._id,
-                            moment().subtract(1, 'month')
-                        )
-                    const memorizedMonthSum = clientMonthSum(client._id)
-                    const memorizedPreviousMonthSum = clientMonthSum(
-                        client._id,
-                        moment().subtract(1, 'month')
-                    )
-                    const arrayOfPaymentsMadeToClient = paymentsList.filter(
-                        payment =>
-                            payment.receiverID === client._id &&
-                            payment.date.substring(6, 10) === currentYear
-                    )
-                    const getArrayOfPaymentsMadeToClientWithAmounts =
-                        arrayOfPaymentsMadeToClient.map(
-                            payment => payment.amount
-                        )
-                    const spendsOnClient = getSumFromArray(
-                        getArrayOfPaymentsMadeToClientWithAmounts
-                    )
+    const getSortedClientsWithCalculations = clients => {
+        const sortedClientsWithCalculations = clients
+            .sort(sortBySum)
+            .map(client => {
+                const memorizedMiddleMonthSum = calculateMiddleMonthSum(
+                    client._id
+                )
+                const memorizedPreviousMiddleMonthSum = calculateMiddleMonthSum(
+                    client._id,
+                    moment().subtract(1, 'month')
+                )
+                const memorizedMonthSum = clientMonthSum(client._id)
+                const memorizedPreviousMonthSum = clientMonthSum(
+                    client._id,
+                    moment().subtract(1, 'month')
+                )
+                const arrayOfPaymentsMadeToClient = paymentsList.filter(
+                    payment =>
+                        payment.receiverID === client._id &&
+                        payment.date.substring(6, 10) === currentYear
+                )
+                const getArrayOfPaymentsMadeToClientWithAmounts =
+                    arrayOfPaymentsMadeToClient.map(payment => payment.amount)
+                const spendsOnClient = getSumFromArray(
+                    getArrayOfPaymentsMadeToClientWithAmounts
+                )
 
-                    const clientProfit = getTotalProfitPerClient(client._id)
-                    const clientWithPersonalAndFinancialData = {
-                        _id: client._id,
-                        name: client.name,
-                        surname: client.surname,
-                        currentMonthTotalAmount: memorizedMonthSum,
-                        translators: getAllAsignedTranslators(client._id),
-                        rating: getClientsRating(client._id),
-                        bankAccount: client.bankAccount || 'PayPal',
-                        svadba: {
-                            login: client.svadba?.login || '',
-                            password: client.svadba?.password || '',
-                        },
-                        dating: {
-                            login: client.dating?.login || '',
-                            password: client.dating?.password || '',
-                        },
-                        instagramLink:
-                            'https://www.instagram.com/' +
-                                client.instagramLink ||
-                            'https://www.instagram.com/',
-                        loss: spendsOnClient,
-                        currentYearProfit: clientProfit.currentYearProfit,
-                        absoluteProfit: clientProfit.allYearsProfit,
-                        previousMonthTotalAmount: memorizedPreviousMonthSum,
-                        middleMonthSum: memorizedMiddleMonthSum,
-                        prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
-                        monthProgressPercent: calculatePercentDifference(
-                            memorizedMiddleMonthSum,
-                            memorizedPreviousMiddleMonthSum
-                        ),
-                    }
-                    return clientWithPersonalAndFinancialData
-                })
-            return sortedClientsWithCalculations.filter(client =>
-                `${client.name} ${client.surname}`
-                    .toLowerCase()
-                    .includes(search)
-            )
-        },
-        [
-            clients,
-            search,
-            calculateMiddleMonthSum(),
-            clientMonthSum(),
-            getAllAsignedTranslators(),
-            getClientsRating(),
-        ]
-    )
+                const clientProfit = getTotalProfitPerClient(client._id)
+                const clientWithPersonalAndFinancialData = {
+                    _id: client._id,
+                    name: client.name,
+                    surname: client.surname,
+                    currentMonthTotalAmount: memorizedMonthSum,
+                    translators: getAllAsignedTranslators(client._id),
+                    rating: getClientsRating(client._id),
+                    bankAccount: client.bankAccount || 'PayPal',
+                    svadba: {
+                        login: client.svadba?.login || '',
+                        password: client.svadba?.password || '',
+                    },
+                    dating: {
+                        login: client.dating?.login || '',
+                        password: client.dating?.password || '',
+                    },
+                    instagramLink:
+                        'https://www.instagram.com/' + client.instagramLink ||
+                        'https://www.instagram.com/',
+                    loss: spendsOnClient,
+                    currentYearProfit: clientProfit.currentYearProfit,
+                    absoluteProfit: clientProfit.allYearsProfit,
+                    previousMonthTotalAmount: memorizedPreviousMonthSum,
+                    middleMonthSum: memorizedMiddleMonthSum,
+                    prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
+                    monthProgressPercent: calculatePercentDifference(
+                        memorizedMiddleMonthSum,
+                        memorizedPreviousMiddleMonthSum
+                    ),
+                }
+                return clientWithPersonalAndFinancialData
+            })
+        return sortedClientsWithCalculations.filter(client =>
+            `${client.name} ${client.surname}`.toLowerCase().includes(search)
+        )
+    }
 
     const closeGraph = () => {
         setShowGraph(false)

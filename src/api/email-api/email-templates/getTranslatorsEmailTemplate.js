@@ -13,16 +13,16 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                             ) {
                                 return ''
                             } else {
-                                return `<td class="container__tbody_amount">${Object.values(
+                                return `<td className="container__tbody_amount">${Object.values(
                                     statisticsCategory
                                 ).join('')}</td>`
                             }
                         }
                     )
-                return `<tr class="${
+                return `<tr className="${
                     index % 2 ? 'container__tbody_secondTR' : ''
                 }">
-                    <td class="container__tbody_client">
+                    <td className="container__tbody_client">
                         ${statisticsInfoForClient.name}
                     </td>
                     ${amountsForStatisticCategories.join('')}
@@ -110,18 +110,18 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                     <title>Email from Sunrise</title>
                                 </head>
                                 <body>
-                                    <table class="wrapper">
+                                    <table className="wrapper">
                                         <tr>
                                             <td>
-                                                <table class="container">
+                                                <table className="container">
                                                     <thead>
                                                     <tr>
-                                                        <td  class="container__tableheader" colspan="9">
+                                                        <td  className="container__tableheader" colspan="9">
                                                             <img src="cid:email-icon" alt="placeholder"></img>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="container__tableheader-greetingsinfo"  colspan="9">
+                                                        <td className="container__tableheader-greetingsinfo"  colspan="9">
                                                                 <h2>
                                                                     Hello ${
                                                                         translatorInfoForEmailLetter.label.split(
@@ -133,30 +133,30 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="container__tbody-main">
-                                                        <td class="container__tbody-header-first-td">
+                                                    <tr className="container__tbody-main">
+                                                        <td className="container__tbody-header-first-td">
                                                             <img src="cid:women" alt="Client name"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:chat" class="icons" alt="Chats"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:chat" className="icons" alt="Chats"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:email-letter" class="icons"  alt="Letters"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:email-letter" className="icons"  alt="Letters"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:love"class="icons" alt="Dating"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:love"className="icons" alt="Dating"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:gift" class="icons" alt="Virtual gifts on Svadba"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:gift" className="icons" alt="Virtual gifts on Svadba"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:heart" alt="virtual gifts Dating" class="icons" alt="Virtual gifts on Dating"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:heart" alt="virtual gifts Dating" className="icons" alt="Virtual gifts on Dating"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:telephone" class="icons"  alt="Phone calls"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:telephone" className="icons"  alt="Phone calls"></img>
                                                         </td>
-                                                        <td class="container__tbody_amount">
-                                                            <img src="cid:penalties" class="icons"  alt="Penalties"></img>
+                                                        <td className="container__tbody_amount">
+                                                            <img src="cid:penalties" className="icons"  alt="Penalties"></img>
                                                         </td>
                                                     </tr>
                                                     ${arrayOfDetailedBalanceFields.join(
@@ -165,12 +165,12 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td class="container__tfoot-td" colspan="3">
+                                                        <td className="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
                                                                 translatorInfoForEmailLetter.yesterdaySum
                                                             } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
                                                         </td>
-                                                        <td class="container__tfoot-td" colspan="5">
+                                                        <td className="container__tfoot-td" colspan="5">
                                                             ${moment().format(
                                                                 'MMMM'
                                                             )}: ${
