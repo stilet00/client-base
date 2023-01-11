@@ -29,8 +29,8 @@ function PreloadPage({ isLoaded }) {
             {shouldShowNightPreload && (
                 <PreloaderOuterContainer isLoaded={isLoaded}>
                     <div className={'background-container'} />
-                    <div class="stars" />
-                    <div class="twinkling" />
+                    <div className="stars" />
+                    <div className="twinkling" />
                     <SignalShapedLoader />
                 </PreloaderOuterContainer>
             )}

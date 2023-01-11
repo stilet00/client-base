@@ -4,10 +4,8 @@ import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment'
-import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
 import '../../styles/modules/Chart.css'
-import Box from '@mui/material/Box'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -19,7 +17,6 @@ import {
 
 function ChartsContainer({ user }) {
     const {
-        arrayOfYears,
         closeAlert,
         alertOpen,
         alertStatusConfirmation,

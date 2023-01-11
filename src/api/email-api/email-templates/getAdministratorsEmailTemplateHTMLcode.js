@@ -14,7 +14,7 @@ const getAdministratorsEmailTemplateHTMLCode = ({
     )
     const translatorsSumToHtmlCode = firstRowOfSumsAndNames.map(
         (translatorStrings, index) =>
-            `<tr class="translator-info-container">
+            `<tr className="translator-info-container">
                 <td><span>${translatorStrings}</span></td>
                 <td><span>${
                     secondRowOfSumsAndNames[index]
@@ -124,8 +124,8 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                         <body>
                                             <table>
                                                 <thead>
-                                                    <tr class="titlesInfo">
-                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum} $</td>
+                                                    <tr className="titlesInfo">
+                                                        <td className="title-info" colspan="2">Total: ${yesterdayTotalSum} $</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
