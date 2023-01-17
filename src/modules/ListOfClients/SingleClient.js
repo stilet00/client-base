@@ -176,11 +176,15 @@ export default function SingleClient({
         >
             <CardHeader
                 sx={{
+                    position: 'relative',
+                    justifyContent: 'space-between',
                     '& .MuiCardHeader-avatar': {
                         margin: 0,
                     },
                     '& .MuiCardHeader-content': {
-                        paddingRight: 3,
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
                     },
                 }}
                 title={
