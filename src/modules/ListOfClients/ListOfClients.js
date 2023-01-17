@@ -125,6 +125,7 @@ export default function ListOfClients({ user }) {
                 password: clientWithID.dating?.password || '',
             },
             instagramLink: clientWithID.instagramLink || '',
+            image: clientWithID.image || '',
         }
         setUpdatingClient(clientWithFieldsForForm)
         handleOpen()
@@ -170,43 +171,36 @@ export default function ListOfClients({ user }) {
         [clients, alertInfo, openAlert]
     )
 
-    const addNewClient = useCallback(
-        newClient => {
-            const message = 'clients date had been added'
-            setAlertInfo({
-                ...alertInfo,
-                mainTitle: message,
-                status: true,
-            })
-            openAlert(2000)
-            addClient(newClient)
-                .then(res => {
-                    if (res.status === 200) {
-                        setClients([
-                            ...clients,
-                            { ...newClient, _id: res.data },
-                        ])
-                        setAlertInfo({
-                            ...alertInfo,
-                            mainTitle: 'client had been added',
-                            status: true,
-                        })
-                        openAlert(2000)
-                    }
-                })
-                .catch(err => {
-                    const message = err.message
+    const addNewClient = newClient => {
+        const message = 'clients date had been added'
+        setAlertInfo({
+            ...alertInfo,
+            mainTitle: message,
+            status: true,
+        })
+        openAlert(2000)
+        addClient(newClient)
+            .then(res => {
+                if (res.status === 200) {
+                    setClients([...clients, { ...newClient, _id: res.data }])
                     setAlertInfo({
                         ...alertInfo,
-                        mainTitle: message,
-                        status: false,
+                        mainTitle: 'client had been added',
+                        status: true,
                     })
-                    openAlert(5000)
+                    openAlert(2000)
+                }
+            })
+            .catch(err => {
+                const message = err.message
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
                 })
-        },
-        [clients, alertInfo, openAlert]
-    )
-
+                openAlert(5000)
+            })
+    }
     const getSortedClientsWithCalculations = clients => {
         const sortedClientsWithCalculations = clients
             .sort(sortBySum)
@@ -255,6 +249,7 @@ export default function ListOfClients({ user }) {
                         'https://www.instagram.com/' + client.instagramLink ||
                         'https://www.instagram.com/',
                     loss: spendsOnClient,
+                    image: client.image ?? null,
                     currentYearProfit: clientProfit.currentYearProfit,
                     absoluteProfit: clientProfit.allYearsProfit,
                     previousMonthTotalAmount: memorizedPreviousMonthSum,

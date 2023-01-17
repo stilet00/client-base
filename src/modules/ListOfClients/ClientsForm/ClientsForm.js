@@ -23,6 +23,9 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -227,6 +230,15 @@ export default function ClientsForm({
             ? true
             : false
 
+    const handleFileInputChange = e => {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+        reader.onload = event => {
+            setClient({ ...client, image: reader.result })
+        }
+        reader.readAsDataURL(file)
+    }
+
     return (
         <>
             <Modal
@@ -253,8 +265,8 @@ export default function ClientsForm({
                         <form
                             onSubmit={e => {
                                 onFormSubmit(e, client)
-                                // clearClient()
-                                // setTimeout(handleClose, 1100)
+                                clearClient()
+                                setTimeout(handleClose, 1100)
                             }}
                         >
                             <h2
@@ -274,6 +286,9 @@ export default function ClientsForm({
                                     variant="outlined"
                                     label={'Name'}
                                     required
+                                    sx={{
+                                        maxWidth: '50%',
+                                    }}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -286,6 +301,9 @@ export default function ClientsForm({
                                     name={'surname'}
                                     onChange={handleChange}
                                     value={client.surname}
+                                    sx={{
+                                        maxWidth: '50%',
+                                    }}
                                     variant="outlined"
                                     label={'Surname'}
                                     required
@@ -297,32 +315,89 @@ export default function ClientsForm({
                                         ),
                                     }}
                                 />
-                                <CssTextField
-                                    name={'instagramLink'}
-                                    className="clients-form__body--big-field"
-                                    error={formErrors.instagramLink}
-                                    helperText={formErrors.instagramLink}
-                                    onChange={handleChange}
-                                    value={client.instagramLink.replace(
-                                        regExpForInstagram,
-                                        ''
+                                <div className="clients-form__body--big-field media-container">
+                                    {client.image === '' ? (
+                                        <IconButton
+                                            aria-label="upload picture"
+                                            component="label"
+                                            onChange={handleFileInputChange}
+                                        >
+                                            <input
+                                                hidden
+                                                accept="image/png"
+                                                type="file"
+                                            />
+                                            <PhotoCamera
+                                                sx={{
+                                                    color: 'black',
+                                                }}
+                                            />
+                                        </IconButton>
+                                    ) : (
+                                        <Badge
+                                            overlap="circular"
+                                            sx={{
+                                                gridColumn: '1',
+                                            }}
+                                            badgeContent={
+                                                <button
+                                                    style={{
+                                                        fontSize: '16px',
+                                                        color: 'red',
+                                                        borderRadius: '50%',
+                                                        border: 'none',
+                                                    }}
+                                                    onClick={e =>
+                                                        setClient({
+                                                            ...client,
+                                                            image: '',
+                                                        })
+                                                    }
+                                                >
+                                                    x
+                                                </button>
+                                            }
+                                        >
+                                            <Avatar
+                                                alt="photo"
+                                                sx={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    '& .MuiAvatar-img': {
+                                                        objectPosition: 'top',
+                                                    },
+                                                }}
+                                                src={client.image}
+                                            />
+                                        </Badge>
                                     )}
-                                    variant="outlined"
-                                    label={'instagram'}
-                                    required
-                                    InputProps={{
-                                        startAdornment: (
-                                            <>
-                                                <InputAdornment position="start">
-                                                    <InstagramIcon />
-                                                </InputAdornment>
-                                                <InputAdornment position="start">
-                                                    http://instagram.com/
-                                                </InputAdornment>
-                                            </>
-                                        ),
-                                    }}
-                                />
+                                    <CssTextField
+                                        name={'instagramLink'}
+                                        className="media-container__link"
+                                        error={formErrors.instagramLink}
+                                        helperText={formErrors.instagramLink}
+                                        onChange={handleChange}
+                                        value={client.instagramLink.replace(
+                                            regExpForInstagram,
+                                            ''
+                                        )}
+                                        variant="outlined"
+                                        label={'instagram'}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <>
+                                                    <InputAdornment position="start">
+                                                        <InstagramIcon />
+                                                    </InputAdornment>
+                                                    <InputAdornment position="start">
+                                                        http://instagram.com/
+                                                    </InputAdornment>
+                                                </>
+                                            ),
+                                        }}
+                                    />
+                                </div>
                                 <CssTextField
                                     name={'bankAccount'}
                                     error={formErrors.bankAccount}

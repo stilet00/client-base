@@ -349,6 +349,7 @@ app.put(clientsURL + ':id', (req, res) => {
                 bankAccount: req.body.bankAccount,
                 instagramLink: req.body.instagramLink,
                 suspended: req.body.suspended,
+                image: req.body.image,
                 svadba: {
                     login: req.body.svadba.login,
                     password: req.body.svadba.password,
