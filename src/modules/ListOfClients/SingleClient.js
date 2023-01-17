@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
+import Avatar from '@mui/material/Avatar'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
@@ -50,6 +51,7 @@ export default function SingleClient({
     handleSwitchToGraph,
     loss,
     currentYearProfit,
+    image,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
@@ -163,6 +165,8 @@ export default function SingleClient({
         </div>
     )
 
+    const avatarImage = image ? image : '/'
+
     return (
         <Card
             className="translator-item gradient-box"
@@ -171,12 +175,34 @@ export default function SingleClient({
             }}
         >
             <CardHeader
+                sx={{
+                    '& .MuiCardHeader-avatar': {
+                        margin: 0,
+                    },
+                    '& .MuiCardHeader-content': {
+                        paddingRight: image ? 3 : 0,
+                        paddingLeft: image ? 0 : '28px',
+                    },
+                }}
                 title={
                     <Rating
                         name="read-only"
                         value={getClientsRating()}
                         readOnly
                         size="small"
+                    />
+                }
+                avatar={
+                    <Avatar
+                        sx={{
+                            width: 56,
+                            height: 56,
+                            '& .MuiAvatar-img': {
+                                objectPosition: 'top',
+                            },
+                        }}
+                        src={avatarImage}
+                        aria-label="photo"
                     />
                 }
                 action={
@@ -207,7 +233,6 @@ export default function SingleClient({
                     </ClickAwayListener>
                 }
             />
-
             <CardContent>
                 <Typography variant="h5">{`${name} ${surname}`}</Typography>
                 <Typography

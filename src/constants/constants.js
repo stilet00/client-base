@@ -49,6 +49,7 @@ export const DEFAULT_CLIENT = {
         login: '',
         password: '',
     },
+    image: '',
 }
 
 export const DEFAULT_PENALTY = {
