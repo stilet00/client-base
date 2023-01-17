@@ -180,8 +180,7 @@ export default function SingleClient({
                         margin: 0,
                     },
                     '& .MuiCardHeader-content': {
-                        paddingRight: image ? 3 : 0,
-                        paddingLeft: image ? 0 : '28px',
+                        paddingRight: 3,
                     },
                 }}
                 title={
