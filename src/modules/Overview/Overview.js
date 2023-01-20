@@ -190,6 +190,8 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    const totalProfit =
+        yearTotalSum - Math.floor(yearTotalSum * 0.45) - totalPayments
 
     return (
         <FirebaseAuthConsumer>
@@ -455,27 +457,25 @@ function Overview({ user }) {
                                             Total profit
                                         </StyledTableCell>
                                         <StyledTableCell className="td-with-info">
-                                            <b>
-                                                {(
-                                                    <span
-                                                        className={
-                                                            'green-text styled-text-numbers'
-                                                        }
-                                                        style={{
-                                                            margin: 0,
-                                                        }}
-                                                    >
-                                                        {' '}
-                                                        {yearTotalSum -
-                                                            Math.floor(
-                                                                yearTotalSum *
-                                                                    0.45
-                                                            ) -
-                                                            totalPayments +
-                                                            ' $'}{' '}
-                                                    </span>
-                                                ) ?? <SmallLoader />}
-                                            </b>
+                                            {yearTotalSum ? (
+                                                <span
+                                                    className={
+                                                        'green-text styled-text-numbers'
+                                                    }
+                                                    style={{
+                                                        margin: 0,
+                                                    }}
+                                                >
+                                                    <CountUp
+                                                        duration={0.75}
+                                                        end={totalProfit}
+                                                        separator=" "
+                                                    />{' '}
+                                                    $
+                                                </span>
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 </TableBody>
