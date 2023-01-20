@@ -93,7 +93,6 @@ export default function ListOfClients({ user }) {
         getPaymentsRequest()
             .then(res => {
                 if (res.status === 200) {
-                    setLoading(false)
                     setPaymentsList(res.data)
                 }
             })
