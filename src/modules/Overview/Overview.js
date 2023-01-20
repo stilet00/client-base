@@ -109,7 +109,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={2}
                     end={calculatePercentDifference(
                         monthTotalSum,
                         previousMonthTotal
@@ -123,7 +122,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={2}
                     end={calculatePercentDifference(
                         monthTotalSum,
                         previousMonthTotal
@@ -139,7 +137,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={1}
                     end={calculatePercentDifference(
                         svadbaMonthTotal,
                         svadbaPreviousMonthTotal
@@ -153,7 +150,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={1}
                     end={calculatePercentDifference(
                         svadbaMonthTotal,
                         svadbaPreviousMonthTotal
@@ -269,7 +265,6 @@ function Overview({ user }) {
                                                                     duration={
                                                                         0.75
                                                                     }
-                                                                    delay={2}
                                                                     end={
                                                                         monthTotalSum
                                                                     }
@@ -300,7 +295,6 @@ function Overview({ user }) {
                                                                     duration={
                                                                         0.75
                                                                     }
-                                                                    delay={1}
                                                                     end={
                                                                         svadbaMonthTotal
                                                                     }
@@ -408,7 +402,6 @@ function Overview({ user }) {
                                                 >
                                                     <CountUp
                                                         duration={0.75}
-                                                        delay={2}
                                                         end={Math.floor(
                                                             yearTotalSum * 0.45
                                                         )}
@@ -442,7 +435,6 @@ function Overview({ user }) {
                                                                       duration={
                                                                           0.75
                                                                       }
-                                                                      delay={2}
                                                                       end={
                                                                           statement.amount
                                                                       }
