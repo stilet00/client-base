@@ -109,7 +109,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={2}
                     end={calculatePercentDifference(
                         monthTotalSum,
                         previousMonthTotal
@@ -123,7 +122,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={2}
                     end={calculatePercentDifference(
                         monthTotalSum,
                         previousMonthTotal
@@ -139,7 +137,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={1}
                     end={calculatePercentDifference(
                         svadbaMonthTotal,
                         svadbaPreviousMonthTotal
@@ -153,7 +150,6 @@ function Overview({ user }) {
                 <span> </span>
                 <CountUp
                     duration={0.75}
-                    delay={1}
                     end={calculatePercentDifference(
                         svadbaMonthTotal,
                         svadbaPreviousMonthTotal
@@ -194,6 +190,8 @@ function Overview({ user }) {
                 &nbsp;%
             </span>
         )
+    const totalProfit =
+        yearTotalSum - Math.floor(yearTotalSum * 0.45) - totalPayments
 
     return (
         <FirebaseAuthConsumer>
@@ -269,7 +267,6 @@ function Overview({ user }) {
                                                                     duration={
                                                                         0.75
                                                                     }
-                                                                    delay={2}
                                                                     end={
                                                                         monthTotalSum
                                                                     }
@@ -300,7 +297,6 @@ function Overview({ user }) {
                                                                     duration={
                                                                         0.75
                                                                     }
-                                                                    delay={1}
                                                                     end={
                                                                         svadbaMonthTotal
                                                                     }
@@ -408,7 +404,6 @@ function Overview({ user }) {
                                                 >
                                                     <CountUp
                                                         duration={0.75}
-                                                        delay={2}
                                                         end={Math.floor(
                                                             yearTotalSum * 0.45
                                                         )}
@@ -442,7 +437,6 @@ function Overview({ user }) {
                                                                       duration={
                                                                           0.75
                                                                       }
-                                                                      delay={2}
                                                                       end={
                                                                           statement.amount
                                                                       }
@@ -463,27 +457,25 @@ function Overview({ user }) {
                                             Total profit
                                         </StyledTableCell>
                                         <StyledTableCell className="td-with-info">
-                                            <b>
-                                                {(
-                                                    <span
-                                                        className={
-                                                            'green-text styled-text-numbers'
-                                                        }
-                                                        style={{
-                                                            margin: 0,
-                                                        }}
-                                                    >
-                                                        {' '}
-                                                        {yearTotalSum -
-                                                            Math.floor(
-                                                                yearTotalSum *
-                                                                    0.45
-                                                            ) -
-                                                            totalPayments +
-                                                            ' $'}{' '}
-                                                    </span>
-                                                ) ?? <SmallLoader />}
-                                            </b>
+                                            {yearTotalSum ? (
+                                                <span
+                                                    className={
+                                                        'green-text styled-text-numbers'
+                                                    }
+                                                    style={{
+                                                        margin: 0,
+                                                    }}
+                                                >
+                                                    <CountUp
+                                                        duration={0.75}
+                                                        end={totalProfit}
+                                                        separator=" "
+                                                    />{' '}
+                                                    $
+                                                </span>
+                                            ) : (
+                                                <SmallLoader />
+                                            )}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 </TableBody>

@@ -89,7 +89,7 @@ export const calculateTranslatorMonthTotal = (
             )
         }, 0)
     } else {
-        total = month.reduce((sum, current, index) => {
+        total = month?.reduce((sum, current, index) => {
             return index + 1 < Number(moment().format('D'))
                 ? sum +
                       current.clients.reduce((sum, current) => {
