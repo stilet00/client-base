@@ -35,6 +35,8 @@ export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
 export const arrayOfSelectedYears = ['2023', '2022']
 
+export const localStorageTokenKey = 'clientBaseUserToken'
+
 export const DEFAULT_CLIENT = {
     name: '',
     surname: '',
