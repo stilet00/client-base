@@ -1,27 +1,16 @@
 import axios from 'axios'
 import { rootURL } from '../rootURL'
-import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const financeStatementsURL = rootURL + 'statements/'
 
 export function getPaymentsRequest() {
-    return axios.get(
-        financeStatementsURL + 'get/',
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.get(financeStatementsURL + 'get/')
 }
 
 export function addPaymentRequest(payment) {
-    return axios.post(
-        financeStatementsURL + 'add/',
-        payment,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.post(financeStatementsURL + 'add/', payment)
 }
 
 export function removePaymentRequest(id) {
-    return axios.delete(
-        financeStatementsURL + id,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.delete(financeStatementsURL + id)
 }

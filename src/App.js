@@ -20,6 +20,7 @@ import {
     FirebaseAuthProvider,
     FirebaseAuthConsumer,
 } from '@react-firebase/auth'
+import { firebaseConfig } from './fireBaseConfig'
 import Translators from './modules/Translators/Translators'
 import Overview from './modules/Overview/Overview'
 import sun from '../src/images/sun_transparent.png'
@@ -39,7 +40,6 @@ function App() {
         setIsLoaded(false)
     }
 
-    const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG)
     return (
         <Router>
             <LocalizationProvider dateAdapter={AdapterMoment}>

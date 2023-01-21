@@ -33,11 +33,6 @@ const {
     createCurrentYearStatisticsForEveryTranslator,
 } = require('./src/api/database-api/createCurrentYearStatisticsForEveryTranslator')
 
-const {
-    getUserIdTokenFromRequest,
-    checkIfUserIsAuthenticatedBeforeExecute,
-} = require('./src/api/firebase/firebaseAdmin')
-
 const PORT = process.env.PORT || 80
 
 let app = express()
@@ -47,13 +42,13 @@ app.set('view engine', 'ejs')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extented: true }))
-app.use(function (request, response, next) {
-    response.setHeader('Access-Control-Allow-Origin', '*')
-    response.setHeader(
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader(
         'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-type, Accept, Authorization'
+        'origin, content-type, accept'
     )
-    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
     next()
 })
 
@@ -162,441 +157,325 @@ async function taskNotificationsMailout() {
 
 // task list api
 
-app.get(tasksURL + 'get', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTasks.find().toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-        },
-        request,
-        response,
+app.get(tasksURL + 'get', (req, res) => {
+    collectionTasks.find().toArray((err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.send(docs)
     })
 })
 
-app.delete(tasksURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTasks.deleteOne(
-                { _id: ObjectId(request.params.id) },
-                (err, docs) => {
-                    if (err) {
-                        console.log(err)
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
-        },
-        request,
-        response,
+app.delete(tasksURL + ':id', (req, res) => {
+    collectionTasks.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.sendStatus(200)
     })
 })
 
-app.post(tasksURL + 'add', (request, response) => {
-    if (request.body.taskName) {
-        checkIfUserIsAuthenticatedBeforeExecute({
-            callBack: () => {
-                const task = { ...request.body }
-                collectionTasks.insertOne(task, (err, result) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    } else {
-                        response.send(result.ops[0]._id)
-                    }
-                })
-            },
-            request,
-            response,
+app.post(tasksURL + 'add', (req, res) => {
+    if (req.body.taskName) {
+        let task = { ...req.body }
+
+        collectionTasks.insertOne(task, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            } else {
+                res.send(result.ops[0]._id)
+            }
         })
-    } else {
-        response.send('No task task name')
     }
 })
 
-app.put(tasksURL + 'edit/:id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTasks.updateOne(
-                { _id: ObjectId(request.params.id) },
-                {
-                    $set: {
-                        completed: request.body.completed,
-                        doneAt: request.body.doneAt,
-                    },
-                },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
+app.put(tasksURL + 'edit/:id', (req, res) => {
+    collectionTasks.updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+            $set: {
+                completed: req.body.completed,
+                doneAt: req.body.doneAt,
+            },
         },
-        request,
-        response,
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
+})
+
+app.get(tasksURL + 'notifications/', (req, res) => {
+    collectionTaskNotifications.find().toArray((err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.send(docs)
     })
 })
 
-app.get(tasksURL + 'notifications/', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTaskNotifications.find().toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
+app.put(tasksURL + 'notifications/', (req, res) => {
+    const taskNotificationsAreAllowed = req.body.allowed
+    if (taskNotificationsAreAllowed) {
+        outdatedTaskNotificationsInterval = setInterval(
+            taskNotificationsMailout,
+            twentyHoursInMiliseconds
+        )
+    }
+    if (!taskNotificationsAreAllowed) {
+        clearInterval(outdatedTaskNotificationsInterval)
+    }
+    const notificationSettingsDatabaseId = '6346e3ed4620ec03ee702c34'
+    collectionTaskNotifications.updateOne(
+        { _id: ObjectId(notificationSettingsDatabaseId) },
+        {
+            $set: {
+                allowed: req.body.allowed,
+            },
         },
-        request,
-        response,
-    })
-})
-
-app.put(tasksURL + 'notifications/', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            const taskNotificationsAreAllowed = request.body.allowed
-            if (taskNotificationsAreAllowed) {
-                outdatedTaskNotificationsInterval = setInterval(
-                    taskNotificationsMailout,
-                    twentyHoursInMiliseconds
-                )
+        err => {
+            if (err) {
+                return res.sendStatus(500)
             }
-            if (!taskNotificationsAreAllowed) {
-                clearInterval(outdatedTaskNotificationsInterval)
-            }
-            const notificationSettingsDatabaseId = '6346e3ed4620ec03ee702c34'
-            collectionTaskNotifications.updateOne(
-                { _id: ObjectId(notificationSettingsDatabaseId) },
-                {
-                    $set: {
-                        allowed: request.body.allowed,
-                    },
-                },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
-        },
-        request,
-        response,
-    })
+            res.sendStatus(200)
+        }
+    )
 })
 
 // balance api
 
-app.get(balanceURL + 'get', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionBalance.find().toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-        },
-        request,
-        response,
+app.get(balanceURL + 'get', (req, res) => {
+    collectionBalance.find().toArray((err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.send(docs)
     })
 })
 
-app.post(balanceURL + 'add', (request, response) => {
-    if (!request.body) {
-        response.send('Ошибка при загрузке платежа')
-    } else {
+app.post(balanceURL + 'add', (req, res) => {
+    if (req.body) {
+        let month = { ...req.body }
+
+        collectionBalance.insertOne(month, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            } else {
+                res.send(result.ops[0]._id)
+            }
+        })
     }
 })
 
-app.delete(balanceURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionBalance.deleteOne(
-                { _id: ObjectId(request.params.id) },
-                (err, docs) => {
-                    if (err) {
-                        console.log(err)
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
-        },
-        request,
-        response,
-    })
+app.delete(balanceURL + ':id', (req, res) => {
+    collectionBalance.deleteOne(
+        { _id: ObjectId(req.params.id) },
+        (err, docs) => {
+            if (err) {
+                console.log(err)
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
 })
 
-app.put(balanceURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionBalance.updateOne(
-                { _id: ObjectId(request.params.id) },
-                {
-                    $set: { values: request.body.values },
-                },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
+app.put(balanceURL + ':id', (req, res) => {
+    collectionBalance.updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+            $set: { values: req.body.values },
         },
-        request,
-        response,
-    })
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
 })
 
 //clients api
 
-app.get(clientsURL + 'get', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionClients.find().toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-        },
-        request,
-        response,
+app.get(clientsURL + 'get', (req, res) => {
+    collectionClients.find().toArray((err, docs) => {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+        res.send(docs)
     })
 })
-
-app.post(clientsURL + 'add', function (request, response, next) {
-    if (!request.body) {
-        response.send('Ошибка при загрузке клиентки')
+app.post(clientsURL + 'add', function (req, res, next) {
+    if (!req.body) {
+        res.send('Ошибка при загрузке клиентки')
     } else {
-        checkIfUserIsAuthenticatedBeforeExecute({
-            callBack: () => {
-                collectionClients.insertOne(request.body, (err, result) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.send(result?.insertedId)
-                })
-            },
-            request,
-            response,
+        collectionClients.insertOne(req.body, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.send(result?.insertedId)
         })
     }
 })
 // we do not delete clients 09.11.2022
-// app.delete(clientsURL + ':id', (request, response) => {
+// app.delete(clientsURL + ':id', (req, res) => {
 //     collectionClients.deleteOne(
-//         { _id: ObjectId(request.params.id) },
+//         { _id: ObjectId(req.params.id) },
 //         (err, docs) => {
 //             if (err) {
-//                 return response.sendStatus(500)
+//                 return res.sendStatus(500)
 //             }
-//             response.sendStatus(200)
+//             res.sendStatus(200)
 //         }
 //     )
 // })
 
-app.put(clientsURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionClients.updateOne(
-                { _id: ObjectId(request.params.id) },
-                {
-                    $set: {
-                        name: request.body.name,
-                        surname: request.body.surname,
-                        bankAccount: request.body.bankAccount,
-                        instagramLink: request.body.instagramLink,
-                        suspended: request.body.suspended,
-                        svadba: {
-                            login: request.body.svadba.login,
-                            password: request.body.svadba.password,
-                        },
-                        dating: {
-                            login: request.body.dating.login,
-                            password: request.body.dating.password,
-                        },
-                    },
-                },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    const message = 'Переводчик сохранен'
-                    response.send(message)
-                    editArrayOfClientsInTranslators(request.body)
-                }
-            )
-        },
-        request,
-        response,
-    })
-})
-
 // translators api
 
-app.get(translatorsURL + 'get', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTranslators.find().toArray((err, docs) => {
-                if (err) {
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-        },
-        request,
-        response,
-    })
-})
-
-app.get(translatorsURL + 'send-emails', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            balanceMailout().then(emailsWereSentSuccessfully => {
-                if (emailsWereSentSuccessfully.length) {
-                    return response.send(emailsWereSentSuccessfully)
-                } else {
-                    return response.sendStatus(500)
-                }
-            })
-        },
-        request,
-        response,
-    })
-})
-
-app.post(translatorsURL + 'add', function (request, response, next) {
-    if (!request.body) {
-        response.send('Ошибка при загрузке переводчика')
-    } else {
-        checkIfUserIsAuthenticatedBeforeExecute({
-            callBack: () => {
-                collectionTranslators.insertOne(request.body, (err, result) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    } else {
-                        response.send(result?.insertedId)
-                    }
-                })
+app.put(clientsURL + ':id', (req, res) => {
+    collectionClients.updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+            $set: {
+                name: req.body.name,
+                surname: req.body.surname,
+                bankAccount: req.body.bankAccount,
+                instagramLink: req.body.instagramLink,
+                suspended: req.body.suspended,
+                svadba: {
+                    login: req.body.svadba.login,
+                    password: req.body.svadba.password,
+                },
+                dating: {
+                    login: req.body.dating.login,
+                    password: req.body.dating.password,
+                },
             },
-            request,
-            response,
+        },
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            const message = 'Переводчик сохранен'
+            console.log(message)
+            res.send(message)
+            editArrayOfClientsInTranslators(req.body)
+        }
+    )
+})
+
+app.get(translatorsURL + 'get', (req, res) => {
+    collectionTranslators.find().toArray((err, docs) => {
+        if (err) {
+            return res.sendStatus(500)
+        }
+        res.send(docs)
+    })
+})
+
+app.get(translatorsURL + 'send-emails', (req, res) => {
+    balanceMailout().then(emailsWereSentSuccessfully => {
+        if (emailsWereSentSuccessfully.length) {
+            return res.send(emailsWereSentSuccessfully)
+        } else {
+            return res.sendStatus(500)
+        }
+    })
+})
+
+app.post(translatorsURL + 'add', function (req, res, next) {
+    if (!req.body) {
+        res.send('Ошибка при загрузке переводчика')
+    } else {
+        collectionTranslators.insertOne(req.body, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            } else {
+                res.send(result?.insertedId)
+            }
         })
     }
 })
 
-app.put(translatorsURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTranslators.updateOne(
-                { _id: ObjectId(request.params.id) },
-                {
-                    $set: {
-                        name: request.body.name,
-                        surname: request.body.surname,
-                        clients: request.body.clients,
-                        statistics: request.body.statistics,
-                        suspended: request.body.suspended,
-                        personalPenalties: request.body.personalPenalties,
-                        email: request.body.email,
-                        wantsToReceiveEmails: request.body.wantsToReceiveEmails,
-                    },
-                },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    const message = 'Переводчик сохранен'
-                    response.send(message)
-                }
-            )
+app.put(translatorsURL + ':id', (req, res) => {
+    collectionTranslators.updateOne(
+        { _id: ObjectId(req.params.id) },
+        {
+            $set: {
+                name: req.body.name,
+                surname: req.body.surname,
+                clients: req.body.clients,
+                statistics: req.body.statistics,
+                suspended: req.body.suspended,
+                personalPenalties: req.body.personalPenalties,
+                email: req.body.email,
+                wantsToReceiveEmails: req.body.wantsToReceiveEmails,
+            },
         },
-        request,
-        response,
-    })
+        err => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            const message = 'Переводчик сохранен'
+            console.log(message)
+            res.send(message)
+        }
+    )
 })
-app.delete(translatorsURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionTranslators.deleteOne(
-                { _id: ObjectId(request.params.id) },
-                (err, docs) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
-        },
-        request,
-        response,
-    })
+app.delete(translatorsURL + ':id', (req, res) => {
+    collectionTranslators.deleteOne(
+        { _id: ObjectId(req.params.id) },
+        (err, docs) => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
 })
 
 //statements api
 
-app.get(financeStatementsURL + 'get', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionStatements.find().toArray((err, docs) => {
-                if (err) {
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-        },
-        request,
-        response,
+app.get(financeStatementsURL + 'get', (req, res) => {
+    collectionStatements.find().toArray((err, docs) => {
+        if (err) {
+            return res.sendStatus(500)
+        }
+        res.send(docs)
     })
 })
 
-app.post(financeStatementsURL + 'add', function (request, response, next) {
-    if (!request.body) {
-        response.send('Ошибка при загрузке платежа')
+app.post(financeStatementsURL + 'add', function (req, res, next) {
+    if (!req.body) {
+        res.send('Ошибка при загрузке платежа')
     } else {
-        checkIfUserIsAuthenticatedBeforeExecute({
-            callBack: () => {
-                collectionStatements.insertOne(request.body, (err, result) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    } else {
-                        response.send(result?.insertedId)
-                    }
-                })
-            },
-            request,
-            response,
+        collectionStatements.insertOne(req.body, (err, result) => {
+            if (err) {
+                return res.sendStatus(500)
+            } else {
+                res.send(result?.insertedId)
+            }
         })
     }
 })
 
-app.delete(financeStatementsURL + ':id', (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            collectionStatements.deleteOne(
-                { _id: ObjectId(request.params.id) },
-                (err, docs) => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    response.sendStatus(200)
-                }
-            )
-        },
-        request,
-        response,
-    })
+app.delete(financeStatementsURL + ':id', (req, res) => {
+    collectionStatements.deleteOne(
+        { _id: ObjectId(req.params.id) },
+        (err, docs) => {
+            if (err) {
+                return res.sendStatus(500)
+            }
+            res.sendStatus(200)
+        }
+    )
 })
 
 client.connect(function (err) {
@@ -608,28 +487,25 @@ client.connect(function (err) {
     collectionClients = client.db('clientsDB').collection('clients')
     collectionTranslators = client.db('translatorsDB').collection('translators')
     collectionStatements = client.db('statementsDB').collection('statements')
-    console.log('Connected successfully to database...')
+    console.log('Connected successfully to server...')
     app.listen(PORT, () => {
         console.log('API started at port', PORT)
     })
     createCurrentYearStatisticsForEveryTranslator(collectionTranslators)
-    try {
-        collectionTaskNotifications.find().toArray((err, docs) => {
-            if (err) {
-                throw new Error(err)
-            }
-            const taskNotificationsAreAllowed = docs[0]?.allowed
-            if (taskNotificationsAreAllowed) {
-                console.log(
-                    'Task notifications are allowed, running mailout interval.'
-                )
-                outdatedTaskNotificationsInterval = setInterval(
-                    taskNotificationsMailout,
-                    twentyHoursInMiliseconds
-                )
-            }
-        })
-    } catch (error) {
-        console.log(error)
-    }
+
+    collectionTaskNotifications.find().toArray((err, docs) => {
+        if (err) {
+            throw new Error(err)
+        }
+        const taskNotificationsAreAllowed = docs[0]?.allowed
+        if (taskNotificationsAreAllowed) {
+            console.log(
+                'Task notifications are allowed, running mailout interval.'
+            )
+            outdatedTaskNotificationsInterval = setInterval(
+                taskNotificationsMailout,
+                twentyHoursInMiliseconds
+            )
+        }
+    })
 })

@@ -1,46 +1,32 @@
 import axios from 'axios'
 import { rootURL } from '../rootURL'
-import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const tasksURL = rootURL + 'tasks/'
 
 export function getTasks() {
-    return axios.get(tasksURL + 'get/', getConfigForAxiosAuthenticatedRequest())
+    return axios.get(tasksURL + 'get/')
 }
 
 export function addTask(task) {
-    return axios.post(
-        tasksURL + 'add/',
-        task,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.post(tasksURL + 'add/', task)
 }
 
 export function removeTask(id) {
-    return axios.delete(tasksURL + id, getConfigForAxiosAuthenticatedRequest())
+    return axios.delete(tasksURL + id)
 }
 
 export function changeTodoStatus(todo) {
-    return axios.put(
-        tasksURL + `edit/${todo._id}`,
-        todo,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.put(tasksURL + `edit/${todo._id}`, todo)
 }
 
 export function getTaskNotificationsSettings() {
-    return axios.get(
-        tasksURL + 'notifications/',
-        getConfigForAxiosAuthenticatedRequest()
-    )
+    return axios.get(tasksURL + 'notifications/')
 }
 
 export function changeTaskNotificationsSettings(
     taskNotificationsSettingsValue
 ) {
-    const config = {
-        ...getConfigForAxiosAuthenticatedRequest(),
+    return axios.put(tasksURL + 'notifications/', {
         allowed: taskNotificationsSettingsValue,
-    }
-    return axios.put(tasksURL + 'notifications/', config)
+    })
 }
