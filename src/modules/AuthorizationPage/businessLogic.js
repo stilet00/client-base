@@ -64,6 +64,9 @@ export const useAuthorizationPage = () => {
                                 saveUserIdTokenToLocalStorage(idToken)
                             )
                     })
+                    .catch(error => {
+                        console.log(error)
+                    })
             })
             .catch(errorFromServer => {
                 const message = errorFromServer.message
