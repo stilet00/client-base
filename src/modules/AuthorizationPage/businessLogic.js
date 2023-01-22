@@ -3,6 +3,7 @@ import { DEFAULT_ERROR } from '../../constants'
 import { useHistory } from 'react-router-dom'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import firebase from 'firebase'
+import { localStorageTokenKey } from '../../constants/constants'
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
@@ -44,6 +45,10 @@ export const useAuthorizationPage = () => {
         [error]
     )
 
+    const saveUserIdTokenToLocalStorage = idToken => {
+        window.localStorage.setItem(localStorageTokenKey, idToken)
+    }
+
     const signInWithEmailPassword = useCallback(() => {
         firebase
             .auth()
@@ -52,6 +57,16 @@ export const useAuthorizationPage = () => {
                 return firebase
                     .auth()
                     .signInWithEmailAndPassword(email, password)
+                    .then(result => {
+                        result.user
+                            .getIdToken()
+                            .then(idToken =>
+                                saveUserIdTokenToLocalStorage(idToken)
+                            )
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             })
             .catch(errorFromServer => {
                 const message = errorFromServer.message
@@ -81,10 +96,10 @@ export const useAuthorizationPage = () => {
     }, [email, password, error, openAlert])
 
     const onSubmit = useCallback(
-        e => {
+        async e => {
             e.preventDefault()
             buttonElement.current.focus()
-            signInWithEmailPassword()
+            await signInWithEmailPassword()
         },
         [signInWithEmailPassword]
     )
