@@ -12,8 +12,9 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 
-export default function FinanceStatementPage() {
+export default function FinanceStatementPage({ user }) {
     const [loading, setLoading] = useState(true)
     const [paymentsList, setPaymentsList] = useState([])
     const [deletedPayment, setDeletedPayment] = useState(null)
@@ -29,24 +30,26 @@ export default function FinanceStatementPage() {
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
-        getPaymentsRequest()
-            .then(res => {
-                if (res.status === 200) {
-                    setLoading(false)
-                    setPaymentsList(res.data)
-                }
-            })
-            .catch(err => {
-                const message = err.message
-                setLoading(false)
-                setAlertInfo({
-                    ...alertInfo,
-                    mainTitle: message,
-                    status: false,
+        if (user) {
+            getPaymentsRequest()
+                .then(res => {
+                    if (res.status === 200) {
+                        setLoading(false)
+                        setPaymentsList(res.data)
+                    }
                 })
-                openAlert(5000)
-            })
-    }, [])
+                .catch(err => {
+                    const message = err.message
+                    setLoading(false)
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert(5000)
+                })
+        }
+    }, [user])
 
     function pressDeleteButton(_id) {
         const payment = paymentsList.find(item => item._id === _id)
@@ -161,36 +164,46 @@ export default function FinanceStatementPage() {
     ) : (
         <h1>No payments yet</h1>
     )
-
-    return loading ? (
-        <Loader />
-    ) : (
+    const userIsAuthorizedAndPageIsLoaded = user && !loading
+    const userIsAuthorizedAndPageIsLoading = user && loading
+    const userIsNotAuthorized = !user
+    return (
         <>
-            <div className={'main-container scrolled-container  animated-box'}>
-                <div className={'finances-inner-wrapper'}>{page}</div>
-            </div>
-            <div className="socials button-add-container">
-                <FinancesForm handleNewPayment={createNewPayment} />
-            </div>
-            <AlertMessageConfirmation
-                mainText={
-                    'Please confirm that you want to delete this payment?'
-                }
-                open={alertStatusConfirmation}
-                handleClose={closeAlertConfirmationNoReload}
-                handleOpen={openAlertConfirmation}
-                status={true}
-                onCancel={closeAlertConfirmationNoReload}
-                onConfirm={deletePayment}
-            />
+            {userIsAuthorizedAndPageIsLoaded && (
+                <>
+                    <div
+                        className={
+                            'main-container scrolled-container  animated-box'
+                        }
+                    >
+                        <div className={'finances-inner-wrapper'}>{page}</div>
+                    </div>
+                    <div className="socials button-add-container">
+                        <FinancesForm handleNewPayment={createNewPayment} />
+                    </div>
+                    <AlertMessageConfirmation
+                        mainText={
+                            'Please confirm that you want to delete this payment?'
+                        }
+                        open={alertStatusConfirmation}
+                        handleClose={closeAlertConfirmationNoReload}
+                        handleOpen={openAlertConfirmation}
+                        status={true}
+                        onCancel={closeAlertConfirmationNoReload}
+                        onConfirm={deletePayment}
+                    />
 
-            <AlertMessage
-                mainText={alertInfo.mainTitle}
-                open={alertOpen}
-                handleOpen={openAlert}
-                handleClose={closeAlert}
-                status={alertInfo.status}
-            />
+                    <AlertMessage
+                        mainText={alertInfo.mainTitle}
+                        open={alertOpen}
+                        handleOpen={openAlert}
+                        handleClose={closeAlert}
+                        status={alertInfo.status}
+                    />
+                </>
+            )}
+            {userIsAuthorizedAndPageIsLoading && <Loader />}
+            {userIsNotAuthorized && <Unauthorized />}
         </>
     )
 }

@@ -96,8 +96,7 @@ export const useAuthorizationPage = () => {
         async e => {
             e.preventDefault()
             buttonElement.current.focus()
-            const user = await signInWithEmailPassword()
-            console.log(user)
+            await signInWithEmailPassword()
         },
         [signInWithEmailPassword]
     )

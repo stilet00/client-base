@@ -34,12 +34,10 @@ const {
 } = require('./src/api/database-api/createCurrentYearStatisticsForEveryTranslator')
 
 const {
-    getUserIdTokenFromRequest,
     checkIfUserIsAuthenticatedBeforeExecute,
 } = require('./src/api/firebase/firebaseAdmin')
 
-const PORT = process.env.PORT || 80
-
+const PORT = process.env.SERVER_PORT || 80
 let app = express()
 app.use(express.static(__dirname + '/build'))
 

@@ -88,24 +88,23 @@ export default function ListOfClients({ user }) {
                     })
                     openAlert(5000)
                 })
-        }
-
-        getPaymentsRequest()
-            .then(res => {
-                if (res.status === 200) {
-                    setPaymentsList(res.data)
-                }
-            })
-            .catch(err => {
-                const message = err.message
-                setLoading(false)
-                setAlertInfo({
-                    ...alertInfo,
-                    mainTitle: message,
-                    status: false,
+            getPaymentsRequest()
+                .then(res => {
+                    if (res.status === 200) {
+                        setPaymentsList(res.data)
+                    }
                 })
-                openAlert(5000)
-            })
+                .catch(err => {
+                    const message = err.message
+                    setLoading(false)
+                    setAlertInfo({
+                        ...alertInfo,
+                        mainTitle: message,
+                        status: false,
+                    })
+                    openAlert(5000)
+                })
+        }
     }, [user])
 
     const getUpdatingClient = _id => {

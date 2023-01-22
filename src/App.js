@@ -115,7 +115,7 @@ function App() {
                         onLoadBg={() => {
                             setTimeout(stopLoading, 1000)
                         }}
-                        onError={(err: any) => console.log('error', err)}
+                        onError={err => console.log('error', err)}
                     />
                 </FirebaseAuthProvider>
             </LocalizationProvider>

@@ -24,6 +24,10 @@ const checkIfUserIsAuthenticatedBeforeExecute = ({
                     callBack()
                 }
             })
+            .catch(error => {
+                console.log(error)
+                response.sendStatus(401)
+            })
     } catch (error) {
         console.log("Something went wrong with checking user's authentication")
         response.sendStatus(401)
