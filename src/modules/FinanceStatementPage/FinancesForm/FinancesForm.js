@@ -44,8 +44,19 @@ export default function FinancesForm({ handleNewPayment }) {
     useEffect(() => {
         getClients().then(res => {
             if (res.status === 200) {
+                const sortedArrayWithClientsByAlphabet = res.data.sort(
+                    function comapare(a, b) {
+                        if (a?.name.toLowerCase() > b?.name.toLowerCase()) {
+                            return 1
+                        } else if (
+                            a?.name.toLowerCase() < b?.name.toLowerCase()
+                        ) {
+                            return -1
+                        } else return 0
+                    }
+                )
                 setReceivers(
-                    res.data.map(client => {
+                    sortedArrayWithClientsByAlphabet.map(client => {
                         return {
                             id: client._id,
                             label: `${client.name} ${client.surname}`,

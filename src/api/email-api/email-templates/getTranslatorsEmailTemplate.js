@@ -100,12 +100,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 font-weight: bold;
                                                 border-top: 4px solid rgb(95,205,181);
                                                 vertical-align: bottom;
-                                            }
-                                            .icons {
-                                                width: 2rem;
-                                                height: 2rem;
-                                            }    
-        
+                                            }  
                                     </style>
                                     <title>Email from Sunrise</title>
                                 </head>
@@ -135,28 +130,28 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 <tbody>
                                                     <tr className="container__tbody-main">
                                                         <td className="container__tbody-header-first-td">
-                                                            <img src="cid:women" alt="Client name"></img>
+                                                            <img src="cid:women" width="32" height="32" alt="Client name"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:chat" className="icons" alt="Chats"></img>
+                                                            <img src="cid:chat" width="32" height="32" alt="Chats"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:email-letter" className="icons"  alt="Letters"></img>
+                                                            <img src="cid:email-letter" width="32" height="32"  alt="Letters"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:love"className="icons" alt="Dating"></img>
+                                                            <img src="cid:love" width="32" height="32" alt="Dating"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:gift" className="icons" alt="Virtual gifts on Svadba"></img>
+                                                            <img src="cid:gift" width="32" height="32" alt="Virtual gifts on Svadba"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:heart" alt="virtual gifts Dating" className="icons" alt="Virtual gifts on Dating"></img>
+                                                            <img src="cid:heart" alt="virtual gifts Dating" width="32" height="32"  alt="Virtual gifts on Dating"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:telephone" className="icons"  alt="Phone calls"></img>
+                                                            <img src="cid:telephone" width="32" height="32"  alt="Phone calls"></img>
                                                         </td>
                                                         <td className="container__tbody_amount">
-                                                            <img src="cid:penalties" className="icons"  alt="Penalties"></img>
+                                                            <img src="cid:penalties"  width="32" height="32"   alt="Penalties"></img>
                                                         </td>
                                                     </tr>
                                                     ${arrayOfDetailedBalanceFields.join(
