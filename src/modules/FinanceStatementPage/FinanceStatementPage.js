@@ -154,9 +154,9 @@ export default function FinanceStatementPage({ user }) {
     const arrayOfStatementsGroupedByDate =
         getStatementGroupedByDates(paymentsList)
     const page = arrayOfStatementsGroupedByDate.length ? (
-        arrayOfStatementsGroupedByDate.map(item => (
+        arrayOfStatementsGroupedByDate.map((item, index) => (
             <PaymentsGroup
-                key={item.id}
+                key={index}
                 {...item}
                 deleteOneStatement={pressDeleteButton}
             />

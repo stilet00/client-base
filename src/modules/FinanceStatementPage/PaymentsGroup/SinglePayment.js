@@ -73,10 +73,11 @@ export default function SinglePayment({
                 </p>
             </div>
             <ClickAwayListener onClickAway={() => setDisplayMenu(false)}>
-                <IconButton className="list-item__menu-button">
-                    <MenuSharpIcon
-                        onClick={() => setDisplayMenu(!displayMenu)}
-                    />
+                <IconButton
+                    className="list-item__menu-button"
+                    onClick={() => setDisplayMenu(!displayMenu)}
+                >
+                    <MenuSharpIcon />
                     {displayMenu ? (
                         <Button
                             className="menu-button_delete"
