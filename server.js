@@ -356,17 +356,19 @@ app.put(balanceURL + ':id', (request, response) => {
 })
 
 //clients api
-
 app.get(clientsURL + 'get', (request, response) => {
     checkIfUserIsAuthenticatedBeforeExecute({
         callBack: () => {
-            collectionClients.find().toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
+            collectionClients
+                .find()
+                .sort({ name: 1 })
+                .toArray((err, docs) => {
+                    if (err) {
+                        console.log(err)
+                        return response.sendStatus(500)
+                    }
+                    response.send(docs)
+                })
         },
         request,
         response,

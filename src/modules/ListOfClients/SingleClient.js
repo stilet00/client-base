@@ -200,8 +200,18 @@ export default function SingleClient({
                         sx={{
                             width: 56,
                             height: 56,
+                            transition: 'all 0.2s ease-in-out',
                             '& .MuiAvatar-img': {
                                 objectPosition: 'top',
+                            },
+                            '&:hover': image && {
+                                position: 'absolute',
+                                top: '0',
+                                left: '0',
+                                zIndex: '1',
+                                width: '100%',
+                                height: '300px',
+                                borderRadius: '4px 4px 0 0',
                             },
                         }}
                         src={avatarImage}
