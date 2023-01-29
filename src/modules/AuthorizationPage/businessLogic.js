@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { DEFAULT_ERROR } from '../../constants'
+import { DEFAULT_ERROR } from '../../constants/constants'
 import { useHistory } from 'react-router-dom'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import firebase from 'firebase'

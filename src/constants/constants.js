@@ -33,7 +33,16 @@ export const previousYear = moment().subtract(1, 'year').format('YYYY')
 export const currentMonth = moment().format('M')
 export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
-export const arrayOfSelectedYears = ['2023', '2022']
+export const appStartYear = '2022'
+const creatArrayOfYears = () => {
+    const arrayWithYears = []
+    const numberOfYearsToAdd = Number(currentYear) - Number(appStartYear)
+    for (let i = 0; i < numberOfYearsToAdd + 1; i++) {
+        arrayWithYears.unshift(String(Number(appStartYear) + i))
+    }
+    return arrayWithYears
+}
+export const arrayOfSelectedYears = creatArrayOfYears()
 
 export const localStorageTokenKey = 'clientBaseUserToken'
 
@@ -97,6 +106,10 @@ export const DEFAULT_BALANCE_DATA = [
         months: fillMonths(currentYear),
     },
 ]
+export const DEFAULT_ERROR = {
+    status: false,
+    text: null,
+}
 
 export const DEFAULT_TRANSLATOR = {
     name: '',

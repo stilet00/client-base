@@ -35,7 +35,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '@mui/material/styles'
 import { purple, blue } from '@mui/material/colors'
 import { green, red } from '@material-ui/core/colors'
-import { SUNRISE_TRANSLATOR_ID } from '../../../constants/constants'
+import {
+    SUNRISE_TRANSLATOR_ID,
+    arrayOfSelectedYears,
+} from '../../../constants/constants'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -159,12 +162,13 @@ export default function EditBalanceForm({
                                                 onChange={handleYear}
                                                 label="Year"
                                             >
-                                                <MenuItem value={'2023'}>
-                                                    {'2023'}
-                                                </MenuItem>
-                                                <MenuItem value={'2022'}>
-                                                    {'2022'}
-                                                </MenuItem>
+                                                {arrayOfSelectedYears.map(
+                                                    year => (
+                                                        <MenuItem value={year}>
+                                                            {year}
+                                                        </MenuItem>
+                                                    )
+                                                )}
                                             </Select>
                                         </FormControl>
                                         <FormControl
@@ -250,274 +254,407 @@ export default function EditBalanceForm({
                                 <>
                                     <p>Finances:</p>
                                     <div className="balance-form__finances">
-                                        <div className="balance-form__finances__svadba">
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'chats'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().chats
-                                                    }
-                                                    variant="outlined"
-                                                    label={'Chats'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    size="small"
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <ForumIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'letters'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().letters
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Letters'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <DraftsIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'virtualGiftsSvadba'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .virtualGiftsSvadba
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Virtual gifts'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <CardGiftcardIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'penalties'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .penalties
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Penalties'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <MoneyOffIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            {id === SUNRISE_TRANSLATOR_ID && (
-                                                <div className="balance-form__finances-input">
-                                                    <TextField
-                                                        name={
-                                                            'photoAttachments'
-                                                        }
-                                                        onChange={handleChange}
-                                                        onClick={e =>
-                                                            e.target.select()
-                                                        }
-                                                        value={
-                                                            findClientById()
-                                                                .photoAttachments
-                                                        }
-                                                        size="small"
-                                                        variant="outlined"
-                                                        label={
-                                                            'Photo attachments'
-                                                        }
-                                                        type={'number'}
-                                                        step="0.01"
-                                                        fullWidth
-                                                        required
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <AddPhotoAlternateIcon />
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
-                                                    />
+                                        {id !== SUNRISE_TRANSLATOR_ID ? (
+                                            <>
+                                                <div className="balance-form__finances__svadba">
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'chats'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .chats
+                                                            }
+                                                            variant="outlined"
+                                                            label={'Chats'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            size="small"
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <ForumIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'letters'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .letters
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={'Letters'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <DraftsIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={
+                                                                'virtualGiftsSvadba'
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .virtualGiftsSvadba
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={
+                                                                'Virtual gifts'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <CardGiftcardIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'penalties'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .penalties
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={'Penalties'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <MoneyOffIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
-                                        <div className="balance-form__finances__dating">
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'dating'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById().dating
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Dating'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <ForumIcon />{' '}
-                                                                Dating
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'phoneCalls'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .phoneCalls
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={'Phone calls'}
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <PhoneCallbackIcon />{' '}
-                                                                Phone
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="balance-form__finances-input">
-                                                <TextField
-                                                    name={'virtualGiftsDating'}
-                                                    onChange={handleChange}
-                                                    onClick={e =>
-                                                        e.target.select()
-                                                    }
-                                                    value={
-                                                        findClientById()
-                                                            .virtualGiftsDating
-                                                    }
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={
-                                                        'Virtual gifts dating'
-                                                    }
-                                                    type={'number'}
-                                                    step="0.01"
-                                                    fullWidth
-                                                    required
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <CardGiftcardIcon />
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </div>
-                                            <Accordion
-                                                className={
-                                                    'balance-form__finances--accordion'
-                                                }
-                                            >
-                                                <AccordionSummary
-                                                    expandIcon={
-                                                        <ExpandMoreIcon />
-                                                    }
-                                                    aria-controls="panel1a-content"
-                                                    id="panel1a-header"
-                                                >
-                                                    <Typography>
-                                                        Comments
-                                                    </Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    <TextField
-                                                        id="outlined-multiline-flexible"
-                                                        label={'Edit here'}
-                                                        name={'comments'}
-                                                        type={'text'}
-                                                        multiline
-                                                        fullWidth
-                                                        size="small"
-                                                        maxRows={4}
-                                                        value={
-                                                            findClientById()
-                                                                .comments || ''
+                                                <div className="balance-form__finances__dating">
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'dating'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .dating
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={'Dating'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <ForumIcon />{' '}
+                                                                        Dating
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'phoneCalls'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .phoneCalls
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={
+                                                                'Phone calls'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <PhoneCallbackIcon />{' '}
+                                                                        Phone
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={
+                                                                'virtualGiftsDating'
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .virtualGiftsDating
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={
+                                                                'Virtual gifts dating'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <CardGiftcardIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <Accordion
+                                                        className={
+                                                            'balance-form__finances--accordion'
                                                         }
-                                                        onChange={handleChange}
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <ContactSupportIcon />
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
-                                                    />
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </div>
+                                                    >
+                                                        <AccordionSummary
+                                                            expandIcon={
+                                                                <ExpandMoreIcon />
+                                                            }
+                                                            aria-controls="panel1a-content"
+                                                            id="panel1a-header"
+                                                        >
+                                                            <Typography>
+                                                                Comments
+                                                            </Typography>
+                                                        </AccordionSummary>
+                                                        <AccordionDetails>
+                                                            <TextField
+                                                                id="outlined-multiline-flexible"
+                                                                label={
+                                                                    'Edit here'
+                                                                }
+                                                                name={
+                                                                    'comments'
+                                                                }
+                                                                type={'text'}
+                                                                multiline
+                                                                fullWidth
+                                                                size="small"
+                                                                maxRows={4}
+                                                                value={
+                                                                    findClientById()
+                                                                        .comments ||
+                                                                    ''
+                                                                }
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                                InputProps={{
+                                                                    endAdornment:
+                                                                        (
+                                                                            <InputAdornment position="end">
+                                                                                <ContactSupportIcon />
+                                                                            </InputAdornment>
+                                                                        ),
+                                                                }}
+                                                            />
+                                                        </AccordionDetails>
+                                                    </Accordion>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="balance-form__finances__svadba">
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'penalties'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .penalties
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={'Penalties'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <MoneyOffIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'letters'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .letters
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={'Letters'}
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <DraftsIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="balance-form__finances__dating">
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={
+                                                                'photoAttachments'
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .photoAttachments
+                                                            }
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={
+                                                                'Photo attachments'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <AddPhotoAlternateIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={'chats'}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={
+                                                                findClientById()
+                                                                    .chats
+                                                            }
+                                                            variant="outlined"
+                                                            label={
+                                                                'Video Reviews'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            size="small"
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <ForumIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                     <p
                                         style={{
@@ -542,6 +679,9 @@ export default function EditBalanceForm({
                                     <div className="balance-form__actions">
                                         <SubmitButton
                                             type={'button'}
+                                            sx={{
+                                                color: 'white',
+                                            }}
                                             variant={'outlined'}
                                             onClick={onSavePressed}
                                             className={
