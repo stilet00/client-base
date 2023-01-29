@@ -36,8 +36,8 @@ import { styled } from '@mui/material/styles'
 import { purple, blue } from '@mui/material/colors'
 import { green, red } from '@material-ui/core/colors'
 import {
-    SUNRISE_TRANSLATOR_ID,
-    arrayOfSelectedYears,
+    SUNRISE_AGENCY_ID,
+    arrayOfYearsForSelectFilter,
 } from '../../../constants/constants'
 
 const useStyles = makeStyles(theme => ({
@@ -162,7 +162,7 @@ export default function EditBalanceForm({
                                                 onChange={handleYear}
                                                 label="Year"
                                             >
-                                                {arrayOfSelectedYears.map(
+                                                {arrayOfYearsForSelectFilter.map(
                                                     year => (
                                                         <MenuItem value={year}>
                                                             {year}
@@ -254,7 +254,7 @@ export default function EditBalanceForm({
                                 <>
                                     <p>Finances:</p>
                                     <div className="balance-form__finances">
-                                        {id !== SUNRISE_TRANSLATOR_ID ? (
+                                        {id !== SUNRISE_AGENCY_ID ? (
                                             <>
                                                 <div className="balance-form__finances__svadba">
                                                     <div className="balance-form__finances-input">

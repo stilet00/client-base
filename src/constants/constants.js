@@ -33,16 +33,8 @@ export const previousYear = moment().subtract(1, 'year').format('YYYY')
 export const currentMonth = moment().format('M')
 export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
-export const appStartYear = '2022'
-const creatArrayOfYears = () => {
-    const arrayWithYears = []
-    const numberOfYearsToAdd = Number(currentYear) - Number(appStartYear)
-    for (let i = 0; i < numberOfYearsToAdd + 1; i++) {
-        arrayWithYears.unshift(String(Number(appStartYear) + i))
-    }
-    return arrayWithYears
-}
-export const arrayOfSelectedYears = creatArrayOfYears()
+export const appStartYear = 2022
+export const arrayOfYearsForSelectFilter = creatArrayOfYears()
 
 export const localStorageTokenKey = 'clientBaseUserToken'
 
@@ -124,7 +116,7 @@ export const DEFAULT_TRANSLATOR = {
     email: null,
 }
 
-export const SUNRISE_TRANSLATOR_ID = '62470d5dffe20600169edac1'
+export const SUNRISE_AGENCY_ID = '62470d5dffe20600169edac1'
 
 export const DEFAULT_CATEGORIES = {
     chats: 'chats',
@@ -135,6 +127,15 @@ export const DEFAULT_CATEGORIES = {
     virtualGiftsDating: 'virtualGiftsDating',
     photoAttachments: 'photoAttachments',
     phoneCalls: 'phoneCalls',
+}
+
+function creatArrayOfYears() {
+    const arrayWithYears = []
+    const lengthOfArrayWithYears = Number(currentYear) - appStartYear
+    for (let i = 0; i < lengthOfArrayWithYears + 1; i++) {
+        arrayWithYears.unshift(String(appStartYear + i))
+    }
+    return arrayWithYears
 }
 
 function fillMonths(year) {

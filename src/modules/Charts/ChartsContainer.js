@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import {
     CHARTS_CATEGORIES,
-    arrayOfSelectedYears,
+    arrayOfYearsForSelectFilter,
 } from '../../constants/constants'
 
 function ChartsContainer({ user }) {
@@ -122,7 +122,7 @@ function ChartsContainer({ user }) {
                         }}
                         onChange={handleChange}
                     >
-                        {arrayOfSelectedYears.map(year => (
+                        {arrayOfYearsForSelectFilter.map(year => (
                             <MenuItem value={year}>{year}</MenuItem>
                         ))}
                     </Select>
