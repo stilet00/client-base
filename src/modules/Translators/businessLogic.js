@@ -597,10 +597,9 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 
     function findMonth() {
-        const searchedMonth = findYear().months.find(
+        return findYear().months.find(
             (item, index) => index + 1 === Number(selectedMonth)
         )
-        return searchedMonth
     }
 
     function findTodayBalance() {
@@ -625,7 +624,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 
     const handleDay = event => {
-        setSelectedDay(String(event.target.value))
+        setSelectedDay(event.target.value)
     }
 
     const handleClient = e => {

@@ -213,7 +213,9 @@ export default function EditBalanceForm({
                                                 {findMonth().map(
                                                     (item, index) => (
                                                         <MenuItem
-                                                            value={index + 1}
+                                                            value={String(
+                                                                index + 1
+                                                            )}
                                                             key={item.id}
                                                         >
                                                             {index + 1}
