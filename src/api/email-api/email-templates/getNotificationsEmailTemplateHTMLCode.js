@@ -4,12 +4,12 @@ const getNotificationsEmailTemplateHTMLCode = tasks => {
     const tasksToHTMLCode = tasks.map(
         task =>
             `<tr>
-                <td colspan="2" className="task_label"><span>${
+                <td colspan="2" class="task_label"><span>${
                     task.taskName
                 }</span></td>
             </tr>
             <tr>
-                <td colspan="2" className="task_created-date"><span>Created ${moment(
+                <td colspan="2" class="task_created-date"><span>Created ${moment(
                     task.created,
                     'MMMM Do YYYY, h:mm:ss'
                 ).fromNow()}</span></td>
@@ -93,8 +93,8 @@ const getNotificationsEmailTemplateHTMLCode = tasks => {
                                         <body>
                                             <table>
                                                 <thead>
-                                                    <tr className="titlesInfo">
-                                                        <td className="title-info" colspan="2">You have <span className="tasks-amount">${
+                                                    <tr class="titlesInfo">
+                                                        <td class="title-info" colspan="2">You have <span class="tasks-amount">${
                                                             tasks.length
                                                         }</span> uncompleted ${
         tasks.length === 1 ? 'task' : 'tasks'

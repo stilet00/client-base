@@ -12,7 +12,7 @@ import {
     currentMonth,
     previousYear,
     previousMonth,
-    arrayOfSelectedYears,
+    arrayOfYearsForSelectFilter,
 } from '../../constants/constants'
 import {
     faArrowAltCircleUp,
@@ -221,7 +221,7 @@ function Overview({ user }) {
                                                         onChange={handleChange}
                                                         className="selected-area"
                                                     >
-                                                        {arrayOfSelectedYears.map(
+                                                        {arrayOfYearsForSelectFilter.map(
                                                             year => (
                                                                 <MenuItem
                                                                     value={year}

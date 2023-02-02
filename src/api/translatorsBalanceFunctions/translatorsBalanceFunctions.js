@@ -60,6 +60,9 @@ const calculateBalanceDayAllClients = (day, onlySvadba, category) => {
 
 const calculateBalanceDayOneClient = (day, onlySvadba, category, clientId) => {
     const clientStatistics = day.clients.find(client => client.id === clientId)
+    if (!clientStatistics) {
+        return 0
+    }
     return Number(
         calculateBalanceDaySum(clientStatistics, onlySvadba, category)
     )
