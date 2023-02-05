@@ -63,13 +63,13 @@ export default function SingleClient({
         setExpanded(!expanded)
     }
     function getClientsRating() {
-        return middleMonthSum >= 100
+        return middleMonthSum >= 80
             ? 5
-            : middleMonthSum >= 75
+            : middleMonthSum >= 60
             ? 4
-            : middleMonthSum >= 50
+            : middleMonthSum >= 40
             ? 3
-            : middleMonthSum >= 30
+            : middleMonthSum >= 20
             ? 2
             : 1
     }
@@ -178,6 +178,7 @@ export default function SingleClient({
                 sx={{
                     position: 'relative',
                     justifyContent: 'space-between',
+                    height: '50px',
                     '& .MuiCardHeader-avatar': {
                         margin: 0,
                     },

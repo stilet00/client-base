@@ -653,6 +653,57 @@ export default function EditBalanceForm({
                                                                 ),
                                                             }}
                                                         />
+                                                        <Accordion
+                                                            className={
+                                                                'balance-form__finances--accordion'
+                                                            }
+                                                        >
+                                                            <AccordionSummary
+                                                                expandIcon={
+                                                                    <ExpandMoreIcon />
+                                                                }
+                                                                aria-controls="panel1a-content"
+                                                                id="panel1a-header"
+                                                            >
+                                                                <Typography>
+                                                                    Comments
+                                                                </Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails>
+                                                                <TextField
+                                                                    id="outlined-multiline-flexible"
+                                                                    label={
+                                                                        'Edit here'
+                                                                    }
+                                                                    name={
+                                                                        'comments'
+                                                                    }
+                                                                    type={
+                                                                        'text'
+                                                                    }
+                                                                    multiline
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    maxRows={4}
+                                                                    value={
+                                                                        findClientById()
+                                                                            .comments ||
+                                                                        ''
+                                                                    }
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    InputProps={{
+                                                                        endAdornment:
+                                                                            (
+                                                                                <InputAdornment position="end">
+                                                                                    <ContactSupportIcon />
+                                                                                </InputAdornment>
+                                                                            ),
+                                                                    }}
+                                                                />
+                                                            </AccordionDetails>
+                                                        </Accordion>
                                                     </div>
                                                 </div>
                                             </>
