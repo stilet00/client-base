@@ -179,15 +179,15 @@ export const useClientsList = translators => {
     function getClientsRating(clientId) {
         const rating = calculateMiddleMonthSum(clientId)
 
-        return rating > 100
+        return rating >= 80
             ? 5
-            : rating > 50
+            : rating >= 60
             ? 4
-            : rating > 30
+            : rating >= 40
             ? 3
-            : rating > 20
+            : rating >= 20
             ? 2
-            : rating > 10
+            : rating >= 10
             ? 1
             : 0
     }

@@ -42,12 +42,8 @@ function ClientsList({
     dragDropHandler,
 }) {
     const { screenIsSmall } = useWindowDimensions()
-    const {
-        clientMonthSum,
-        sortBySum,
-        getClientsRating,
-        calculateMiddleMonthSum,
-    } = useClientsList(translators)
+    const { clientMonthSum, sortBySum, calculateMiddleMonthSum } =
+        useClientsList(translators)
     const [search, setSearch] = useState('')
     function onSearchChange(e) {
         setSearch(e.target.value.toLowerCase())
@@ -201,12 +197,6 @@ function ClientsList({
                                     >
                                         <ListItemText
                                             primary={`${client.name} ${client.surname}`}
-                                        />
-                                        <Rating
-                                            name="read-only"
-                                            value={getClientsRating(client._id)}
-                                            readOnly
-                                            size="small"
                                         />
                                         {/*<Button onClick={() => deleteClient(client._id)} disabled>*/}
                                         {/*  <DeleteForeverIcon />*/}
