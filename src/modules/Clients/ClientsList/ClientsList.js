@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
+import { getClientsRating } from '../../../sharedFunctions/sharedFunctions'
 
 const SearchTextField = styled.input`
     padding: 0;
@@ -197,6 +198,14 @@ function ClientsList({
                                     >
                                         <ListItemText
                                             primary={`${client.name} ${client.surname}`}
+                                        />
+                                        <Rating
+                                            name="read-only"
+                                            value={getClientsRating(
+                                                memoizedMiddleMonthSum
+                                            )}
+                                            readOnly
+                                            size="small"
                                         />
                                         {/*<Button onClick={() => deleteClient(client._id)} disabled>*/}
                                         {/*  <DeleteForeverIcon />*/}

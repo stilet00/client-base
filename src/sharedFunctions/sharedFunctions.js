@@ -124,6 +124,19 @@ export function getMiddleValueFromArray(arrayOfNumbers) {
     }
     return Math.round(sum / arrayOfNumbers.length)
 }
+export function getClientsRating(MiddleMonthSum = 0) {
+    return MiddleMonthSum >= 80
+        ? 5
+        : MiddleMonthSum >= 60
+        ? 4
+        : MiddleMonthSum >= 40
+        ? 3
+        : MiddleMonthSum >= 20
+        ? 2
+        : MiddleMonthSum >= 10
+        ? 1
+        : 0
+}
 
 export function calculatePercentDifference(currentSum, previousSum) {
     const difference =
