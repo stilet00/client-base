@@ -118,6 +118,17 @@ function Translators({ user }) {
                             >
                                 Show total
                             </Button>
+                            <Button
+                                aria-describedby={id}
+                                onClick={openAlertConfirmation}
+                                fullWidth={screenIsSmall}
+                                className="translators-container__menu-button"
+                                startIcon={
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                }
+                            >
+                                Send emails
+                            </Button>
                             <Popover
                                 id={id}
                                 open={open}

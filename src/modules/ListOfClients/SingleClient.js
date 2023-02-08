@@ -52,6 +52,7 @@ export default function SingleClient({
     loss,
     currentYearProfit,
     image,
+    rating,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
@@ -61,17 +62,6 @@ export default function SingleClient({
 
     const handleChange = e => {
         setExpanded(!expanded)
-    }
-    function getClientsRating() {
-        return middleMonthSum >= 100
-            ? 5
-            : middleMonthSum >= 75
-            ? 4
-            : middleMonthSum >= 50
-            ? 3
-            : middleMonthSum >= 30
-            ? 2
-            : 1
     }
 
     const catergoriesWithIcons = CHARTS_CATEGORIES.filter(
@@ -178,6 +168,7 @@ export default function SingleClient({
                 sx={{
                     position: 'relative',
                     justifyContent: 'space-between',
+                    height: '50px',
                     '& .MuiCardHeader-avatar': {
                         margin: 0,
                     },
@@ -190,7 +181,7 @@ export default function SingleClient({
                 title={
                     <Rating
                         name="read-only"
-                        value={getClientsRating()}
+                        value={rating}
                         readOnly
                         size="small"
                     />

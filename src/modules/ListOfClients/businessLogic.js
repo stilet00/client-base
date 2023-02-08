@@ -176,21 +176,6 @@ export const useClientsList = translators => {
             : -1
     }
 
-    function getClientsRating(clientId) {
-        const rating = calculateMiddleMonthSum(clientId)
-
-        return rating > 100
-            ? 5
-            : rating > 50
-            ? 4
-            : rating > 30
-            ? 3
-            : rating > 20
-            ? 2
-            : rating > 10
-            ? 1
-            : 0
-    }
     function getArrayOfBalancePerDay(
         clientId,
         category = null,
@@ -300,7 +285,6 @@ export const useClientsList = translators => {
     return {
         clientMonthSum,
         sortBySum,
-        getClientsRating,
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,

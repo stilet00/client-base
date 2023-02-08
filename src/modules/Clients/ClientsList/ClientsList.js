@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
+import { getClientsRating } from '../../../sharedFunctions/sharedFunctions'
 
 const SearchTextField = styled.input`
     padding: 0;
@@ -42,12 +43,8 @@ function ClientsList({
     dragDropHandler,
 }) {
     const { screenIsSmall } = useWindowDimensions()
-    const {
-        clientMonthSum,
-        sortBySum,
-        getClientsRating,
-        calculateMiddleMonthSum,
-    } = useClientsList(translators)
+    const { clientMonthSum, sortBySum, calculateMiddleMonthSum } =
+        useClientsList(translators)
     const [search, setSearch] = useState('')
     function onSearchChange(e) {
         setSearch(e.target.value.toLowerCase())
@@ -204,7 +201,9 @@ function ClientsList({
                                         />
                                         <Rating
                                             name="read-only"
-                                            value={getClientsRating(client._id)}
+                                            value={getClientsRating(
+                                                memoizedMiddleMonthSum
+                                            )}
                                             readOnly
                                             size="small"
                                         />

@@ -25,6 +25,7 @@ import Button from '@material-ui/core/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
+import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
 
 export default function ListOfClients({ user }) {
     const [paymentsList, setPaymentsList] = useState([])
@@ -44,7 +45,6 @@ export default function ListOfClients({ user }) {
     const {
         clientMonthSum,
         sortBySum,
-        getClientsRating,
         calculateMiddleMonthSum,
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
@@ -233,7 +233,7 @@ export default function ListOfClients({ user }) {
                     surname: client.surname,
                     currentMonthTotalAmount: memorizedMonthSum,
                     translators: getAllAsignedTranslators(client._id),
-                    rating: getClientsRating(client._id),
+                    rating: getClientsRating(memorizedMiddleMonthSum),
                     bankAccount: client.bankAccount || 'PayPal',
                     svadba: {
                         login: client.svadba?.login || '',
