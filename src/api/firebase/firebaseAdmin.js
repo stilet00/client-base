@@ -6,7 +6,11 @@ const googleFirebaseApp = firebaseAdmin.initializeApp({
 })
 
 const getUserIdTokenFromRequest = request => {
-    return request.header('authorization').split(' ')[1].toString()
+    try {
+        return request.header('authorization').split(' ')[1].toString()
+    } catch (err) {
+        throw new Error('Someting went wrong with authorization header')
+    }
 }
 
 const checkIfUserIsAuthenticatedBeforeExecute = ({
@@ -14,8 +18,8 @@ const checkIfUserIsAuthenticatedBeforeExecute = ({
     response,
     request,
 }) => {
-    const clientIdToken = getUserIdTokenFromRequest(request)
     try {
+        const clientIdToken = getUserIdTokenFromRequest(request)
         googleFirebaseApp
             .auth()
             .verifyIdToken(clientIdToken)
@@ -29,7 +33,9 @@ const checkIfUserIsAuthenticatedBeforeExecute = ({
                 response.sendStatus(401)
             })
     } catch (error) {
-        console.log("Something went wrong with checking user's authentication")
+        console.log(
+            "Error: Something went wrong with checking user's authentication"
+        )
         response.sendStatus(401)
     }
 }
