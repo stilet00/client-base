@@ -39,8 +39,11 @@ export function changeTaskNotificationsSettings(
     taskNotificationsSettingsValue
 ) {
     const config = {
-        ...getConfigForAxiosAuthenticatedRequest(),
         allowed: taskNotificationsSettingsValue,
     }
-    return axios.put(tasksURL + 'notifications/', config)
+    return axios.put(
+        tasksURL + 'notifications/',
+        config,
+        getConfigForAxiosAuthenticatedRequest()
+    )
 }
