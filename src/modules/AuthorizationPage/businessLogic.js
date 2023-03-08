@@ -3,7 +3,7 @@ import { DEFAULT_ERROR } from '../../constants/constants'
 import { useHistory } from 'react-router-dom'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import firebase from 'firebase'
-import { localStorageTokenKey } from '../../constants/constants'
+import { saveUserIdTokenToLocalStorage } from '../../sharedFunctions/sharedFunctions'
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
@@ -44,10 +44,6 @@ export const useAuthorizationPage = () => {
         },
         [error]
     )
-
-    const saveUserIdTokenToLocalStorage = idToken => {
-        window.localStorage.setItem(localStorageTokenKey, idToken)
-    }
 
     const signInWithEmailPassword = useCallback(() => {
         firebase
