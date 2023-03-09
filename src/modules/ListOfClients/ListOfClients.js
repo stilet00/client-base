@@ -26,6 +26,9 @@ import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
 import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
+import Select from '@mui/material/Select'
+import { arrayOfYearsForSelectFilter } from '../../constants/constants'
+import MenuItem from '@mui/material/MenuItem'
 
 export default function ListOfClients({ user }) {
     const [paymentsList, setPaymentsList] = useState([])
@@ -49,7 +52,8 @@ export default function ListOfClients({ user }) {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
-        currentYear,
+        handleChange,
+        selectedYear,
     } = useClientsList(translators)
 
     useEffect(() => {
@@ -218,7 +222,7 @@ export default function ListOfClients({ user }) {
                 const arrayOfPaymentsMadeToClient = paymentsList.filter(
                     payment =>
                         payment.receiverID === client._id &&
-                        payment.date.substring(6, 10) === currentYear
+                        payment.date.substring(6, 10) === selectedYear
                 )
                 const getArrayOfPaymentsMadeToClientWithAmounts =
                     arrayOfPaymentsMadeToClient.map(payment => payment.amount)
@@ -226,7 +230,10 @@ export default function ListOfClients({ user }) {
                     getArrayOfPaymentsMadeToClientWithAmounts
                 )
 
-                const clientProfit = getTotalProfitPerClient(client._id)
+                const clientProfit = getTotalProfitPerClient(
+                    client._id,
+                    selectedYear
+                )
                 const clientWithPersonalAndFinancialData = {
                     _id: client._id,
                     name: client.name,
@@ -282,7 +289,11 @@ export default function ListOfClients({ user }) {
 
     return user && !loading ? (
         <>
-            <div>
+            <div
+                style={{
+                    display: 'flex',
+                }}
+            >
                 <input
                     className="search-input"
                     type="text"
@@ -290,6 +301,31 @@ export default function ListOfClients({ user }) {
                     value={search}
                     onChange={onSearchChange}
                 ></input>
+                <Select
+                    size="small"
+                    sx={{
+                        margin: 0,
+                        color: 'white',
+                        border: '2px solid',
+                        borderColor: 'white',
+                        borderRadius: '0 4px 0 0',
+                        borderBottom: 'none',
+                        borderLeft: 'none',
+                        '& .MuiSvgIcon-root': {
+                            color: 'white',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: 'none',
+                        },
+                    }}
+                    id="demo-simple-select"
+                    value={selectedYear}
+                    onChange={handleChange}
+                >
+                    {arrayOfYearsForSelectFilter.map(year => (
+                        <MenuItem value={year}>{year}</MenuItem>
+                    ))}
+                </Select>
             </div>
             <div className={'main-container scrolled-container  animated-box'}>
                 <ClientsChartsContainer

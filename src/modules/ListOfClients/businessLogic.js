@@ -37,7 +37,16 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 }
 
 export const useClientsList = translators => {
-    const getTotalProfitPerClient = (clientId, date = moment()) => {
+    const [selectedYear, setSelectedYear] = useState(currentYear)
+
+    const handleChange = event => {
+        setSelectedYear(event.target.value)
+    }
+
+    const getTotalProfitPerClient = (
+        clientId,
+        date = moment().format('YYYY')
+    ) => {
         let totalProfitForAllYears = 0
         let profitForCurrentYear = 0
 
@@ -57,7 +66,7 @@ export const useClientsList = translators => {
                 })
             })
             const thisYearStat = translator.statistics.find(
-                year => year.year === date.format('YYYY')
+                year => year.year === date
             )
             thisYearStat?.months.forEach(month => {
                 month.forEach(day => {
@@ -289,6 +298,7 @@ export const useClientsList = translators => {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
-        currentYear,
+        handleChange,
+        selectedYear,
     }
 }
