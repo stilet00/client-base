@@ -39,7 +39,7 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 export const useClientsList = translators => {
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
-    const handleChange = event => {
+    const handleYearSelect = event => {
         setSelectedYear(event.target.value)
     }
 
@@ -298,7 +298,7 @@ export const useClientsList = translators => {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
-        handleChange,
+        handleYearSelect,
         selectedYear,
     }
 }

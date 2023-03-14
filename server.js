@@ -374,7 +374,53 @@ app.get(clientsURL + 'get', (request, response) => {
         response,
     })
 })
-
+app.post(clientsURL, function (request, response) {
+    console.log(request.body.filter)
+    if (!request.body.filter) {
+        checkIfUserIsAuthenticatedBeforeExecute({
+            callBack: () => {
+                collectionClients.find().toArray((err, docs) => {
+                    if (err) {
+                        console.log(err)
+                        return response.sendStatus(500)
+                    }
+                    response.send(docs)
+                })
+            },
+            request,
+            response,
+        })
+    } else {
+        checkIfUserIsAuthenticatedBeforeExecute({
+            callBack: () => {
+                const searchedString = request.body.filter
+                collectionClients
+                    .find({
+                        $or: [
+                            { name: { $regex: searchedString, $options: 'i' } },
+                            {
+                                surname: {
+                                    $regex: searchedString,
+                                    $options: 'i',
+                                },
+                            },
+                        ],
+                    })
+                    .toArray((err, docs) => {
+                        if (err) {
+                            console.log(err)
+                            return response.sendStatus(500)
+                        }
+                        console.log(searchedString)
+                        response.send(docs)
+                    })
+            },
+            request,
+            response,
+        })
+    }
+})
+ 
 app.post(clientsURL + 'add', function (request, response, next) {
     if (!request.body) {
         response.send('Ошибка при загрузке клиентки')

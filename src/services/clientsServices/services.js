@@ -33,3 +33,15 @@ export function updateClient(editedClient) {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function filtrateClients(
+    filter = {
+        filter: '',
+    }
+) {
+    return axios.post(
+        clientsURL,
+        filter,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}

@@ -3,6 +3,7 @@ import {
     getClients,
     addClient,
     updateClient,
+    filtrateClients,
 } from '../../services/clientsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
 import { getTranslators } from '../../services/translatorsServices/services'
@@ -52,7 +53,7 @@ export default function ListOfClients({ user }) {
         getAllAsignedTranslators,
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
-        handleChange,
+        handleYearSelect,
         selectedYear,
     } = useClientsList(translators)
 
@@ -76,7 +77,7 @@ export default function ListOfClients({ user }) {
                     openAlert(5000)
                 })
 
-            getClients()
+            filtrateClients()
                 .then(res => {
                     if (res.status === 200) {
                         setClients(res.data)
@@ -267,9 +268,7 @@ export default function ListOfClients({ user }) {
                 }
                 return clientWithPersonalAndFinancialData
             })
-        return sortedClientsWithCalculations.filter(client =>
-            `${client.name} ${client.surname}`.toLowerCase().includes(search)
-        )
+        return sortedClientsWithCalculations
     }
 
     const closeGraph = () => {
@@ -284,7 +283,27 @@ export default function ListOfClients({ user }) {
     }
 
     function onSearchChange(e) {
-        setSearch(e.target.value.toLowerCase())
+        const { value } = e.target
+        setSearch(value)
+        const querySting = {
+            filter: value,
+        }
+        filtrateClients(querySting)
+            .then(res => {
+                if (res.status === 200) {
+                    setClients(res.data)
+                }
+            })
+            .catch(err => {
+                const message = err.message
+                setLoading(false)
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert(5000)
+            })
     }
 
     return user && !loading ? (
@@ -318,9 +337,9 @@ export default function ListOfClients({ user }) {
                             border: 'none',
                         },
                     }}
-                    id="demo-simple-select"
+                    id="demo"
                     value={selectedYear}
-                    onChange={handleChange}
+                    onChange={handleYearSelect}
                 >
                     {arrayOfYearsForSelectFilter.map(year => (
                         <MenuItem value={year}>{year}</MenuItem>
