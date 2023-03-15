@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { inactivityPeriod } from '../constants/constants'
 
 export function useActivity() {
     const [loggedIn, setLoggedIn] = useState(true)
@@ -11,11 +12,10 @@ export function useActivity() {
     }
 
     const updateExpireTime = () => {
-        const timeOutPeriod = 1000 * 60 * 10
-        const expireTime = Date.now() + timeOutPeriod
+        const expireTime = Date.now() + inactivityPeriod
         localStorage.setItem('expireTime', expireTime)
     }
-
+    // we don't check mobile events for now
     useEffect(() => {
         updateExpireTime()
         window.addEventListener('click', updateExpireTime)
