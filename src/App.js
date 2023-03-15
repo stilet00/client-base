@@ -3,7 +3,7 @@ import './App.css'
 import './styles/modules/karusell.css'
 import './styles/modules/Gallery.css'
 import './styles/modules/ClientsForm.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     BrowserRouter as Router,
     Switch,
@@ -31,13 +31,30 @@ import BackgroundImageOnLoad from 'background-image-on-load'
 import Navigation from './sharedComponents/Navigation/Navigation'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { saveUserIdTokenToLocalStorage } from './sharedFunctions/sharedFunctions'
+import { useActivity } from './services/userActivity'
 
 function App() {
     const [isLoaded, setIsLoaded] = useState(true)
-
+    const { loggedIn } = useActivity()
     const stopLoading = () => {
         setIsLoaded(false)
     }
+
+    useEffect(() => {
+        const timeToRefresh = 1000 * 60 * 40
+        if (loggedIn) {
+            setTimeout(() => {
+                firebase
+                    .auth()
+                    .currentUser.getIdToken(true)
+                    .then(idToken => {
+                        saveUserIdTokenToLocalStorage(idToken)
+                    })
+                    .catch(error => console.log(error))
+            }, timeToRefresh)
+        } else return
+    }, [loggedIn])
 
     const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG)
     return (

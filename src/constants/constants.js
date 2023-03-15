@@ -35,6 +35,7 @@ export const previousMonth = moment().subtract(1, 'month').format('M')
 export const previousDay = moment().subtract(1, 'day').format('D')
 export const appStartYear = 2022
 export const arrayOfYearsForSelectFilter = creatArrayOfYears()
+export const inactivityPeriod = 1000 * 60 * 20
 
 export const localStorageTokenKey = 'clientBaseUserToken'
 

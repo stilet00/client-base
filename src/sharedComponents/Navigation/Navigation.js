@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -45,14 +45,14 @@ export default function Navigation({ user }) {
     const history = useHistory()
     let { pathname } = useLocation()
     const classes = useStyles()
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         top: false,
         left: false,
         bottom: false,
         right: false,
     })
 
-    const [page, setPage] = React.useState(pathname)
+    const [page, setPage] = useState(pathname)
 
     useEffect(() => {
         setPage(pathname)

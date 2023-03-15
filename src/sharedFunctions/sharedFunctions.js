@@ -1,5 +1,9 @@
 import moment from 'moment'
-import { currentMonth, currentYear } from '../constants/constants'
+import {
+    currentMonth,
+    currentYear,
+    localStorageTokenKey,
+} from '../constants/constants'
 
 export function calculateBalanceDaySum(
     targetObject,
@@ -152,4 +156,8 @@ export function calculatePercentDifference(currentSum, previousSum) {
 
 export function getNumberWithHundreds(number) {
     return Number(number?.toFixed(2))
+}
+
+export function saveUserIdTokenToLocalStorage(idToken) {
+    window.localStorage.setItem(localStorageTokenKey, idToken)
 }
