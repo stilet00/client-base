@@ -3,7 +3,10 @@ const nodeMailer = require('nodemailer')
 const {
     getNotificationsEmailTemplateHTMLCode,
 } = require('./email-templates/getNotificationsEmailTemplateHTMLCode')
-const { administratorsEmailList } = require('../constants')
+const {
+    administratorsEmailList,
+    credentialsForNodeMailer,
+} = require('../constants')
 const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
     try {
         const uncompletedTasksWithStartedWeekAgoOrMore = taskCollection.filter(
@@ -26,8 +29,8 @@ const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
                 port: 465,
                 secure: true,
                 auth: {
-                    user: 'antonstilet@gmail.com',
-                    pass: 'vsurysphowtyqljr',
+                    user: credentialsForNodeMailer.user,
+                    pass: credentialsForNodeMailer.pass,
                 },
             })
             const administratorsEmailListWithoutVasyl =

@@ -7,7 +7,11 @@ const {
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
-const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
+const {
+    DEFAULT_FINANCE_DAY,
+    administratorsEmailList,
+    credentialsForNodeMailer,
+} = require('../constants')
 var path = require('path')
 class imageAttachmentInformation {
     constructor(imageName) {
@@ -57,8 +61,8 @@ const sendEmailTemplateToAdministrators = translatorsCollection => {
         port: 465,
         secure: true,
         auth: {
-            user: 'antonstilet@gmail.com',
-            pass: 'vsurysphowtyqljr',
+            user: credentialsForNodeMailer.user,
+            pass: credentialsForNodeMailer.pass,
         },
     })
     let mailOptions = {
@@ -151,8 +155,8 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         port: 465,
         secure: true,
         auth: {
-            user: 'antonstilet@gmail.com',
-            pass: 'vsurysphowtyqljr',
+            user: credentialsForNodeMailer.user,
+            pass: credentialsForNodeMailer.pass,
         },
     })
 
