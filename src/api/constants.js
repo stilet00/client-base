@@ -15,7 +15,6 @@ const administratorsEmailList = [
     'safroninanton@gmail.com',
     'vasiliybabchenkov@gmail.com',
 ]
-
 const twentyHoursInMiliseconds = 72000000
 
 module.exports = {

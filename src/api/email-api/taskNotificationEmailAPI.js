@@ -4,6 +4,9 @@ const {
     getNotificationsEmailTemplateHTMLCode,
 } = require('./email-templates/getNotificationsEmailTemplateHTMLCode')
 const { administratorsEmailList } = require('../constants')
+const credentialsForNodeMailer = JSON.parse(
+    process.env.CREDENTIALS_FOR_NODEMAILER
+)
 const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
     try {
         const uncompletedTasksWithStartedWeekAgoOrMore = taskCollection.filter(
@@ -26,8 +29,8 @@ const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
                 port: 465,
                 secure: true,
                 auth: {
-                    user: 'antonstilet@gmail.com',
-                    pass: 'vsurysphowtyqljr',
+                    user: credentialsForNodeMailer.user,
+                    pass: credentialsForNodeMailer.pass,
                 },
             })
             const administratorsEmailListWithoutVasyl =

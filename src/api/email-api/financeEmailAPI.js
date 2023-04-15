@@ -16,7 +16,9 @@ class imageAttachmentInformation {
         this.cid = imageName.replace('.png', '')
     }
 }
-
+const credentialsForNodeMailer = JSON.parse(
+    process.env.CREDENTIALS_FOR_NODEMAILER
+)
 const imageNamesArrayForEmail = [
     'email-icon.png',
     'women.png',
@@ -57,8 +59,8 @@ const sendEmailTemplateToAdministrators = translatorsCollection => {
         port: 465,
         secure: true,
         auth: {
-            user: 'antonstilet@gmail.com',
-            pass: 'vsurysphowtyqljr',
+            user: credentialsForNodeMailer.user,
+            pass: credentialsForNodeMailer.pass,
         },
     })
     let mailOptions = {
@@ -151,8 +153,8 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         port: 465,
         secure: true,
         auth: {
-            user: 'antonstilet@gmail.com',
-            pass: 'vsurysphowtyqljr',
+            user: credentialsForNodeMailer.user,
+            pass: credentialsForNodeMailer.pass,
         },
     })
 
