@@ -7,11 +7,7 @@ const {
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
-const {
-    DEFAULT_FINANCE_DAY,
-    administratorsEmailList,
-    credentialsForNodeMailer,
-} = require('../constants')
+const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
 var path = require('path')
 class imageAttachmentInformation {
     constructor(imageName) {
@@ -20,7 +16,9 @@ class imageAttachmentInformation {
         this.cid = imageName.replace('.png', '')
     }
 }
-
+const credentialsForNodeMailer = JSON.parse(
+    process.env.CREDENTIALS_FOR_NODEMAILER
+)
 const imageNamesArrayForEmail = [
     'email-icon.png',
     'women.png',

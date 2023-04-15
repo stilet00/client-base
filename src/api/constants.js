@@ -15,15 +15,10 @@ const administratorsEmailList = [
     'safroninanton@gmail.com',
     'vasiliybabchenkov@gmail.com',
 ]
-const credentialsForNodeMailer = {
-    user: 'meetyourmate.od@gmail.com',
-    pass: 'sddvorieahdzpdfj',
-}
 const twentyHoursInMiliseconds = 72000000
 
 module.exports = {
     DEFAULT_FINANCE_DAY,
     administratorsEmailList,
     twentyHoursInMiliseconds,
-    credentialsForNodeMailer,
 }

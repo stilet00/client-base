@@ -3,10 +3,10 @@ const nodeMailer = require('nodemailer')
 const {
     getNotificationsEmailTemplateHTMLCode,
 } = require('./email-templates/getNotificationsEmailTemplateHTMLCode')
-const {
-    administratorsEmailList,
-    credentialsForNodeMailer,
-} = require('../constants')
+const { administratorsEmailList } = require('../constants')
+const credentialsForNodeMailer = JSON.parse(
+    process.env.CREDENTIALS_FOR_NODEMAILER
+)
 const sendTaskNotificationEmailTemplatesToAdministrators = taskCollection => {
     try {
         const uncompletedTasksWithStartedWeekAgoOrMore = taskCollection.filter(
