@@ -7,6 +7,7 @@ class DEFAULT_FINANCE_DAY {
         this.virtualGiftsDating = 0
         this.photoAttachments = 0
         this.phoneCalls = 0
+        this.voiceMessages = 0
         this.penalties = 0
     }
 }

@@ -88,6 +88,7 @@ export class DEFAULT_DAY_CLIENT {
         this.virtualGiftsDating = 0
         this.photoAttachments = 0
         this.phoneCalls = 0
+        this.voiceMessages = 0
         this.penalties = 0
         this.comments = ''
     }

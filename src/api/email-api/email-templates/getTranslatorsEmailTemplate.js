@@ -151,6 +151,9 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                             <img src="cid:telephone" width="32" height="32"  alt="Phone calls"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
+                                                            <img src="cid:voice" width="32" height="32"  alt="Voice messages"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
                                                             <img src="cid:penalties"  width="32" height="32"   alt="Penalties"></img>
                                                         </td>
                                                     </tr>
