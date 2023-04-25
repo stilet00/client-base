@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import ForumIcon from '@mui/icons-material/Forum'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
+import MicIcon from '@mui/icons-material/Mic'
 import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import '../../../styles/modules/EditBalanceForm.css'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
@@ -110,7 +111,14 @@ export default function EditBalanceForm({
             backgroundColor: red[700],
         },
     }))
-
+    const voiceMessageCheck = () => {
+        const client = findClientById()
+        if (client.voiceMessages) {
+            return client.voiceMessages
+        }
+        const newClient = { ...client, voiceMessages: 0 }
+        return newClient.voiceMessages
+    }
     return (
         <>
             <FormMainButton
@@ -471,6 +479,36 @@ export default function EditBalanceForm({
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
                                                                         <CardGiftcardIcon />
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="balance-form__finances-input">
+                                                        <TextField
+                                                            name={
+                                                                'voiceMessages'
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            onClick={e =>
+                                                                e.target.select()
+                                                            }
+                                                            value={voiceMessageCheck()}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            label={
+                                                                'Voice Messages'
+                                                            }
+                                                            type={'number'}
+                                                            step="0.01"
+                                                            fullWidth
+                                                            required
+                                                            InputProps={{
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <MicIcon />
                                                                     </InputAdornment>
                                                                 ),
                                                             }}

@@ -29,6 +29,7 @@ const imageNamesArrayForEmail = [
     'gift.png',
     'heart.png',
     'dollar-sign.png',
+    'voice.png',
     'penalties.png',
 ]
 
