@@ -37,3 +37,10 @@ export function sendNotificationEmailsRequest() {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function sendLastVirtualGiftDateRequest(id) {
+    return axios.get(
+        translatorsURL + 'last-gift/' + id,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}

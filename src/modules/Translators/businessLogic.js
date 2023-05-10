@@ -7,6 +7,7 @@ import {
     removeTranslator,
     updateTranslator,
     sendNotificationEmailsRequest,
+    sendLastVirtualGiftDateRequest,
 } from '../../services/translatorsServices/services'
 import { getCurrency } from '../../services/currencyServices'
 import {
@@ -695,6 +696,8 @@ export const useSingleTranslator = (
     selectedDate,
     personalPenalties
 ) => {
+    const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
+    const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
             .find(
@@ -825,6 +828,19 @@ export const useSingleTranslator = (
         }
     }
 
+    function getLastVirtualGiftDate(translatorId) {
+        setGiftRequestLoader(true)
+        sendLastVirtualGiftDateRequest(translatorId)
+            .then(res => {
+                setLastVirtualGiftDate(res.data[0]?.date || 'No gifts found')
+                setGiftRequestLoader(false)
+            })
+            .catch(err => {
+                console.log(err.message)
+                setGiftRequestLoader(false)
+            })
+    }
+
     return {
         calculateSumByClient,
         specialColorNeeded,
@@ -833,5 +849,8 @@ export const useSingleTranslator = (
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
         calculatePersonalPenalties,
+        getLastVirtualGiftDate,
+        lastVirtualGiftDate,
+        giftRequestLoader,
     }
 }
