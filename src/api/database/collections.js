@@ -29,14 +29,16 @@ const connectToDatabase = async err => {
     collections.collectionTaskNotifications = client
         .db('taskListDB')
         .collection('notificationSwitch')
-    // collectionClients = client.db('clientsDB').collection('clients')
-    collections.collectionClients = client
-        .db('testDB')
-        .collection('testClientCollection')
+    collections.collectionClients = client.db('clientsDB').collection('clients')
+    // collections.collectionClients = client
+    //     .db('testDB')
+    //     .collection('testClientCollection')
+    // collections.collectionTranslators = client
+    //     .db('testDB')
+    //     .collection('testTranslatorCollection')
     collections.collectionTranslators = client
-        .db('testDB')
-        .collection('testTranslatorCollection')
-    // collectionTranslators = client.db('translatorsDB').collection('translators')
+        .db('translatorsDB')
+        .collection('translators')
     collections.collectionStatements = client
         .db('statementsDB')
         .collection('statements')
