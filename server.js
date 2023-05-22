@@ -3,7 +3,6 @@ let bodyParser = require('body-parser')
 const { connectToDatabase } = require('./src/api/database/collections')
 const {
     rootURL,
-    balanceURL,
     clientsURL,
     translatorsURL,
     financeStatementsURL,
@@ -35,12 +34,6 @@ const {
     addNewClient,
     updateClient,
 } = require('./src/api/controllers/clientController')
-const {
-    getBalance,
-    uploadBalance,
-    deleteBalance,
-    updateBalance,
-} = require('./src/api/controllers/balanceController')
 
 const PORT = process.env.PORT || 80
 let app = express()
@@ -91,12 +84,6 @@ app.post(tasksURL + 'add', createTask)
 app.put(tasksURL + 'edit/:id', editTask)
 app.get(tasksURL + 'notifications/', sendNotification)
 app.put(tasksURL + 'notifications/', allowNotifications)
-
-// balance api
-app.get(balanceURL + 'get', getBalance)
-app.post(balanceURL + 'add', uploadBalance)
-app.delete(balanceURL + ':id', deleteBalance)
-app.put(balanceURL + ':id', updateBalance)
 
 //clients api
 app.get(clientsURL + 'get', getAllClients)

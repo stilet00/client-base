@@ -11,62 +11,82 @@ const {
 } = require('../email-api/taskNotificationEmailAPI')
 const { twentyHoursInMiliseconds } = require('../constants')
 const client = new MongoClient(DB, { useUnifiedTopology: true })
-const collections = {}
+const collections = new Map()
 let outdatedTaskNotificationsInterval
 
 async function taskNotificationsMailout() {
-    const taskCollection = await collections.collectionTasks.find().toArray()
+    const taskCollection = await collections
+        .get('collectionTasks')
+        .find()
+        .toArray()
     sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
 }
 
 const connectToDatabase = async err => {
     await client.connect()
     console.log('Connected to MongoDB database')
-    collections.collectionTasks = client.db('taskListDB').collection('tasks')
-    collections.collectionBalance = client
-        .db('taskListDB')
-        .collection('totalBalance')
-    collections.collectionTaskNotifications = client
-        .db('taskListDB')
-        .collection('notificationSwitch')
-    collections.collectionClients = client.db('clientsDB').collection('clients')
-    // collections.collectionClients = client
-    //     .db('testDB')
-    //     .collection('testClientCollection')
-    // collections.collectionTranslators = client
-    //     .db('testDB')
-    //     .collection('testTranslatorCollection')
-    collections.collectionTranslators = client
-        .db('translatorsDB')
-        .collection('translators')
-    collections.collectionStatements = client
-        .db('statementsDB')
-        .collection('statements')
+    collections.set(
+        'collectionTasks',
+        client.db('taskListDB').collection('tasks')
+    )
+    collections.set(
+        'collectionBalance',
+        client.db('taskListDB').collection('totalBalance')
+    )
+    collections.set(
+        'collectionTaskNotifications',
+        client.db('taskListDB').collection('notificationSwitch')
+    )
+    collections.set(
+        'collectionClients',
+        client.db('clientsDB').collection('clients')
+    )
+    collections.set(
+        'collectionTranslators',
+        client.db('translatorsDB').collection('translators')
+    )
+    collections.set(
+        'collectionStatements',
+        client.db('statementsDB').collection('statements')
+    )
     createCurrentYearStatisticsForEveryTranslator(
-        collections.collectionTranslators
+        collections.get('collectionTranslators')
     )
     try {
-        collections.collectionTaskNotifications.find().toArray((err, docs) => {
-            if (err) {
-                throw new Error(err)
-            }
-            const taskNotificationsAreAllowed = docs[0]?.allowed
-            if (taskNotificationsAreAllowed) {
-                console.log(
-                    'Task notifications are allowed, running mailout interval.'
-                )
-                outdatedTaskNotificationsInterval = setInterval(
-                    taskNotificationsMailout,
-                    twentyHoursInMiliseconds
-                )
-            }
-        })
+        collections
+            .get('collectionTaskNotifications')
+            .find()
+            .toArray((err, docs) => {
+                if (err) {
+                    throw new Error(err)
+                }
+                const taskNotificationsAreAllowed = docs[0]?.allowed
+                if (taskNotificationsAreAllowed) {
+                    console.log(
+                        'Task notifications are allowed, running mailout interval.'
+                    )
+                    outdatedTaskNotificationsInterval = setInterval(
+                        taskNotificationsMailout,
+                        twentyHoursInMiliseconds
+                    )
+                }
+            })
     } catch (error) {
         console.log(error)
     }
 }
+
 const getCollections = () => {
-    return collections
+    return {
+        collectionTasks: collections.get('collectionTasks'),
+        collectionBalance: collections.get('collectionBalance'),
+        collectionTaskNotifications: collections.get(
+            'collectionTaskNotifications'
+        ),
+        collectionClients: collections.get('collectionClients'),
+        collectionTranslators: collections.get('collectionTranslators'),
+        collectionStatements: collections.get('collectionStatements'),
+    }
 }
 
 module.exports = {
