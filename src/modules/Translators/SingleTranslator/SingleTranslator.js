@@ -39,6 +39,9 @@ import {
 import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
 import PenaltiesList from '../PenaltiesList/PenaltiesList'
 import EditTranslatorEmailForm from '../EditTranslatorEmailForm/EditTranslatorEmailForm'
+import LoadingButton from '@mui/lab/LoadingButton'
+import RedeemIcon from '@mui/icons-material/Redeem'
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 
 function SingleTranslator({
     name,
@@ -69,6 +72,9 @@ function SingleTranslator({
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
         calculatePersonalPenalties,
+        getLastVirtualGiftDate,
+        lastVirtualGiftDate,
+        giftRequestLoader,
     } = useSingleTranslator(statistics, selectedDate, personalPenalties)
 
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
@@ -443,6 +449,45 @@ function SingleTranslator({
                                 ) : null}
                             </AccordionDetails>
                         </Accordion>
+                        <LoadingButton
+                            size="small"
+                            sx={{
+                                borderColor: '#fff',
+                                color: 'rgba(0, 0, 0, 0.87)',
+                                width: '100%',
+                                transition:
+                                    'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                backgroundColor: '#fff',
+                                boxShadow:
+                                    '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+                                marginTop: '5px',
+                                '&:hover': {
+                                    backgroundColor: '#fff',
+                                    borderColor: 'rgba(0, 0, 0, 0.87)',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    color: 'rgb(224,224,224)',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    },
+                                },
+                            }}
+                            onClick={e => getLastVirtualGiftDate(_id)}
+                            disabled={lastVirtualGiftDate}
+                            endIcon={
+                                lastVirtualGiftDate === 'No gifts found' ? (
+                                    <SentimentVeryDissatisfiedIcon />
+                                ) : (
+                                    <RedeemIcon />
+                                )
+                            }
+                            loading={giftRequestLoader}
+                            loadingPosition="end"
+                            variant="outlined"
+                        >
+                            {lastVirtualGiftDate ?? 'Last virtual gift was at:'}
+                        </LoadingButton>
                     </>
                 )}
             </CardContent>
