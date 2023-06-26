@@ -124,6 +124,7 @@ export default function ListOfClients({ user }) {
             },
             instagramLink: clientWithID.instagramLink || '',
             image: clientWithID.image || '',
+            suspended: clientWithID.suspended || false,
         }
         setUpdatingClient(clientWithFieldsForForm)
         handleOpen()
@@ -248,6 +249,7 @@ export default function ListOfClients({ user }) {
                         'https://www.instagram.com/',
                     loss: spendsOnClient,
                     image: client.image ?? null,
+                    suspended: client.suspended || false,
                     currentYearProfit: clientProfit.currentYearProfit,
                     absoluteProfit: clientProfit.allYearsProfit,
                     previousMonthTotalAmount: memorizedPreviousMonthSum,

@@ -37,13 +37,21 @@ const connectToDatabase = async err => {
         'collectionTaskNotifications',
         client.db('taskListDB').collection('notificationSwitch')
     )
+    // collections.set(
+    //     'collectionClients',
+    //     client.db('clientsDB').collection('clients')
+    // )
+    // collections.set(
+    //     'collectionTranslators',
+    //     client.db('translatorsDB').collection('translators')
+    // )
     collections.set(
         'collectionClients',
-        client.db('clientsDB').collection('clients')
+        client.db('testDB').collection('testClientCollection')
     )
     collections.set(
         'collectionTranslators',
-        client.db('translatorsDB').collection('translators')
+        client.db('testDB').collection('testTranslatorCollection')
     )
     collections.set(
         'collectionStatements',

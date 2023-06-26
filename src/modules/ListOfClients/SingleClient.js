@@ -53,6 +53,7 @@ export default function SingleClient({
     currentYearProfit,
     image,
     rating,
+    suspended,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
@@ -156,12 +157,17 @@ export default function SingleClient({
     )
 
     const avatarImage = image ? image : '/'
-
+    console.log(suspended)
     return (
         <Card
             className="translator-item gradient-box"
             style={{
-                minHeight: 100,
+                position: 'relative',
+                minHeight: 350,
+                ...(suspended && {
+                    backgroundImage:
+                        'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8))',
+                }),
             }}
         >
             <CardHeader
@@ -239,155 +245,167 @@ export default function SingleClient({
             />
             <CardContent>
                 <Typography variant="h5">{`${name} ${surname}`}</Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Total for {currentMonth}:
-                    </span>
-                    <b className="styled-text-numbers grid-template-container__info">{`${currentMonthTotalAmount} $`}</b>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Total for {previousMonth}:
-                    </span>
-                    <b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Middle for {currentMonth}:
-                    </span>
-                    {progressPage}
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    component="div"
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Profile profit:
-                    </span>
-                    <ClickAwayListener
-                        onClickAway={() => setDisplayProfit(false)}
-                    >
-                        <Box
-                            className="grid-template-container__info"
-                            sx={{ position: 'relative' }}
+                {!suspended && (
+                    <>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
                         >
-                            <Button
-                                variant="text"
-                                size="small"
-                                sx={{
-                                    padding: 0,
-                                    letterSpacing: 1,
-                                    color: 'black',
-                                    textShadow: '1px 1px 1px rgb(0 0 0 / 20%)',
-                                }}
-                                startIcon={
-                                    <AccountBalanceIcon
-                                        sx={{
-                                            color:
-                                                clientProfit < 0
-                                                    ? 'red'
-                                                    : 'green',
-                                        }}
-                                    />
-                                }
-                                onClick={() => setDisplayProfit(!displayProfit)}
+                            <span className="grid-template-container__title">
+                                Total for {currentMonth}:
+                            </span>
+                            <b className="styled-text-numbers grid-template-container__info">{`${currentMonthTotalAmount} $`}</b>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Total for {previousMonth}:
+                            </span>
+                            <b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Middle for {currentMonth}:
+                            </span>
+                            {progressPage}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            component="div"
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Profile profit:
+                            </span>
+                            <ClickAwayListener
+                                onClickAway={() => setDisplayProfit(false)}
                             >
-                                <b className="styled-text-numbers">
-                                    {clientProfit} $
-                                </b>
-                            </Button>
-                            {displayProfit && (
                                 <Box
+                                    className="grid-template-container__info"
+                                    sx={{ position: 'relative' }}
+                                >
+                                    <Button
+                                        variant="text"
+                                        size="small"
+                                        sx={{
+                                            padding: 0,
+                                            letterSpacing: 1,
+                                            color: 'black',
+                                            textShadow:
+                                                '1px 1px 1px rgb(0 0 0 / 20%)',
+                                        }}
+                                        startIcon={
+                                            <AccountBalanceIcon
+                                                sx={{
+                                                    color:
+                                                        clientProfit < 0
+                                                            ? 'red'
+                                                            : 'green',
+                                                }}
+                                            />
+                                        }
+                                        onClick={() =>
+                                            setDisplayProfit(!displayProfit)
+                                        }
+                                    >
+                                        <b className="styled-text-numbers">
+                                            {clientProfit} $
+                                        </b>
+                                    </Button>
+                                    {displayProfit && (
+                                        <Box
+                                            sx={{
+                                                position: 'absolute',
+                                                minWidth: 200,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                top: 28,
+                                                right: '5px',
+                                                zIndex: 1,
+                                                borderRadius: '8px',
+                                                p: 1,
+                                                bgcolor: 'background.paper',
+                                            }}
+                                        >
+                                            {loss > 0 && (
+                                                <span className="balance-menu_item">
+                                                    Client's spends:
+                                                    <b>{`-${loss} $`}</b>
+                                                </span>
+                                            )}
+                                            <span className="balance-menu_item">
+                                                Total profit:{' '}
+                                                <b>{`${currentYearProfit} $`}</b>
+                                            </span>
+                                            <span className="balance-menu_item">
+                                                Payed to translators:
+                                                <b>{`${payedToTranslators} $`}</b>
+                                            </span>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </ClickAwayListener>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Bank account:
+                            </span>
+                            <span className="grid-template-container__card">
+                                <IconButton
                                     sx={{
-                                        position: 'absolute',
-                                        minWidth: 200,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        top: 28,
-                                        right: '5px',
-                                        zIndex: 1,
-                                        borderRadius: '8px',
-                                        p: 1,
-                                        bgcolor: 'background.paper',
+                                        color: copied ? 'green' : 'gray',
+                                    }}
+                                    variant="contained"
+                                    size="small"
+                                    onClick={e => {
+                                        setCopied(true)
+                                        navigator.clipboard.writeText(
+                                            bankAccount
+                                        )
                                     }}
                                 >
-                                    {loss > 0 && (
-                                        <span className="balance-menu_item">
-                                            Client's spends:
-                                            <b>{`-${loss} $`}</b>
-                                        </span>
-                                    )}
-                                    <span className="balance-menu_item">
-                                        Total profit:{' '}
-                                        <b>{`${currentYearProfit} $`}</b>
-                                    </span>
-                                    <span className="balance-menu_item">
-                                        Payed to translators:
-                                        <b>{`${payedToTranslators} $`}</b>
-                                    </span>
-                                </Box>
-                            )}
-                        </Box>
-                    </ClickAwayListener>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Bank account:
-                    </span>
-                    <span className="grid-template-container__card">
-                        <IconButton
-                            sx={{
-                                color: copied ? 'green' : 'gray',
-                            }}
-                            variant="contained"
-                            size="small"
-                            onClick={e => {
-                                setCopied(true)
-                                navigator.clipboard.writeText(bankAccount)
-                            }}
-                        >
-                            <ContentCopyIcon fontSize="small" />
-                        </IconButton>
-                        {bankAccount}
-                    </span>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Assigned translators:
-                    </span>
-                    <span
-                        className="grid-template-container__card"
-                        style={{ display: 'grid' }}
-                    >
-                        {translators.map(translator => (
-                            <span key={translator} style={{ textAlign: 'end' }}>
-                                {translator}
+                                    <ContentCopyIcon fontSize="small" />
+                                </IconButton>
+                                {bankAccount}
                             </span>
-                        ))}
-                    </span>
-                </Typography>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Assigned translators:
+                            </span>
+                            <span
+                                className="grid-template-container__card"
+                                style={{ display: 'grid' }}
+                            >
+                                {translators.map(translator => (
+                                    <span
+                                        key={translator}
+                                        style={{ textAlign: 'end' }}
+                                    >
+                                        {translator}
+                                    </span>
+                                ))}
+                            </span>
+                        </Typography>{' '}
+                    </>
+                )}
             </CardContent>
             <CardActions
                 style={{
@@ -412,59 +430,61 @@ export default function SingleClient({
                         />
                     </Link>
                 </Typography>
-                <Accordion
-                    expanded={expanded}
-                    onChange={handleChange}
-                    className="grid-template-container__card"
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
+                {!suspended && (
+                    <Accordion
+                        expanded={expanded}
+                        onChange={handleChange}
+                        className="grid-template-container__card"
                     >
-                        <Typography sx={{ flexShrink: 0 }}>
-                            Sites Access
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1bh-content"
+                            id="panel1bh-header"
                         >
-                            <span className="grid-template-container__title">
-                                Logins:
-                            </span>
-                            <span className="grid-template-container__card">
-                                Passwords:
-                            </span>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                {svadba.login}
-                            </span>
-                            <span className="grid-template-container__card">
-                                {svadba.password}
-                            </span>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                {dating.login}
-                            </span>
-                            <span className="grid-template-container__card">
-                                {dating.password}
-                            </span>
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
+                            <Typography sx={{ flexShrink: 0 }}>
+                                Sites Access
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    Logins:
+                                </span>
+                                <span className="grid-template-container__card">
+                                    Passwords:
+                                </span>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    {svadba.login}
+                                </span>
+                                <span className="grid-template-container__card">
+                                    {svadba.password}
+                                </span>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    {dating.login}
+                                </span>
+                                <span className="grid-template-container__card">
+                                    {dating.password}
+                                </span>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                )}
             </CardActions>
         </Card>
     )

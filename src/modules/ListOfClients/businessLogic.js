@@ -171,10 +171,21 @@ export const useClientsList = translators => {
     }
 
     function sortBySum(clientOne, clientTwo) {
-        return clientMonthSum(clientOne._id) < clientMonthSum(clientTwo._id)
-            ? 1
-            : -1
+        if (clientOne.suspended && !clientTwo.suspended) {
+            return 1
+        } else if (!clientOne.suspended && clientTwo.suspended) {
+            return -1
+        }
+        const clientOneSum = clientMonthSum(clientOne._id)
+        const clientTwoSum = clientMonthSum(clientTwo._id)
+        if (clientOneSum > clientTwoSum) {
+            return 1
+        } else if (clientOneSum < clientTwoSum) {
+            return -1
+        }
+        return 0
     }
+
 
     function getArrayOfBalancePerDay(
         clientId,
