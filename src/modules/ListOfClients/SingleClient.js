@@ -85,74 +85,89 @@ export default function SingleClient({
             : moment().subtract(1, 'month').format('MMMM')
     const progressPage = (
         <div className="grid-template-container__info">
-            <IconButton
-                color="primary"
-                variant="contained"
-                size="small"
-                sx={{
-                    padding: 0,
-                }}
-                onClick={() => setOpenCategorySelect(!openCategorySelect)}
-            >
-                {openCategorySelect ? (
-                    <ClickAwayListener
-                        onClickAway={() => setOpenCategorySelect(false)}
+            {!suspended && (
+                <>
+                    <IconButton
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        sx={{
+                            padding: 0,
+                        }}
+                        onClick={() =>
+                            setOpenCategorySelect(!openCategorySelect)
+                        }
                     >
-                        <Box sx={{ position: 'relative' }}>
-                            {catergoriesWithIcons.map((category, index) => (
-                                <React.Fragment key={category + index}>
-                                    <label
-                                        for={category.name}
-                                        className={
-                                            category.value === null
-                                                ? 'category-all'
-                                                : `category-${category.value}`
-                                        }
-                                    >
-                                        {category.icon}
-                                    </label>
-                                    <input
-                                        type="radio"
-                                        id={category.name}
-                                        className={
-                                            category.value === null
-                                                ? 'category-all category-select'
-                                                : `category-${category.value} category-select`
-                                        }
-                                        value={category.value}
-                                        onChange={e => {
-                                            const argsForHandleSwitchToGraph = {
-                                                id: _id,
-                                                category: e.target.value,
-                                            }
-                                            handleSwitchToGraph(
-                                                argsForHandleSwitchToGraph
-                                            )
-                                        }}
-                                    ></input>
-                                </React.Fragment>
-                            ))}
-                        </Box>
-                    </ClickAwayListener>
-                ) : (
-                    <QueryStatsIcon fontSize="small" />
-                )}
-            </IconButton>
-            <span
-                className={
-                    middleMonthSum >= prevousMiddleMonthSum
-                        ? ' green-text styled-text-numbers'
-                        : ' red-text styled-text-numbers'
-                }
-            >
-                {middleMonthSum >= prevousMiddleMonthSum ? (
-                    <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                ) : (
-                    <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                )}
-                {` ${monthProgressPercent}%`}
-            </span>
-            <b> {middleMonthSum}$</b>
+                        {openCategorySelect ? (
+                            <ClickAwayListener
+                                onClickAway={() => setOpenCategorySelect(false)}
+                            >
+                                <Box sx={{ position: 'relative' }}>
+                                    {catergoriesWithIcons.map(
+                                        (category, index) => (
+                                            <React.Fragment
+                                                key={category + index}
+                                            >
+                                                <label
+                                                    htmlFor={category.name}
+                                                    className={
+                                                        category.value === null
+                                                            ? 'category-all'
+                                                            : `category-${category.value}`
+                                                    }
+                                                >
+                                                    {category.icon}
+                                                </label>
+                                                <input
+                                                    type="radio"
+                                                    id={category.name}
+                                                    className={
+                                                        category.value === null
+                                                            ? 'category-all category-select'
+                                                            : `category-${category.value} category-select`
+                                                    }
+                                                    value={category.value}
+                                                    onChange={e => {
+                                                        const argsForHandleSwitchToGraph =
+                                                            {
+                                                                id: _id,
+                                                                category:
+                                                                    e.target
+                                                                        .value,
+                                                            }
+                                                        handleSwitchToGraph(
+                                                            argsForHandleSwitchToGraph
+                                                        )
+                                                    }}
+                                                ></input>
+                                            </React.Fragment>
+                                        )
+                                    )}
+                                </Box>
+                            </ClickAwayListener>
+                        ) : (
+                            <QueryStatsIcon fontSize="small" />
+                        )}
+                    </IconButton>
+                    <span
+                        className={
+                            middleMonthSum >= prevousMiddleMonthSum
+                                ? ' green-text styled-text-numbers'
+                                : ' red-text styled-text-numbers'
+                        }
+                    >
+                        {middleMonthSum >= prevousMiddleMonthSum ? (
+                            <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                        ) : (
+                            <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                        )}
+                        {` ${monthProgressPercent}%`}
+                    </span>
+                </>
+            )}
+            <b className="styled-text-numbers grid-template-container__info">
+                {middleMonthSum} $
+            </b>
         </div>
     )
 
@@ -166,10 +181,53 @@ export default function SingleClient({
                 minHeight: 350,
                 ...(suspended && {
                     backgroundImage:
-                        'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8))',
+                        'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2))',
+                    overflow: 'visible',
                 }),
             }}
         >
+            {suspended && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        width: 'calc(96% + 0px)',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%) skew(1deg, -30deg)',
+                        background: `linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)`,
+                        borderRadius: '4px',
+                        padding: '10px',
+                        color: 'black',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <span
+                        style={{
+                            border: '3px solid black',
+                            display: 'inline-block',
+                            transform: 'skew(30deg, 0deg)',
+                            fontFamily: 'inherit',
+                            borderImage: `linear-gradient(to bottom, gray 50%, black 50%)`,
+                            borderImageSlice: '1',
+                            padding: '5px',
+                            color: 'transparent',
+                            background:
+                                'linear-gradient(to bottom, gray 50%, black 50%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent', // For Safari compatibility
+                            mask: 'linear-gradient(to bottom, transparent 50%, black 50%)',
+                        }}
+                    >
+                        DISABLED
+                    </span>
+                </div>
+            )}
             <CardHeader
                 sx={{
                     position: 'relative',
@@ -245,167 +303,155 @@ export default function SingleClient({
             />
             <CardContent>
                 <Typography variant="h5">{`${name} ${surname}`}</Typography>
-                {!suspended && (
-                    <>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Total for {currentMonth}:
+                    </span>
+                    <b className="styled-text-numbers grid-template-container__info">{`${currentMonthTotalAmount} $`}</b>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Total for {previousMonth}:
+                    </span>
+                    <b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Middle for {currentMonth}:
+                    </span>
+                    {progressPage}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    component="div"
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Profile profit:
+                    </span>
+                    <ClickAwayListener
+                        onClickAway={() => setDisplayProfit(false)}
+                    >
+                        <Box
+                            className="grid-template-container__info"
+                            sx={{ position: 'relative' }}
                         >
-                            <span className="grid-template-container__title">
-                                Total for {currentMonth}:
-                            </span>
-                            <b className="styled-text-numbers grid-template-container__info">{`${currentMonthTotalAmount} $`}</b>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                Total for {previousMonth}:
-                            </span>
-                            <b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                Middle for {currentMonth}:
-                            </span>
-                            {progressPage}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            component="div"
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                Profile profit:
-                            </span>
-                            <ClickAwayListener
-                                onClickAway={() => setDisplayProfit(false)}
-                            >
-                                <Box
-                                    className="grid-template-container__info"
-                                    sx={{ position: 'relative' }}
-                                >
-                                    <Button
-                                        variant="text"
-                                        size="small"
+                            <Button
+                                variant="text"
+                                size="small"
+                                sx={{
+                                    padding: 0,
+                                    letterSpacing: 1,
+                                    color: 'black',
+                                    textShadow: '1px 1px 1px rgb(0 0 0 / 20%)',
+                                }}
+                                startIcon={
+                                    <AccountBalanceIcon
                                         sx={{
-                                            padding: 0,
-                                            letterSpacing: 1,
-                                            color: 'black',
-                                            textShadow:
-                                                '1px 1px 1px rgb(0 0 0 / 20%)',
+                                            color:
+                                                clientProfit < 0
+                                                    ? 'red'
+                                                    : 'green',
                                         }}
-                                        startIcon={
-                                            <AccountBalanceIcon
-                                                sx={{
-                                                    color:
-                                                        clientProfit < 0
-                                                            ? 'red'
-                                                            : 'green',
-                                                }}
-                                            />
-                                        }
-                                        onClick={() =>
-                                            setDisplayProfit(!displayProfit)
-                                        }
-                                    >
-                                        <b className="styled-text-numbers">
-                                            {clientProfit} $
-                                        </b>
-                                    </Button>
-                                    {displayProfit && (
-                                        <Box
-                                            sx={{
-                                                position: 'absolute',
-                                                minWidth: 200,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                top: 28,
-                                                right: '5px',
-                                                zIndex: 1,
-                                                borderRadius: '8px',
-                                                p: 1,
-                                                bgcolor: 'background.paper',
-                                            }}
-                                        >
-                                            {loss > 0 && (
-                                                <span className="balance-menu_item">
-                                                    Client's spends:
-                                                    <b>{`-${loss} $`}</b>
-                                                </span>
-                                            )}
-                                            <span className="balance-menu_item">
-                                                Total profit:{' '}
-                                                <b>{`${currentYearProfit} $`}</b>
-                                            </span>
-                                            <span className="balance-menu_item">
-                                                Payed to translators:
-                                                <b>{`${payedToTranslators} $`}</b>
-                                            </span>
-                                        </Box>
-                                    )}
-                                </Box>
-                            </ClickAwayListener>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                Bank account:
-                            </span>
-                            <span className="grid-template-container__card">
-                                <IconButton
+                                    />
+                                }
+                                onClick={() => setDisplayProfit(!displayProfit)}
+                            >
+                                <b className="styled-text-numbers">
+                                    {clientProfit} $
+                                </b>
+                            </Button>
+                            {displayProfit && (
+                                <Box
                                     sx={{
-                                        color: copied ? 'green' : 'gray',
-                                    }}
-                                    variant="contained"
-                                    size="small"
-                                    onClick={e => {
-                                        setCopied(true)
-                                        navigator.clipboard.writeText(
-                                            bankAccount
-                                        )
+                                        position: 'absolute',
+                                        minWidth: 200,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        top: 28,
+                                        right: '5px',
+                                        zIndex: 1,
+                                        borderRadius: '8px',
+                                        p: 1,
+                                        bgcolor: 'background.paper',
                                     }}
                                 >
-                                    <ContentCopyIcon fontSize="small" />
-                                </IconButton>
-                                {bankAccount}
-                            </span>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                Assigned translators:
-                            </span>
-                            <span
-                                className="grid-template-container__card"
-                                style={{ display: 'grid' }}
-                            >
-                                {translators.map(translator => (
-                                    <span
-                                        key={translator}
-                                        style={{ textAlign: 'end' }}
-                                    >
-                                        {translator}
+                                    {loss > 0 && (
+                                        <span className="balance-menu_item">
+                                            Client's spends:
+                                            <b>{`-${loss} $`}</b>
+                                        </span>
+                                    )}
+                                    <span className="balance-menu_item">
+                                        Total profit:{' '}
+                                        <b>{`${currentYearProfit} $`}</b>
                                     </span>
-                                ))}
+                                    <span className="balance-menu_item">
+                                        Payed to translators:
+                                        <b>{`${payedToTranslators} $`}</b>
+                                    </span>
+                                </Box>
+                            )}
+                        </Box>
+                    </ClickAwayListener>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Bank account:
+                    </span>
+                    <span className="grid-template-container__card">
+                        <IconButton
+                            sx={{
+                                color: copied ? 'green' : 'gray',
+                            }}
+                            variant="contained"
+                            size="small"
+                            onClick={e => {
+                                setCopied(true)
+                                navigator.clipboard.writeText(bankAccount)
+                            }}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                        {bankAccount}
+                    </span>
+                </Typography>
+                <Typography
+                    variant="body2"
+                    align={'left'}
+                    className="grid-template-container"
+                >
+                    <span className="grid-template-container__title">
+                        Assigned translators:
+                    </span>
+                    <span
+                        className="grid-template-container__card"
+                        style={{ display: 'grid' }}
+                    >
+                        {translators.map(translator => (
+                            <span key={translator} style={{ textAlign: 'end' }}>
+                                {translator}
                             </span>
-                        </Typography>{' '}
-                    </>
-                )}
+                        ))}
+                    </span>
+                </Typography>{' '}
             </CardContent>
             <CardActions
                 style={{
