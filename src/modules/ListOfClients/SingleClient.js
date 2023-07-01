@@ -172,7 +172,7 @@ export default function SingleClient({
     )
 
     const avatarImage = image ? image : '/'
-    console.log(suspended)
+
     return (
         <Card
             className="translator-item gradient-box"
@@ -190,7 +190,7 @@ export default function SingleClient({
                 <div
                     style={{
                         position: 'absolute',
-                        width: 'calc(96% + 0px)',
+                        width: '96%',
                         height: '40px',
                         display: 'flex',
                         alignItems: 'center',
@@ -396,7 +396,7 @@ export default function SingleClient({
                                         </span>
                                     )}
                                     <span className="balance-menu_item">
-                                        Total profit:{' '}
+                                        Total profit:
                                         <b>{`${currentYearProfit} $`}</b>
                                     </span>
                                     <span className="balance-menu_item">
@@ -424,8 +424,13 @@ export default function SingleClient({
                             variant="contained"
                             size="small"
                             onClick={e => {
-                                setCopied(true)
-                                navigator.clipboard.writeText(bankAccount)
+                                const isMobileDevice = /Mobi/i.test(
+                                    navigator.userAgent
+                                )
+                                if (!isMobileDevice) {
+                                    setCopied(true)
+                                    navigator.clipboard.writeText(bankAccount)
+                                }
                             }}
                         >
                             <ContentCopyIcon fontSize="small" />

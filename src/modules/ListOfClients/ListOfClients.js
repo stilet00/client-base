@@ -124,7 +124,7 @@ export default function ListOfClients({ user }) {
             },
             instagramLink: clientWithID.instagramLink || '',
             image: clientWithID.image || '',
-            suspended: clientWithID.suspended || false,
+            suspended: !!clientWithID.suspended,
         }
         setUpdatingClient(clientWithFieldsForForm)
         handleOpen()
