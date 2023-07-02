@@ -45,6 +45,14 @@ const connectToDatabase = async err => {
         'collectionTranslators',
         client.db('translatorsDB').collection('translators')
     )
+    // collections.set(
+    //     'collectionClients',
+    //     client.db('testDB').collection('testClientCollection')
+    // )
+    // collections.set(
+    //     'collectionTranslators',
+    //     client.db('testDB').collection('testTranslatorCollection')
+    // )
     collections.set(
         'collectionStatements',
         client.db('statementsDB').collection('statements')

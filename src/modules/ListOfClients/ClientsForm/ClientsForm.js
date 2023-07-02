@@ -20,6 +20,7 @@ import FormControl from '@mui/material/FormControl'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
@@ -167,6 +168,14 @@ export default function ClientsForm({
 
     const handleRadioChange = e => {
         setSiteFilter(e.target.value)
+    }
+    const handleSuspendedStatusChange = e => {
+        const { checked } = e.target
+        const newState = {
+            ...client,
+            suspended: !checked,
+        }
+        setClient(newState)
     }
 
     function onFormSubmit(e, client) {
@@ -560,6 +569,24 @@ export default function ClientsForm({
                                         label="Password"
                                     />
                                 </FormControl>
+                                {arrayOfEditedClientsFields.length > 0 && (
+                                    <FormControl className="clients-form__body--big-field">
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    defaultChecked={
+                                                        !client.suspended
+                                                    }
+                                                />
+                                            }
+                                            name="suspended"
+                                            label="Active"
+                                            onChange={
+                                                handleSuspendedStatusChange
+                                            }
+                                        />
+                                    </FormControl>
+                                )}
                             </div>
                             <Button
                                 type={'submit'}

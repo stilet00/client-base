@@ -53,6 +53,7 @@ export default function SingleClient({
     currentYearProfit,
     image,
     rating,
+    suspended,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
@@ -84,74 +85,89 @@ export default function SingleClient({
             : moment().subtract(1, 'month').format('MMMM')
     const progressPage = (
         <div className="grid-template-container__info">
-            <IconButton
-                color="primary"
-                variant="contained"
-                size="small"
-                sx={{
-                    padding: 0,
-                }}
-                onClick={() => setOpenCategorySelect(!openCategorySelect)}
-            >
-                {openCategorySelect ? (
-                    <ClickAwayListener
-                        onClickAway={() => setOpenCategorySelect(false)}
+            {!suspended && (
+                <>
+                    <IconButton
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        sx={{
+                            padding: 0,
+                        }}
+                        onClick={() =>
+                            setOpenCategorySelect(!openCategorySelect)
+                        }
                     >
-                        <Box sx={{ position: 'relative' }}>
-                            {catergoriesWithIcons.map((category, index) => (
-                                <React.Fragment key={category + index}>
-                                    <label
-                                        for={category.name}
-                                        className={
-                                            category.value === null
-                                                ? 'category-all'
-                                                : `category-${category.value}`
-                                        }
-                                    >
-                                        {category.icon}
-                                    </label>
-                                    <input
-                                        type="radio"
-                                        id={category.name}
-                                        className={
-                                            category.value === null
-                                                ? 'category-all category-select'
-                                                : `category-${category.value} category-select`
-                                        }
-                                        value={category.value}
-                                        onChange={e => {
-                                            const argsForHandleSwitchToGraph = {
-                                                id: _id,
-                                                category: e.target.value,
-                                            }
-                                            handleSwitchToGraph(
-                                                argsForHandleSwitchToGraph
-                                            )
-                                        }}
-                                    ></input>
-                                </React.Fragment>
-                            ))}
-                        </Box>
-                    </ClickAwayListener>
-                ) : (
-                    <QueryStatsIcon fontSize="small" />
-                )}
-            </IconButton>
-            <span
-                className={
-                    middleMonthSum >= prevousMiddleMonthSum
-                        ? ' green-text styled-text-numbers'
-                        : ' red-text styled-text-numbers'
-                }
-            >
-                {middleMonthSum >= prevousMiddleMonthSum ? (
-                    <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                ) : (
-                    <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                )}
-                {` ${monthProgressPercent}%`}
-            </span>
-            <b> {middleMonthSum}$</b>
+                        {openCategorySelect ? (
+                            <ClickAwayListener
+                                onClickAway={() => setOpenCategorySelect(false)}
+                            >
+                                <Box sx={{ position: 'relative' }}>
+                                    {catergoriesWithIcons.map(
+                                        (category, index) => (
+                                            <React.Fragment
+                                                key={category + index}
+                                            >
+                                                <label
+                                                    htmlFor={category.name}
+                                                    className={
+                                                        category.value === null
+                                                            ? 'category-all'
+                                                            : `category-${category.value}`
+                                                    }
+                                                >
+                                                    {category.icon}
+                                                </label>
+                                                <input
+                                                    type="radio"
+                                                    id={category.name}
+                                                    className={
+                                                        category.value === null
+                                                            ? 'category-all category-select'
+                                                            : `category-${category.value} category-select`
+                                                    }
+                                                    value={category.value}
+                                                    onChange={e => {
+                                                        const argsForHandleSwitchToGraph =
+                                                            {
+                                                                id: _id,
+                                                                category:
+                                                                    e.target
+                                                                        .value,
+                                                            }
+                                                        handleSwitchToGraph(
+                                                            argsForHandleSwitchToGraph
+                                                        )
+                                                    }}
+                                                ></input>
+                                            </React.Fragment>
+                                        )
+                                    )}
+                                </Box>
+                            </ClickAwayListener>
+                        ) : (
+                            <QueryStatsIcon fontSize="small" />
+                        )}
+                    </IconButton>
+                    <span
+                        className={
+                            middleMonthSum >= prevousMiddleMonthSum
+                                ? ' green-text styled-text-numbers'
+                                : ' red-text styled-text-numbers'
+                        }
+                    >
+                        {middleMonthSum >= prevousMiddleMonthSum ? (
+                            <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                        ) : (
+                            <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                        )}
+                        {` ${monthProgressPercent}%`}
+                    </span>
+                </>
+            )}
+            <b className="styled-text-numbers grid-template-container__info">
+                {middleMonthSum} $
+            </b>
         </div>
     )
 
@@ -161,9 +177,57 @@ export default function SingleClient({
         <Card
             className="translator-item gradient-box"
             style={{
-                minHeight: 100,
+                position: 'relative',
+                minHeight: 350,
+                ...(suspended && {
+                    backgroundImage:
+                        'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2))',
+                    overflow: 'visible',
+                }),
             }}
         >
+            {suspended && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        width: '96%',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%) skew(1deg, -30deg)',
+                        background: `linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)`,
+                        borderRadius: '4px',
+                        padding: '10px',
+                        color: 'black',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <span
+                        style={{
+                            border: '3px solid black',
+                            display: 'inline-block',
+                            transform: 'skew(30deg, 0deg)',
+                            fontFamily: 'inherit',
+                            borderImage: `linear-gradient(to bottom, gray 50%, black 50%)`,
+                            borderImageSlice: '1',
+                            padding: '5px',
+                            color: 'transparent',
+                            background:
+                                'linear-gradient(to bottom, gray 50%, black 50%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent', // For Safari compatibility
+                            mask: 'linear-gradient(to bottom, transparent 50%, black 50%)',
+                        }}
+                    >
+                        DISABLED
+                    </span>
+                </div>
+            )}
             <CardHeader
                 sx={{
                     position: 'relative',
@@ -332,7 +396,7 @@ export default function SingleClient({
                                         </span>
                                     )}
                                     <span className="balance-menu_item">
-                                        Total profit:{' '}
+                                        Total profit:
                                         <b>{`${currentYearProfit} $`}</b>
                                     </span>
                                     <span className="balance-menu_item">
@@ -360,8 +424,13 @@ export default function SingleClient({
                             variant="contained"
                             size="small"
                             onClick={e => {
-                                setCopied(true)
-                                navigator.clipboard.writeText(bankAccount)
+                                const isMobileDevice = /Mobi/i.test(
+                                    navigator.userAgent
+                                )
+                                if (!isMobileDevice) {
+                                    setCopied(true)
+                                    navigator.clipboard.writeText(bankAccount)
+                                }
                             }}
                         >
                             <ContentCopyIcon fontSize="small" />
@@ -412,59 +481,61 @@ export default function SingleClient({
                         />
                     </Link>
                 </Typography>
-                <Accordion
-                    expanded={expanded}
-                    onChange={handleChange}
-                    className="grid-template-container__card"
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
+                {!suspended && (
+                    <Accordion
+                        expanded={expanded}
+                        onChange={handleChange}
+                        className="grid-template-container__card"
                     >
-                        <Typography sx={{ flexShrink: 0 }}>
-                            Sites Access
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1bh-content"
+                            id="panel1bh-header"
                         >
-                            <span className="grid-template-container__title">
-                                Logins:
-                            </span>
-                            <span className="grid-template-container__card">
-                                Passwords:
-                            </span>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                {svadba.login}
-                            </span>
-                            <span className="grid-template-container__card">
-                                {svadba.password}
-                            </span>
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            className="grid-template-container"
-                        >
-                            <span className="grid-template-container__title">
-                                {dating.login}
-                            </span>
-                            <span className="grid-template-container__card">
-                                {dating.password}
-                            </span>
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
+                            <Typography sx={{ flexShrink: 0 }}>
+                                Sites Access
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    Logins:
+                                </span>
+                                <span className="grid-template-container__card">
+                                    Passwords:
+                                </span>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    {svadba.login}
+                                </span>
+                                <span className="grid-template-container__card">
+                                    {svadba.password}
+                                </span>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                className="grid-template-container"
+                            >
+                                <span className="grid-template-container__title">
+                                    {dating.login}
+                                </span>
+                                <span className="grid-template-container__card">
+                                    {dating.password}
+                                </span>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                )}
             </CardActions>
         </Card>
     )
