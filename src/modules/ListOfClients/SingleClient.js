@@ -456,7 +456,7 @@ export default function SingleClient({
                             </span>
                         ))}
                     </span>
-                </Typography>{' '}
+                </Typography>
             </CardContent>
             <CardActions
                 style={{

@@ -249,7 +249,7 @@ export default function ListOfClients({ user }) {
                         'https://www.instagram.com/',
                     loss: spendsOnClient,
                     image: client.image ?? null,
-                    suspended: client.suspended || false,
+                    suspended: !!client.suspended,
                     currentYearProfit: clientProfit.currentYearProfit,
                     absoluteProfit: clientProfit.allYearsProfit,
                     previousMonthTotalAmount: memorizedPreviousMonthSum,
