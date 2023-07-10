@@ -44,3 +44,11 @@ export function sendLastVirtualGiftDateRequest(id) {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function requestBonusesForChats(data) {
+    return axios.post(
+        translatorsURL + 'chat-bonus',
+        data,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
