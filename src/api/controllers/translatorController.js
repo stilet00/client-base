@@ -8,7 +8,7 @@ const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
-
+const { chatCostBonusInCents } = require('../constants')
 const getAllTranslators = async (request, response) => {
     getCollections()
         .collectionTranslators.find()
@@ -302,7 +302,12 @@ const calculateBonuses = (request, response) => {
                                 },
                                 bonusChatsSum: {
                                     $round: [
-                                        { $divide: ['$totalChatsSum', 3] }, // getting  value we need to add as 9 cents to 12 cents is like 3/4 so we need to find 1/4 of it or 1/3 from 9
+                                        {
+                                            $divide: [
+                                                '$totalChatsSum',
+                                                chatCostBonusInCents,
+                                            ],
+                                        }, // getting  value we need to add as 9 cents to 12 cents is like 3/4 so we need to find 1/4 of it or 1/3 from 9
                                         2,
                                     ],
                                 },

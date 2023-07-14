@@ -11,6 +11,7 @@ class DEFAULT_FINANCE_DAY {
         this.penalties = 0
     }
 }
+const chatCostBonusInCents = 3
 const administratorsEmailList = [
     'antonstilet@gmail.com',
     'safroninanton@gmail.com',
@@ -22,4 +23,5 @@ module.exports = {
     DEFAULT_FINANCE_DAY,
     administratorsEmailList,
     twentyHoursInMiliseconds,
+    chatCostBonusInCents,
 }

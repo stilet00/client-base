@@ -138,7 +138,7 @@ function SingleTranslator({
 
     useEffect(() => {
         getBonusesForChats(_id, selectedDate, 'chats')
-    }, [selectedDate])
+    }, [_id, getBonusesForChats, selectedDate])
 
     return (
         <Card
