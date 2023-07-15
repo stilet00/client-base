@@ -15,6 +15,7 @@ const {
     updateTranslator,
     deleteTranslator,
     sendEmailsToTranslators,
+    calculateBonuses,
 } = require('./src/api/controllers/translatorController')
 const {
     getAllTasks,
@@ -97,6 +98,7 @@ app.get(translatorsURL + 'get', getAllTranslators)
 app.get(translatorsURL + 'last-gift/:id', getLastVirtualGift)
 app.get(translatorsURL + 'send-emails', sendEmailsToTranslators)
 app.post(translatorsURL + 'add', addNewTranslator)
+app.post(translatorsURL + 'chat-bonus', calculateBonuses)
 app.put(translatorsURL + ':id', updateTranslator)
 app.delete(translatorsURL + ':id', deleteTranslator)
 

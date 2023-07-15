@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import {
     Accordion,
     AccordionDetails,
@@ -75,6 +75,8 @@ function SingleTranslator({
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
+        chatsBonus,
+        getBonusesForChats,
     } = useSingleTranslator(statistics, selectedDate, personalPenalties)
 
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
@@ -88,12 +90,14 @@ function SingleTranslator({
               )
             : calculateTranslatorMonthTotal(statistics, false, previousMonth)
     const translatorSalaryForPickedMonth = Math.floor(
-        calculateTranslatorMonthTotal(
+        (calculateTranslatorMonthTotal(
             statistics,
             true,
             selectedDate.format('M'),
             selectedDate.format('YYYY')
-        ) * TRANSLATORS_SALARY_PERCENT
+        ) +
+            chatsBonus) *
+            TRANSLATORS_SALARY_PERCENT
     )
 
     const getTranslatorSalaryInUah = (salary = 100) => {
@@ -131,6 +135,11 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
+
+    useEffect(() => {
+        getBonusesForChats(_id, selectedDate, 'chats')
+    }, [_id, selectedDate])
+
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -417,6 +426,12 @@ function SingleTranslator({
                                         selectedDate.format('M'),
                                         selectedDate.format('YYYY')
                                     )} $`}</b>
+                                </Typography>
+                                <Typography variant="body2">
+                                    {`Chats bonus in ${selectedDate.format(
+                                        'MMMM'
+                                    )}: `}
+                                    <b>{`${chatsBonus} $`}</b>
                                 </Typography>
                                 <Typography variant="body2">
                                     {`Salary for ${selectedDate.format(
