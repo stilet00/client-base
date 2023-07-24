@@ -8,6 +8,8 @@ import styled, { keyframes } from 'styled-components'
 import { bounceIn } from 'react-animations'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
+import { rootURL } from '../../services/rootURL'
 
 const Bounce = styled.div`
     animation: 1s ${keyframes`${bounceIn}`};
@@ -88,7 +90,11 @@ function AuthorizationPage() {
         password,
         buttonElement,
     } = useAuthorizationPage()
-
+    const passwordChangeRequest = e => {
+        axios.post(rootURL + 'reset-password', {
+            email: email,
+        })
+    }
     return (
         <FirebaseAuthConsumer>
             {({ isSignedIn }) => {
@@ -152,6 +158,9 @@ function AuthorizationPage() {
                             handleClose={closeAlert}
                             status={false}
                         />
+                        <Button onClick={passwordChangeRequest}>
+                            Forgot Password?
+                        </Button>
                     </div>
                 )
             }}

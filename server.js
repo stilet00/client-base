@@ -35,6 +35,7 @@ const {
     addNewClient,
     updateClient,
 } = require('./src/api/controllers/clientController')
+const { checkIfUserExists } = require('./src/api/firebase/firebaseAdmin')
 
 const PORT = process.env.PORT || 80
 let app = express()
@@ -76,6 +77,11 @@ app.get(rootURL + 'translators/?', function (request, response, next) {
 })
 app.get(rootURL + 'finances/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
+})
+
+// password change
+app.post(rootURL + 'reset-password', (req, res) => {
+    checkIfUserExists(req, res)
 })
 
 // task list api
