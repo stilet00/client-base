@@ -17,7 +17,7 @@ const getUserIdTokenFromRequest = request => {
         throw new Error('Someting went wrong with authorization header')
     }
 }
-const checkIfUserExists = async (request, response) => {
+const changeUserPassword = async (request, response) => {
     const { email } = request.body
     try {
         const userRecord = await firebaseAdmin.auth().getUserByEmail(email)
@@ -78,5 +78,5 @@ async function sendResetEmail(email, resetLink) {
 
 module.exports = {
     checkIfUserIsAuthenticatedBeforeExecute,
-    checkIfUserExists,
+    changeUserPassword,
 }

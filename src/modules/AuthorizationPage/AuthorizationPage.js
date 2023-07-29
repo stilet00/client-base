@@ -158,7 +158,12 @@ function AuthorizationPage() {
                             handleClose={closeAlert}
                             status={false}
                         />
-                        <Button onClick={passwordChangeRequest}>
+                        <Button
+                            style={{
+                                marginTop: '5px',
+                            }}
+                            onClick={passwordChangeRequest}
+                        >
                             Forgot Password?
                         </Button>
                     </div>
