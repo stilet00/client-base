@@ -146,6 +146,14 @@ function AuthorizationPage() {
                                 >
                                     Enter
                                 </StyledButton>
+                                <Button
+                                    style={{
+                                        padding: 0,
+                                    }}
+                                    onClick={passwordChangeRequest}
+                                >
+                                    Forgot Password?
+                                </Button>
                             </form>
                         </Bounce>
                         <AlertMessage
@@ -158,14 +166,6 @@ function AuthorizationPage() {
                             handleClose={closeAlert}
                             status={false}
                         />
-                        <Button
-                            style={{
-                                marginTop: '5px',
-                            }}
-                            onClick={passwordChangeRequest}
-                        >
-                            Forgot Password?
-                        </Button>
                     </div>
                 )
             }}
