@@ -7,6 +7,7 @@ import { saveUserIdTokenToLocalStorage } from '../../sharedFunctions/sharedFunct
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
+    const [forgotPasswordToogle, setForgotPassword] = useState(false)
 
     const [password, setPassword] = useState('')
 
@@ -99,6 +100,9 @@ export const useAuthorizationPage = () => {
         },
         [signInWithEmailPassword]
     )
+    const onToogle = () => {
+        setForgotPassword(!forgotPasswordToogle)
+    }
 
     return {
         history,
@@ -112,5 +116,7 @@ export const useAuthorizationPage = () => {
         openAlert,
         closeAlert,
         buttonElement,
+        forgotPasswordToogle,
+        onToogle,
     }
 }
