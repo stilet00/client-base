@@ -22,14 +22,19 @@ const changeUserPassword = async (request, response) => {
     try {
         const userRecord = await firebaseAdmin.auth().getUserByEmail(email)
         if (userRecord) {
-            // Generate the password reset link using Firebase Auth API
             const resetLink = await firebaseAdmin
                 .auth()
                 .generatePasswordResetLink(email)
             await sendResetEmail(email, resetLink)
+
+            return response
+                .status(200)
+                .json({ message: 'Password reset link sent successfully.' })
         }
+        return response.status(404).json({ error: 'User not found.' })
     } catch (err) {
         console.log(err.message)
+        return response.status(500).json({ error: 'Internal server error.' })
     }
 }
 const checkIfUserIsAuthenticatedBeforeExecute = ({
