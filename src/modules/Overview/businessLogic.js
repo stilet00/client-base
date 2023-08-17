@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
@@ -15,8 +15,6 @@ export const useOverview = user => {
 
     const [translators, setTranslators] = useState([])
 
-    const [bestMonth] = useState(null)
-
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
     const handleChange = event => {
@@ -25,13 +23,13 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            getClients().then(res => {
+            getClients('overview').then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 }
             })
 
-            getTranslators().then(res => {
+            getTranslators(selectedYear).then(res => {
                 if (res.status === 200) {
                     setTranslators(res.data)
                 }
@@ -43,7 +41,7 @@ export const useOverview = user => {
                 }
             })
         }
-    }, [user])
+    }, [user, selectedYear])
 
     const calculateMonthTotal = (
         monthNumber = currentMonth,
@@ -96,7 +94,6 @@ export const useOverview = user => {
         handleChange,
         clients,
         translators,
-        bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
         statements,

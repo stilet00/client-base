@@ -7,16 +7,32 @@ let ObjectId = require('mongodb').ObjectID
 const getAllClients = (request, response) => {
     checkIfUserIsAuthenticatedBeforeExecute({
         callBack: () => {
-            getCollections()
-                .collectionClients.find()
-                .sort({ name: 1 })
-                .toArray((err, docs) => {
-                    if (err) {
-                        console.log(err)
-                        return response.sendStatus(500)
-                    }
-                    response.send(docs)
-                })
+            const params = request.query.params
+            if (params) {
+                getCollections()
+                    .collectionClients.aggregate([
+                        { $project: { image: 0 } },
+                        { $sort: { name: 1 } },
+                    ])
+                    .toArray((err, docs) => {
+                        if (err) {
+                            console.log(err)
+                            return response.sendStatus(500)
+                        }
+                        response.send(docs)
+                    })
+            } else {
+                getCollections()
+                    .collectionClients.find()
+                    .sort({ name: 1 })
+                    .toArray((err, docs) => {
+                        if (err) {
+                            console.log(err)
+                            return response.sendStatus(500)
+                        }
+                        response.send(docs)
+                    })
+            }
         },
         request,
         response,

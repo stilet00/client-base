@@ -4,9 +4,11 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClients() {
+export function getClients(params = null) {
+    const queryParams = params ? `?params=${encodeURIComponent(params)}` : ''
+
     return axios.get(
-        clientsURL + 'get/',
+        clientsURL + 'get/' + queryParams,
         getConfigForAxiosAuthenticatedRequest()
     )
 }

@@ -9,15 +9,66 @@ const {
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
 const { chatCostBonusInCents } = require('../constants')
+
 const getAllTranslators = async (request, response) => {
-    getCollections()
-        .collectionTranslators.find()
-        .toArray((err, docs) => {
-            if (err) {
-                return response.sendStatus(500)
-            }
-            response.send(docs)
-        })
+    const selectedStatisticsYear = request.query.params
+    if (selectedStatisticsYear) {
+        try {
+            const result = await getCollections()
+                .collectionTranslators.aggregate([
+                    {
+                        $unwind: '$statistics',
+                    },
+                    {
+                        $match: {
+                            'statistics.year': selectedStatisticsYear,
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            statistics: {
+                                $cond: {
+                                    if: {
+                                        $eq: [
+                                            '$statistics.year',
+                                            selectedStatisticsYear,
+                                        ],
+                                    },
+                                    then: '$statistics',
+                                    else: null,
+                                },
+                            },
+                            suspended: 1,
+                        },
+                    },
+                    {
+                        $group: {
+                            _id: '$_id',
+                            statistics: { $push: '$statistics' },
+                            suspended: { $first: '$suspended' },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            statistics: 1,
+                            suspended: 1,
+                        },
+                    },
+                ])
+                .toArray()
+            response.send(result)
+        } catch (error) {
+            console.error(error)
+            response.sendStatus(500)
+        }
+    } else {
+        const result = await getCollections()
+            .collectionTranslators.find()
+            .toArray()
+        response.send(result)
+    }
 }
 
 const getLastVirtualGift = (request, response) => {
