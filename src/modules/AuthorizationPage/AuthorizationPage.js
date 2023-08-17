@@ -94,6 +94,7 @@ function AuthorizationPage() {
         password,
         buttonElement,
         forgotPasswordToogle,
+        setForgotPassword,
         onToogle,
     } = useAuthorizationPage()
     const moveOut = useSpring({
@@ -122,10 +123,20 @@ function AuthorizationPage() {
         justifyContent: 'space-between',
         config: { duration: 600 },
     })
-    const passwordChangeRequest = e => {
-        axios.post(rootURL + 'reset-password', {
-            email: email,
-        })
+
+    const passwordChangeRequest = async e => {
+        try {
+            const response = await axios.post(rootURL + 'reset-password', {
+                email: email,
+            })
+            if (response.status === 200) {
+                setForgotPassword(false)
+            } else {
+                console.log('something went wrong')
+            }
+        } catch (error) {
+            return error
+        }
     }
     return (
         <FirebaseAuthConsumer>

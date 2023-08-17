@@ -117,6 +117,7 @@ export const useAuthorizationPage = () => {
         closeAlert,
         buttonElement,
         forgotPasswordToogle,
+        setForgotPassword,
         onToogle,
     }
 }
