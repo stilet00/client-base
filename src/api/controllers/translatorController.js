@@ -11,9 +11,14 @@ const {
 const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (request, response) => {
-    const selectedStatisticsYear = request.query.params
-    if (selectedStatisticsYear) {
-        try {
+    const hasStatisticsYearsInParams = request.query?.params
+
+    try {
+        if (hasStatisticsYearsInParams) {
+            const yearsArray = Array.isArray(hasStatisticsYearsInParams)
+                ? hasStatisticsYearsInParams
+                : [hasStatisticsYearsInParams]
+
             const result = await getCollections()
                 .collectionTranslators.aggregate([
                     {
@@ -21,7 +26,7 @@ const getAllTranslators = async (request, response) => {
                     },
                     {
                         $match: {
-                            'statistics.year': selectedStatisticsYear,
+                            'statistics.year': { $in: yearsArray },
                         },
                     },
                     {
@@ -30,10 +35,7 @@ const getAllTranslators = async (request, response) => {
                             statistics: {
                                 $cond: {
                                     if: {
-                                        $eq: [
-                                            '$statistics.year',
-                                            selectedStatisticsYear,
-                                        ],
+                                        $in: ['$statistics.year', yearsArray],
                                     },
                                     then: '$statistics',
                                     else: null,
@@ -59,15 +61,15 @@ const getAllTranslators = async (request, response) => {
                 ])
                 .toArray()
             response.send(result)
-        } catch (error) {
-            console.error(error)
-            response.sendStatus(500)
+        } else {
+            const result = await getCollections()
+                .collectionTranslators.find()
+                .toArray()
+            response.send(result)
         }
-    } else {
-        const result = await getCollections()
-            .collectionTranslators.find()
-            .toArray()
-        response.send(result)
+    } catch (error) {
+        console.error(error)
+        response.sendStatus(500)
     }
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
@@ -10,7 +11,7 @@ import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
-
+    const match = useRouteMatch()
     const [statements, setStatments] = useState([])
 
     const [translators, setTranslators] = useState([])
@@ -23,7 +24,7 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            getClients('overview').then(res => {
+            getClients(match.path.slice(1)).then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 }
