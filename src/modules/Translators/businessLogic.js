@@ -116,7 +116,7 @@ export const useTranslators = user => {
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                 }
-                const responseClients = await getClients(match.path.slice(1))
+                const responseClients = await getClients(match.url)
                 if (responseClients.status === 200) {
                     setClients(responseClients.data)
                 } else {

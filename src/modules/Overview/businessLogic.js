@@ -24,7 +24,7 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            getClients(match.path.slice(1)).then(res => {
+            getClients(match.url).then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 }

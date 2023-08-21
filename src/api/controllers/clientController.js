@@ -7,7 +7,7 @@ let ObjectId = require('mongodb').ObjectID
 const getAllClients = (request, response) => {
     checkIfUserIsAuthenticatedBeforeExecute({
         callBack: () => {
-            const noImageRequest = request.query?.params
+            const noImageRequest = !!request.query?.params
             if (noImageRequest) {
                 getCollections()
                     .collectionClients.aggregate([

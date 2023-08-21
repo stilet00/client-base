@@ -11,13 +11,13 @@ const {
 const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (request, response) => {
-    const hasStatisticsYearsInParams = request.query?.params
-
+    const hasStatisticsYearsInParams = !!request.query?.params
     try {
         if (hasStatisticsYearsInParams) {
-            const yearsArray = Array.isArray(hasStatisticsYearsInParams)
-                ? hasStatisticsYearsInParams
-                : [hasStatisticsYearsInParams]
+            const yearParams = request.query.params
+            const yearsArray = Array.isArray(yearParams)
+                ? yearParams
+                : [yearParams]
 
             const result = await getCollections()
                 .collectionTranslators.aggregate([
