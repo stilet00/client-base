@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
@@ -10,12 +11,10 @@ import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
-
+    const match = useRouteMatch()
     const [statements, setStatments] = useState([])
 
     const [translators, setTranslators] = useState([])
-
-    const [bestMonth] = useState(null)
 
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
@@ -25,13 +24,13 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            getClients().then(res => {
+            getClients(match.url).then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 }
             })
 
-            getTranslators().then(res => {
+            getTranslators(selectedYear).then(res => {
                 if (res.status === 200) {
                     setTranslators(res.data)
                 }
@@ -43,7 +42,7 @@ export const useOverview = user => {
                 }
             })
         }
-    }, [user])
+    }, [user, selectedYear])
 
     const calculateMonthTotal = (
         monthNumber = currentMonth,
@@ -96,7 +95,6 @@ export const useOverview = user => {
         handleChange,
         clients,
         translators,
-        bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
         statements,

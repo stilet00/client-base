@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { MESSAGES } from '../../constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -37,7 +38,7 @@ import {
 
 export const useTranslators = user => {
     const [message, setMessage] = useState(MESSAGES.addTranslator)
-
+    const match = useRouteMatch()
     const [clients, setClients] = useState([])
 
     const [translators, setTranslators] = useState([])
@@ -115,7 +116,7 @@ export const useTranslators = user => {
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                 }
-                const responseClients = await getClients()
+                const responseClients = await getClients(match.url)
                 if (responseClients.status === 200) {
                     setClients(responseClients.data)
                 } else {

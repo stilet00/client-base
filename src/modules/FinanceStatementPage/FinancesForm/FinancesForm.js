@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import MenuItem from '@mui/material/MenuItem'
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FinancesForm({ handleNewPayment }) {
     const classes = useStyles()
-
+    const match = useRouteMatch()
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [fromErrors, setFormErrors] = useState({})
@@ -42,7 +43,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
-        getClients().then(res => {
+        getClients(match.url).then(res => {
             if (res.status === 200) {
                 setReceivers(
                     res.data.map(client => {
