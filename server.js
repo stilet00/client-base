@@ -1,5 +1,9 @@
 let express = require('express')
 let bodyParser = require('body-parser')
+const {
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+} = require('./src/api/firebase/firebaseAdmin')
 const { connectToDatabase } = require('./src/api/database/collections')
 const {
     rootURL,
@@ -36,6 +40,7 @@ const {
     updateClient,
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
+const { getCollections } = require('./src/api/database/collections')
 
 const PORT = process.env.PORT || 80
 let app = express()
@@ -83,35 +88,120 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
 app.post(rootURL + 'reset-password', (req, res) => {
     changeUserPassword(req, res)
 })
+// permision check
+app.post(rootURL + 'isAdmin', async (req, res) => {
+    const userEmail = req.body.email
+    const admin = await getCollections().collectionAdmins.findOne({
+        registeredEmail: userEmail,
+    })
 
-// task list api
-app.get(tasksURL + 'get', getAllTasks)
-app.delete(tasksURL + ':id', deleteTask)
-app.post(tasksURL + 'add', createTask)
-app.put(tasksURL + 'edit/:id', editTask)
-app.get(tasksURL + 'notifications/', sendNotification)
-app.put(tasksURL + 'notifications/', allowNotifications)
+    res.send(!!admin) // Send true if admin exists, false otherwise
+})
 
-//clients api
-app.get(clientsURL + 'get', getAllClients)
-app.post(clientsURL + 'add', addNewClient)
-// we do not delete clients 09.11.2022
-// app.delete(clientsURL + ':id', deleteClient)
-app.put(clientsURL + ':id', updateClient)
+// Apply the middleware to all task routes
+app.get(tasksURL + 'get', checkIfUserIsAuthenticatedBeforeExecute, getAllTasks)
+app.delete(
+    tasksURL + ':id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    deleteTask
+)
+app.post(tasksURL + 'add', checkIfUserIsAuthenticatedBeforeExecute, createTask)
+app.put(
+    tasksURL + 'edit/:id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    editTask
+)
+app.get(
+    tasksURL + 'notifications/',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    sendNotification
+)
+app.put(
+    tasksURL + 'notifications/',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    allowNotifications
+)
 
-// translators api
-app.get(translatorsURL + 'get', getAllTranslators)
-app.get(translatorsURL + 'last-gift/:id', getLastVirtualGift)
-app.get(translatorsURL + 'send-emails', sendEmailsToTranslators)
-app.post(translatorsURL + 'add', addNewTranslator)
-app.post(translatorsURL + 'chat-bonus', calculateBonuses)
-app.put(translatorsURL + ':id', updateTranslator)
-app.delete(translatorsURL + ':id', deleteTranslator)
+// Apply the middleware to all client routes
+app.get(
+    clientsURL + 'get',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    getAllClients
+)
+app.post(
+    clientsURL + 'add',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    addNewClient
+)
+app.put(
+    clientsURL + ':id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    updateClient
+)
 
-//statements api
-app.get(financeStatementsURL + 'get', getAllStatments)
-app.post(financeStatementsURL + 'add', createStatement)
-app.delete(financeStatementsURL + ':id', deleteStatement)
+// Apply the middleware to all translator routes
+app.get(
+    translatorsURL + 'get',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    getAllTranslators
+)
+app.get(
+    translatorsURL + 'last-gift/:id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    getLastVirtualGift
+)
+app.get(
+    translatorsURL + 'send-emails',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    sendEmailsToTranslators
+)
+app.post(
+    translatorsURL + 'add',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    addNewTranslator
+)
+app.post(
+    translatorsURL + 'chat-bonus',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    calculateBonuses
+)
+app.put(
+    translatorsURL + ':id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    updateTranslator
+)
+app.delete(
+    translatorsURL + ':id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    deleteTranslator
+)
+
+// Apply the middleware to all statements routes
+app.get(
+    financeStatementsURL + 'get',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    getAllStatments
+)
+app.post(
+    financeStatementsURL + 'add',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    createStatement
+)
+app.delete(
+    financeStatementsURL + ':id',
+    checkIfUserIsAuthenticatedBeforeExecute,
+    protectedRoutes,
+    deleteStatement
+)
 
 // DB connection and server starts
 const startServer = async () => {

@@ -28,6 +28,7 @@ import Footer from './modules/Footer/Footer'
 import PreloadPage from './modules/PreloadPage/PreloadPage'
 import FinanceStatementPage from './modules/FinanceStatementPage/FinanceStatementPage'
 import BackgroundImageOnLoad from 'background-image-on-load'
+import AsyncComponentRenderer from './modules/AsyncComponentRenderer/AsyncComponentRenderer'
 import Navigation from './sharedComponents/Navigation/Navigation'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -95,15 +96,21 @@ function App() {
                                             <Route path="/overview">
                                                 <Overview user={user} />
                                             </Route>
-                                            <Route path="/tasks/">
-                                                <TaskList user={user} />
+                                            <Route path="/tasks">
+                                                <AsyncComponentRenderer
+                                                    user={user}
+                                                    component={TaskList}
+                                                />
                                             </Route>
                                             <Route path="/translators/">
                                                 <Translators user={user} />
                                             </Route>
                                             <Route path="/finances/">
-                                                <FinanceStatementPage
+                                                <AsyncComponentRenderer
                                                     user={user}
+                                                    component={
+                                                        FinanceStatementPage
+                                                    }
                                                 />
                                             </Route>
                                             <Route path="/clients/">

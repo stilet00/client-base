@@ -16,7 +16,10 @@ export const useTaskList = user => {
     const [loading, setLoading] = useState(true)
 
     const [notificationsAreAllowed, setNotificationsAreAllowed] = useState(true)
-
+    const [alertInfo, setAlertInfo] = useState({
+        mainTitle: 'no message had been put',
+        status: true,
+    })
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
@@ -40,13 +43,22 @@ export const useTaskList = user => {
 
     const onTaskNotificationsSettingsChange = () => {
         const changedTaskNotificationsSettings = !notificationsAreAllowed
-        changeTaskNotificationsSettings(changedTaskNotificationsSettings).then(
-            res => {
+        changeTaskNotificationsSettings(changedTaskNotificationsSettings)
+            .then(res => {
                 if (res.status === 200) {
                     setNotificationsAreAllowed(changedTaskNotificationsSettings)
                 }
-            }
-        )
+            })
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
     }
 
     const newTask = useCallback(
@@ -58,16 +70,25 @@ export const useTaskList = user => {
                     created: moment().format('MMMM Do YYYY, h:mm:ss'),
                 }
 
-                addTask(task).then(res => {
-                    if (res.status === 200) {
-                        setTasks(prevTasks => {
-                            let newTask = { ...task, _id: res.data }
-                            return [...prevTasks, newTask]
+                addTask(task)
+                    .then(res => {
+                        if (res.status === 200) {
+                            setTasks(prevTasks => {
+                                let newTask = { ...task, _id: res.data }
+                                return [...prevTasks, newTask]
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        const message =
+                            err?.response?.data?.error || 'An error occurred'
+                        setAlertInfo({
+                            ...alertInfo,
+                            mainTitle: message,
+                            status: false,
                         })
-                    } else {
-                        console.log('something went wrong')
-                    }
-                })
+                        openAlert()
+                    })
             } else {
                 openAlert()
             }
@@ -76,25 +97,47 @@ export const useTaskList = user => {
     )
 
     const deleteTask = useCallback(_id => {
-        removeTask(_id).then(res => {
-            if (res.status === 200) {
-                setTasks(prevTasks =>
-                    prevTasks.filter(item => item._id !== _id)
-                )
-            } else {
-                console.log('something went wrong')
-            }
-        })
+        removeTask(_id)
+            .then(res => {
+                if (res.status === 200) {
+                    setTasks(prevTasks =>
+                        prevTasks.filter(item => item._id !== _id)
+                    )
+                }
+            })
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
     }, [])
 
     const toggleTodo = useCallback(task => {
-        changeTodoStatus(task).then(res => {
-            if (res.status === 200) {
-                setTasks(prevTasks =>
-                    prevTasks.map(item => (item._id === task._id ? task : item))
-                )
-            }
-        })
+        changeTodoStatus(task)
+            .then(res => {
+                if (res.status === 200) {
+                    setTasks(prevTasks =>
+                        prevTasks.map(item =>
+                            item._id === task._id ? task : item
+                        )
+                    )
+                }
+            })
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
     }, [])
 
     return {

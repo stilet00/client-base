@@ -26,6 +26,7 @@ import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
 import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 export default function ListOfClients({ user }) {
     const [paymentsList, setPaymentsList] = useState([])
@@ -51,6 +52,7 @@ export default function ListOfClients({ user }) {
         getTotalProfitPerClient,
         currentYear,
     } = useClientsList(translators)
+    const admin = useAdminStatus(user)
 
     useEffect(() => {
         if (user) {
@@ -158,7 +160,8 @@ export default function ListOfClients({ user }) {
                     }
                 })
                 .catch(err => {
-                    const message = err.message
+                    const message =
+                        err?.response?.data?.error || 'An error occurred'
                     setAlertInfo({
                         ...alertInfo,
                         mainTitle: message,
@@ -191,7 +194,8 @@ export default function ListOfClients({ user }) {
                 }
             })
             .catch(err => {
-                const message = err.message
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
                 setAlertInfo({
                     ...alertInfo,
                     mainTitle: message,
@@ -307,6 +311,7 @@ export default function ListOfClients({ user }) {
                             <SingleClient
                                 key={client._id}
                                 {...client}
+                                admin={admin}
                                 handleUpdatingClientsId={getUpdatingClient}
                                 handleSwitchToGraph={switchToGraph}
                             />
@@ -320,17 +325,20 @@ export default function ListOfClients({ user }) {
                     onClick={handleOpen}
                     fullWidth
                     startIcon={<FontAwesomeIcon icon={faVenus} />}
+                    disabled={!admin}
                 >
                     Add client
                 </Button>
-                <ClientsForm
-                    editedClient={updatingClient}
-                    onAddNewClient={addNewClient}
-                    onEditClientData={editClientData}
-                    handleClose={handleClose}
-                    clearEditedClient={clearEditedClient}
-                    open={open}
-                />
+                {admin && (
+                    <ClientsForm
+                        editedClient={updatingClient}
+                        onAddNewClient={addNewClient}
+                        onEditClientData={editClientData}
+                        handleClose={handleClose}
+                        clearEditedClient={clearEditedClient}
+                        open={open}
+                    />
+                )}
             </div>
             <AlertMessage
                 mainText={alertInfo.mainTitle}

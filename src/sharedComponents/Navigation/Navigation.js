@@ -25,6 +25,7 @@ import Typography from '@material-ui/core/Typography'
 import { BottomNavigation } from '@material-ui/core'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import { localStorageTokenKey } from '../../constants/constants'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 const Animation = styled.div`
     animation: 1s ${keyframes`${fadeInRight}`};
@@ -53,6 +54,7 @@ export default function Navigation({ user }) {
     })
 
     const [page, setPage] = useState(pathname)
+    const admin = useAdminStatus(user)
 
     useEffect(() => {
         setPage(pathname)
@@ -161,11 +163,13 @@ export default function Navigation({ user }) {
                                 icon={<PageViewIcon />}
                                 value={'/overview'}
                             />
-                            <BottomNavigationAction
-                                label="Finance Statement"
-                                icon={<PriceChangeOutlinedIcon />}
-                                value={'/finances'}
-                            />
+                            {admin && (
+                                <BottomNavigationAction
+                                    label="Finance Statement"
+                                    icon={<PriceChangeOutlinedIcon />}
+                                    value={'/finances'}
+                                />
+                            )}
                             <BottomNavigationAction
                                 label="Clients"
                                 icon={<GroupIcon />}
@@ -181,11 +185,13 @@ export default function Navigation({ user }) {
                                 icon={<BarChartIcon />}
                                 value={'/chart'}
                             />
-                            <BottomNavigationAction
-                                label="Task List"
-                                icon={<FormatListNumberedIcon />}
-                                value={'/tasks'}
-                            />
+                            {admin && (
+                                <BottomNavigationAction
+                                    label="Task List"
+                                    icon={<FormatListNumberedIcon />}
+                                    value={'/tasks'}
+                                />
+                            )}
                             <ListItem
                                 button
                                 onClick={() => {

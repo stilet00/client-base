@@ -108,7 +108,7 @@ export const useTranslators = user => {
                         }
                     })
                     .catch(err => {
-                        showAlertMessage(err.message)
+                        showAlertMessage(MESSAGES.somethingWrong)
                     })
                 const responseTranslators = await getTranslators()
                 if (responseTranslators.status === 200) {
@@ -128,9 +128,9 @@ export const useTranslators = user => {
     }, [user])
 
     const showAlertMessage = useCallback(
-        (alertMessage, duration) => {
+        (alertMessage, duration = 1000) => {
             setMessage(alertMessage)
-            openAlert({ duration })
+            openAlert(duration)
         },
         [openAlert]
     )
@@ -182,21 +182,28 @@ export const useTranslators = user => {
 
     const saveChangedTranslator = useCallback(
         (editedTranslator, message) => {
-            updateTranslator(editedTranslator).then(res => {
-                if (res.status === 200) {
-                    showAlertMessage(message)
-                    setTranslators(
-                        translators.map(item => {
-                            return item._id === editedTranslator._id
-                                ? editedTranslator
-                                : item
-                        })
-                    )
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                    console.log(res.data)
-                }
-            })
+            updateTranslator(editedTranslator)
+                .then(res => {
+                    if (res.status === 200) {
+                        showAlertMessage(message)
+                        setTranslators(
+                            translators.map(item => {
+                                return item._id === editedTranslator._id
+                                    ? editedTranslator
+                                    : item
+                            })
+                        )
+                    }
+                })
+                .catch(error => {
+                    const erroMessageForShowAlertMessage = {
+                        text:
+                            error?.response?.data?.error || 'An error occurred',
+                        status: false,
+                    }
+                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                    console.error('An error occurred:', error) // Log the error for debugging
+                })
         },
         [translators, showAlertMessage]
     )
@@ -317,21 +324,30 @@ export const useTranslators = user => {
 
     const sendNotificationEmails = () => {
         setMailoutInProgress(true)
-        sendNotificationEmailsRequest().then(res => {
-            if (res.status === 200) {
-                closeAlertConfirmationNoReload()
-                const messageAboutEmailsReceived = {
-                    text: `Emails have been sent to: ${res.data.join(', ')}`,
-                    status: true,
+        sendNotificationEmailsRequest()
+            .then(res => {
+                if (res.status === 200) {
+                    closeAlertConfirmationNoReload()
+                    const messageAboutEmailsReceived = {
+                        text: `Emails have been sent to: ${res.data.join(
+                            ', '
+                        )}`,
+                        status: true,
+                    }
+                    showAlertMessage(messageAboutEmailsReceived, 20000)
+                    setMailoutInProgress(false)
                 }
-                showAlertMessage(messageAboutEmailsReceived, 20000)
+            })
+            .catch(error => {
+                closeAlertConfirmationNoReload()
+                const erroMessageForShowAlertMessage = {
+                    text: error?.response?.data?.error || 'An error occurred',
+                    status: false,
+                }
+                showAlertMessage(erroMessageForShowAlertMessage, 5000) // Handle error case
+                console.error('An error occurred:', error) // Log the error for debugging
                 setMailoutInProgress(false)
-            } else {
-                showAlertMessage(MESSAGES.somethingWrong)
-                setMailoutInProgress(false)
-                console.log(res.data)
-            }
-        })
+            })
     }
 
     const translatorsFormSubmit = useCallback(
@@ -349,17 +365,25 @@ export const useTranslators = user => {
             ) {
                 showAlertMessage(MESSAGES.translatorExist)
             } else {
-                showAlertMessage(MESSAGES.addTranslator)
-                addTranslator(newTranslator).then(res => {
-                    if (res.status === 200) {
-                        setTranslators([
-                            ...translators,
-                            { ...newTranslator, _id: res.data },
-                        ])
-                    } else {
-                        console.log(res.status)
-                    }
-                })
+                addTranslator(newTranslator)
+                    .then(res => {
+                        if (res.status === 200) {
+                            setTranslators([
+                                ...translators,
+                                { ...newTranslator, _id: res.data },
+                            ])
+                            showAlertMessage(MESSAGES.addTranslator, 3000)
+                        }
+                    })
+                    .catch(error => {
+                        const erroMessageForShowAlertMessage = {
+                            text:
+                                error?.response?.data?.error ||
+                                'An error occurred',
+                            status: false,
+                        }
+                        showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                    })
             }
         },
         [translators, showAlertMessage]
@@ -369,15 +393,24 @@ export const useTranslators = user => {
         (e, newClient) => {
             e.preventDefault()
 
-            addClient(newClient).then(res => {
-                if (res.status === 200) {
-                    showAlertMessage(MESSAGES.addClient)
-                    setClients([...clients, { ...newClient, _id: res.data }])
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                    console.log(res.data)
-                }
-            })
+            addClient(newClient)
+                .then(res => {
+                    if (res.status === 200) {
+                        showAlertMessage(MESSAGES.addClient)
+                        setClients([
+                            ...clients,
+                            { ...newClient, _id: res.data },
+                        ])
+                    }
+                })
+                .catch(error => {
+                    const erroMessageForShowAlertMessage = {
+                        text:
+                            error?.response?.data?.error || 'An error occurred',
+                        status: false,
+                    }
+                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                })
         },
         [clients, showAlertMessage]
     )

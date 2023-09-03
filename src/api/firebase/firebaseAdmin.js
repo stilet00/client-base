@@ -1,4 +1,5 @@
 const firebaseAdmin = require('firebase-admin')
+const { getCollections } = require('../database/collections')
 const googleFirebaseApp = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(
         JSON.parse(process.env.GOOGLE_ACCOUNT_CREDENTIALS)
@@ -37,11 +38,7 @@ const changeUserPassword = async (request, response) => {
         return response.status(500).json({ error: 'Internal server error.' })
     }
 }
-const checkIfUserIsAuthenticatedBeforeExecute = ({
-    callBack,
-    response,
-    request,
-}) => {
+const checkIfUserIsAuthenticatedBeforeExecute = (request, response, next) => {
     try {
         const clientIdToken = getUserIdTokenFromRequest(request)
         googleFirebaseApp
@@ -49,7 +46,9 @@ const checkIfUserIsAuthenticatedBeforeExecute = ({
             .verifyIdToken(clientIdToken)
             .then(decodedToken => {
                 if (decodedToken) {
-                    callBack()
+                    next() // Proceed to the next middleware or route handler
+                } else {
+                    response.sendStatus(401)
                 }
             })
             .catch(error => {
@@ -81,7 +80,46 @@ async function sendResetEmail(email, resetLink) {
     await transporter.sendMail(mailOptions)
 }
 
+async function getAllUserEmails() {
+    try {
+        const listUsersResult = await firebaseAdmin.auth().listUsers()
+        const userEmails = listUsersResult.users.map(user => user.email)
+        return userEmails
+    } catch (error) {
+        console.error('Error getting user emails:', error)
+        return []
+    }
+}
+
+async function protectedRoutes(request, response, next) {
+    const idToken = request.header('Authorization')
+    const tokenParts = idToken.split(' ')
+    const cleanedIdToken = tokenParts[1].trim()
+
+    try {
+        const decodedToken = await firebaseAdmin
+            .auth()
+            .verifyIdToken(cleanedIdToken)
+        const userFromToken = decodedToken.email
+        const admin = await getCollections().collectionAdmins.findOne({
+            registeredEmail: userFromToken,
+        })
+        if (!admin) {
+            return response.status(401).json({
+                error: "You don't have permission to do this action 😡",
+            })
+        }
+
+        next()
+    } catch (error) {
+        console.error('Error verifying token:', error)
+        response.sendStatus(403)
+    }
+}
+
 module.exports = {
     checkIfUserIsAuthenticatedBeforeExecute,
     changeUserPassword,
+    firebaseAdmin,
+    protectedRoutes,
 }

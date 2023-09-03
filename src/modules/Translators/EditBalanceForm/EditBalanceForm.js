@@ -63,6 +63,7 @@ export default function EditBalanceForm({
     surname,
     clients,
     id,
+    admin,
 }) {
     const {
         handleOpen,
@@ -775,6 +776,7 @@ export default function EditBalanceForm({
                                             }}
                                             variant={'outlined'}
                                             onClick={onSavePressed}
+                                            disabled={!admin}
                                             className={
                                                 'balance-form__actions--button'
                                             }
