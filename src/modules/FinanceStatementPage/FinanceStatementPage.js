@@ -83,7 +83,8 @@ export default function FinanceStatementPage({ user }) {
                 }
             })
             .catch(err => {
-                const message = err.message
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
                 setLoading(false)
                 setAlertInfo({
                     ...alertInfo,
@@ -107,7 +108,8 @@ export default function FinanceStatementPage({ user }) {
                 }
             })
             .catch(err => {
-                const message = err.message
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
                 setLoading(false)
                 setAlertInfo({
                     ...alertInfo,

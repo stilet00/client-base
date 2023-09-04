@@ -1,5 +1,9 @@
 let express = require('express')
 let bodyParser = require('body-parser')
+const {
+    isAuthenticated,
+    adminRules,
+} = require('./src/api/firebase/firebaseAdmin')
 const { connectToDatabase } = require('./src/api/database/collections')
 const {
     rootURL,
@@ -36,6 +40,7 @@ const {
     updateClient,
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
+const { getCollections } = require('./src/api/database/collections')
 
 const PORT = process.env.PORT || 80
 let app = express()
@@ -83,35 +88,46 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
 app.post(rootURL + 'reset-password', (req, res) => {
     changeUserPassword(req, res)
 })
+// permision check
+app.post(rootURL + 'isAdmin', async (req, res) => {
+    const userEmail = req.body.email
+    const admin = await getCollections().collectionAdmins.findOne({
+        registeredEmail: userEmail,
+    })
+
+    res.send(!!admin) // Send true if admin exists, false otherwise
+})
 
 // task list api
-app.get(tasksURL + 'get', getAllTasks)
-app.delete(tasksURL + ':id', deleteTask)
-app.post(tasksURL + 'add', createTask)
-app.put(tasksURL + 'edit/:id', editTask)
-app.get(tasksURL + 'notifications/', sendNotification)
-app.put(tasksURL + 'notifications/', allowNotifications)
+app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
+app.delete(tasksURL + ':id', [...adminRules], deleteTask)
+app.post(tasksURL + 'add', isAuthenticated, createTask)
+app.put(tasksURL + 'edit/:id', [...adminRules], editTask)
+app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
+app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
-//clients api
-app.get(clientsURL + 'get', getAllClients)
-app.post(clientsURL + 'add', addNewClient)
-// we do not delete clients 09.11.2022
-// app.delete(clientsURL + ':id', deleteClient)
-app.put(clientsURL + ':id', updateClient)
+// clients api
+app.get(clientsURL + 'get', isAuthenticated, getAllClients)
+app.post(clientsURL + 'add', [...adminRules], addNewClient)
+app.put(clientsURL + ':id', [...adminRules], updateClient)
 
 // translators api
-app.get(translatorsURL + 'get', getAllTranslators)
-app.get(translatorsURL + 'last-gift/:id', getLastVirtualGift)
-app.get(translatorsURL + 'send-emails', sendEmailsToTranslators)
-app.post(translatorsURL + 'add', addNewTranslator)
-app.post(translatorsURL + 'chat-bonus', calculateBonuses)
-app.put(translatorsURL + ':id', updateTranslator)
-app.delete(translatorsURL + ':id', deleteTranslator)
+app.get(translatorsURL + 'get', isAuthenticated, getAllTranslators)
+app.get(translatorsURL + 'last-gift/:id', isAuthenticated, getLastVirtualGift)
+app.get(
+    translatorsURL + 'send-emails',
+    [...adminRules],
+    sendEmailsToTranslators
+)
+app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
+app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
+app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
+app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 
-//statements api
-app.get(financeStatementsURL + 'get', getAllStatments)
-app.post(financeStatementsURL + 'add', createStatement)
-app.delete(financeStatementsURL + ':id', deleteStatement)
+// statements api
+app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatments)
+app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
+app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 
 // DB connection and server starts
 const startServer = async () => {

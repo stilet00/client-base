@@ -28,6 +28,7 @@ import Footer from './modules/Footer/Footer'
 import PreloadPage from './modules/PreloadPage/PreloadPage'
 import FinanceStatementPage from './modules/FinanceStatementPage/FinanceStatementPage'
 import BackgroundImageOnLoad from 'background-image-on-load'
+import PrivateRoute from './modules/PrivateRoute/PrivateRoute'
 import Navigation from './sharedComponents/Navigation/Navigation'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -88,37 +89,57 @@ function App() {
                                 {({ user }) => {
                                     return (
                                         <Switch>
+                                            <PrivateRoute
+                                                user={user}
+                                                component={TaskList}
+                                                path="/tasks"
+                                            />
+                                            <PrivateRoute
+                                                user={user}
+                                                component={FinanceStatementPage}
+                                                path="/finances/"
+                                            />
                                             <Redirect
                                                 from="/overview/*"
                                                 to="/overview"
                                             />
-                                            <Route path="/overview">
-                                                <Overview user={user} />
-                                            </Route>
-                                            <Route path="/tasks/">
-                                                <TaskList user={user} />
-                                            </Route>
-                                            <Route path="/translators/">
-                                                <Translators user={user} />
-                                            </Route>
-                                            <Route path="/finances/">
-                                                <FinanceStatementPage
-                                                    user={user}
-                                                />
-                                            </Route>
-                                            <Route path="/clients/">
-                                                <ListOfClients user={user} />
-                                            </Route>
+                                            <Route
+                                                path="/overview"
+                                                component={() => (
+                                                    <Overview user={user} />
+                                                )}
+                                            />
+                                            <Route
+                                                path="/translators/"
+                                                component={() => (
+                                                    <Translators user={user} />
+                                                )}
+                                            />
+                                            <Route
+                                                path="/clients/"
+                                                component={() => (
+                                                    <ListOfClients
+                                                        user={user}
+                                                    />
+                                                )}
+                                            />
                                             <Redirect
                                                 from="/chart/*"
                                                 to="/chart"
                                             />
-                                            <Route path="/chart">
-                                                <ChartsContainer user={user} />
-                                            </Route>
-                                            <Route path="/" exact>
-                                                <AuthorizationPage />
-                                            </Route>
+                                            <Route
+                                                path="/chart"
+                                                component={() => (
+                                                    <ChartsContainer
+                                                        user={user}
+                                                    />
+                                                )}
+                                            />
+                                            <Route
+                                                path="/"
+                                                exact
+                                                component={AuthorizationPage}
+                                            />
                                             <Redirect from="/*" to="/" />
                                         </Switch>
                                     )

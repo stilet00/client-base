@@ -54,13 +54,13 @@ export default function SingleClient({
     image,
     rating,
     suspended,
+    admin,
 }) {
     const [expanded, setExpanded] = useState(false)
     const [displayMenu, setDisplayMenu] = useState(false)
     const [displayProfit, setDisplayProfit] = useState(false)
     const [copied, setCopied] = useState(false)
     const [openCategorySelect, setOpenCategorySelect] = useState(false)
-
     const handleChange = e => {
         setExpanded(!expanded)
     }
@@ -178,7 +178,7 @@ export default function SingleClient({
             className="translator-item gradient-box"
             style={{
                 position: 'relative',
-                minHeight: 350,
+                minHeight: admin ? 350 : 'auto',
                 ...(suspended && {
                     backgroundImage:
                         'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2))',
@@ -279,6 +279,7 @@ export default function SingleClient({
                     >
                         <IconButton
                             onClick={() => setDisplayMenu(!displayMenu)}
+                            disabled={!admin}
                             className="list-item__menu-button"
                         >
                             <MenuSharpIcon />
@@ -289,6 +290,7 @@ export default function SingleClient({
                                         aria-label="delete"
                                         size="small"
                                         startIcon={<EditIcon />}
+                                        disabled={!admin}
                                         onClick={() =>
                                             handleUpdatingClientsId(_id)
                                         }
@@ -333,111 +335,120 @@ export default function SingleClient({
                     </span>
                     {progressPage}
                 </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    component="div"
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Profile profit:
-                    </span>
-                    <ClickAwayListener
-                        onClickAway={() => setDisplayProfit(false)}
-                    >
-                        <Box
-                            className="grid-template-container__info"
-                            sx={{ position: 'relative' }}
+                {admin && (
+                    <>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            component="div"
+                            className="grid-template-container"
                         >
-                            <Button
-                                variant="text"
-                                size="small"
-                                sx={{
-                                    padding: 0,
-                                    letterSpacing: 1,
-                                    color: 'black',
-                                    textShadow: '1px 1px 1px rgb(0 0 0 / 20%)',
-                                }}
-                                startIcon={
-                                    <AccountBalanceIcon
-                                        sx={{
-                                            color:
-                                                clientProfit < 0
-                                                    ? 'red'
-                                                    : 'green',
-                                        }}
-                                    />
-                                }
-                                onClick={() => setDisplayProfit(!displayProfit)}
+                            <span className="grid-template-container__title">
+                                Profile profit:
+                            </span>
+                            <ClickAwayListener
+                                onClickAway={() => setDisplayProfit(false)}
                             >
-                                <b className="styled-text-numbers">
-                                    {clientProfit} $
-                                </b>
-                            </Button>
-                            {displayProfit && (
                                 <Box
+                                    className="grid-template-container__info"
+                                    sx={{ position: 'relative' }}
+                                >
+                                    <Button
+                                        variant="text"
+                                        size="small"
+                                        sx={{
+                                            padding: 0,
+                                            letterSpacing: 1,
+                                            color: 'black',
+                                            textShadow:
+                                                '1px 1px 1px rgb(0 0 0 / 20%)',
+                                        }}
+                                        startIcon={
+                                            <AccountBalanceIcon
+                                                sx={{
+                                                    color:
+                                                        clientProfit < 0
+                                                            ? 'red'
+                                                            : 'green',
+                                                }}
+                                            />
+                                        }
+                                        onClick={() =>
+                                            setDisplayProfit(!displayProfit)
+                                        }
+                                    >
+                                        <b className="styled-text-numbers">
+                                            {clientProfit} $
+                                        </b>
+                                    </Button>
+                                    {displayProfit && (
+                                        <Box
+                                            sx={{
+                                                position: 'absolute',
+                                                minWidth: 200,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                top: 28,
+                                                right: '5px',
+                                                zIndex: 1,
+                                                borderRadius: '8px',
+                                                p: 1,
+                                                bgcolor: 'background.paper',
+                                            }}
+                                        >
+                                            {loss > 0 && (
+                                                <span className="balance-menu_item">
+                                                    Client's spends:
+                                                    <b>{`-${loss} $`}</b>
+                                                </span>
+                                            )}
+                                            <span className="balance-menu_item">
+                                                Total profit:
+                                                <b>{`${currentYearProfit} $`}</b>
+                                            </span>
+                                            <span className="balance-menu_item">
+                                                Payed to translators:
+                                                <b>{`${payedToTranslators} $`}</b>
+                                            </span>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </ClickAwayListener>
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            align={'left'}
+                            className="grid-template-container"
+                        >
+                            <span className="grid-template-container__title">
+                                Bank account:
+                            </span>
+                            <span className="grid-template-container__card">
+                                <IconButton
                                     sx={{
-                                        position: 'absolute',
-                                        minWidth: 200,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        top: 28,
-                                        right: '5px',
-                                        zIndex: 1,
-                                        borderRadius: '8px',
-                                        p: 1,
-                                        bgcolor: 'background.paper',
+                                        color: copied ? 'green' : 'gray',
+                                    }}
+                                    variant="contained"
+                                    size="small"
+                                    onClick={e => {
+                                        const isMobileDevice = /Mobi/i.test(
+                                            navigator.userAgent
+                                        )
+                                        if (!isMobileDevice) {
+                                            setCopied(true)
+                                            navigator.clipboard.writeText(
+                                                bankAccount
+                                            )
+                                        }
                                     }}
                                 >
-                                    {loss > 0 && (
-                                        <span className="balance-menu_item">
-                                            Client's spends:
-                                            <b>{`-${loss} $`}</b>
-                                        </span>
-                                    )}
-                                    <span className="balance-menu_item">
-                                        Total profit:
-                                        <b>{`${currentYearProfit} $`}</b>
-                                    </span>
-                                    <span className="balance-menu_item">
-                                        Payed to translators:
-                                        <b>{`${payedToTranslators} $`}</b>
-                                    </span>
-                                </Box>
-                            )}
-                        </Box>
-                    </ClickAwayListener>
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align={'left'}
-                    className="grid-template-container"
-                >
-                    <span className="grid-template-container__title">
-                        Bank account:
-                    </span>
-                    <span className="grid-template-container__card">
-                        <IconButton
-                            sx={{
-                                color: copied ? 'green' : 'gray',
-                            }}
-                            variant="contained"
-                            size="small"
-                            onClick={e => {
-                                const isMobileDevice = /Mobi/i.test(
-                                    navigator.userAgent
-                                )
-                                if (!isMobileDevice) {
-                                    setCopied(true)
-                                    navigator.clipboard.writeText(bankAccount)
-                                }
-                            }}
-                        >
-                            <ContentCopyIcon fontSize="small" />
-                        </IconButton>
-                        {bankAccount}
-                    </span>
-                </Typography>
+                                    <ContentCopyIcon fontSize="small" />
+                                </IconButton>
+                                {bankAccount}
+                            </span>
+                        </Typography>
+                    </>
+                )}
                 <Typography
                     variant="body2"
                     align={'left'}

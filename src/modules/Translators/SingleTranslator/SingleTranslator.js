@@ -63,6 +63,7 @@ function SingleTranslator({
     updateTranslatorEmail,
     wantsToReceiveEmails,
     dollarToUahRate,
+    admin,
 }) {
     const {
         calculateSumByClient,
@@ -306,22 +307,26 @@ function SingleTranslator({
                                                         <p>
                                                             {`${client.name} ${client.surname}`}
                                                         </p>
-                                                        <IconButton
-                                                            color={'primary'}
-                                                            variant={
-                                                                'contained'
-                                                            }
-                                                            size={'small'}
-                                                            onClick={() =>
-                                                                suspendClient(
-                                                                    _id,
-                                                                    client._id
-                                                                )
-                                                            }
-                                                            component="span"
-                                                        >
-                                                            <HighlightOffIcon />
-                                                        </IconButton>
+                                                        {admin && (
+                                                            <IconButton
+                                                                color={
+                                                                    'primary'
+                                                                }
+                                                                variant={
+                                                                    'contained'
+                                                                }
+                                                                size={'small'}
+                                                                onClick={() =>
+                                                                    suspendClient(
+                                                                        _id,
+                                                                        client._id
+                                                                    )
+                                                                }
+                                                                component="span"
+                                                            >
+                                                                <HighlightOffIcon />
+                                                            </IconButton>
+                                                        )}
                                                     </li>
                                                     {Number(
                                                         calculateSumByClient(
@@ -381,89 +386,102 @@ function SingleTranslator({
                                                     key={client._id}
                                                 >
                                                     <p>{`${client.name} ${client.surname}`}</p>
-                                                    <IconButton
-                                                        color={'success'}
-                                                        variant={'contained'}
-                                                        size={'small'}
-                                                        onClick={() =>
-                                                            suspendClient(
-                                                                _id,
-                                                                client._id
-                                                            )
-                                                        }
-                                                        component="span"
-                                                    >
-                                                        <AddCircleOutlineIcon />
-                                                    </IconButton>
+                                                    {admin && (
+                                                        <IconButton
+                                                            color={'success'}
+                                                            variant={
+                                                                'contained'
+                                                            }
+                                                            size={'small'}
+                                                            onClick={() =>
+                                                                suspendClient(
+                                                                    _id,
+                                                                    client._id
+                                                                )
+                                                            }
+                                                            component="span"
+                                                        >
+                                                            <AddCircleOutlineIcon />
+                                                        </IconButton>
+                                                    )}
                                                 </li>
                                             ))}
                                     </ul>
                                 </AccordionDetails>
                             </Accordion>
                         ) : null}
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header-2"
-                            >
-                                <Typography>Filtered balance</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography variant="body2">
-                                    {`For ${selectedDate.format('DD MMMM')}: `}
-                                    <b>{`${calculateTranslatorDayTotal(
-                                        statistics
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography variant="body2">
-                                    {`Total for ${selectedDate.format(
-                                        'MMMM'
-                                    )}: `}
-                                    <b>{`${calculateTranslatorMonthTotal(
-                                        statistics,
-                                        true,
-                                        selectedDate.format('M'),
-                                        selectedDate.format('YYYY')
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography variant="body2">
-                                    {`Chats bonus in ${selectedDate.format(
-                                        'MMMM'
-                                    )}: `}
-                                    <b>{`${chatsBonus} $`}</b>
-                                </Typography>
-                                <Typography variant="body2">
-                                    {`Salary for ${selectedDate.format(
-                                        'MMMM'
-                                    )}: `}
-                                    <b>{`${translatorSalaryForPickedMonth} $`}</b>
-                                </Typography>
-                                {dollarToUahRate ? (
+                        {admin && (
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header-2"
+                                >
+                                    <Typography>Filtered balance</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
                                     <Typography variant="body2">
-                                        {`Salary: `}
-                                        <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                        {`For ${selectedDate.format(
+                                            'DD MMMM'
+                                        )}: `}
+                                        <b>{`${calculateTranslatorDayTotal(
+                                            statistics
+                                        )} $`}</b>
                                     </Typography>
-                                ) : null}
+                                    <Typography variant="body2">
+                                        {`Total for ${selectedDate.format(
+                                            'MMMM'
+                                        )}: `}
+                                        <b>{`${calculateTranslatorMonthTotal(
+                                            statistics,
+                                            true,
+                                            selectedDate.format('M'),
+                                            selectedDate.format('YYYY')
+                                        )} $`}</b>
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {`Chats bonus in ${selectedDate.format(
+                                            'MMMM'
+                                        )}: `}
+                                        <b>{`${chatsBonus} $`}</b>
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {`Salary for ${selectedDate.format(
+                                            'MMMM'
+                                        )}: `}
+                                        <b>{`${translatorSalaryForPickedMonth} $`}</b>
+                                    </Typography>
+                                    {dollarToUahRate ? (
+                                        <Typography variant="body2">
+                                            {`Salary: `}
+                                            <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                        </Typography>
+                                    ) : null}
 
-                                {calculatePersonalPenalties()
-                                    ?.selectedDatePenaltiesArray.length ? (
-                                    <Typography variant="body2" align={'left'}>
-                                        Penalties for{' '}
-                                        {`${selectedDate.format('MMMM')}: `}
-                                        <PenaltiesList
-                                            penaltiesArray={personalPenalties.filter(
-                                                penalty =>
-                                                    penalty.date.slice(3) ===
-                                                    moment(selectedDate).format(
-                                                        'MM YYYY'
-                                                    )
-                                            )}
-                                        />
-                                    </Typography>
-                                ) : null}
-                            </AccordionDetails>
-                        </Accordion>
+                                    {calculatePersonalPenalties()
+                                        ?.selectedDatePenaltiesArray.length ? (
+                                        <Typography
+                                            variant="body2"
+                                            align={'left'}
+                                        >
+                                            Penalties for{' '}
+                                            {`${selectedDate.format('MMMM')}: `}
+                                            <PenaltiesList
+                                                penaltiesArray={personalPenalties.filter(
+                                                    penalty =>
+                                                        penalty.date.slice(
+                                                            3
+                                                        ) ===
+                                                        moment(
+                                                            selectedDate
+                                                        ).format('MM YYYY')
+                                                )}
+                                            />
+                                        </Typography>
+                                    ) : null}
+                                </AccordionDetails>
+                            </Accordion>
+                        )}
                         <LoadingButton
                             size="small"
                             sx={{
@@ -517,6 +535,7 @@ function SingleTranslator({
                         statistics={statistics}
                         clients={clients}
                         id={_id}
+                        admin={admin}
                     />
                 ) : null}
                 <IconButton
@@ -524,6 +543,7 @@ function SingleTranslator({
                     variant={'contained'}
                     size={'small'}
                     onClick={() => suspendTranslator(_id)}
+                    disabled={!admin}
                     component="span"
                 >
                     {suspended.status ? (
@@ -532,13 +552,15 @@ function SingleTranslator({
                         <FontAwesomeIcon icon={faPersonCircleXmark} />
                     )}
                 </IconButton>
-                <PersonalPenaltyForm
-                    suspended={suspended.status}
-                    id={_id}
-                    addPersonalPenaltyToTranslator={
-                        addPersonalPenaltyToTranslator
-                    }
-                />
+                {admin && (
+                    <PersonalPenaltyForm
+                        suspended={suspended.status}
+                        id={_id}
+                        addPersonalPenaltyToTranslator={
+                            addPersonalPenaltyToTranslator
+                        }
+                    />
+                )}
             </CardActions>
         </Card>
     )

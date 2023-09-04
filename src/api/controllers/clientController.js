@@ -1,63 +1,48 @@
-const {
-    checkIfUserIsAuthenticatedBeforeExecute,
-} = require('../firebase/firebaseAdmin')
 const { getCollections } = require('../database/collections')
 let ObjectId = require('mongodb').ObjectID
 
 const getAllClients = (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            const noImageRequest = !!request.query?.params
-            if (noImageRequest) {
-                getCollections()
-                    .collectionClients.aggregate([
-                        { $project: { image: 0 } },
-                        { $sort: { name: 1 } },
-                    ])
-                    .toArray((err, docs) => {
-                        if (err) {
-                            console.log(err)
-                            return response.sendStatus(500)
-                        }
-                        response.send(docs)
-                    })
-            } else {
-                getCollections()
-                    .collectionClients.find()
-                    .sort({ name: 1 })
-                    .toArray((err, docs) => {
-                        if (err) {
-                            console.log(err)
-                            return response.sendStatus(500)
-                        }
-                        response.send(docs)
-                    })
-            }
-        },
-        request,
-        response,
-    })
+    const noImageRequest = !!request.query?.params
+    if (noImageRequest) {
+        getCollections()
+            .collectionClients.aggregate([
+                { $project: { image: 0 } },
+                { $sort: { name: 1 } },
+            ])
+            .toArray((err, docs) => {
+                if (err) {
+                    console.log(err)
+                    return response.sendStatus(500)
+                }
+                response.send(docs)
+            })
+    } else {
+        getCollections()
+            .collectionClients.find()
+            .sort({ name: 1 })
+            .toArray((err, docs) => {
+                if (err) {
+                    console.log(err)
+                    return response.sendStatus(500)
+                }
+                response.send(docs)
+            })
+    }
 }
 
 const addNewClient = function (request, response, next) {
     if (!request.body) {
         response.send('Ошибка при загрузке клиентки')
     } else {
-        checkIfUserIsAuthenticatedBeforeExecute({
-            callBack: () => {
-                getCollections().collectionClients.insertOne(
-                    request.body,
-                    (err, result) => {
-                        if (err) {
-                            return response.sendStatus(500)
-                        }
-                        response.send(result?.insertedId)
-                    }
-                )
-            },
-            request,
-            response,
-        })
+        getCollections().collectionClients.insertOne(
+            request.body,
+            (err, result) => {
+                if (err) {
+                    return response.sendStatus(500)
+                }
+                response.send(result?.insertedId)
+            }
+        )
     }
 }
 
@@ -111,41 +96,35 @@ const changeClientNameInTranslatorsDataBase = async (
 }
 
 const updateClient = (request, response) => {
-    checkIfUserIsAuthenticatedBeforeExecute({
-        callBack: () => {
-            getCollections().collectionClients.updateOne(
-                { _id: ObjectId(request.params.id) },
-                {
-                    $set: {
-                        name: request.body.name,
-                        surname: request.body.surname,
-                        bankAccount: request.body.bankAccount,
-                        instagramLink: request.body.instagramLink,
-                        suspended: request.body.suspended,
-                        image: request.body.image,
-                        svadba: {
-                            login: request.body.svadba.login,
-                            password: request.body.svadba.password,
-                        },
-                        dating: {
-                            login: request.body.dating.login,
-                            password: request.body.dating.password,
-                        },
-                    },
+    getCollections().collectionClients.updateOne(
+        { _id: ObjectId(request.params.id) },
+        {
+            $set: {
+                name: request.body.name,
+                surname: request.body.surname,
+                bankAccount: request.body.bankAccount,
+                instagramLink: request.body.instagramLink,
+                suspended: request.body.suspended,
+                image: request.body.image,
+                svadba: {
+                    login: request.body.svadba.login,
+                    password: request.body.svadba.password,
                 },
-                err => {
-                    if (err) {
-                        return response.sendStatus(500)
-                    }
-                    const message = 'Переводчик сохранен'
-                    response.send(message)
-                    editArrayOfClientsInTranslators(request.body)
-                }
-            )
+                dating: {
+                    login: request.body.dating.login,
+                    password: request.body.dating.password,
+                },
+            },
         },
-        request,
-        response,
-    })
+        err => {
+            if (err) {
+                return response.sendStatus(500)
+            }
+            const message = 'Переводчик сохранен'
+            response.send(message)
+            editArrayOfClientsInTranslators(request.body)
+        }
+    )
 }
 
 // const deleteClient = (request, response) => {

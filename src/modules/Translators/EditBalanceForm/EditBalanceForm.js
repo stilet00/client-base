@@ -18,6 +18,7 @@ import DraftsIcon from '@mui/icons-material/Drafts'
 import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import moment from 'moment'
@@ -63,6 +64,7 @@ export default function EditBalanceForm({
     surname,
     clients,
     id,
+    admin,
 }) {
     const {
         handleOpen,
@@ -128,7 +130,7 @@ export default function EditBalanceForm({
                 onClick={handleOpen}
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
-                Edit balance
+                {admin ? 'Edit balance' : 'Show Balance'}
             </FormMainButton>
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -286,6 +288,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             size="small"
                                                             InputProps={{
                                                                 endAdornment: (
@@ -316,6 +319,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
@@ -349,6 +353,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
@@ -378,6 +383,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
@@ -409,11 +415,11 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
-                                                                        <ForumIcon />{' '}
-                                                                        Dating
+                                                                        <FavoriteIcon />
                                                                     </InputAdornment>
                                                                 ),
                                                             }}
@@ -441,11 +447,11 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
-                                                                        <PhoneCallbackIcon />{' '}
-                                                                        Phone
+                                                                        <PhoneCallbackIcon />
                                                                     </InputAdornment>
                                                                 ),
                                                             }}
@@ -475,6 +481,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
@@ -497,6 +504,7 @@ export default function EditBalanceForm({
                                                             }
                                                             value={voiceMessageCheck()}
                                                             size="small"
+                                                            disabled={!admin}
                                                             variant="outlined"
                                                             label={
                                                                 'Voice Messages'
@@ -514,55 +522,62 @@ export default function EditBalanceForm({
                                                             }}
                                                         />
                                                     </div>
-                                                    <Accordion
-                                                        className={
-                                                            'balance-form__finances--accordion'
-                                                        }
-                                                    >
-                                                        <AccordionSummary
-                                                            expandIcon={
-                                                                <ExpandMoreIcon />
+                                                    {admin && (
+                                                        <Accordion
+                                                            className={
+                                                                'balance-form__finances--accordion'
                                                             }
-                                                            aria-controls="panel1a-content"
-                                                            id="panel1a-header"
                                                         >
-                                                            <Typography>
-                                                                Comments
-                                                            </Typography>
-                                                        </AccordionSummary>
-                                                        <AccordionDetails>
-                                                            <TextField
-                                                                id="outlined-multiline-flexible"
-                                                                label={
-                                                                    'Edit here'
+                                                            <AccordionSummary
+                                                                expandIcon={
+                                                                    <ExpandMoreIcon />
                                                                 }
-                                                                name={
-                                                                    'comments'
-                                                                }
-                                                                type={'text'}
-                                                                multiline
-                                                                fullWidth
-                                                                size="small"
-                                                                maxRows={4}
-                                                                value={
-                                                                    findClientById()
-                                                                        .comments ||
-                                                                    ''
-                                                                }
-                                                                onChange={
-                                                                    handleChange
-                                                                }
-                                                                InputProps={{
-                                                                    endAdornment:
-                                                                        (
-                                                                            <InputAdornment position="end">
-                                                                                <ContactSupportIcon />
-                                                                            </InputAdornment>
-                                                                        ),
-                                                                }}
-                                                            />
-                                                        </AccordionDetails>
-                                                    </Accordion>
+                                                                aria-controls="panel1a-content"
+                                                                id="panel1a-header"
+                                                            >
+                                                                <Typography>
+                                                                    Comments
+                                                                </Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails>
+                                                                <TextField
+                                                                    id="outlined-multiline-flexible"
+                                                                    label={
+                                                                        'Edit here'
+                                                                    }
+                                                                    name={
+                                                                        'comments'
+                                                                    }
+                                                                    type={
+                                                                        'text'
+                                                                    }
+                                                                    multiline
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    maxRows={4}
+                                                                    disabled={
+                                                                        !admin
+                                                                    }
+                                                                    value={
+                                                                        findClientById()
+                                                                            .comments ||
+                                                                        ''
+                                                                    }
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    InputProps={{
+                                                                        endAdornment:
+                                                                            (
+                                                                                <InputAdornment position="end">
+                                                                                    <ContactSupportIcon />
+                                                                                </InputAdornment>
+                                                                            ),
+                                                                    }}
+                                                                />
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    )}
                                                 </div>
                                             </>
                                         ) : (
@@ -617,6 +632,7 @@ export default function EditBalanceForm({
                                                             step="0.01"
                                                             fullWidth
                                                             required
+                                                            disabled={!admin}
                                                             InputProps={{
                                                                 endAdornment: (
                                                                     <InputAdornment position="end">
@@ -644,6 +660,7 @@ export default function EditBalanceForm({
                                                                     .photoAttachments
                                                             }
                                                             size="small"
+                                                            disabled={!admin}
                                                             variant="outlined"
                                                             label={
                                                                 'Photo attachments'
@@ -768,20 +785,23 @@ export default function EditBalanceForm({
                                         </p>
                                     ) : null}
                                     <div className="balance-form__actions">
-                                        <SubmitButton
-                                            type={'button'}
-                                            sx={{
-                                                color: 'white',
-                                            }}
-                                            variant={'outlined'}
-                                            onClick={onSavePressed}
-                                            className={
-                                                'balance-form__actions--button'
-                                            }
-                                            startIcon={<SaveAsIcon />}
-                                        >
-                                            Save
-                                        </SubmitButton>
+                                        {admin && (
+                                            <SubmitButton
+                                                type={'button'}
+                                                sx={{
+                                                    color: 'white',
+                                                }}
+                                                variant={'outlined'}
+                                                onClick={onSavePressed}
+                                                disabled={!admin}
+                                                className={
+                                                    'balance-form__actions--button'
+                                                }
+                                                startIcon={<SaveAsIcon />}
+                                            >
+                                                Save
+                                            </SubmitButton>
+                                        )}
                                         <CloseButton
                                             type={'button'}
                                             variant={'outlined'}

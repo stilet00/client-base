@@ -45,6 +45,10 @@ const connectToDatabase = async err => {
         'collectionTranslators',
         client.db('translatorsDB').collection('translators')
     )
+    collections.set(
+        'collectionAdmins',
+        client.db('adminDB').collection('adminCollection')
+    )
     // collections.set(
     //     'collectionClients',
     //     client.db('testDB').collection('testClientCollection')
@@ -94,6 +98,7 @@ const getCollections = () => {
         collectionClients: collections.get('collectionClients'),
         collectionTranslators: collections.get('collectionTranslators'),
         collectionStatements: collections.get('collectionStatements'),
+        collectionAdmins: collections.get('collectionAdmins'),
     }
 }
 

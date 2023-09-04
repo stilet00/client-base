@@ -32,6 +32,7 @@ import { FINANCE_COMMENTS } from '../../constants/constants'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -63,7 +64,7 @@ function Overview({ user }) {
         statements,
         handleChange,
     } = useOverview(user)
-
+    const admin = useAdminStatus(user)
     const getStatementsGroupedByCommentAndYear = statements => {
         const groupedStatement = Object.values(FINANCE_COMMENTS).map(
             comment => {
@@ -379,105 +380,113 @@ function Overview({ user }) {
                                         </>
                                     ) : null}
 
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Year's balance
-                                        </StyledTableCell>
-                                        <StyledTableCell className="td-with-info">
-                                            {yearTotalSum ? (
-                                                yearTotalSum + ' $'
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Salary payed
-                                        </StyledTableCell>
-                                        <StyledTableCell className="td-with-info">
-                                            {yearTotalSum ? (
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    <CountUp
-                                                        duration={0.75}
-                                                        end={Math.floor(
-                                                            yearTotalSum * 0.45
-                                                        )}
-                                                        separator=" "
-                                                        prefix="$"
-                                                    />
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                    {statementsGroupedByComment.length > 0
-                                        ? statementsGroupedByComment.map(
-                                              statement => (
-                                                  <StyledTableRow>
-                                                      <StyledTableCell>
-                                                          {statement.comment ===
-                                                          'salary'
-                                                              ? 'Clients Salary'
-                                                              : statement.comment}
-                                                      </StyledTableCell>
-                                                      <StyledTableCell className="td-with-info">
-                                                          {yearTotalSum ? (
-                                                              <span
-                                                                  className={
-                                                                      'blue-text styled-text-numbers'
-                                                                  }
-                                                              >
-                                                                  <CountUp
-                                                                      duration={
-                                                                          0.75
-                                                                      }
-                                                                      end={
-                                                                          statement.amount
-                                                                      }
-                                                                      separator=" "
-                                                                      prefix="$"
-                                                                  />
-                                                              </span>
-                                                          ) : (
-                                                              <SmallLoader />
-                                                          )}
-                                                      </StyledTableCell>
-                                                  </StyledTableRow>
-                                              )
-                                          )
-                                        : null}
-                                    <StyledTableRow>
-                                        <StyledTableCell>
-                                            Total profit
-                                        </StyledTableCell>
-                                        <StyledTableCell className="td-with-info">
-                                            {yearTotalSum ? (
-                                                <span
-                                                    className={
-                                                        'green-text styled-text-numbers'
-                                                    }
-                                                    style={{
-                                                        margin: 0,
-                                                    }}
-                                                >
-                                                    <CountUp
-                                                        duration={0.75}
-                                                        end={totalProfit}
-                                                        separator=" "
-                                                    />{' '}
-                                                    $
-                                                </span>
-                                            ) : (
-                                                <SmallLoader />
-                                            )}
-                                        </StyledTableCell>
-                                    </StyledTableRow>
+                                    {admin && (
+                                        <>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Year's balance
+                                                </StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
+                                                    {yearTotalSum ? (
+                                                        yearTotalSum + ' $'
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Salary payed
+                                                </StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
+                                                    {yearTotalSum ? (
+                                                        <span
+                                                            className={
+                                                                'blue-text styled-text-numbers'
+                                                            }
+                                                        >
+                                                            <CountUp
+                                                                duration={0.75}
+                                                                end={Math.floor(
+                                                                    yearTotalSum *
+                                                                        0.45
+                                                                )}
+                                                                separator=" "
+                                                                prefix="$"
+                                                            />
+                                                        </span>
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            {statementsGroupedByComment.length >
+                                            0
+                                                ? statementsGroupedByComment.map(
+                                                      statement => (
+                                                          <StyledTableRow>
+                                                              <StyledTableCell>
+                                                                  {statement.comment ===
+                                                                  'salary'
+                                                                      ? 'Clients Salary'
+                                                                      : statement.comment}
+                                                              </StyledTableCell>
+                                                              <StyledTableCell className="td-with-info">
+                                                                  {yearTotalSum ? (
+                                                                      <span
+                                                                          className={
+                                                                              'blue-text styled-text-numbers'
+                                                                          }
+                                                                      >
+                                                                          <CountUp
+                                                                              duration={
+                                                                                  0.75
+                                                                              }
+                                                                              end={
+                                                                                  statement.amount
+                                                                              }
+                                                                              separator=" "
+                                                                              prefix="$"
+                                                                          />
+                                                                      </span>
+                                                                  ) : (
+                                                                      <SmallLoader />
+                                                                  )}
+                                                              </StyledTableCell>
+                                                          </StyledTableRow>
+                                                      )
+                                                  )
+                                                : null}
+                                            <StyledTableRow>
+                                                <StyledTableCell>
+                                                    Total profit
+                                                </StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
+                                                    {yearTotalSum ? (
+                                                        <span
+                                                            className={
+                                                                'green-text styled-text-numbers'
+                                                            }
+                                                            style={{
+                                                                margin: 0,
+                                                            }}
+                                                        >
+                                                            <CountUp
+                                                                duration={0.75}
+                                                                end={
+                                                                    totalProfit
+                                                                }
+                                                                separator=" "
+                                                            />{' '}
+                                                            $
+                                                        </span>
+                                                    ) : (
+                                                        <SmallLoader />
+                                                    )}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        </>
+                                    )}
                                 </TableBody>
                             </Table>
                         </TableContainer>
