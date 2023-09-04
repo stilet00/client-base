@@ -129,7 +129,7 @@ export default function EditBalanceForm({
                 onClick={handleOpen}
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
-                Edit balance
+                {admin ? 'Edit balance' : 'Show Balance'}
             </FormMainButton>
             <Modal
                 aria-labelledby="transition-modal-title"

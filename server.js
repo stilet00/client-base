@@ -98,7 +98,7 @@ app.post(rootURL + 'isAdmin', async (req, res) => {
     res.send(!!admin) // Send true if admin exists, false otherwise
 })
 
-// Apply the middleware to all task routes
+// task list api
 app.get(tasksURL + 'get', checkIfUserIsAuthenticatedBeforeExecute, getAllTasks)
 app.delete(
     tasksURL + ':id',
@@ -124,7 +124,7 @@ app.put(
     allowNotifications
 )
 
-// Apply the middleware to all client routes
+// clients api
 app.get(
     clientsURL + 'get',
     checkIfUserIsAuthenticatedBeforeExecute,
@@ -143,7 +143,7 @@ app.put(
     updateClient
 )
 
-// Apply the middleware to all translator routes
+// translators api
 app.get(
     translatorsURL + 'get',
     checkIfUserIsAuthenticatedBeforeExecute,
@@ -184,7 +184,7 @@ app.delete(
     deleteTranslator
 )
 
-// Apply the middleware to all statements routes
+// statements api
 app.get(
     financeStatementsURL + 'get',
     checkIfUserIsAuthenticatedBeforeExecute,
