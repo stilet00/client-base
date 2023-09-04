@@ -1,8 +1,8 @@
 let express = require('express')
 let bodyParser = require('body-parser')
 const {
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
+    isAuthenticated,
+    adminRules,
 } = require('./src/api/firebase/firebaseAdmin')
 const { connectToDatabase } = require('./src/api/database/collections')
 const {
@@ -99,109 +99,35 @@ app.post(rootURL + 'isAdmin', async (req, res) => {
 })
 
 // task list api
-app.get(tasksURL + 'get', checkIfUserIsAuthenticatedBeforeExecute, getAllTasks)
-app.delete(
-    tasksURL + ':id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    deleteTask
-)
-app.post(tasksURL + 'add', checkIfUserIsAuthenticatedBeforeExecute, createTask)
-app.put(
-    tasksURL + 'edit/:id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    editTask
-)
-app.get(
-    tasksURL + 'notifications/',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    sendNotification
-)
-app.put(
-    tasksURL + 'notifications/',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    allowNotifications
-)
+app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
+app.delete(tasksURL + ':id', [...adminRules], deleteTask)
+app.post(tasksURL + 'add', isAuthenticated, createTask)
+app.put(tasksURL + 'edit/:id', [...adminRules], editTask)
+app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
+app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
 // clients api
-app.get(
-    clientsURL + 'get',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    getAllClients
-)
-app.post(
-    clientsURL + 'add',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    addNewClient
-)
-app.put(
-    clientsURL + ':id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    updateClient
-)
+app.get(clientsURL + 'get', isAuthenticated, getAllClients)
+app.post(clientsURL + 'add', [...adminRules], addNewClient)
+app.put(clientsURL + ':id', [...adminRules], updateClient)
 
 // translators api
-app.get(
-    translatorsURL + 'get',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    getAllTranslators
-)
-app.get(
-    translatorsURL + 'last-gift/:id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    getLastVirtualGift
-)
+app.get(translatorsURL + 'get', isAuthenticated, getAllTranslators)
+app.get(translatorsURL + 'last-gift/:id', isAuthenticated, getLastVirtualGift)
 app.get(
     translatorsURL + 'send-emails',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
+    [...adminRules],
     sendEmailsToTranslators
 )
-app.post(
-    translatorsURL + 'add',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    addNewTranslator
-)
-app.post(
-    translatorsURL + 'chat-bonus',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    calculateBonuses
-)
-app.put(
-    translatorsURL + ':id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    updateTranslator
-)
-app.delete(
-    translatorsURL + ':id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    deleteTranslator
-)
+app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
+app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
+app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
+app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 
 // statements api
-app.get(
-    financeStatementsURL + 'get',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    getAllStatments
-)
-app.post(
-    financeStatementsURL + 'add',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    createStatement
-)
-app.delete(
-    financeStatementsURL + ':id',
-    checkIfUserIsAuthenticatedBeforeExecute,
-    protectedRoutes,
-    deleteStatement
-)
+app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatments)
+app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
+app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 
 // DB connection and server starts
 const startServer = async () => {

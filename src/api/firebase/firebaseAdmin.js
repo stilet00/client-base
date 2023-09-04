@@ -38,7 +38,7 @@ const changeUserPassword = async (request, response) => {
         return response.status(500).json({ error: 'Internal server error.' })
     }
 }
-const checkIfUserIsAuthenticatedBeforeExecute = (request, response, next) => {
+const isAuthenticated = (request, response, next) => {
     try {
         const clientIdToken = getUserIdTokenFromRequest(request)
         googleFirebaseApp
@@ -46,7 +46,7 @@ const checkIfUserIsAuthenticatedBeforeExecute = (request, response, next) => {
             .verifyIdToken(clientIdToken)
             .then(decodedToken => {
                 if (decodedToken) {
-                    next() // Proceed to the next middleware or route handler
+                    next()
                 } else {
                     response.sendStatus(401)
                 }
@@ -80,18 +80,7 @@ async function sendResetEmail(email, resetLink) {
     await transporter.sendMail(mailOptions)
 }
 
-async function getAllUserEmails() {
-    try {
-        const listUsersResult = await firebaseAdmin.auth().listUsers()
-        const userEmails = listUsersResult.users.map(user => user.email)
-        return userEmails
-    } catch (error) {
-        console.error('Error getting user emails:', error)
-        return []
-    }
-}
-
-async function protectedRoutes(request, response, next) {
+async function isAdmin(request, response, next) {
     const idToken = request.header('Authorization')
     const tokenParts = idToken.split(' ')
     const cleanedIdToken = tokenParts[1].trim()
@@ -117,9 +106,13 @@ async function protectedRoutes(request, response, next) {
     }
 }
 
+const adminRules = [isAuthenticated, isAdmin]
+
 module.exports = {
-    checkIfUserIsAuthenticatedBeforeExecute,
+    isAuthenticated,
     changeUserPassword,
     firebaseAdmin,
-    protectedRoutes,
+    adminRules,
+    isAdmin,
+    adminRules,
 }
