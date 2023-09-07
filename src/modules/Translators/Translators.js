@@ -1,5 +1,10 @@
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Popover from '@mui/material/Popover'
+import Typography from '@mui/material/Typography'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
 import SingleTranslator from './SingleTranslator/SingleTranslator'
 import '../../styles/modules/Translators.css'
@@ -9,13 +14,6 @@ import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTranslators } from './businessLogic'
 import React, { useState } from 'react'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Popover,
-    Typography,
-} from '@material-ui/core'
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'

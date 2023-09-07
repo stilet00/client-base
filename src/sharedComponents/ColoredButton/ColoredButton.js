@@ -1,6 +1,6 @@
 import React from 'react'
 import { styled } from '@mui/material/styles'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 import { lightBlue } from '@mui/material/colors'
 
 const ColorButton = styled(Button)(({ theme }) => ({

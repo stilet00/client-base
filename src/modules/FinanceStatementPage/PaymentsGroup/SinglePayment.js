@@ -1,5 +1,5 @@
 import Badge from '@mui/material/Badge'
-import { Avatar } from '@material-ui/core'
+import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/material/styles'
 import { FINANCE_IMAGES, FINANCE_AVATARS } from '../../../constants/constants'
 import IconButton from '@mui/material/IconButton'

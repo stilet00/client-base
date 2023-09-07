@@ -1,61 +1,77 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
-import Backdrop from '@material-ui/core/Backdrop'
-import Fade from '@material-ui/core/Fade'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import { styled } from '@mui/system'
+import Modal from '@mui/material/Modal'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import ForumIcon from '@mui/icons-material/Forum'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import InputAdornment from '@mui/material/InputAdornment'
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
 import MicIcon from '@mui/icons-material/Mic'
 import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import '../../../styles/modules/EditBalanceForm.css'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
 import CloseIcon from '@mui/icons-material/Close'
-import FormControl from '@material-ui/core/FormControl'
+import FormControl from '@mui/material/FormControl'
 import DraftsIcon from '@mui/icons-material/Drafts'
 import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import moment from 'moment'
-import InputLabel from '@material-ui/core/InputLabel'
+import InputLabel from '@mui/material/InputLabel'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Typography from '@mui/material/Typography'
 import { useBalanceForm } from '../businessLogic'
 import { calculateBalanceDaySum } from '../../../sharedFunctions/sharedFunctions'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Typography,
-} from '@material-ui/core'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { styled } from '@mui/material/styles'
-import { purple, blue } from '@mui/material/colors'
-import { green, red } from '@material-ui/core/colors'
+import { purple, blue, green, red } from '@mui/material/colors'
 import {
     SUNRISE_AGENCY_ID,
     arrayOfYearsForSelectFilter,
 } from '../../../constants/constants'
 
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
+const FormMainButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: blue[500],
+    '&:hover': {
+        backgroundColor: blue[700],
     },
 }))
+
+const SubmitButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(green[500]),
+    backgroundColor: green[500],
+    '&:hover': {
+        backgroundColor: green[700],
+    },
+}))
+
+const CloseButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(red[500]),
+    backgroundColor: red[500],
+    '&:hover': {
+        backgroundColor: red[700],
+    },
+}))
+
+const StyledModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
+
+const StyledFormControl = styled(FormControl)({
+    margin: '1rem',
+    minWidth: 120,
+})
 
 export default function EditBalanceForm({
     balanceDaySubmit,
@@ -88,31 +104,6 @@ export default function EditBalanceForm({
         statistics,
         clients,
     })
-    const classes = useStyles()
-
-    const FormMainButton = styled(Button)(({ theme }) => ({
-        color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: blue[500],
-        '&:hover': {
-            backgroundColor: blue[700],
-        },
-    }))
-
-    const SubmitButton = styled(Button)(({ theme }) => ({
-        color: theme.palette.getContrastText(green[500]),
-        backgroundColor: green[500],
-        '&:hover': {
-            backgroundColor: green[700],
-        },
-    }))
-
-    const CloseButton = styled(Button)(({ theme }) => ({
-        color: theme.palette.getContrastText(red[500]),
-        backgroundColor: red[500],
-        '&:hover': {
-            backgroundColor: red[700],
-        },
-    }))
     const voiceMessageCheck = () => {
         const client = findClientById()
         if (client.voiceMessages) {
@@ -132,10 +123,9 @@ export default function EditBalanceForm({
             >
                 {admin ? 'Edit balance' : 'Show Balance'}
             </FormMainButton>
-            <Modal
+            <StyledModal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -162,10 +152,7 @@ export default function EditBalanceForm({
                                         <Typography>Date filter</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        >
+                                        <StyledFormControl variant="outlined">
                                             <InputLabel>Year</InputLabel>
                                             <Select
                                                 value={selectedYear}
@@ -180,11 +167,8 @@ export default function EditBalanceForm({
                                                     )
                                                 )}
                                             </Select>
-                                        </FormControl>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        >
+                                        </StyledFormControl>
+                                        <StyledFormControl variant="outlined">
                                             <InputLabel htmlFor={'Month'}>
                                                 Month
                                             </InputLabel>
@@ -207,11 +191,8 @@ export default function EditBalanceForm({
                                                     )
                                                 )}
                                             </Select>
-                                        </FormControl>
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        >
+                                        </StyledFormControl>
+                                        <StyledFormControl variant="outlined">
                                             <InputLabel htmlFor={'Day'}>
                                                 Day
                                             </InputLabel>
@@ -233,13 +214,10 @@ export default function EditBalanceForm({
                                                     )
                                                 )}
                                             </Select>
-                                        </FormControl>
+                                        </StyledFormControl>
                                     </AccordionDetails>
                                 </Accordion>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                >
+                                <StyledFormControl variant="outlined">
                                     <InputLabel>Client</InputLabel>
                                     <Select
                                         value={selectedClient}
@@ -260,7 +238,7 @@ export default function EditBalanceForm({
                                                 </MenuItem>
                                             ))}
                                     </Select>
-                                </FormControl>
+                                </StyledFormControl>
                             </div>
                             {findClientById() ? (
                                 <>
@@ -827,7 +805,7 @@ export default function EditBalanceForm({
                         </form>
                     </div>
                 </Fade>
-            </Modal>
+            </StyledModal>
         </>
     )
 }

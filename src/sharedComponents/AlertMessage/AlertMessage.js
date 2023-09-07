@@ -1,14 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
+import { styled } from '@mui/system'
+import Modal from '@mui/material/Modal'
 import '../../styles/sharedComponents/AlertMessage.css'
 
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-}))
+const StyledModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
 
 export default function AlertMessage({
     mainText,
@@ -17,11 +15,9 @@ export default function AlertMessage({
     open,
     status,
 }) {
-    const classes = useStyles()
-
     return (
         <div>
-            <Modal open={open} onClose={handleClose} className={classes.modal}>
+            <StyledModal open={open} onClose={handleClose}>
                 <div
                     className={
                         status
@@ -32,7 +28,7 @@ export default function AlertMessage({
                     <h2>{mainText}</h2>
                     {additionalText ? <p>{additionalText}</p> : null}
                 </div>
-            </Modal>
+            </StyledModal>
         </div>
     )
 }

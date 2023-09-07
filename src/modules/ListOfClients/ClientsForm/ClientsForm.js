@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
-import Backdrop from '@material-ui/core/Backdrop'
-import Fade from '@material-ui/core/Fade'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import { styled } from '@mui/system'
+import Modal from '@mui/material/Modal'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import FormLabel from '@mui/material/FormLabel'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import InputAdornment from '@mui/material/InputAdornment'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
@@ -28,28 +28,16 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import Avatar from '@mui/material/Avatar'
 import Badge from '@mui/material/Badge'
 
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+const StyledModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
+const StyledTextField = styled(TextField)({
+    '& .MuiInputBase-root:first-child': {
+        background: 'rgba(210,206,206,0.5)',
     },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-}))
-
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInputBase-root:first-child': {
-            background: 'rgba(210,206,206,0.5)',
-        },
-    },
-})(TextField)
+})
 
 export default function ClientsForm({
     editedClient,
@@ -59,7 +47,6 @@ export default function ClientsForm({
     handleClose,
     open,
 }) {
-    const classes = useStyles()
     const [client, setClient] = useState(DEFAULT_CLIENT)
     const [siteFilter, setSiteFilter] = useState('svadba')
     const [showPassword, setShowPassword] = useState(false)
@@ -250,11 +237,10 @@ export default function ClientsForm({
 
     return (
         <>
-            <Modal
+            <StyledModal
                 disableEnforceFocus
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
                 open={open}
                 onClose={e => {
                     handleClose()
@@ -288,7 +274,7 @@ export default function ClientsForm({
                                 <FormLabel className="clients-form__body--label">
                                     Primarly information
                                 </FormLabel>
-                                <CssTextField
+                                <StyledTextField
                                     name={'name'}
                                     onChange={handleChange}
                                     value={client.name}
@@ -306,7 +292,7 @@ export default function ClientsForm({
                                         ),
                                     }}
                                 />
-                                <CssTextField
+                                <StyledTextField
                                     name={'surname'}
                                     onChange={handleChange}
                                     value={client.surname}
@@ -380,7 +366,7 @@ export default function ClientsForm({
                                             />
                                         </Badge>
                                     )}
-                                    <CssTextField
+                                    <StyledTextField
                                         name={'instagramLink'}
                                         className="media-container__link"
                                         error={formErrors.instagramLink}
@@ -407,7 +393,7 @@ export default function ClientsForm({
                                         }}
                                     />
                                 </div>
-                                <CssTextField
+                                <StyledTextField
                                     name={'bankAccount'}
                                     error={formErrors.bankAccount}
                                     helperText={formErrors.bankAccount}
@@ -504,7 +490,7 @@ export default function ClientsForm({
                                         />
                                     </RadioGroup>
                                 </FormControl>
-                                <CssTextField
+                                <StyledTextField
                                     name={`${siteFilter}.login`}
                                     onChange={handleChange}
                                     type={
@@ -605,7 +591,7 @@ export default function ClientsForm({
                         </form>
                     </div>
                 </Fade>
-            </Modal>
+            </StyledModal>
         </>
     )
 }

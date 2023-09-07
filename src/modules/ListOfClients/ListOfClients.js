@@ -27,7 +27,7 @@ import {
 import moment from 'moment'
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
 import useModal from '../../sharedHooks/useModal'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'

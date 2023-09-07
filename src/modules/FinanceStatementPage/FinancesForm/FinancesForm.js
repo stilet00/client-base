@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
+import { styled } from '@mui/system'
+import Modal from '@mui/material/Modal'
 import MenuItem from '@mui/material/MenuItem'
-import Backdrop from '@material-ui/core/Backdrop'
-import Fade from '@material-ui/core/Fade'
-import Button from '@material-ui/core/Button'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
+import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@mui/material/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
 import { getClients } from '../../../services/clientsServices/services'
@@ -25,16 +25,13 @@ import {
 } from '../../../constants/constants.js'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-}))
+const StyledModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+})
 
 export default function FinancesForm({ handleNewPayment }) {
-    const classes = useStyles()
     const match = useRouteMatch()
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
@@ -145,11 +142,10 @@ export default function FinancesForm({ handleNewPayment }) {
             <Button type="button" onClick={handleOpen} fullWidth>
                 <AddIcon />
             </Button>
-            <Modal
+            <StyledModal
                 disableEnforceFocus
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -282,7 +278,7 @@ export default function FinancesForm({ handleNewPayment }) {
                         </form>
                     </div>
                 </Fade>
-            </Modal>
+            </StyledModal>
         </div>
     )
 }
