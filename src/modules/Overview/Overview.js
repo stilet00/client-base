@@ -64,7 +64,7 @@ function Overview({ user }) {
         statements,
         handleChange,
     } = useOverview(user)
-    const admin = useAdminStatus(user)
+    const { isAdmin } = useAdminStatus(user)
     const getStatementsGroupedByCommentAndYear = statements => {
         const groupedStatement = Object.values(FINANCE_COMMENTS).map(
             comment => {
@@ -380,7 +380,7 @@ function Overview({ user }) {
                                         </>
                                     ) : null}
 
-                                    {admin && (
+                                    {isAdmin && (
                                         <>
                                             <StyledTableRow>
                                                 <StyledTableCell>

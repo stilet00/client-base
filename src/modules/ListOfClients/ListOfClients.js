@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback } from 'react'
+import {
+    useState,
+    useEffect,
+    useCallback,
+    useDeferredValue,
+    useMemo,
+} from 'react'
 import {
     getClients,
     addClient,
@@ -52,7 +58,7 @@ export default function ListOfClients({ user }) {
         getTotalProfitPerClient,
         currentYear,
     } = useClientsList(translators)
-    const admin = useAdminStatus(user)
+    const { isAdmin } = useAdminStatus(user)
 
     useEffect(() => {
         if (user) {
@@ -204,7 +210,12 @@ export default function ListOfClients({ user }) {
                 openAlert(5000)
             })
     }
-    const getSortedClientsWithCalculations = clients => {
+
+    const deferredSearchValue = useDeferredValue(search)
+    const getSortedClients = clients => {
+        if (clients.length === 0) {
+            return []
+        }
         const sortedClientsWithCalculations = clients
             .sort(sortBySum)
             .map(client => {
@@ -266,10 +277,18 @@ export default function ListOfClients({ user }) {
                 }
                 return clientWithPersonalAndFinancialData
             })
-        return sortedClientsWithCalculations.filter(client =>
-            `${client.name} ${client.surname}`.toLowerCase().includes(search)
-        )
+        return sortedClientsWithCalculations
     }
+
+    const memoizedSortedClients = useMemo(
+        () => getSortedClients(clients),
+        [clients]
+    )
+
+    const getFilteredClients = client =>
+        `${client.name} ${client.surname}`
+            .toLowerCase()
+            .includes(deferredSearchValue)
 
     const closeGraph = () => {
         setShowGraph(false)
@@ -306,17 +325,19 @@ export default function ListOfClients({ user }) {
                 />
 
                 <Grid container spacing={2}>
-                    {getSortedClientsWithCalculations(clients).map(client => (
-                        <Grid key={client._id} item xs={12} md={4} sm={6}>
-                            <SingleClient
-                                key={client._id}
-                                {...client}
-                                admin={admin}
-                                handleUpdatingClientsId={getUpdatingClient}
-                                handleSwitchToGraph={switchToGraph}
-                            />
-                        </Grid>
-                    ))}
+                    {memoizedSortedClients
+                        .filter(getFilteredClients)
+                        .map(client => (
+                            <Grid key={client._id} item xs={12} md={4} sm={6}>
+                                <SingleClient
+                                    key={client._id}
+                                    {...client}
+                                    admin={isAdmin}
+                                    handleUpdatingClientsId={getUpdatingClient}
+                                    handleSwitchToGraph={switchToGraph}
+                                />
+                            </Grid>
+                        ))}
                 </Grid>
             </div>
             <div className="socials button-add-container">
@@ -325,11 +346,11 @@ export default function ListOfClients({ user }) {
                     onClick={handleOpen}
                     fullWidth
                     startIcon={<FontAwesomeIcon icon={faVenus} />}
-                    disabled={!admin}
+                    disabled={!isAdmin}
                 >
                     Add client
                 </Button>
-                {admin && (
+                {isAdmin && (
                     <ClientsForm
                         editedClient={updatingClient}
                         onAddNewClient={addNewClient}

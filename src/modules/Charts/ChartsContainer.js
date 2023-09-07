@@ -90,7 +90,10 @@ function ChartsContainer({ user }) {
                         onChange={handleCategoryChange}
                     >
                         {CHARTS_CATEGORIES.map(singleCategory => (
-                            <MenuItem value={singleCategory.value}>
+                            <MenuItem
+                                value={singleCategory.value}
+                                key={singleCategory.value}
+                            >
                                 {singleCategory.name}
                             </MenuItem>
                         ))}

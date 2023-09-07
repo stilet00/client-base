@@ -2,26 +2,33 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { rootURL } from '../services/rootURL'
 
+async function checkAdminStatus(user) {
+    try {
+        const response = await axios.post(rootURL + 'isAdmin', {
+            email: user.email,
+        })
+        return response.data
+    } catch (error) {
+        console.error('Error checking admin role:', error)
+        return false
+    }
+}
+
 export function useAdminStatus(user) {
-    const [admin, setAdmin] = useState(false)
-
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
-        async function checkAdminStatus() {
-            try {
-                const response = await axios.post(rootURL + 'isAdmin', {
-                    email: user.email,
-                })
-                setAdmin(response.data)
-            } catch (error) {
-                console.error('Error checking admin role:', error)
-                setAdmin(false)
-            }
-        }
-
-        if (user) {
-            checkAdminStatus()
+        if (!user) {
+            setIsAdmin(false)
+            setIsLoading(false)
+        } else {
+            ;(async () => {
+                const isAdmin = await checkAdminStatus(user)
+                setIsAdmin(isAdmin)
+                setIsLoading(false)
+            })()
         }
     }, [user])
 
-    return admin
+    return { isAdmin, isLoading }
 }

@@ -71,7 +71,7 @@ export default function PenaltiesList({ penaltiesArray }) {
                         <TableBody>
                             {penaltiesArray.map(penalty => (
                                 <TableRow
-                                    key={penalty.id}
+                                    key={penalty._id}
                                     sx={{
                                         '&:last-child td, &:last-child th': {
                                             border: 0,

@@ -54,7 +54,7 @@ export default function Navigation({ user }) {
     })
 
     const [page, setPage] = useState(pathname)
-    const admin = useAdminStatus(user)
+    const { isAdmin } = useAdminStatus(user)
 
     useEffect(() => {
         setPage(pathname)
@@ -163,7 +163,7 @@ export default function Navigation({ user }) {
                                 icon={<PageViewIcon />}
                                 value={'/overview'}
                             />
-                            {admin && (
+                            {isAdmin && (
                                 <BottomNavigationAction
                                     label="Finance Statement"
                                     icon={<PriceChangeOutlinedIcon />}
@@ -185,7 +185,7 @@ export default function Navigation({ user }) {
                                 icon={<BarChartIcon />}
                                 value={'/chart'}
                             />
-                            {admin && (
+                            {isAdmin && (
                                 <BottomNavigationAction
                                     label="Task List"
                                     icon={<FormatListNumberedIcon />}

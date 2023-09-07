@@ -4,13 +4,11 @@ import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import Loader from '../../sharedComponents/Loader/Loader' // Adjust the path as needed
 
 export default function PrivateRoute({ user, component: Component, path }) {
-    const admin = useAdminStatus(user)
-
-    if (admin === null) {
+    const { isAdmin, isLoading } = useAdminStatus(user)
+    if (isLoading) {
         return <Loader />
     }
-
-    return admin ? (
+    return isAdmin ? (
         <Route path={path}>
             <Component user={user} />
         </Route>
