@@ -97,6 +97,7 @@ app.get(rootURL + 'finances/?', function (request, response, next) {
 app.post(rootURL + 'reset-password', (req, res) => {
     changeUserPassword(req, res)
 })
+
 // permision check
 app.post(rootURL + 'isAdmin', async (req, res) => {
     const userEmail = req.body.email
