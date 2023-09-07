@@ -41,13 +41,21 @@ const {
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
 const { getCollections } = require('./src/api/database/collections')
+const rateLimit = require('express-rate-limit')
 
 const PORT = process.env.PORT || 80
 let app = express()
+
+const limiter = rateLimit({
+    windowMs: 2000,
+    max: 10,
+    message: 'Too many requests from this IP, please try again later.',
+})
+
 app.use(express.static(__dirname + '/build'))
 app.set('view engine', 'ejs')
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+app.use(bodyParser.json({ limit: '100mb' }))
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', '*')
     response.setHeader(
@@ -57,6 +65,7 @@ app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
     next()
 })
+app.use(limiter)
 
 //routes
 app.get(rootURL + 'chart/', function (request, response, next) {
