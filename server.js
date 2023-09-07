@@ -47,7 +47,7 @@ let app = express()
 app.use(express.static(__dirname + '/build'))
 app.set('view engine', 'ejs')
 app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extented: true }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', '*')
     response.setHeader(
