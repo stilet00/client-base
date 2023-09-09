@@ -24,7 +24,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import styled from 'styled-components'
 
+const StyledButton = styled(Button)`
+    && {
+        color: black;
+    }
+`
 function Translators({ user }) {
     const { screenIsSmall } = useWindowDimensions()
     const {
@@ -109,7 +115,7 @@ function Translators({ user }) {
                                     <TranslatorsForm
                                         onFormSubmit={translatorsFormSubmit}
                                     />
-                                    <Button
+                                    <StyledButton
                                         aria-describedby={id}
                                         onClick={openAlertConfirmation}
                                         fullWidth={screenIsSmall}
@@ -122,10 +128,10 @@ function Translators({ user }) {
                                         }
                                     >
                                         Send emails
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
-                            <Button
+                            <StyledButton
                                 aria-describedby={id}
                                 onClick={handleClick}
                                 fullWidth={screenIsSmall}
@@ -134,7 +140,7 @@ function Translators({ user }) {
                                 }
                             >
                                 Show total
-                            </Button>
+                            </StyledButton>
                             <Popover
                                 id={id}
                                 open={open}
@@ -248,7 +254,7 @@ function Translators({ user }) {
                             <TranslatorsForm
                                 onFormSubmit={translatorsFormSubmit}
                             />
-                            <Button
+                            <StyledButton
                                 aria-describedby={id}
                                 onClick={openAlertConfirmation}
                                 fullWidth={screenIsSmall}
@@ -259,17 +265,17 @@ function Translators({ user }) {
                                 }
                             >
                                 Send emails
-                            </Button>
+                            </StyledButton>
                         </>
                     )}
-                    <Button
+                    <StyledButton
                         aria-describedby={id}
                         onClick={handleClick}
                         className="translators-container__menu-button"
                         startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
                     >
                         Show total
-                    </Button>
+                    </StyledButton>
                     <Popover
                         id={id}
                         open={open}

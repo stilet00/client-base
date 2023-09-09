@@ -143,7 +143,7 @@ function ChartsContainer({ user }) {
                                 }
                                 graph={month}
                                 index={index}
-                                key={index}
+                                key={index + 1}
                                 deleteGraph={deleteGraph}
                             />
                         ))}

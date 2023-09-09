@@ -1,7 +1,6 @@
 import '../../styles/modules/AuthorizationPage.css'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import { styled as styledMaterial } from '@mui/system'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAuthorizationPage } from './businessLogic'
@@ -22,17 +21,20 @@ const Bounce = styled.div`
     height: 100%;
 `
 
-const StyledButton = styled(Button)({
-    borderRadius: 3,
-    border: '1px solid black',
-    color: 'black',
-    height: 48,
-    padding: '0 30px',
-    background: 'rgba(255,255,255,0.5)',
-    backdropFilter: 'blur(10px)',
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-    textTransform: 'capitalize',
-})
+const StyledButton = styled(Button)`
+    && {
+        border-radius: 3;
+        border: 1px solid black;
+        color: black;
+        height: 48px;
+        padding: 0 30px;
+        background-color: rgba(255, 255, 255, 0.5) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.22);
+        text-transform: capitalize;
+    }
+`
 
 const StyledInput = styled(TextField)({
     '& label.Mui-focused': {
@@ -199,6 +201,7 @@ function AuthorizationPage() {
                                         <Button
                                             style={{
                                                 padding: 0,
+                                                color: 'black',
                                             }}
                                             onClick={onToogle}
                                         >
@@ -243,6 +246,7 @@ function AuthorizationPage() {
                                         onClick={onToogle}
                                         style={{
                                             padding: 0,
+                                            color: 'black',
                                         }}
                                     >
                                         Back

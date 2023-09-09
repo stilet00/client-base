@@ -3,9 +3,10 @@ import { Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
 import moment from 'moment'
 import { getSumFromArray } from '../../../sharedFunctions/sharedFunctions'
+import { Chart, registerables } from 'chart.js'
+Chart.register(...registerables)
 
 export default function SingleChart({ graph, previousMonth, values }) {
-
     let dataSets = [
         {
             label: 'Current month',
