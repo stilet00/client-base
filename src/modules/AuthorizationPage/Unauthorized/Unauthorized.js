@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../../../styles/modules/Unauthorized.css'
 import { useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import Button from '@mui/material/Button'
 import { fadeOut } from 'react-animations'
 import styled, { keyframes } from 'styled-components'
 import HomeIcon from '@mui/icons-material/Home'

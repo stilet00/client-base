@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
+import Drawer from '@mui/material/Drawer'
 import Media from 'react-media'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import { useHistory } from 'react-router-dom'
@@ -21,8 +20,8 @@ import PriceChangeOutlinedIcon from '@mui/icons-material/PriceChangeOutlined'
 import { BottomNavigationAction, IconButton } from '@mui/material'
 import styled, { keyframes } from 'styled-components'
 import { fadeInRight } from 'react-animations'
-import Typography from '@material-ui/core/Typography'
-import { BottomNavigation } from '@material-ui/core'
+import Typography from '@mui/material/Typography'
+import BottomNavigation from '@mui/material/BottomNavigation'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import { localStorageTokenKey } from '../../constants/constants'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
@@ -33,19 +32,9 @@ const Animation = styled.div`
     height: 100%;
 `
 
-const useStyles = makeStyles({
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
-    },
-})
-
 export default function Navigation({ user }) {
     const history = useHistory()
     let { pathname } = useLocation()
-    const classes = useStyles()
     const [state, setState] = useState({
         top: false,
         left: false,
@@ -54,7 +43,7 @@ export default function Navigation({ user }) {
     })
 
     const [page, setPage] = useState(pathname)
-    const admin = useAdminStatus(user)
+    const { isAdmin } = useAdminStatus(user)
 
     useEffect(() => {
         setPage(pathname)
@@ -78,9 +67,14 @@ export default function Navigation({ user }) {
 
     const list = anchor => (
         <div
-            className={clsx(classes.list, {
-                [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-            })}
+            className={clsx(
+                { width: 250 },
+                {
+                    [{
+                        width: 'auto',
+                    }]: anchor === 'top' || anchor === 'bottom',
+                }
+            )}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
@@ -163,7 +157,7 @@ export default function Navigation({ user }) {
                                 icon={<PageViewIcon />}
                                 value={'/overview'}
                             />
-                            {admin && (
+                            {isAdmin && (
                                 <BottomNavigationAction
                                     label="Finance Statement"
                                     icon={<PriceChangeOutlinedIcon />}
@@ -185,7 +179,7 @@ export default function Navigation({ user }) {
                                 icon={<BarChartIcon />}
                                 value={'/chart'}
                             />
-                            {admin && (
+                            {isAdmin && (
                                 <BottomNavigationAction
                                     label="Task List"
                                     icon={<FormatListNumberedIcon />}

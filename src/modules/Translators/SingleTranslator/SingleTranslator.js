@@ -1,15 +1,13 @@
 import React, { memo, useEffect } from 'react'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Card,
-    CardActions,
-    CardContent,
-} from '@material-ui/core'
 import EditBalanceForm from '../EditBalanceForm/EditBalanceForm'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Typography } from '@material-ui/core'
+import Typography from '@mui/material/Typography'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
 import {
     TRANSLATORS_SALARY_PERCENT,
     PAYONEER_COMISSION,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import { MESSAGES } from '../../constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
@@ -95,6 +95,11 @@ export const useTranslators = user => {
             return translators
         }
     }, [translators, translatorFilter])
+
+    const memoizedFilteredTranslators = useMemo(
+        () => filterTranslators(),
+        [translators, translatorFilter]
+    )
 
     useEffect(() => {
         ;(async () => {
@@ -589,7 +594,7 @@ export const useTranslators = user => {
         suspendTranslator,
         suspendClient,
         changeFilter,
-        filterTranslators,
+        memoizedFilteredTranslators,
         translatorFilter,
         addPersonalPenaltyToTranslator,
         updateTranslatorEmail,

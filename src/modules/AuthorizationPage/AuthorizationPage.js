@@ -1,6 +1,6 @@
 import '../../styles/modules/AuthorizationPage.css'
-import { Button, TextField } from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAuthorizationPage } from './businessLogic'
@@ -21,64 +21,60 @@ const Bounce = styled.div`
     height: 100%;
 `
 
-const StyledButton = withStyles({
-    root: {
-        borderRadius: 3,
-        border: '1px solid black',
-        color: 'black',
-        height: 48,
-        padding: '0 30px',
-        background: 'rgba(255,255,255,0.5)',
-        backdropFilter: 'blur(10px)',
-        boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-    },
-    label: {
-        textTransform: 'capitalize',
-    },
-})(Button)
+const StyledButton = styled(Button)`
+    && {
+        border-radius: 3;
+        border: 1px solid black;
+        color: black;
+        height: 48px;
+        padding: 0 30px;
+        background-color: rgba(255, 255, 255, 0.5) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.22);
+        text-transform: capitalize;
+    }
+`
 
-const StyledInput = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: 'black',
+const StyledInput = styled(TextField)({
+    '& label.Mui-focused': {
+        color: 'black',
+    },
+    '& label': {
+        top: '-5px',
+        left: '-5px',
+        boxSizing: 'border box',
+        padding: '5px 9px',
+        color: 'black',
+    },
+    '& .MuiInput-underline:after': {
+        borderBottomColor: 'black',
+    },
+    '& .MuiInputLabel-shrink': {
+        border: '1px solid black',
+        borderRadius: '5px',
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+    },
+    '& .MuiOutlinedInput-root': {
+        background: 'rgba(255, 255, 255, 0.5)',
+        boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
+        '& fieldset': {
+            borderColor: 'black',
+            borderWidth: 1,
         },
-        '& label': {
-            top: '-5px',
-            left: '-5px',
-            boxSizing: 'border box',
-            padding: '5px 9px',
-            color: 'black',
+        '&:hover fieldset': {
+            borderColor: 'black',
         },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: 'black',
-        },
-        '& .MuiInputLabel-shrink': {
-            border: '1px solid black',
-            borderRadius: '5px',
-            backgroundColor: 'rgba(255, 255, 255, 1)',
-        },
-        '& .MuiOutlinedInput-root': {
-            background: 'rgba(255, 255, 255, 0.5)',
-            boxShadow:
-                '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-            '& fieldset': {
-                borderColor: 'black',
-                borderWidth: 1,
-            },
-            '&:hover fieldset': {
-                borderColor: 'black',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: 'black',
-            },
-        },
-        '& label.Mui-error': {
-            border: '1px solid red',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(5px)',
+        '&.Mui-focused fieldset': {
+            borderColor: 'black',
         },
     },
-})(TextField)
+    '& label.Mui-error': {
+        border: '1px solid red',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(5px)',
+    },
+})
 
 function AuthorizationPage() {
     const {
@@ -205,6 +201,7 @@ function AuthorizationPage() {
                                         <Button
                                             style={{
                                                 padding: 0,
+                                                color: 'black',
                                             }}
                                             onClick={onToogle}
                                         >
@@ -249,6 +246,7 @@ function AuthorizationPage() {
                                         onClick={onToogle}
                                         style={{
                                             padding: 0,
+                                            color: 'black',
                                         }}
                                     >
                                         Back

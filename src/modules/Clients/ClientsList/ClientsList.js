@@ -1,9 +1,9 @@
 import { React, useState } from 'react'
 import styled from 'styled-components'
-import Button from '@material-ui/core/Button'
-import Drawer from '@material-ui/core/Drawer'
+import Button from '@mui/material/Button'
+import Drawer from '@mui/material/Drawer'
 import WomanIcon from '@mui/icons-material/Woman'
-import ListItemText from '@material-ui/core/ListItemText'
+import ListItemText from '@mui/material/ListItemText'
 import '../../../styles/modules/Clients.css'
 import { useClientsList } from '../businessLogic'
 import moment from 'moment'
@@ -53,6 +53,9 @@ function ClientsList({
         <>
             <Button
                 onClick={toggleDrawer('left', true)}
+                sx={{
+                    color: 'black',
+                }}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faListAlt} />}
                 className="translators-container__menu-button"

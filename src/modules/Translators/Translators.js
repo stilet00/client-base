@@ -1,5 +1,10 @@
 import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Popover from '@mui/material/Popover'
+import Typography from '@mui/material/Typography'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
 import SingleTranslator from './SingleTranslator/SingleTranslator'
 import '../../styles/modules/Translators.css'
@@ -9,13 +14,6 @@ import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTranslators } from './businessLogic'
 import React, { useState } from 'react'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Popover,
-    Typography,
-} from '@material-ui/core'
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'
@@ -26,7 +24,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import styled from 'styled-components'
 
+const StyledButton = styled(Button)`
+    && {
+        color: black;
+    }
+`
 function Translators({ user }) {
     const { screenIsSmall } = useWindowDimensions()
     const {
@@ -56,7 +60,7 @@ function Translators({ user }) {
         suspendTranslator,
         suspendClient,
         changeFilter,
-        filterTranslators,
+        memoizedFilteredTranslators,
         translatorFilter,
         addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
@@ -64,7 +68,7 @@ function Translators({ user }) {
         mailoutInProgress,
         dollarToUahRate,
     } = useTranslators(user)
-    const admin = useAdminStatus(user)
+    const { isAdmin } = useAdminStatus(user)
     const [anchorEl, setAnchorEl] = useState(null)
 
     const handleClick = event => {
@@ -88,9 +92,7 @@ function Translators({ user }) {
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                            <Typography>
-                                {!screenIsSmall ? 'Menu' : 'Filters'}
-                            </Typography>
+                            <Typography>Menu</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <ClientsList
@@ -105,7 +107,7 @@ function Translators({ user }) {
                                 deleteClient={deleteClient}
                                 translators={translators}
                             />
-                            {admin && (
+                            {isAdmin && (
                                 <>
                                     <ClientsForm
                                         onFormSubmit={clientsFormSubmit}
@@ -113,11 +115,11 @@ function Translators({ user }) {
                                     <TranslatorsForm
                                         onFormSubmit={translatorsFormSubmit}
                                     />
-                                    <Button
+                                    <StyledButton
                                         aria-describedby={id}
                                         onClick={openAlertConfirmation}
                                         fullWidth={screenIsSmall}
-                                        disabled={!admin}
+                                        disabled={!isAdmin}
                                         className="translators-container__menu-button"
                                         startIcon={
                                             <FontAwesomeIcon
@@ -126,10 +128,10 @@ function Translators({ user }) {
                                         }
                                     >
                                         Send emails
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
-                            <Button
+                            <StyledButton
                                 aria-describedby={id}
                                 onClick={handleClick}
                                 fullWidth={screenIsSmall}
@@ -138,7 +140,7 @@ function Translators({ user }) {
                                 }
                             >
                                 Show total
-                            </Button>
+                            </StyledButton>
                             <Popover
                                 id={id}
                                 open={open}
@@ -212,7 +214,7 @@ function Translators({ user }) {
                                         defaultChecked
                                         name={'suspended'}
                                         onChange={changeFilter}
-                                        disabled={!admin}
+                                        disabled={!isAdmin}
                                     />
                                     Hide suspended
                                 </div>
@@ -222,7 +224,7 @@ function Translators({ user }) {
                                         value={translatorFilter.date}
                                         name={'date'}
                                         onChange={changeFilter}
-                                        disabled={!admin}
+                                        disabled={!isAdmin}
                                         renderInput={params => (
                                             <TextField {...params} />
                                         )}
@@ -246,34 +248,34 @@ function Translators({ user }) {
                         deleteClient={deleteClient}
                         translators={translators}
                     />
-                    {admin && (
+                    {isAdmin && (
                         <>
                             <ClientsForm onFormSubmit={clientsFormSubmit} />
                             <TranslatorsForm
                                 onFormSubmit={translatorsFormSubmit}
                             />
-                            <Button
+                            <StyledButton
                                 aria-describedby={id}
                                 onClick={openAlertConfirmation}
                                 fullWidth={screenIsSmall}
-                                disabled={!admin}
+                                disabled={!isAdmin}
                                 className="translators-container__menu-button"
                                 startIcon={
                                     <FontAwesomeIcon icon={faPaperPlane} />
                                 }
                             >
                                 Send emails
-                            </Button>
+                            </StyledButton>
                         </>
                     )}
-                    <Button
+                    <StyledButton
                         aria-describedby={id}
                         onClick={handleClick}
                         className="translators-container__menu-button"
                         startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
                     >
                         Show total
-                    </Button>
+                    </StyledButton>
                     <Popover
                         id={id}
                         open={open}
@@ -334,14 +336,12 @@ function Translators({ user }) {
                         </Typography>
                     </Popover>
                     <div className="gallery-menu__inline-filters">
-                        <div className="gallery-menu__filters-label">
-                            Filters
-                        </div>
+                        <div className="gallery-menu__filters-label">Menu</div>
                         <div className={'gallery-menu__checkbox-container'}>
                             <Checkbox
                                 defaultChecked
                                 name={'suspended'}
-                                disabled={!admin}
+                                disabled={!isAdmin}
                                 onChange={changeFilter}
                             />
                             Hide suspended
@@ -352,37 +352,13 @@ function Translators({ user }) {
                                 value={translatorFilter.date}
                                 name={'date'}
                                 onChange={changeFilter}
-                                disabled={!admin}
+                                disabled={!isAdmin}
                                 renderInput={params => (
                                     <TextField {...params} />
                                 )}
                             />
                         </div>
                     </div>
-
-                    {/* <div className="gallery-menu__filters">
-                        <div className={'gallery-menu__checkbox-container'}>
-                            <Checkbox
-                                defaultChecked
-                                name={'suspended'}
-                                onChange={changeFilter}
-                                disabled={!admin}
-                            />
-                            Hide suspended
-                        </div>
-                        <div className="gallery-menu__date-container">
-                            <MobileDatePicker
-                                label="Balance date"
-                                value={translatorFilter.date}
-                                name={'date'}
-                                onChange={changeFilter}
-                                disabled={!admin}
-                                renderInput={params => (
-                                    <TextField {...params} />
-                                )}
-                            />
-                        </div>
-                    </div> */}
                 </div>
             )}
             <div
@@ -391,7 +367,7 @@ function Translators({ user }) {
                 }
             >
                 {translators.length && !loading ? (
-                    filterTranslators().map(item => (
+                    memoizedFilteredTranslators.map(item => (
                         <SingleTranslator
                             {...item}
                             key={item._id}
@@ -412,7 +388,7 @@ function Translators({ user }) {
                                 addPersonalPenaltyToTranslator
                             }
                             updateTranslatorEmail={updateTranslatorEmail}
-                            admin={admin}
+                            admin={isAdmin}
                         />
                     ))
                 ) : loading ? (

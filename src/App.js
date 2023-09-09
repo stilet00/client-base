@@ -93,11 +93,12 @@ function App() {
                                                 user={user}
                                                 component={TaskList}
                                                 path="/tasks"
+                                                exact
                                             />
                                             <PrivateRoute
                                                 user={user}
                                                 component={FinanceStatementPage}
-                                                path="/finances/"
+                                                path="/finances"
                                             />
                                             <Redirect
                                                 from="/overview/*"
@@ -110,13 +111,13 @@ function App() {
                                                 )}
                                             />
                                             <Route
-                                                path="/translators/"
+                                                path="/translators"
                                                 component={() => (
                                                     <Translators user={user} />
                                                 )}
                                             />
                                             <Route
-                                                path="/clients/"
+                                                path="/clients"
                                                 component={() => (
                                                     <ListOfClients
                                                         user={user}
