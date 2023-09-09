@@ -38,30 +38,6 @@ import {
     arrayOfYearsForSelectFilter,
 } from '../../../constants/constants'
 
-const FormMainButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: blue[500],
-    '&:hover': {
-        backgroundColor: blue[700],
-    },
-}))
-
-const SubmitButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
-    '&:hover': {
-        backgroundColor: green[700],
-    },
-}))
-
-const CloseButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(red[500]),
-    backgroundColor: red[500],
-    '&:hover': {
-        backgroundColor: red[700],
-    },
-}))
-
 const StyledModal = styled(Modal)({
     display: 'flex',
     alignItems: 'center',
@@ -114,7 +90,14 @@ export default function EditBalanceForm({
     }
     return (
         <>
-            <FormMainButton
+            <Button
+                sx={{
+                    color: 'white',
+                    backgroundColor: blue[500],
+                    '&:hover': {
+                        backgroundColor: blue[700],
+                    },
+                }}
                 type="button"
                 size={'small'}
                 variant={'contained'}
@@ -122,7 +105,7 @@ export default function EditBalanceForm({
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
                 {admin ? 'Edit balance' : 'Show Balance'}
-            </FormMainButton>
+            </Button>
             <StyledModal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -764,25 +747,37 @@ export default function EditBalanceForm({
                                     ) : null}
                                     <div className="balance-form__actions">
                                         {admin && (
-                                            <SubmitButton
-                                                type={'button'}
-                                                sx={{
-                                                    color: 'white',
-                                                }}
+                                            <Button
                                                 variant={'outlined'}
+                                                type={'button'}
                                                 onClick={onSavePressed}
                                                 disabled={!admin}
                                                 className={
                                                     'balance-form__actions--button'
                                                 }
+                                                sx={{
+                                                    color: 'white',
+                                                    backgroundColor: green[500],
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            green[700],
+                                                    },
+                                                }}
                                                 startIcon={<SaveAsIcon />}
                                             >
                                                 Save
-                                            </SubmitButton>
+                                            </Button>
                                         )}
-                                        <CloseButton
+                                        <Button
                                             type={'button'}
                                             variant={'outlined'}
+                                            sx={{
+                                                color: 'white',
+                                                backgroundColor: red[500],
+                                                '&:hover': {
+                                                    backgroundColor: red[700],
+                                                },
+                                            }}
                                             onClick={handleClose}
                                             className={
                                                 'balance-form__actions--button'
@@ -790,7 +785,7 @@ export default function EditBalanceForm({
                                             startIcon={<CloseIcon />}
                                         >
                                             Close
-                                        </CloseButton>
+                                        </Button>
                                     </div>
                                 </>
                             ) : (

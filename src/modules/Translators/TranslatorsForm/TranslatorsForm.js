@@ -52,6 +52,9 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
         <>
             <Button
                 type="button"
+                sx={{
+                    color: 'black',
+                }}
                 onClick={handleOpen}
                 fullWidth={screenIsSmall}
                 startIcon={<WorkIcon />}
@@ -116,6 +119,9 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                             />
                             <Button
                                 type={'submit'}
+                                sx={{
+                                    color: 'black',
+                                }}
                                 fullWidth
                                 variant={'outlined'}
                             >

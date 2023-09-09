@@ -280,11 +280,6 @@ export default function ListOfClients({ user }) {
         return sortedClientsWithCalculations
     }
 
-    const memoizedSortedClients = useMemo(
-        () => getSortedClients(clients),
-        [clients]
-    )
-
     const getFilteredClients = client =>
         `${client.name} ${client.surname}`
             .toLowerCase()
@@ -325,7 +320,7 @@ export default function ListOfClients({ user }) {
                 />
 
                 <Grid container spacing={2}>
-                    {memoizedSortedClients
+                    {getSortedClients(clients)
                         .filter(getFilteredClients)
                         .map(client => (
                             <Grid key={client._id} item xs={12} md={4} sm={6}>

@@ -53,6 +53,9 @@ function ClientsList({
         <>
             <Button
                 onClick={toggleDrawer('left', true)}
+                sx={{
+                    color: 'black',
+                }}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faListAlt} />}
                 className="translators-container__menu-button"

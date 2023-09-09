@@ -1,6 +1,8 @@
 import { Bar, Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
 import moment from 'moment'
+import { Chart, registerables } from 'chart.js'
+Chart.register(...registerables)
 
 function SingleChart({ graph, index, previousMonth }) {
     let dataSets = [

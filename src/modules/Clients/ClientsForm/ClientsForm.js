@@ -43,6 +43,9 @@ export default function ClientsForm(props) {
             <Button
                 type="button"
                 onClick={handleOpen}
+                sx={{
+                    color: 'black',
+                }}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faVenus} />}
                 className="translators-container__menu-button"
@@ -151,6 +154,9 @@ export default function ClientsForm(props) {
                             {/*{previewImage}*/}
                             <Button
                                 type={'submit'}
+                                sx={{
+                                    color: 'black',
+                                }}
                                 fullWidth
                                 variant={'outlined'}
                             >
