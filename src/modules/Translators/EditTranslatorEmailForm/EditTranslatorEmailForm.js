@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -12,13 +10,7 @@ import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
+import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 export default function EditTranslatorEmailForm(props) {
     const emailRegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
 

@@ -1,6 +1,4 @@
 import React from 'react'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -13,7 +11,6 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import '../../../styles/modules/EditBalanceForm.css'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
 import CloseIcon from '@mui/icons-material/Close'
-import FormControl from '@mui/material/FormControl'
 import DraftsIcon from '@mui/icons-material/Drafts'
 import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
@@ -32,22 +29,15 @@ import { calculateBalanceDaySum } from '../../../sharedFunctions/sharedFunctions
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { purple, blue, green, red } from '@mui/material/colors'
+import { blue, green, red } from '@mui/material/colors'
 import {
     SUNRISE_AGENCY_ID,
     arrayOfYearsForSelectFilter,
 } from '../../../constants/constants'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
-const StyledFormControl = styled(FormControl)({
-    margin: '1rem',
-    minWidth: 120,
-})
+import {
+    StyledModal,
+    StyledFormControl,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function EditBalanceForm({
     balanceDaySubmit,

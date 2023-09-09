@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import FormLabel from '@mui/material/FormLabel'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -27,17 +24,10 @@ import IconButton from '@mui/material/IconButton'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import Avatar from '@mui/material/Avatar'
 import Badge from '@mui/material/Badge'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-const StyledTextField = styled(TextField)({
-    '& .MuiInputBase-root:first-child': {
-        background: 'rgba(210,206,206,0.5)',
-    },
-})
+import {
+    StyledModal,
+    StyledTextField,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function ClientsForm({
     editedClient,

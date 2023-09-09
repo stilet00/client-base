@@ -1,13 +1,9 @@
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
-import FormControl from '@mui/material/FormControl'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 import CheckIcon from '@mui/icons-material/Check'
 import ColoredButton from '../../../sharedComponents/ColoredButton/ColoredButton'
@@ -15,22 +11,11 @@ import InputAdornment from '@mui/material/InputAdornment'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import { useChartDateForm } from '../businessLogic'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
-const StyledFormControl = styled(FormControl)({
-    margin: '1rem',
-    minWidth: 120,
-})
-const StyledTextField = styled(TextField)({
-    '& .MuiInputBase-root:first-child': {
-        background: 'rgba(210,206,206,0.5)',
-    },
-})
+import {
+    StyledModal,
+    StyledTextField,
+    StyledFormControl,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function ChartDateForm(props) {
     const {
@@ -99,7 +84,7 @@ export default function ChartDateForm(props) {
                                     ))}
                                 </Select>
                             </StyledFormControl>
-                            <CssTextField
+                            <StyledTextField
                                 value={value}
                                 variant="outlined"
                                 label={'Summ'}

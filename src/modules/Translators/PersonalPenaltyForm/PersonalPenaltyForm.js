@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -16,13 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_PENALTY } from '../../../constants/constants'
 import { v4 as uuidv4 } from 'uuid'
 import GavelIcon from '@mui/icons-material/Gavel'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
+import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 export default function PersonalPenaltyForm({
     id,
     addPersonalPenaltyToTranslator,

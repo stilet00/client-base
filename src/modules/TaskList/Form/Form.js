@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -8,13 +6,7 @@ import AddIcon from '@mui/icons-material/Add'
 import TextField from '@mui/material/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
+import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 export default function Form({ addTask }) {
     const [taskName, setTaskName] = useState('')
 

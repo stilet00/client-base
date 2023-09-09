@@ -1,12 +1,5 @@
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import '../../styles/sharedComponents/AlertMessage.css'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
+import { StyledModal } from '../StyledMaterial/styledMaterialComponents'
 
 export default function AlertMessage({
     mainText,

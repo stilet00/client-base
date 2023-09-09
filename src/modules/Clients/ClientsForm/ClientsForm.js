@@ -1,9 +1,6 @@
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import InputAdornment from '@mui/material/InputAdornment'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
@@ -13,17 +10,10 @@ import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
-
-const StyledTextField = styled(TextField)({
-    '& .MuiInputBase-root:first-child': {
-        background: 'rgba(210,206,206,0.5)',
-    },
-})
+import {
+    StyledModal,
+    StyledTextField,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function ClientsForm(props) {
     const { screenIsSmall } = useWindowDimensions()

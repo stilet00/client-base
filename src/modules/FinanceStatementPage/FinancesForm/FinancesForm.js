@@ -24,12 +24,7 @@ import {
     BOT_LIST,
 } from '../../../constants/constants.js'
 import { MobileDatePicker } from '@mui/x-date-pickers'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
+import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function FinancesForm({ handleNewPayment }) {
     const match = useRouteMatch()

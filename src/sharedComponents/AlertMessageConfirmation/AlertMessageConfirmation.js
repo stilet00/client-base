@@ -1,15 +1,8 @@
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import '../../styles/sharedComponents/AlertMessageConfirmation.css'
 import Button from '@mui/material/Button'
 import SendIcon from '@mui/icons-material/Send'
 import LoadingButton from '@mui/lab/LoadingButton'
-
-const StyledModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-})
+import { StyledModal } from '../StyledMaterial/styledMaterialComponents'
 
 export default function AlertMessageConfirmation({
     mainText,
