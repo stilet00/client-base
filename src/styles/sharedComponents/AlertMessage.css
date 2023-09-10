@@ -1,33 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .message-container {
   position: absolute;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   top: 30%;
   width: 300px;
   min-height: 150px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 20px;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border: 4px solid;
   border-radius: 10px;
   text-align: center;
 }
-
 .message-container h2 {
   text-shadow: none;
 }
-
 .message-container p {
   color: #797272;
 }
@@ -35,7 +25,6 @@
 .approve-box {
   border-color: #2196f3;
 }
-
 .approve-box h2 {
   color: #339966;
 }
@@ -43,8 +32,6 @@
 .decline-box {
   border-color: red;
 }
-
 .decline-box h2 {
   color: red;
-}
-/*# sourceMappingURL=AlertMessage.css.map */
+}/*# sourceMappingURL=AlertMessage.css.map */

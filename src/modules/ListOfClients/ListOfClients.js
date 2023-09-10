@@ -319,7 +319,11 @@ export default function ListOfClients({ user }) {
                     handleClose={closeGraph}
                 />
 
-                <Grid container spacing={2}>
+                <Grid
+                    container
+                    spacing={2}
+                    id="on-scroll__rotate-animation-list"
+                >
                     {getSortedClients(clients)
                         .filter(getFilteredClients)
                         .map(client => (

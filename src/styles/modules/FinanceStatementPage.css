@@ -2,36 +2,28 @@
 .finances-inner-wrapper {
   width: 100%;
   padding: 0 10px;
-  background: white;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  background: rgb(255, 255, 255);
+  box-sizing: border-box;
   border-radius: 4px;
 }
-
 .finances-inner-wrapper__header {
   width: 100%;
-  background: white;
+  background: rgb(255, 255, 255);
   padding: 5px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgb(224, 224, 224);
   color: #797272;
   font-size: 0.875rem;
   text-align: left;
 }
-
 .finances-inner-wrapper__list-item {
   position: relative;
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  background: white;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  background: rgb(255, 255, 255);
+  align-items: center;
   text-align: center;
   z-index: 1;
 }
-
 .finances-inner-wrapper__list-item::before {
   position: absolute;
   content: "";
@@ -39,94 +31,69 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: radial-gradient(circle, #747373 0%, white 83%);
+  background: radial-gradient(circle, rgb(116, 115, 115) 0%, rgb(255, 255, 255) 83%);
   z-index: -1;
-  -webkit-transition: opacity 0.5s linear;
   transition: opacity 0.5s linear;
   opacity: 0;
 }
-
 .finances-inner-wrapper__list-item .list-item__picture {
   width: 20%;
-  -webkit-transition: 1s;
   transition: 1s;
 }
-
 .finances-inner-wrapper__list-item .list-item__menu-button {
   position: relative;
-  -ms-flex-item-align: start;
-      align-self: flex-start;
-  -webkit-transition: 1s;
+  align-self: flex-start;
   transition: 1s;
 }
-
 .finances-inner-wrapper__list-item .list-item__menu-button .menu-button_delete {
   position: absolute;
   top: 30px;
   right: 5px;
-  background: #333333;
+  background: rgb(51, 51, 51);
 }
-
 .finances-inner-wrapper__list-item .list-item__info {
   height: 100%;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  flex: 1;
+  box-sizing: border-box;
   padding: 10px 0;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   text-align: left;
   font-size: 1rem;
-  color: #333333;
+  color: rgb(51, 51, 51);
 }
-
 .finances-inner-wrapper__list-item .list-item__info p {
   margin: 0;
   margin-bottom: 2px;
 }
-
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_aditional-info {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   margin-bottom: 2px;
   font-size: 0.8rem;
-  color: #93a0ab;
-  -webkit-transition: 1s;
+  color: rgb(147, 160, 171);
   transition: 1s;
 }
-
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info {
   font-size: 1rem;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-  -webkit-transition: 1s;
   transition: 1s;
 }
-
 .finances-inner-wrapper__list-item .list-item__info .list-item__info_amount-info span {
-  color: #93a0ab;
+  color: rgb(147, 160, 171);
   font-size: 1rem;
-  -webkit-transition: 1s;
   transition: 1s;
 }
 
 .payment-form {
   padding: 0;
   border: transparent;
-  background: #c1d2d6;
+  background: rgb(193, 210, 214);
 }
-
 @media (max-width: 690px) {
   .payment-form {
     width: 90%;
   }
 }
-
 .payment-form__header {
   width: 100%;
   height: 200px;
@@ -135,39 +102,24 @@
   -webkit-clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
           clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
 }
-
 .payment-form__header_picture {
   height: 100%;
   background: rgba(192, 222, 229, 0.7);
   border-radius: 10px 10px 0 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   font-size: 2rem;
   color: rgba(0, 0, 0, 0.6);
 }
-
 .payment-form__main {
   padding: 20px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 .payment-form__main_radio-container {
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
   margin: 10px 0;
-}
-/*# sourceMappingURL=FinanceStatementPage.css.map */
+}/*# sourceMappingURL=FinanceStatementPage.css.map */

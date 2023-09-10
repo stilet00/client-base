@@ -2,10 +2,9 @@
 .slider-container {
   margin: 0 auto;
   width: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 5px;
-  border: 1px solid white;
+  border: 1px solid rgb(255, 255, 255);
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -15,13 +14,11 @@
 .filter-container {
   margin: 0 auto;
   width: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 5px;
-  border: 1px solid white;
+  border: 1px solid rgb(255, 255, 255);
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   background: rgba(255, 255, 255, 0.7);
-}
-/*# sourceMappingURL=GalleryControls.css.map */
+}/*# sourceMappingURL=GalleryControls.css.map */

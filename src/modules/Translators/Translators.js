@@ -362,6 +362,7 @@ function Translators({ user }) {
                 </div>
             )}
             <div
+                id="on-scroll__rotate-animation-list"
                 className={
                     'inner-gallery-container translators-container animated-box scrolled-container'
                 }
