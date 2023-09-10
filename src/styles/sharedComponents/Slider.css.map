@@ -1,10 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,OAAO,CAAC,4EAAI;ACAZ,OAAO,CAAC,kFAAI;ADIZ,AAAA,aAAa,CAAC;EACZ,WAAW,EAAE,iBAAiB,EAAE,OAAO,CAAA,UAAU;EACjD,WAAW,EAAE,IAAI,CAAA,UAAU;EAC3B,aAAa,EAAE,CAAC;EAChB,UAAU,EAAE,IAAI,CAAA,UAAU;EAC1B,KAAK,EAAE,KAAK;EACZ,cAAc,EAAE,GAAG,CAAA,UAAU;CAAG;;AAElC,AAAA,eAAe,CAAC;EACd,KAAK,EAAE,SAAS,CAAA,UAAU;CAAG;;AAE/B,AAAA,gBAAgB,EAAE,gBAAgB,CAAC;EACjC,KAAK,ECdM,KAAmB;CDcT",
-    "sources": [
-        "Slider.sass",
-        "../../variables.sass"
-    ],
-    "names": [],
-    "file": "Slider.css"
-}
+{"version":3,"sources":["Slider.sass","../../variables.sass","Slider.css"],"names":[],"mappings":"AAAQ,oFAAA;ACAA,0FAAA;ADIR;EACE,kDAAA;EACA,4BAAA;EACA,gBAAA;EACA,2BAAA;EACA,YAAA;EACA,8BAAA;AEDF;;AFGA;EACE,2BAAA;AEAF;;AFEA;EACE,yBCdW;ACeb","file":"Slider.css"}

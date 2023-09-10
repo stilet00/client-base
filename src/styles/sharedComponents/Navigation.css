@@ -1,58 +1,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .App-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
   font-size: calc(10px + 2vmin);
-  background: white;
+  background: rgb(255, 255, 255);
   background-size: cover;
   margin-bottom: 20px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-
 .App-header h5 {
-  -webkit-box-flex: 2;
-      -ms-flex-positive: 2;
-          flex-grow: 2;
+  flex-grow: 2;
   letter-spacing: 0.1rem;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.4);
   text-shadow: 0 1px 0 #ffffff;
 }
-
 .App-header .MuiBottomNavigation-root .MuiBottomNavigationAction-root:hover {
   text-decoration: none;
   background-color: rgba(0, 0, 0, 0.04);
 }
-
 @media (max-width: 839px) {
   .App-header {
-    -webkit-box-pack: start;
-        -ms-flex-pack: start;
-            justify-content: flex-start;
+    justify-content: flex-start;
   }
 }
-
 .App-header .header_nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
-
 .App-header .header_nav .MuiListItem-root {
   width: auto;
 }
@@ -75,9 +53,8 @@
   font-size: 15px;
   font-style: italic;
 }
-
 .logged-user:after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   bottom: 0;
@@ -88,8 +65,7 @@
 
 .user-email {
   display: block;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   height: 32px;
   margin-top: 5px;
   padding: 5px;
@@ -100,13 +76,8 @@
 }
 
 .sunrise-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   width: 100%;
   background: rgba(255, 255, 255, 0.8);
-}
-/*# sourceMappingURL=Navigation.css.map */
+}/*# sourceMappingURL=Navigation.css.map */

@@ -2,15 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
 .taskList-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  justify-content: flex-start;
   width: 90%;
 }
-
 .taskList-menu__switch-container {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 0 10px;
@@ -24,106 +19,71 @@
   max-height: 80vh;
   margin: 0 auto;
   padding: 10px;
-  border: 2px solid white;
+  border: 2px solid rgb(255, 255, 255);
   border-radius: 10px;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
   overflow-x: no;
 }
-
 .taskList-container ul {
   padding: 1rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+  flex-flow: row wrap;
   margin: 0 auto;
   gap: 1rem;
   row-gap: 1rem;
   max-height: 75vh;
 }
-
 .taskList-container .task {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-flex: 1;
-      -ms-flex: 1 250px;
-          flex: 1 250px;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex: 1 250px;
+  flex-direction: column;
+  justify-content: space-between;
   max-width: 300px;
   min-height: 250px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border-radius: 10px;
   list-style: none;
-  -webkit-transition: 0.5s;
   transition: 0.5s;
-  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  background-color: floralwhite;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  background-color: rgb(255, 250, 240);
 }
-
 @media (min-width: 690px) and (max-width: 890px) {
   .taskList-container .task {
     max-width: 350px;
   }
 }
-
 @media (max-width: 690px) {
   .taskList-container .task {
     width: 90%;
     max-width: none;
   }
 }
-
 .taskList-container .task p {
   margin: 0;
   display: block;
   font-size: 0.7rem;
 }
-
 .taskList-container .task .task-date {
   font-size: 0.7rem;
 }
-
 .taskList-container .task .button-container {
   width: 50%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 @media (max-width: 500px) {
   .taskList-container .task .button-container {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    flex-direction: column;
   }
 }
-
 .taskList-container .task .done-text {
   color: orange;
 }
-
 .taskList-container .completed {
   background: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: rgb(255, 255, 255);
 }
-
 .taskList-container .completed button {
   color: black;
 }
@@ -139,7 +99,6 @@
 
 .item-enter-active {
   opacity: 1;
-  -webkit-transition: opacity 500ms ease-in;
   transition: opacity 500ms ease-in;
 }
 
@@ -149,7 +108,5 @@
 
 .item-exit-active {
   opacity: 0;
-  -webkit-transition: opacity 500ms ease-in;
   transition: opacity 500ms ease-in;
-}
-/*# sourceMappingURL=TaskList.css.map */
+}/*# sourceMappingURL=TaskList.css.map */

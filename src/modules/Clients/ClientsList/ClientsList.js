@@ -78,7 +78,7 @@ function ClientsList({
                             onChange={onSearchChange}
                         ></SearchTextField>
                     </h3>
-                    <ul>
+                    <ul id="on-scroll__slide-animation-list">
                         {clients
                             .filter(client =>
                                 `${client.name} ${client.surname}`

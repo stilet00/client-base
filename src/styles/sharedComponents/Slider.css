@@ -14,6 +14,5 @@
 }
 
 .MuiSlider-track, .MuiSlider-thumb {
-  color: white;
-}
-/*# sourceMappingURL=Slider.css.map */
+  color: rgb(255, 255, 255);
+}/*# sourceMappingURL=Slider.css.map */
