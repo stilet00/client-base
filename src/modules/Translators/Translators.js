@@ -1,4 +1,6 @@
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import Button from '@mui/material/Button'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -12,7 +14,6 @@ import ClientsForm from '../Clients/ClientsForm/ClientsForm'
 import Loader from '../../sharedComponents/Loader/Loader'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTranslators } from './businessLogic'
-import React, { useState } from 'react'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -31,7 +32,8 @@ const StyledButton = styled(Button)`
         color: black;
     }
 `
-function Translators({ user }) {
+function Translators() {
+    const user = useSelector(state => state.auth.user)
     const { screenIsSmall } = useWindowDimensions()
     const {
         translators,
@@ -425,7 +427,7 @@ function Translators({ user }) {
             />
         </div>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }
 

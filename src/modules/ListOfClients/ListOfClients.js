@@ -1,10 +1,5 @@
-import {
-    useState,
-    useEffect,
-    useCallback,
-    useDeferredValue,
-    useMemo,
-} from 'react'
+import { useState, useEffect, useCallback, useDeferredValue } from 'react'
+import { useSelector } from 'react-redux'
 import {
     getClients,
     addClient,
@@ -25,7 +20,7 @@ import {
     getSumFromArray,
 } from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import useModal from '../../sharedHooks/useModal'
 import Button from '@mui/material/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
@@ -34,7 +29,8 @@ import Loader from '../../sharedComponents/Loader/Loader'
 import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
-export default function ListOfClients({ user }) {
+export default function ListOfClients() {
+    const user = useSelector(state => state.auth.user)
     const [paymentsList, setPaymentsList] = useState([])
     const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
@@ -373,6 +369,6 @@ export default function ListOfClients({ user }) {
             <Loader />
         </div>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }

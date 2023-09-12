@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import '../../styles/modules/FinanceStatementPage.css'
 import PaymentsGroup from './PaymentsGroup/PaymentsGroup'
 import FinancesForm from './FinancesForm/FinancesForm'
@@ -12,9 +13,10 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 
-export default function FinanceStatementPage({ user }) {
+export default function FinanceStatementPage() {
+    const user = useSelector(state => state.auth.user)
     const [loading, setLoading] = useState(true)
     const [paymentsList, setPaymentsList] = useState([])
     const [deletedPayment, setDeletedPayment] = useState(null)
@@ -205,7 +207,7 @@ export default function FinanceStatementPage({ user }) {
                 </>
             )}
             {userIsAuthorizedAndPageIsLoading && <Loader />}
-            {userIsNotAuthorized && <Unauthorized />}
+            {userIsNotAuthorized && <LoggedOutPage />}
         </>
     )
 }
