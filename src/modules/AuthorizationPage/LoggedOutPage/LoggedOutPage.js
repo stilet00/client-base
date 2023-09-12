@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import '../../../styles/modules/Unauthorized.css'
+import '../../../styles/modules/LoggedOut.css'
 import { useHistory } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import { fadeOut } from 'react-animations'
@@ -12,7 +12,7 @@ const Animate = styled.div`
     height: 100%;
 `
 
-function Unauthorized() {
+function LoggedOutPage() {
     const [time, setTime] = useState(3)
 
     const history = useHistory()
@@ -35,8 +35,8 @@ function Unauthorized() {
 
     return (
         <Animate>
-            <div className={'unauthorized'}>
-                <h1>You should log in before using this service...</h1>
+            <div className={'logged-out'}>
+                <h1>You have been logged out...</h1>
                 <p>You will be redirected in ...{time}</p>
                 <Button
                     onClick={() => history.push('/')}
@@ -50,4 +50,4 @@ function Unauthorized() {
     )
 }
 
-export default Unauthorized
+export default LoggedOutPage

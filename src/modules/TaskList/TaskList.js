@@ -1,10 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import '../../styles/modules/TaskList.css'
 import SingleTask from './SingleTask/SingleTask'
 import Form from './Form/Form'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Loader from '../../sharedComponents/Loader/Loader'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTaskList } from './businessLogic'
 import FormGroup from '@mui/material/FormGroup'
@@ -12,7 +13,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
 
-function TaskList({ user }) {
+function TaskList() {
+    const user = useSelector(state => state.auth.user)
     const {
         tasks,
         alertOpen,
@@ -86,7 +88,7 @@ function TaskList({ user }) {
             />
         </>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }
 

@@ -1,15 +1,18 @@
 import { useCallback, useRef, useState } from 'react'
-import { DEFAULT_ERROR } from '../../constants/constants'
 import { useHistory } from 'react-router-dom'
-import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../../features/authSlice'
 import firebase from 'firebase'
+
+import { DEFAULT_ERROR } from '../../constants/constants'
+import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import { saveUserIdTokenToLocalStorage } from '../../sharedFunctions/sharedFunctions'
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
     const [forgotPasswordToogle, setForgotPassword] = useState(false)
-
     const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
 
     const [error, setError] = useState({
         email: DEFAULT_ERROR,
@@ -55,6 +58,19 @@ export const useAuthorizationPage = () => {
                     .auth()
                     .signInWithEmailAndPassword(email, password)
                     .then(result => {
+                        if (!!result.user) {
+                            const { email, displayName, emailVerified, uid } =
+                                result.user
+                            dispatch(
+                                setUser({
+                                    email,
+                                    displayName,
+                                    emailVerified,
+                                    uid,
+                                })
+                            )
+                            history.push('/overview/')
+                        }
                         result.user
                             .getIdToken()
                             .then(idToken =>
@@ -105,7 +121,6 @@ export const useAuthorizationPage = () => {
     }
 
     return {
-        history,
         onSubmit,
         error,
         email,

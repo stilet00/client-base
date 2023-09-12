@@ -1,7 +1,6 @@
 import '../../styles/modules/AuthorizationPage.css'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAuthorizationPage } from './businessLogic'
 import styled, { keyframes } from 'styled-components'
@@ -78,7 +77,6 @@ const StyledInput = styled(TextField)({
 
 function AuthorizationPage() {
     const {
-        history,
         onPasswordChange,
         alertOpen,
         closeAlert,
@@ -135,139 +133,124 @@ function AuthorizationPage() {
         }
     }
     return (
-        <FirebaseAuthConsumer>
-            {({ isSignedIn }) => {
-                if (isSignedIn) {
-                    history.push('/overview/')
-                }
-                return (
-                    <>
-                        <div className={`authorization-container`}>
-                            <Bounce>
-                                <animated.form
-                                    action=""
-                                    onSubmit={onSubmit}
-                                    style={moveOut}
-                                >
-                                    {!forgotPasswordToogle && (
-                                        <h2 className={'authorization-welcome'}>
-                                            Please, log in to proceed...
-                                        </h2>
-                                    )}
-                                    <StyledInput
-                                        error={error.email.status}
-                                        label="Email"
-                                        type="email"
-                                        fullWidth
-                                        autoComplete="current-password"
-                                        variant="outlined"
-                                        name={'email'}
-                                        value={email}
-                                        disabled={forgotPasswordToogle}
-                                        onChange={onEmailChange}
-                                        required
-                                    />
+        <>
+            <div className={`authorization-container`}>
+                <Bounce>
+                    <animated.form
+                        action=""
+                        onSubmit={onSubmit}
+                        style={moveOut}
+                    >
+                        {!forgotPasswordToogle && (
+                            <h2 className={'authorization-welcome'}>
+                                Please, log in to proceed...
+                            </h2>
+                        )}
+                        <StyledInput
+                            error={error.email.status}
+                            label="Email"
+                            type="email"
+                            fullWidth
+                            autoComplete="current-password"
+                            variant="outlined"
+                            name={'email'}
+                            value={email}
+                            disabled={forgotPasswordToogle}
+                            onChange={onEmailChange}
+                            required
+                        />
 
-                                    <StyledInput
-                                        disabled={forgotPasswordToogle}
-                                        error={error.password.status}
-                                        label="Password"
-                                        type="password"
-                                        fullWidth
-                                        autoComplete="current-password"
-                                        variant="outlined"
-                                        name={'password'}
-                                        value={password}
-                                        onChange={onPasswordChange}
-                                        required
-                                    />
+                        <StyledInput
+                            disabled={forgotPasswordToogle}
+                            error={error.password.status}
+                            label="Password"
+                            type="password"
+                            fullWidth
+                            autoComplete="current-password"
+                            variant="outlined"
+                            name={'password'}
+                            value={password}
+                            onChange={onPasswordChange}
+                            required
+                        />
 
-                                    <StyledButton
-                                        disabled={forgotPasswordToogle}
-                                        variant="contained"
-                                        fullWidth
-                                        className={'enter-button'}
-                                        type={'submit'}
-                                        ref={buttonElement}
-                                        startIcon={
-                                            <FontAwesomeIcon
-                                                icon={faRightToBracket}
-                                            />
-                                        }
-                                    >
-                                        Enter
-                                    </StyledButton>
-                                    {!forgotPasswordToogle && (
-                                        <Button
-                                            style={{
-                                                padding: 0,
-                                                color: 'black',
-                                            }}
-                                            onClick={onToogle}
-                                        >
-                                            Forgot Password?
-                                        </Button>
-                                    )}
-                                </animated.form>
-                                <animated.div style={moveIn}>
-                                    <Avatar sx={{ bgcolor: blue[500] }}>
-                                        <LockIcon />
-                                    </Avatar>
-                                    <h2 className={'authorization-welcome'}>
-                                        Enter your email...
-                                    </h2>
-                                    <StyledInput
-                                        error={error.email.status}
-                                        label="Email"
-                                        type="email"
-                                        fullWidth
-                                        autoComplete="current-password"
-                                        variant="outlined"
-                                        name={'email'}
-                                        value={email}
-                                        onChange={onEmailChange}
-                                        required
-                                    />
-                                    <StyledButton
-                                        variant="contained"
-                                        fullWidth
-                                        className={'enter-button'}
-                                        onClick={passwordChangeRequest}
-                                        ref={buttonElement}
-                                        startIcon={
-                                            <FontAwesomeIcon
-                                                icon={faRightToBracket}
-                                            />
-                                        }
-                                    >
-                                        send password
-                                    </StyledButton>
-                                    <Button
-                                        onClick={onToogle}
-                                        style={{
-                                            padding: 0,
-                                            color: 'black',
-                                        }}
-                                    >
-                                        Back
-                                    </Button>
-                                </animated.div>
-                            </Bounce>
-                            <AlertMessage
-                                mainText={"You've not been authorized :("}
-                                additionalText={
-                                    error.email.text || error.password.text
-                                }
-                                open={alertOpen}
-                                handleOpen={openAlert}
-                                handleClose={closeAlert}
-                                status={false}
-                            />
-                        </div>
-                    </>
-                )
-            }}
-        </FirebaseAuthConsumer>
+                        <StyledButton
+                            disabled={forgotPasswordToogle}
+                            variant="contained"
+                            fullWidth
+                            className={'enter-button'}
+                            type={'submit'}
+                            ref={buttonElement}
+                            startIcon={
+                                <FontAwesomeIcon icon={faRightToBracket} />
+                            }
+                        >
+                            Enter
+                        </StyledButton>
+                        {!forgotPasswordToogle && (
+                            <Button
+                                style={{
+                                    padding: 0,
+                                    color: 'black',
+                                }}
+                                onClick={onToogle}
+                            >
+                                Forgot Password?
+                            </Button>
+                        )}
+                    </animated.form>
+                    <animated.div style={moveIn}>
+                        <Avatar sx={{ bgcolor: blue[500] }}>
+                            <LockIcon />
+                        </Avatar>
+                        <h2 className={'authorization-welcome'}>
+                            Enter your email...
+                        </h2>
+                        <StyledInput
+                            error={error.email.status}
+                            label="Email"
+                            type="email"
+                            fullWidth
+                            autoComplete="current-password"
+                            variant="outlined"
+                            name={'email'}
+                            value={email}
+                            onChange={onEmailChange}
+                            required
+                        />
+                        <StyledButton
+                            variant="contained"
+                            fullWidth
+                            className={'enter-button'}
+                            onClick={passwordChangeRequest}
+                            ref={buttonElement}
+                            startIcon={
+                                <FontAwesomeIcon icon={faRightToBracket} />
+                            }
+                        >
+                            send password
+                        </StyledButton>
+                        <Button
+                            onClick={onToogle}
+                            style={{
+                                padding: 0,
+                                color: 'black',
+                            }}
+                        >
+                            Back
+                        </Button>
+                    </animated.div>
+                </Bounce>
+                <AlertMessage
+                    mainText={"You've not been authorized :("}
+                    additionalText={error.email.text || error.password.text}
+                    open={alertOpen}
+                    handleOpen={openAlert}
+                    handleClose={closeAlert}
+                    status={false}
+                />
+            </div>
+        </>
     )
 }
 

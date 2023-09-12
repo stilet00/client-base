@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx'
 import Drawer from '@mui/material/Drawer'
 import Media from 'react-media'
@@ -25,6 +26,7 @@ import BottomNavigation from '@mui/material/BottomNavigation'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import { localStorageTokenKey } from '../../constants/constants'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import { clearUser } from '../../features/authSlice'
 
 const Animation = styled.div`
     animation: 1s ${keyframes`${fadeInRight}`};
@@ -32,7 +34,9 @@ const Animation = styled.div`
     height: 100%;
 `
 
-export default function Navigation({ user }) {
+export default function Navigation() {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.auth.user)
     const history = useHistory()
     let { pathname } = useLocation()
     const [state, setState] = useState({
@@ -63,6 +67,12 @@ export default function Navigation({ user }) {
             return
         }
         setState({ ...state, [anchor]: open })
+    }
+
+    const onLogOut = () => {
+        firebase.auth().signOut()
+        removeUserIdTokenFromLocalStorage()
+        dispatch(clearUser())
     }
 
     const list = anchor => (
@@ -117,13 +127,7 @@ export default function Navigation({ user }) {
                     <ListItemText primary={'Task List'} />
                 </ListItem>
                 {user ? (
-                    <ListItem
-                        button
-                        onClick={() => {
-                            firebase.auth().signOut()
-                            removeUserIdTokenFromLocalStorage()
-                        }}
-                    >
+                    <ListItem button onClick={onLogOut}>
                         <ListItemIcon>
                             <ExitToAppIcon />
                         </ListItemIcon>
@@ -137,6 +141,7 @@ export default function Navigation({ user }) {
     const removeUserIdTokenFromLocalStorage = () => {
         window.localStorage.removeItem(localStorageTokenKey)
     }
+
     return user ? (
         <div className="App-header">
             <Media
@@ -186,13 +191,7 @@ export default function Navigation({ user }) {
                                     value={'/tasks'}
                                 />
                             )}
-                            <ListItem
-                                button
-                                onClick={() => {
-                                    firebase.auth().signOut()
-                                    removeUserIdTokenFromLocalStorage()
-                                }}
-                            >
+                            <ListItem button onClick={onLogOut}>
                                 <ListItemIcon>
                                     <ExitToAppIcon />
                                 </ListItemIcon>

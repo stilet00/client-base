@@ -1,6 +1,8 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
 import SingleChart from './SingleChart/SingleChart'
 import Loader from '../../sharedComponents/Loader/Loader'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment'
@@ -15,7 +17,8 @@ import {
     arrayOfYearsForSelectFilter,
 } from '../../constants/constants'
 
-function ChartsContainer({ user }) {
+function ChartsContainer() {
+    const user = useSelector(state => state.auth.user)
     const {
         closeAlert,
         alertOpen,
@@ -178,7 +181,7 @@ function ChartsContainer({ user }) {
             />
         </>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }
 
