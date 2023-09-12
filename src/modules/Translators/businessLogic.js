@@ -737,7 +737,7 @@ export const useSingleTranslator = (
     personalPenalties
 ) => {
     const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
-    const [chatsBonus, setChatsBonus] = useState(0)
+    const [chatsBonus, setChatsBonus] = useState([])
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
@@ -882,20 +882,19 @@ export const useSingleTranslator = (
             })
     }
 
-    const getBonusesForChats = (
-        id,
-        date = selectedDate,
-        category = 'chats'
-    ) => {
+    const getBonusesForChats = (date = selectedDate, category = 'chats') => {
         const data = {
-            id,
             year: date.format('YYYY'),
             month: date.format('M'),
             category,
         }
-        requestBonusesForChats(data).then(
-            res => setChatsBonus(res.data[0]?.bonusChatsSum || 0) // can happen that translator is new and didn't exist in searched month
-        ) // see no reasons to use try catch block here as it is used on server side already
+        requestBonusesForChats(data)
+            .then(res => {
+                if (res.status === 200) setChatsBonus(res.data)
+            })
+            .catch(err => {
+                setChatsBonus([])
+            })
     }
 
     return {

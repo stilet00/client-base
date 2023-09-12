@@ -133,8 +133,11 @@ export default function EditBalanceForm({
                                                 label="Year"
                                             >
                                                 {arrayOfYearsForSelectFilter.map(
-                                                    year => (
-                                                        <MenuItem value={year}>
+                                                    (year, index) => (
+                                                        <MenuItem
+                                                            key={index}
+                                                            value={year}
+                                                        >
                                                             {year}
                                                         </MenuItem>
                                                     )

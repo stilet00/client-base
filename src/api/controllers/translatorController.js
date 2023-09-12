@@ -232,49 +232,36 @@ const calculateBonuses = (request, response) => {
         response.send('Ошибка при загрузке переводчика')
     } else {
         try {
-            const year = request.body.year || '2022'
+            const year = request.body.year || '2023'
             const month = parseInt(request.body.month) || 1 // making sure months will be integer
             const category = request.body.category || 'chats'
             const { collectionTranslators } = getCollections()
-            const chatPerMonthSum = collectionTranslators.aggregate([
+            const pipeline = [
                 {
-                    $match: { _id: ObjectId(request.body.id) }, // finding translator by id
+                    $unwind: '$statistics',
                 },
                 {
-                    $project: {
-                        // Including  only needed fields fro Translator object
-                        _id: 0, // Exclude _id field from the result
-                        statistics: {
-                            // in our case it is statistics
-                            $filter: {
-                                input: '$statistics', // same as for JS statistics.filter(stat => stat.year === year)
-                                as: 'stat',
-                                cond: { $eq: ['$$stat.year', year] }, // finding statistics by year
-                            },
-                        },
+                    $match: {
+                        'statistics.year': year,
                     },
-                },
-                {
-                    $unwind: '$statistics', // statistics is an array of months, so we have to unwind it to creater 12 objects of months
                 },
                 {
                     $project: {
                         currentMonth: {
-                            $arrayElemAt: ['$statistics.months', month - 1], // finding needed months  by index  and renaming it to currentMonth
+                            $arrayElemAt: ['$statistics.months', month - 1],
                         },
                     },
                 },
                 {
                     $project: {
-                        clients: '$currentMonth.clients', // talking only clients field and renaming it so we don't have to write currentMonth.clients all the time
+                        clients: '$currentMonth.clients',
                     },
                 },
                 {
                     $project: {
-                        _id: 0,
                         clients: {
                             $reduce: {
-                                input: '$clients', // taking array of clients
+                                input: '$clients',
                                 initialValue: [],
                                 in: {
                                     $concatArrays: [
@@ -282,10 +269,10 @@ const calculateBonuses = (request, response) => {
                                         {
                                             $filter: {
                                                 input: '$$this',
-                                                as: 'element', // doing something similar as clients.forEach(element => element.chats > 0 )
+                                                as: 'element',
                                                 cond: {
                                                     $gt: [
-                                                        '$$element.' + category, // concatination of element. + chats
+                                                        '$$element.' + category,
                                                         0,
                                                     ],
                                                 },
@@ -298,21 +285,20 @@ const calculateBonuses = (request, response) => {
                     },
                 },
                 {
-                    $unwind: '$clients', // now we have  array of clients, with only dates left where chats > 0 and we again unwind this array to get sum of those days
+                    $unwind: '$clients',
                 },
                 {
                     $group: {
-                        // creating output object  which will have { id: translatorId, totalChatsSum: integer}
-                        _id: request.body.id,
+                        _id: '$_id',
                         totalChatsSum: {
                             $sum: { $toDouble: '$clients.' + category },
-                        }, // The $toDouble operator is used to convert the value of a field to a double data type. In this case, it is used to ensure that the value retrieved from the clients array is treated as a numeric value before being summed using the $sum operator.
+                        },
                     },
                 },
                 {
                     $addFields: {
                         roundedTotalChatsSum: {
-                            $round: ['$totalChatsSum', 2], // just rounding data
+                            $round: ['$totalChatsSum', 2],
                         },
                         bonusChatsSum: {
                             $round: [
@@ -321,7 +307,7 @@ const calculateBonuses = (request, response) => {
                                         '$totalChatsSum',
                                         chatCostBonusInCents,
                                     ],
-                                }, // getting  value we need to add as 9 cents to 12 cents is like 3/4 so we need to find 1/4 of it or 1/3 from 9
+                                },
                                 2,
                             ],
                         },
@@ -329,13 +315,13 @@ const calculateBonuses = (request, response) => {
                 },
                 {
                     $project: {
-                        // finally returing the object we need with only 3 fields left
-                        _id: 1, // means if the field existed in previous object in our case when we used  $group, it should be included here as well
                         totalChatsSum: '$roundedTotalChatsSum',
-                        bonusChatsSum: 1, // same this field existed 1 step above so we just project it to new output object
+                        bonusChatsSum: 1,
                     },
                 },
-            ])
+            ]
+
+            const chatPerMonthSum = collectionTranslators.aggregate(pipeline)
 
             chatPerMonthSum.toArray().then(docs => {
                 response.send(docs)
