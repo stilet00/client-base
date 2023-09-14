@@ -69,8 +69,9 @@ function Translators() {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        getBonusesForChats,
+        chatsBonus,
     } = useTranslators(user)
-    const { getBonusesForChats, chatsBonus } = useSingleTranslator(user)
     const { isAdmin } = useAdminStatus(user)
     const [anchorEl, setAnchorEl] = useState(null)
 

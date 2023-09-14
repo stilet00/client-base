@@ -40,6 +40,7 @@ export const useTranslators = user => {
     const [message, setMessage] = useState(MESSAGES.addTranslator)
     const match = useRouteMatch()
     const [clients, setClients] = useState([])
+    const [chatsBonus, setChatsBonus] = useState([])
 
     const [translators, setTranslators] = useState([])
 
@@ -563,6 +564,25 @@ export const useTranslators = user => {
         },
         [translators]
     )
+    const getBonusesForChats = (
+        date = translatorFilter?.date,
+        category = 'chats'
+    ) => {
+        const data = {
+            year: date.format('YYYY'),
+            month: date.format('M'),
+            category,
+        }
+        requestBonusesForChats(data)
+            .then(res => {
+                if (res.status === 200) {
+                    setChatsBonus(res.data)
+                }
+            })
+            .catch(err => {
+                setChatsBonus([])
+            })
+    }
 
     return {
         translators,
@@ -601,6 +621,8 @@ export const useTranslators = user => {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        chatsBonus,
+        getBonusesForChats,
     }
 }
 
@@ -737,7 +759,6 @@ export const useSingleTranslator = (
     personalPenalties
 ) => {
     const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
-    const [chatsBonus, setChatsBonus] = useState([])
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
@@ -882,21 +903,6 @@ export const useSingleTranslator = (
             })
     }
 
-    const getBonusesForChats = (date = selectedDate, category = 'chats') => {
-        const data = {
-            year: date.format('YYYY'),
-            month: date.format('M'),
-            category,
-        }
-        requestBonusesForChats(data)
-            .then(res => {
-                if (res.status === 200) setChatsBonus(res.data)
-            })
-            .catch(err => {
-                setChatsBonus([])
-            })
-    }
-
     return {
         calculateSumByClient,
         specialColorNeeded,
@@ -908,7 +914,5 @@ export const useSingleTranslator = (
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
-        chatsBonus,
-        getBonusesForChats,
     }
 }

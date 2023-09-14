@@ -227,7 +227,7 @@ const sendEmailsToTranslators = (request, response) => {
         })
 }
 
-const calculateBonuses = (request, response) => {
+const calculateBonuses = async (request, response) => {
     if (!request.body) {
         response.send('Ошибка при загрузке переводчика')
     } else {
@@ -321,11 +321,10 @@ const calculateBonuses = (request, response) => {
                 },
             ]
 
-            const chatPerMonthSum = collectionTranslators.aggregate(pipeline)
-
-            chatPerMonthSum.toArray().then(docs => {
-                response.send(docs)
-            })
+            const chatPerMonthSum = await collectionTranslators
+                .aggregate(pipeline)
+                .toArray()
+            response.send(chatPerMonthSum)
         } catch (err) {
             response.status(500).send(err.message)
         }
