@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import Button from '@mui/material/Button'
@@ -13,7 +13,7 @@ import '../../styles/modules/Translators.css'
 import ClientsForm from '../Clients/ClientsForm/ClientsForm'
 import Loader from '../../sharedComponents/Loader/Loader'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
-import { useTranslators } from './businessLogic'
+import { useTranslators, useSingleTranslator } from './businessLogic'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -69,6 +69,8 @@ function Translators() {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
+        getBonusesForChats,
+        chatsBonus,
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -83,7 +85,9 @@ function Translators() {
 
     const open = Boolean(anchorEl)
     const id = open ? 'simple-popover' : undefined
-
+    useEffect(() => {
+        getBonusesForChats(translatorFilter.date, 'chats')
+    }, [user, translatorFilter.date])
     return user ? (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
@@ -392,6 +396,9 @@ function Translators() {
                             }
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
+                            bonus={chatsBonus.find(
+                                bonus => bonus._id === item._id
+                            )}
                         />
                     ))
                 ) : loading ? (

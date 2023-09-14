@@ -62,6 +62,7 @@ function SingleTranslator({
     wantsToReceiveEmails,
     dollarToUahRate,
     admin,
+    bonus,
 }) {
     const {
         calculateSumByClient,
@@ -74,10 +75,7 @@ function SingleTranslator({
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
-        chatsBonus,
-        getBonusesForChats,
     } = useSingleTranslator(statistics, selectedDate, personalPenalties)
-
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
     const translatorPreviousMonthTotalSum =
         previousMonth === '12'
@@ -95,7 +93,7 @@ function SingleTranslator({
             selectedDate.format('M'),
             selectedDate.format('YYYY')
         ) +
-            chatsBonus) *
+            bonus?.bonusChatsSum) *
             TRANSLATORS_SALARY_PERCENT
     )
 
@@ -134,10 +132,6 @@ function SingleTranslator({
         moment().format('MMMM').length > '5'
             ? moment().format('MMM')
             : moment().format('MMMM')
-
-    useEffect(() => {
-        getBonusesForChats(_id, selectedDate, 'chats')
-    }, [_id, selectedDate])
 
     return (
         <Card
@@ -441,7 +435,7 @@ function SingleTranslator({
                                         {`Chats bonus in ${selectedDate.format(
                                             'MMMM'
                                         )}: `}
-                                        <b>{`${chatsBonus} $`}</b>
+                                        <b>{`${bonus?.bonusChatsSum} $`}</b>
                                     </Typography>
                                     <Typography variant="body2">
                                         {`Salary for ${selectedDate.format(
