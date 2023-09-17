@@ -170,102 +170,103 @@ main
   100%
     transform: scale(1)
 
-// @keyframes animate-in-view-rotate
-//   0%
-//     transform: translateY(100%) rotate(45deg)
+@keyframes animate-in-view-rotate
+  0%
+    transform: translateY(100%) rotate(45deg)
 
-//   100%
-//     transform: translateY(0) rotate(0)
+  100%
+    transform: translateY(0) rotate(0)
 
-// @keyframes animate-out-view-rotate
-//   0%
-//     transform: translateY(0) rotate(0)
+@keyframes animate-out-view-rotate
+  0%
+    transform: translateY(0) rotate(0)
 
-//   100%
-//     transform: translateY(-100%) rotate(-45deg)
+  100%
+    transform: translateY(-100%) rotate(-45deg)
 
-// @keyframes animate-in-view-slide-medium
-//   0%
-//     transform: translateY(100%)
+@keyframes animate-in-view-slide-medium
+  0%
+    transform: translateY(100%)
 
-//   100%
-//     transform: translateY(0)
+  100%
+    transform: translateY(0)
 
-// @keyframes animate-out-view-slide-medium
-//   0%
-//     transform: translateY(0)
+@keyframes animate-out-view-slide-medium
+  0%
+    transform: translateY(0)
 
-//   100%
-//     transform: translateY(-100%)
+  100%
+    transform: translateY(-100%)
 
-// @keyframes animate-in-view-slide-big
-//   0%
-//     transform: translateY(150%)
+@keyframes animate-in-view-slide-big
+  0%
+    transform: translateY(150%)
 
-//   100%
-//     transform: translateY(0)
+  100%
+    transform: translateY(0)
 
-// @keyframes animate-out-view-slide-big
-//   0%
-//     transform: translateY(0)
+@keyframes animate-out-view-slide-big
+  0%
+    transform: translateY(0)
 
-//   100%
-//     transform: translateY(-150%)
+  100%
+    transform: translateY(-150%)
 
-// @keyframes animate-in-view-slide-small
-//   0%
-//     transform: translateY(50%)
+@keyframes animate-in-view-slide-small
+  0%
+    transform: translateY(50%)
 
-//   100%
-//     transform: translateY(0)
+  100%
+    transform: translateY(0)
 
-// @keyframes animate-out-view-slide-small
-//   0%
-//     transform: translateY(0)
+@keyframes animate-out-view-slide-small
+  0%
+    transform: translateY(0)
 
-//   100%
-//     transform: translateY(-50%)
+  100%
+    transform: translateY(-50%)
 
-// #on-scroll__slide-animation-list > li
-//   animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
-//   animation-timeline: view()
-//   animation-range: entry, exit
-//   animation-duration: 1ms
+@supports  (animation-timeline: view())
+  #on-scroll__slide-animation-list > li
+    animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
+    animation-timeline: view()
+    animation-range: entry, exit
+    animation-duration: 1ms
 
-// #on-scroll__rotate-animation-list > div:nth-child(3n)
-//   animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-big linear forwards
-//   animation-timeline: view()
-//   animation-range: entry, exit
-//   animation-duration: 1ms
+  #on-scroll__rotate-animation-list > div:nth-child(3n)
+    animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-big linear forwards
+    animation-timeline: view()
+    animation-range: entry, exit
+    animation-duration: 1ms
 
-// #on-scroll__rotate-animation-list > div:nth-child(3n - 1)
-//   animation: animate-in-view-slide-medium linear forwards, animate-out-view-slide-medium linear forwards
-//   animation-timeline: view()
-//   animation-range: entry, exit
-//   animation-duration: 1ms
+  #on-scroll__rotate-animation-list > div:nth-child(3n - 1)
+    animation: animate-in-view-slide-medium linear forwards, animate-out-view-slide-medium linear forwards
+    animation-timeline: view()
+    animation-range: entry, exit
+    animation-duration: 1ms
 
-// #on-scroll__rotate-animation-list > div:nth-child(3n - 2)
-//   animation: animate-in-view-slide-big linear forwards, animate-out-view-slide-small linear forwards
-//   animation-timeline: view()
-//   animation-range: entry, exit
-//   animation-duration: 1ms
+  #on-scroll__rotate-animation-list > div:nth-child(3n - 2)
+    animation: animate-in-view-slide-big linear forwards, animate-out-view-slide-small linear forwards
+    animation-timeline: view()
+    animation-range: entry, exit
+    animation-duration: 1ms
 
-// @media (max-width: 900px)
-//   #on-scroll__rotate-animation-list > div:nth-child(2n)
-//     animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-medium linear forwards
-//     animation-timeline: view()
-//     animation-range: entry, exit
-//     animation-duration: 1ms
+  @media (max-width: 900px)
+    #on-scroll__rotate-animation-list > div:nth-child(2n)
+      animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-medium linear forwards
+      animation-timeline: view()
+      animation-range: entry, exit
+      animation-duration: 1ms
 
-//   #on-scroll__rotate-animation-list > div:nth-child(2n - 1)
-//     animation: animate-in-view-slide-medium linear forwards, animate-out-view-slide-small linear forwards
-//     animation-timeline: view()
-//     animation-range: entry, exit
-//     animation-duration: 1ms
+    #on-scroll__rotate-animation-list > div:nth-child(2n - 1)
+      animation: animate-in-view-slide-medium linear forwards, animate-out-view-slide-small linear forwards
+      animation-timeline: view()
+      animation-range: entry, exit
+      animation-duration: 1ms
 
-// @media (max-width: 650px)
-//   #on-scroll__rotate-animation-list > div
-//     animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards !important
-//     animation-timeline: view() !important
-//     animation-range: entry, exit !important
-//     animation-duration: 1ms !important
+  @media (max-width: 650px)
+    #on-scroll__rotate-animation-list > div
+      animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards !important
+      animation-timeline: view() !important
+      animation-range: entry, exit !important
+      animation-duration: 1ms !important
