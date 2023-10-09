@@ -1,6 +1,25 @@
 const { getCollections } = require('../database/collections')
 let ObjectId = require('mongodb').ObjectID
+const sharp = require('sharp')
 
+const clientImageConverter = async image => {
+    try {
+        const format = 'jpeg'
+        const resizedImageBuffer = await sharp(
+            Buffer.from(image.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+        )
+            .resize(300, 300, { fit: 'inside', withoutEnlargement: true })
+            .toFormat('jpeg')
+            .toBuffer()
+
+        const resizedImageBase64 = `data:image/${format};base64,${resizedImageBuffer.toString(
+            'base64'
+        )}`
+        return resizedImageBase64
+    } catch (err) {
+        return image
+    }
+}
 const getAllClients = (request, response) => {
     const noImageRequest = !!request.query?.params
     if (noImageRequest) {
@@ -30,19 +49,28 @@ const getAllClients = (request, response) => {
     }
 }
 
-const addNewClient = function (request, response, next) {
-    if (!request.body) {
-        response.send('Ошибка при загрузке клиентки')
-    } else {
-        getCollections().collectionClients.insertOne(
-            request.body,
-            (err, result) => {
-                if (err) {
-                    return response.sendStatus(500)
-                }
-                response.send(result?.insertedId)
-            }
+const addNewClient = async function (request, response, next) {
+    try {
+        if (!request.body) {
+            return response.status(400).send('Ошибка при загрузке клиентки')
+        }
+
+        const { image } = request.body
+        const resizedImage = await clientImageConverter(image)
+
+        const newClientDataWithResizedImage = {
+            ...request.body,
+            image: resizedImage,
+        }
+
+        const result = await getCollections().collectionClients.insertOne(
+            newClientDataWithResizedImage
         )
+
+        response.status(201).send(result?.insertedId)
+    } catch (error) {
+        console.error(error)
+        response.status(500).send('Internal Server Error')
     }
 }
 
@@ -95,36 +123,58 @@ const changeClientNameInTranslatorsDataBase = async (
     )
 }
 
-const updateClient = (request, response) => {
-    getCollections().collectionClients.updateOne(
-        { _id: ObjectId(request.params.id) },
-        {
-            $set: {
-                name: request.body.name,
-                surname: request.body.surname,
-                bankAccount: request.body.bankAccount,
-                instagramLink: request.body.instagramLink,
-                suspended: request.body.suspended,
-                image: request.body.image,
-                svadba: {
-                    login: request.body.svadba.login,
-                    password: request.body.svadba.password,
-                },
-                dating: {
-                    login: request.body.dating.login,
-                    password: request.body.dating.password,
-                },
-            },
-        },
-        err => {
-            if (err) {
-                return response.sendStatus(500)
-            }
-            const message = 'Переводчик сохранен'
-            response.send(message)
-            editArrayOfClientsInTranslators(request.body)
+const updateClient = async (request, response) => {
+    try {
+        if (!request.body) {
+            return response.sendStatus(400)
         }
-    )
+        const {
+            image,
+            name,
+            surname,
+            bankAccount,
+            instagramLink,
+            suspended,
+            svadba,
+            dating,
+        } = request.body
+
+        const resizedImage = await clientImageConverter(image)
+
+        const result = await getCollections().collectionClients.updateOne(
+            { _id: ObjectId(request.params.id) },
+            {
+                $set: {
+                    name,
+                    surname,
+                    bankAccount,
+                    instagramLink,
+                    suspended,
+                    image: resizedImage,
+                    svadba: {
+                        login: svadba.login,
+                        password: svadba.password,
+                    },
+                    dating: {
+                        login: dating.login,
+                        password: dating.password,
+                    },
+                },
+            }
+        )
+
+        if (result.matchedCount === 0) {
+            return response.sendStatus(404)
+        }
+
+        const message = 'клиентка сохранена'
+        response.send(message)
+
+        editArrayOfClientsInTranslators(request.body)
+    } catch (error) {
+        console.error(error)
+        response.sendStatus(500)
+    }
 }
 
 // const deleteClient = (request, response) => {

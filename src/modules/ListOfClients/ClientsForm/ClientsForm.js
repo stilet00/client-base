@@ -309,7 +309,7 @@ export default function ClientsForm({
                                         >
                                             <input
                                                 hidden
-                                                accept="image/png"
+                                                accept="image/jpeg,image/jpg,image/png"
                                                 type="file"
                                             />
                                             <PhotoCamera
