@@ -4,6 +4,7 @@ const {
     calculateTranslatorYesterdayTotal,
     calculateTranslatorMonthTotal,
     calculatePercentDifference,
+    calCurMonthTranslatorPenaties,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
@@ -21,7 +22,7 @@ const credentialsForNodeMailer = JSON.parse(
 )
 const imageNamesArrayForEmail = [
     'email-icon.png',
-    'women.png',
+    'customer.png',
     'chat.png',
     'love.png',
     'email-letter.png',
@@ -32,6 +33,32 @@ const imageNamesArrayForEmail = [
     'voice.png',
     'penalties.png',
 ]
+
+const createTransport = () => {
+    let transporter
+    if (process.env.NODE_ENV === 'development') {
+        transporter = nodeMailer.createTransport({
+            host: 'smtp.mailtrap.io',
+            port: 2525,
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        })
+    } else {
+        transporter = nodeMailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: credentialsForNodeMailer.user,
+                pass: credentialsForNodeMailer.pass,
+            },
+        })
+    }
+
+    return transporter
+}
 
 const sendEmailTemplateToAdministrators = translatorsCollection => {
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
@@ -55,15 +82,7 @@ const sendEmailTemplateToAdministrators = translatorsCollection => {
             arrayOfTranslatorsNamesAndMonthSums,
             yesterdayTotalSum,
         })
-    let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: credentialsForNodeMailer.user,
-            pass: credentialsForNodeMailer.pass,
-        },
-    })
+    let transporter = createTransport()
     let mailOptions = {
         from: '"Sunrise agency" <sunrise-agency@gmail.com>',
         to: administratorsEmailList,
@@ -90,6 +109,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                 client => !client.suspended
             ),
             wantsToReceiveEmails: translator.wantsToReceiveEmails,
+            personalPenalties: translator.personalPenalties,
         })
     )
     arrayOfTranslatorsInfoForEmailLetter =
@@ -139,25 +159,20 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                     statistics: statisticByClient,
                 }
             })
-
+            const curMonthPenalties = calCurMonthTranslatorPenaties(
+                translator.personalPenalties
+            )
             return {
                 ...translator,
                 yesterdaySum,
                 currentMonthTotal,
                 monthProgressPercent,
                 detailedStatistic,
+                curMonthPenalties,
             }
         })
 
-    let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: credentialsForNodeMailer.user,
-            pass: credentialsForNodeMailer.pass,
-        },
-    })
+    let transporter = createTransport()
 
     const arrayOfTranslatorsWhoReceivedLetter = await Promise.all(
         arrayOfTranslatorsInfoForEmailLetter.map(
