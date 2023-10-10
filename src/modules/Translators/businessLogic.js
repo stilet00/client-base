@@ -630,7 +630,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     const { open, handleOpen, handleClose } = useModal()
 
     const [selectedClient, setSelectedClient] = useState(
-        clients.filter(client => !client.suspended)[0]._id
+        clients.filter(client => !client.suspended)[0]?._id
     )
 
     const [selectedYear, setSelectedYear] = useState(
