@@ -73,8 +73,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                             }
                                             .container__tableheader-greetingsinfo {
                                                 background: linear-gradient(to bottom, #005BBB, #FFD100);
-                                                color: #ffffffa3;
-                                                text-shadow: -1px -1px 0px rgb(3 3 4 / 56%), 1px 1px 6px rgb(255 255 255 / 25%), 2px -1px 5px rgb(183 191 102 / 0%);
+                                                color: #ffffff;
                                             }
                                             .container__tbody-header {
                                                 font-weight: bold;
@@ -181,17 +180,17 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td class="container__tfoot-td" colspan="3">
+                                                        <td class="container__tfoot-td" colspan="2">
                                                             Yesterday: ${
                                                                 translatorInfoForEmailLetter.yesterdaySum
-                                                            } 💲 
+                                                            } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
-                                                        <td class="container__tfoot-td" colspan="3">
+                                                        <td class="container__tfoot-td" colspan="4">
                                                             ${moment().format(
                                                                 'MMMM'
                                                             )}: ${
         translatorInfoForEmailLetter.currentMonthTotal
-    } 💲 <span style="color:${
+    } <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
         translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
             ? 'green'
             : 'red'
@@ -202,7 +201,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
     }${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="3">
-                                                        Penalties: 🛑 <span style="color:${
+                                                        Penalties: <span>🛑 </span><span style="color:${
                                                             translatorInfoForEmailLetter.curMonthPenalties >
                                                             0
                                                                 ? 'red'
