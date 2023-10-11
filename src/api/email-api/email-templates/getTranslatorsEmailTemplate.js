@@ -74,7 +74,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                             .container__tableheader-greetingsinfo {
                                                 background: linear-gradient(to bottom, #005BBB, #FFD100);
                                                 color: #ffffffa3;
-                                                text-shadow: -1px -1px 1px rgb(116 115 115 / 56%), 1px 1px 1px rgb(255 255 255 / 25%), 2px -5px 1px rgb(183 191 102 / 0%);
+                                                text-shadow: -1px -1px 0px rgb(3 3 4 / 56%), 1px 1px 6px rgb(255 255 255 / 25%), 2px -1px 5px rgb(183 191 102 / 0%);
                                             }
                                             .container__tbody-header {
                                                 font-weight: bold;
