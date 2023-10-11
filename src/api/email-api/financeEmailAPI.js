@@ -36,26 +36,15 @@ const imageNamesArrayForEmail = [
 
 const createTransport = () => {
     let transporter
-    if (process.env.NODE_ENV === 'development') {
-        transporter = nodeMailer.createTransport({
-            host: 'smtp.mailtrap.io',
-            port: 2525,
-            auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        })
-    } else {
-        transporter = nodeMailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: credentialsForNodeMailer.user,
-                pass: credentialsForNodeMailer.pass,
-            },
-        })
-    }
+    transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: credentialsForNodeMailer.user,
+            pass: credentialsForNodeMailer.pass,
+        },
+    })
 
     return transporter
 }

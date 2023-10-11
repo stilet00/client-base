@@ -214,6 +214,7 @@ const insertClientToTranslatorBalanceDays = (balanceYearToUpdate, clientId) => {
 }
 
 const calCurMonthTranslatorPenaties = penalties => {
+    if (!penalties) return '0'
     const currentDate = moment()
     const onlyCurMonthPenalties = penalties.filter(penalty => {
         const penaltyDate = moment(penalty.date, 'DD MM YYYY')
