@@ -1,10 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .logged-out {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  box-sizing: border-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   z-index: 1;
   width: 90%;
   max-width: 600px;
@@ -12,14 +21,16 @@
   max-height: 300px;
   margin: auto;
   padding: 20px;
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid white;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
 }
+
 .logged-out h1 {
   color: #000000;
   text-shadow: none;
 }
+
 .logged-out p {
   font-size: 1.2rem;
 }
@@ -27,6 +38,8 @@
 a {
   text-decoration: none;
 }
+
 a:visited {
-  color: rgb(255, 255, 255);
-}/*# sourceMappingURL=LoggedOut.css.map */
+  color: white;
+}
+/*# sourceMappingURL=LoggedOut.css.map */

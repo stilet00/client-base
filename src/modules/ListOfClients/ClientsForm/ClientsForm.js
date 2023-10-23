@@ -271,9 +271,6 @@ export default function ClientsForm({
                                     variant="outlined"
                                     label={'Name'}
                                     required
-                                    sx={{
-                                        maxWidth: '50%',
-                                    }}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -286,9 +283,6 @@ export default function ClientsForm({
                                     name={'surname'}
                                     onChange={handleChange}
                                     value={client.surname}
-                                    sx={{
-                                        maxWidth: '50%',
-                                    }}
                                     variant="outlined"
                                     label={'Surname'}
                                     required

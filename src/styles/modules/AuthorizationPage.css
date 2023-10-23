@@ -1,10 +1,19 @@
 form {
   width: 100%;
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .authorization-container {
@@ -24,4 +33,5 @@ form {
 .password-container {
   width: 90%;
   max-width: 420.5px;
-}/*# sourceMappingURL=AuthorizationPage.css.map */
+}
+/*# sourceMappingURL=AuthorizationPage.css.map */
