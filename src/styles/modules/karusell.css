@@ -1,8 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 h2 {
   margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   letter-spacing: 0.2rem;
   color: #000000;
 }
@@ -17,9 +21,16 @@ h3 {
   min-height: 728px;
   margin: 0 auto;
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   will-change: transform;
 }
 
@@ -27,13 +38,15 @@ h3 {
   position: absolute;
   top: 39%;
   border: 1px solid lightblue;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   border-radius: 5px;
   outline: none;
   color: white;
+  -webkit-transition: 0.5s;
   transition: 0.5s;
   cursor: pointer;
 }
+
 .control:active {
   background: red;
 }
@@ -41,43 +54,66 @@ h3 {
 .previous {
   left: -15px;
 }
+
 .previous:hover {
-  box-shadow: 2px 2px 2px lightblue;
+  -webkit-box-shadow: 2px 2px 2px lightblue;
+          box-shadow: 2px 2px 2px lightblue;
 }
 
 .next {
   right: -15px;
 }
+
 .next:hover {
-  box-shadow: -2px 2px 2px lightblue;
+  -webkit-box-shadow: -2px 2px 2px lightblue;
+          box-shadow: -2px 2px 2px lightblue;
 }
 
 .control-buttons {
   width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .rotated-icon {
-  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 
 .karussell {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   min-height: 459px;
   min-width: 338px;
 }
+
 .karussell h3 {
   margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   padding: 5px;
   width: 90%;
   height: 30px;
-  border: 1px solid rgb(255, 255, 255);
+  border: 1px solid white;
   background-color: rgba(255, 255, 255, 0.7);
   border-bottom: none;
   border-top-left-radius: 5px;
@@ -86,48 +122,67 @@ h3 {
 }
 
 .socials {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   z-index: 1;
   width: 90%;
   max-height: 30px;
   margin: 0 auto;
   padding: 5px;
   border-top: none;
-  border-radius: 50% 0% 50% 50%/0% 0% 100% 100%;
+  border-radius: 50% 0% 50% 50% / 0% 0% 100% 100%;
   background-color: rgba(255, 255, 255, 0.7);
 }
+
 .socials .down-add-button {
   border-radius: inherit;
 }
 
 .main-photo-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   min-height: 384px;
   margin: 0 auto;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 .main-photo {
   width: 100%;
   border-radius: 10px;
   margin-bottom: 0;
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid white;
 }
 
 /*forward animation */
 .forward-enter {
   opacity: 0;
-  transform: translateX(200px);
+  -webkit-transform: translateX(200px);
+          transform: translateX(200px);
 }
 
 .forward-enter-active {
   opacity: 1;
-  transform: translateX(0);
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-transition: opacity 300ms, -webkit-transform 300ms;
+  transition: opacity 300ms, -webkit-transform 300ms;
   transition: opacity 300ms, transform 300ms;
+  transition: opacity 300ms, transform 300ms, -webkit-transform 300ms;
 }
 
 .forward-exit {
@@ -136,20 +191,29 @@ h3 {
 
 .forward-exit-active {
   opacity: 0;
-  transform: translateX(-200px);
+  -webkit-transform: translateX(-200px);
+          transform: translateX(-200px);
+  -webkit-transition: opacity 300ms, -webkit-transform 300ms;
+  transition: opacity 300ms, -webkit-transform 300ms;
   transition: opacity 300ms, transform 300ms;
+  transition: opacity 300ms, transform 300ms, -webkit-transform 300ms;
 }
 
 /*back animation */
 .back-enter {
   opacity: 0;
-  transform: translateX(-200px);
+  -webkit-transform: translateX(-200px);
+          transform: translateX(-200px);
 }
 
 .back-enter-active {
   opacity: 1;
-  transform: translateX(0);
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-transition: opacity 300ms, -webkit-transform 300ms;
+  transition: opacity 300ms, -webkit-transform 300ms;
   transition: opacity 300ms, transform 300ms;
+  transition: opacity 300ms, transform 300ms, -webkit-transform 300ms;
 }
 
 .back-exit {
@@ -158,8 +222,12 @@ h3 {
 
 .back-exit-active {
   opacity: 0;
-  transform: translateX(200px);
+  -webkit-transform: translateX(200px);
+          transform: translateX(200px);
+  -webkit-transition: opacity 300ms, -webkit-transform 300ms;
+  transition: opacity 300ms, -webkit-transform 300ms;
   transition: opacity 300ms, transform 300ms;
+  transition: opacity 300ms, transform 300ms, -webkit-transform 300ms;
 }
 
 @media (min-width: 500px) {
@@ -172,4 +240,5 @@ h3 {
   .previous {
     left: 7px;
   }
-}/*# sourceMappingURL=karusell.css.map */
+}
+/*# sourceMappingURL=karusell.css.map */
