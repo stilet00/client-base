@@ -57,6 +57,7 @@ function ChartsContainer() {
                     margin: '0 auto',
                     dislpay: 'flex',
                     flexDirection: 'row',
+                    zIndex: 3,
                 }}
             >
                 <FormControl

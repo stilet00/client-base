@@ -1,33 +1,26 @@
 import React from 'react'
 import '../../styles/modules/PreloadPage.css'
 import styled from 'styled-components'
-import moment from 'moment'
 import SignalShapedLoader from '../../sharedComponents/SignalShapedLoader/SignalShapedLoader'
 import Loader from '../../sharedComponents/Loader/Loader'
+import useNightTime from '../../sharedHooks/useNightTime'
 
 const PreloaderOuterContainer = styled.div`
     width: 100vw;
     height: 100vh;
-    display: ${props => (props.isLoaded ? 'flex' : 'none')};
+    display: ${props => (props.isLoading ? 'flex' : 'none')};
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;\
 `
 
-function PreloadPage({ isLoaded }) {
-    const isEveningTime = moment().isSameOrAfter(
-        moment('9:00:00 pm', 'h:mm:ss a')
-    )
-    const isNightTime = moment().isBetween(
-        moment('12:00:00 am', 'h:mm:ss a'),
-        moment('7:00:00 am', 'h:mm:ss a')
-    )
-    const shouldShowNightPreload = isEveningTime || isNightTime
+function PreloadPage({ isLoading }) {
+    const shouldShowNightPreload = useNightTime()
     return (
         <>
             {shouldShowNightPreload && (
-                <PreloaderOuterContainer isLoaded={isLoaded}>
+                <PreloaderOuterContainer isLoading={isLoading}>
                     <div className={'background-container'} />
                     <div className="stars" />
                     <div className="twinkling" />
@@ -37,7 +30,7 @@ function PreloadPage({ isLoaded }) {
             {!shouldShowNightPreload && (
                 <div
                     className={
-                        isLoaded ? 'preload-page' : 'preload-page invisible'
+                        isLoading ? 'preload-page' : 'preload-page invisible'
                     }
                 >
                     <Loader position={'0'} />

@@ -5,7 +5,7 @@ p {
 
 .green-line {
   width: 95%;
-  border-top: 2px solid white;
+  border-top: 2px solid rgb(255, 255, 255);
 }
 
 .total-text {
@@ -20,32 +20,20 @@ p {
 .button-chart-edit {
   margin: 0 auto;
   width: 60%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .button-chart-edit button {
   width: 50px;
 }
 
 .total-sum {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   width: 62%;
   margin: 0 auto 5px auto;
-  border: 2px solid white;
+  border: 2px solid rgb(255, 255, 255);
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -56,5 +44,4 @@ p {
   .hide-on-mobile-portrait {
     display: none;
   }
-}
-/*# sourceMappingURL=SingleChart.css.map */
+}/*# sourceMappingURL=SingleChart.css.map */

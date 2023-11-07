@@ -10,7 +10,8 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import sun from '../src/images/sun_transparent.png'
-import background from '../src/images/main-background-2.png'
+import lightThemeBackground from '../src/images/main-background-2.png'
+import darkThemeBackground from '../src/images/background-dark-theme.png'
 import Footer from './modules/Footer/Footer'
 import PreloadPage from './modules/PreloadPage/PreloadPage'
 import BackgroundImageOnLoad from 'background-image-on-load'
@@ -20,17 +21,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { saveUserIdTokenToLocalStorage } from './sharedFunctions/sharedFunctions'
 import { useActivity } from './services/userActivity'
 import AppRouter from './modules/Routes/AppRouter'
+import useNightTime from './sharedHooks/useNightTime'
 
 const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG)
 firebase.initializeApp(firebaseConfig)
 
 function App() {
-    const [isLoaded, setIsLoaded] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
     const { loggedIn } = useActivity()
     const stopLoading = () => {
-        setIsLoaded(false)
+        setIsLoading(false)
     }
-
+    const shouldShowDarkTheme = useNightTime()
+    const mainBackgroundImage = shouldShowDarkTheme
+        ? darkThemeBackground
+        : lightThemeBackground
     useEffect(() => {
         const timeToRefresh = 1000 * 60 * 40
         if (loggedIn) {
@@ -49,23 +54,37 @@ function App() {
         <Provider store={store}>
             <Router>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <PreloadPage isLoaded={isLoaded} />
+                    <PreloadPage isLoading={isLoading} />
                     <div
-                        className={isLoaded ? 'App invisible' : 'App'}
+                        className={isLoading ? 'App invisible' : 'App'}
                         style={{
-                            background: isLoaded
+                            background: isLoading
                                 ? 'white'
-                                : `url(${background})`,
+                                : `url(${mainBackgroundImage})`,
                         }}
                     >
-                        <div className="sun">
-                            <img
-                                src={sun}
-                                alt="Sun"
-                                width={'150px'}
-                                height={'150px'}
-                            />
-                        </div>
+                        {!shouldShowDarkTheme && (
+                            <div className="sun">
+                                <img
+                                    src={sun}
+                                    alt="Sun"
+                                    width={'150px'}
+                                    height={'150px'}
+                                />
+                            </div>
+                        )}
+                        {shouldShowDarkTheme && (
+                            <>
+                                <div
+                                    className="stars"
+                                    style={{
+                                        background: `black url(${mainBackgroundImage}) repeat`,
+                                    }}
+                                />
+                                <div className="twinkling" />
+                            </>
+                        )}
+
                         <Navigation />
                         <main>
                             <AppRouter />
@@ -73,7 +92,7 @@ function App() {
                         <Footer />
                     </div>
                     <BackgroundImageOnLoad
-                        src={background}
+                        src={mainBackgroundImage}
                         onLoadBg={() => {
                             setTimeout(stopLoading, 1000)
                         }}
