@@ -10,6 +10,7 @@ const Animate = styled.div`
     animation: 6s ${keyframes`${fadeOut}`};
     width: 100%;
     height: 100%;
+    z-index: 3;
 `
 
 function LoggedOutPage() {

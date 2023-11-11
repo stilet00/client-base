@@ -1,17 +1,17 @@
 const moment = require('moment')
 const { getCollections } = require('../database/collections')
-let ObjectId = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
 const { chatCostBonusInCents } = require('../constants')
 
-const getAllTranslators = async (request, response) => {
-    const hasStatisticsYearsInParams = !!request.query?.params
+const getAllTranslators = async (req, res) => {
+    const hasStatisticsYearsInParams = !!req.query?.params
     try {
         if (hasStatisticsYearsInParams) {
-            const yearParams = request.query.params
+            const yearParams = req.query.params
             const yearsArray = Array.isArray(yearParams)
                 ? yearParams
                 : [yearParams]
@@ -57,26 +57,26 @@ const getAllTranslators = async (request, response) => {
                     },
                 ])
                 .toArray()
-            response.send(result)
+            res.send(result)
         } else {
             const result = await getCollections()
                 .collectionTranslators.find()
                 .toArray()
-            response.send(result)
+            res.send(result)
         }
     } catch (error) {
         console.error(error)
-        response.sendStatus(500)
+        res.sendStatus(500)
     }
 }
 
-const getLastVirtualGift = (request, response) => {
+const getLastVirtualGift = (req, res) => {
     try {
         const year = moment().format('YYYY')
         const { collectionTranslators } = getCollections()
         const lastVirtualGift = collectionTranslators.aggregate([
             {
-                $match: { _id: ObjectId(request.params.id) },
+                $match: { _id: ObjectId(req.params.id) },
             },
             {
                 $match: {
@@ -135,63 +135,63 @@ const getLastVirtualGift = (request, response) => {
             { $limit: 1 },
         ])
         lastVirtualGift.toArray().then(doc => {
-            response.send(doc)
+            res.send(doc)
         })
     } catch (err) {
-        response.status(500).send(err.message)
+        res.status(500).send(err.message)
     }
 }
 
-const addNewTranslator = async (request, response) => {
-    if (!request.body) {
-        response.send('Ошибка при загрузке переводчика')
+const addNewTranslator = async (req, res) => {
+    if (!req.body) {
+        res.send('Ошибка при загрузке переводчика')
     } else {
         getCollections().collectionTranslators.insertOne(
-            request.body,
+            req.body,
             (err, result) => {
                 if (err) {
-                    return response.sendStatus(500)
+                    return res.sendStatus(500)
                 } else {
-                    response.send(result?.insertedId)
+                    res.send(result?.insertedId)
                 }
             }
         )
     }
 }
 
-const updateTranslator = (request, response) => {
+const updateTranslator = (req, res) => {
     getCollections().collectionTranslators.updateOne(
-        { _id: ObjectId(request.params.id) },
+        { _id: ObjectId(req.params.id) },
         {
             $set: {
-                name: request.body.name,
-                surname: request.body.surname,
-                clients: request.body.clients,
-                statistics: request.body.statistics,
-                suspended: request.body.suspended,
-                personalPenalties: request.body.personalPenalties,
-                email: request.body.email,
-                wantsToReceiveEmails: request.body.wantsToReceiveEmails,
+                name: req.body.name,
+                surname: req.body.surname,
+                clients: req.body.clients,
+                statistics: req.body.statistics,
+                suspended: req.body.suspended,
+                personalPenalties: req.body.personalPenalties,
+                email: req.body.email,
+                wantsToReceiveEmails: req.body.wantsToReceiveEmails,
             },
         },
         err => {
             if (err) {
-                return response.sendStatus(500)
+                return res.sendStatus(500)
             }
             const message = 'Переводчик сохранен'
-            response.send(message)
+            res.send(message)
         }
     )
 }
 
-const deleteTranslator = (request, response) => {
+const deleteTranslator = (req, res) => {
     getCollections().collectionTranslators.deleteOne(
-        { _id: ObjectId(request.params.id) },
+        { _id: ObjectId(req.params.id) },
         (err, docs) => {
             if (err) {
-                return response.sendStatus(500)
+                return res.sendStatus(500)
             }
-            response.sendStatus(200)
+            res.sendStatus(200)
         }
     )
 }
@@ -212,29 +212,29 @@ const balanceMailout = async translatorsCollection => {
     }
 }
 
-const sendEmailsToTranslators = (request, response) => {
+const sendEmailsToTranslators = (req, res) => {
     getCollections()
         .collectionTranslators.find()
         .toArray()
         .then(translators => {
             balanceMailout(translators).then(emailsWereSentSuccessfully => {
                 if (emailsWereSentSuccessfully.length) {
-                    return response.send(emailsWereSentSuccessfully)
+                    return res.send(emailsWereSentSuccessfully)
                 } else {
-                    return response.sendStatus(500)
+                    return res.sendStatus(500)
                 }
             })
         })
 }
 
-const calculateBonuses = async (request, response) => {
-    if (!request.body) {
-        response.send('Ошибка при загрузке переводчика')
+const calculateBonuses = async (req, res) => {
+    if (!req.body) {
+        res.send('Ошибка при загрузке переводчика')
     } else {
         try {
-            const year = request.body.year || '2023'
-            const month = parseInt(request.body.month) || 1 // making sure months will be integer
-            const category = request.body.category || 'chats'
+            const year = req.body.year || '2023'
+            const month = parseInt(req.body.month) || 1 // making sure months will be integer
+            const category = req.body.category || 'chats'
             const { collectionTranslators } = getCollections()
             const pipeline = [
                 {
@@ -324,9 +324,9 @@ const calculateBonuses = async (request, response) => {
             const chatPerMonthSum = await collectionTranslators
                 .aggregate(pipeline)
                 .toArray()
-            response.send(chatPerMonthSum)
+            res.send(chatPerMonthSum)
         } catch (err) {
-            response.status(500).send(err.message)
+            res.status(500).send(err.message)
         }
     }
 }

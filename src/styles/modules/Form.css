@@ -3,62 +3,45 @@
   position: relative;
   width: 400px;
   min-height: 200px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid white;
   border-radius: 10px;
 }
-
 @media (max-width: 690px) {
   .form-container {
     max-width: 90%;
   }
 }
-
 .form-container_task-form {
   height: 250px;
 }
-
 .form-container_penalty-form {
   height: 280px;
   width: 300px;
 }
-
 .form-container_penalty-form form {
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  justify-content: space-evenly;
 }
-
 .form-container_penalty-form .penalty-inputs {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row nowrap;
-          flex-flow: row nowrap;
+  flex-flow: row nowrap;
   width: 100%;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  justify-content: space-evenly;
 }
 
 .modal-wrapper {
   width: 100%;
 }
-
 .modal-wrapper:hover {
-  background: #b2b2b2;
+  background: rgb(178, 178, 178);
 }
 
 .chart-form {
   width: 400px;
   min-height: 320px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 20px;
   background-color: white;
   border: 1px solid white;
@@ -80,12 +63,10 @@
   text-align: center;
   cursor: pointer;
 }
-
 .year-select-menu:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 option {
   background-color: red;
-}
-/*# sourceMappingURL=Form.css.map */
+}/*# sourceMappingURL=Form.css.map */
