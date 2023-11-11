@@ -5,7 +5,7 @@ const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
-const { CHAT_COST_BONUS_IN_CENTS } = require('../constants')
+const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (req, res) => {
     const hasStatisticsYearsInParams = !!req.query?.params
@@ -305,7 +305,7 @@ const calculateBonuses = async (req, res) => {
                                 {
                                     $divide: [
                                         '$totalChatsSum',
-                                        CHAT_COST_BONUS_IN_CENTS,
+                                        chatCostBonusInCents,
                                     ],
                                 },
                                 2,
