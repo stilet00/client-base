@@ -1,16 +1,16 @@
-const DB = process.env.DATABASE.replace(
+const DBConnectionCredentials = process.env.DATABASE.replace(
     '<PASSWORD>',
     process.env.DATABASE_PASSWORD
 )
-let MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
 const {
     createCurrentYearStatisticsForEveryTranslator,
 } = require('../database-api/createCurrentYearStatisticsForEveryTranslator')
+const { changeDatabaseInConnectionString } = require('./utils')
 const {
     sendTaskNotificationEmailTemplatesToAdministrators,
 } = require('../email-api/taskNotificationEmailAPI')
 const { twentyHoursInMiliseconds } = require('../constants')
-const client = new MongoClient(DB, { useUnifiedTopology: true })
 const collections = new Map()
 let outdatedTaskNotificationsInterval
 
@@ -18,71 +18,68 @@ async function taskNotificationsMailout() {
     const taskCollection = await collections
         .get('collectionTasks')
         .find()
-        .toArray()
+        .exec()
     sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
 }
 
-const connectToDatabase = async err => {
-    await client.connect()
-    console.log('Connected to MongoDB database')
-    collections.set(
-        'collectionTasks',
-        client.db('taskListDB').collection('tasks')
-    )
-    collections.set(
-        'collectionBalance',
-        client.db('taskListDB').collection('totalBalance')
-    )
-    collections.set(
-        'collectionTaskNotifications',
-        client.db('taskListDB').collection('notificationSwitch')
-    )
-    collections.set(
-        'collectionClients',
-        client.db('clientsDB').collection('clients')
-    )
-    collections.set(
-        'collectionTranslators',
-        client.db('translatorsDB').collection('translators')
-    )
-    collections.set(
-        'collectionAdmins',
-        client.db('adminDB').collection('adminCollection')
-    )
-    // collections.set(
-    //     'collectionClients',
-    //     client.db('testDB').collection('testClientCollection')
-    // )
-    // collections.set(
-    //     'collectionTranslators',
-    //     client.db('testDB').collection('testTranslatorCollection')
-    // )
-    collections.set(
-        'collectionStatements',
-        client.db('statementsDB').collection('statements')
-    )
-    createCurrentYearStatisticsForEveryTranslator(
-        collections.get('collectionTranslators')
-    )
+const connectToDatabase = async () => {
     try {
-        collections
-            .get('collectionTaskNotifications')
-            .find()
-            .toArray((err, docs) => {
-                if (err) {
-                    throw new Error(err)
-                }
-                const taskNotificationsAreAllowed = docs[0]?.allowed
-                if (taskNotificationsAreAllowed) {
-                    console.log(
-                        'Task notifications are allowed, running mailout interval.'
-                    )
-                    outdatedTaskNotificationsInterval = setInterval(
-                        taskNotificationsMailout,
-                        twentyHoursInMiliseconds
-                    )
-                }
-            })
+        const adminDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(DBConnectionCredentials, 'adminDB')
+        )
+        const clientsDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(
+                DBConnectionCredentials,
+                'clientsDB'
+            )
+        )
+        const statementsDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(
+                DBConnectionCredentials,
+                'statementsDB'
+            )
+        )
+        const taskListDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(
+                DBConnectionCredentials,
+                'taskListDB'
+            )
+        )
+        const translatorsDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(
+                DBConnectionCredentials,
+                'translatorsDB'
+            )
+        )
+
+        const Task = taskListDB.model(
+            'Task',
+            new mongoose.Schema({}, { collection: 'tasks' })
+        )
+        const Client = clientsDB.model(
+            'Client',
+            new mongoose.Schema({}, { collection: 'clients' })
+        )
+        const Translator = translatorsDB.model(
+            'Translator',
+            new mongoose.Schema({}, { collection: 'translators' })
+        )
+        const Admin = adminDB.model(
+            'Admin',
+            new mongoose.Schema({}, { collection: 'adminCollection' })
+        )
+        const Statement = statementsDB.model(
+            'Statement',
+            new mongoose.Schema({}, { collection: 'statements' })
+        )
+
+        collections.set('collectionTasks', Task)
+        collections.set('collectionClients', Client)
+        collections.set('collectionTranslators', Translator)
+        collections.set('collectionAdmins', Admin)
+        collections.set('collectionStatements', Statement)
+
+        // createCurrentYearStatisticsForEveryTranslator(collectionTranslators)
     } catch (error) {
         console.log(error)
     }

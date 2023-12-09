@@ -5,16 +5,9 @@ const { getCollections } = require('../database/collections')
 const { twentyHoursInMiliseconds } = require('../constants')
 let ObjectId = require('mongodb').ObjectID
 
-const getAllTasks = (request, response) => {
-    getCollections()
-        .collectionTasks.find()
-        .toArray((err, docs) => {
-            if (err) {
-                console.log(err)
-                return response.sendStatus(500)
-            }
-            response.send(docs)
-        })
+const getAllTasks = async (request, response) => {
+    const tasksCollection = await getCollections().collectionTasks.find().exec()
+    response.send(tasksCollection)
 }
 
 const deleteTask = (request, response) => {
@@ -62,24 +55,17 @@ const createTask = (request, response) => {
         response.send('No task task name')
     }
 }
-const sendNotification = (request, response) => {
-    getCollections()
+const sendNotification = async (request, response) => {
+    const notificationCollection = await getCollections()
         .collectionTaskNotifications.find()
-        .toArray((err, docs) => {
-            if (err) {
-                console.log(err)
-                return response.sendStatus(500)
-            }
-            response.send(docs)
-        })
+        .exec()
+    response.send(notificationCollection)
 }
 
 let outdatedTaskNotificationsInterval
 
 async function taskNotificationsMailout() {
-    const taskCollection = await getCollections()
-        .collectionTasks.find()
-        .toArray()
+    const taskCollection = await getCollections().collectionTasks.find().exec()
     sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
 }
 

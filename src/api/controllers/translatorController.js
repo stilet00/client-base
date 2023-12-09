@@ -56,12 +56,12 @@ const getAllTranslators = async (req, res) => {
                         },
                     },
                 ])
-                .toArray()
+                .exec()
             res.send(result)
         } else {
             const result = await getCollections()
                 .collectionTranslators.find()
-                .toArray()
+                .exec()
             res.send(result)
         }
     } catch (error) {
@@ -70,10 +70,10 @@ const getAllTranslators = async (req, res) => {
     }
 }
 
-const getLastVirtualGift = (req, res) => {
+const getLastVirtualGift = async (req, res) => {
     try {
         const year = moment().format('YYYY')
-        const { collectionTranslators } = getCollections()
+        const { collectionTranslators } = await getCollections()
         const lastVirtualGift = collectionTranslators.aggregate([
             {
                 $match: { _id: ObjectId(req.params.id) },
@@ -134,7 +134,7 @@ const getLastVirtualGift = (req, res) => {
             { $sort: { dateToSort: -1 } },
             { $limit: 1 },
         ])
-        lastVirtualGift.toArray().then(doc => {
+        lastVirtualGift.exec().then(doc => {
             res.send(doc)
         })
     } catch (err) {
@@ -215,7 +215,7 @@ const balanceMailout = async translatorsCollection => {
 const sendEmailsToTranslators = (req, res) => {
     getCollections()
         .collectionTranslators.find()
-        .toArray()
+        .exec()
         .then(translators => {
             balanceMailout(translators).then(emailsWereSentSuccessfully => {
                 if (emailsWereSentSuccessfully.length) {
@@ -323,7 +323,7 @@ const calculateBonuses = async (req, res) => {
 
             const chatPerMonthSum = await collectionTranslators
                 .aggregate(pipeline)
-                .toArray()
+                .exec()
             res.send(chatPerMonthSum)
         } catch (err) {
             res.status(500).send(err.message)

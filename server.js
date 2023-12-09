@@ -30,7 +30,7 @@ const {
     allowNotifications,
 } = require('./src/api/controllers/taskController')
 const {
-    getAllStatments,
+    getAllStatements,
     createStatement,
     deleteStatement,
 } = require('./src/api/controllers/statementController')
@@ -135,7 +135,7 @@ app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
 app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 
 // statements api
-app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatments)
+app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)
 app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
 app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 

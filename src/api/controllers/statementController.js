@@ -1,15 +1,11 @@
 const { getCollections } = require('../database/collections')
 let ObjectId = require('mongodb').ObjectID
 
-const getAllStatments = (request, response) => {
-    getCollections()
+const getAllStatements = async (request, response) => {
+    const statementsCollection = await getCollections()
         .collectionStatements.find()
-        .toArray((err, docs) => {
-            if (err) {
-                return response.sendStatus(500)
-            }
-            response.send(docs)
-        })
+        .exec()
+    response.send(statementsCollection)
 }
 
 const createStatement = (request, response) => {
@@ -41,4 +37,4 @@ const deleteStatement = (request, response) => {
     )
 }
 
-module.exports = { getAllStatments, createStatement, deleteStatement }
+module.exports = { getAllStatements, createStatement, deleteStatement }

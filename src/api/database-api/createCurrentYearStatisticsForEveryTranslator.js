@@ -37,7 +37,7 @@ const getUpdatedStatisticsForSingleTranslator = async translator => {
 
 const createCurrentYearStatisticsForEveryTranslator =
     async translatorDataBase => {
-        const translatorCollection = await translatorDataBase.find().toArray()
+        const translatorCollection = await translatorDataBase.find().exec()
 
         for (const translator of translatorCollection) {
             const updatedStatisticsOnTranslator =

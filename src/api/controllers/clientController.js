@@ -20,33 +20,23 @@ const clientImageConverter = async image => {
         return image
     }
 }
-const getAllClients = (request, response) => {
+const getAllClients = async (request, response) => {
     const noImageRequest = !!request.query?.params
+    let clientsWithoutImages = []
     if (noImageRequest) {
-        getCollections()
+        clientsWithoutImages = await getCollections()
             .collectionClients.aggregate([
                 { $project: { image: 0 } },
                 { $sort: { name: 1 } },
             ])
-            .toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
+            .exec()
     } else {
-        getCollections()
+        clientsWithoutImages = await getCollections()
             .collectionClients.find()
             .sort({ name: 1 })
-            .toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
+            .exec()
     }
+    response.send(clientsWithoutImages)
 }
 
 const addNewClient = async function (request, response, next) {
@@ -84,7 +74,7 @@ const editArrayOfClientsInTranslators = async info => {
                 },
             },
         })
-        .toArray()
+        .exec()
     if (translatorsWithEditedClient.length > 0) {
         for (let translator of translatorsWithEditedClient) {
             const arrayWithChangedClientsNames = translator.clients.map(
