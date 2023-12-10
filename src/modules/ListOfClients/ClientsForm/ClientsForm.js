@@ -264,37 +264,7 @@ export default function ClientsForm({
                                 <FormLabel className="clients-form__body--label">
                                     Primarly information
                                 </FormLabel>
-                                <StyledTextField
-                                    name={'name'}
-                                    onChange={handleChange}
-                                    value={client.name}
-                                    variant="outlined"
-                                    label={'Name'}
-                                    required
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <AccountCircleIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <StyledTextField
-                                    name={'surname'}
-                                    onChange={handleChange}
-                                    value={client.surname}
-                                    variant="outlined"
-                                    label={'Surname'}
-                                    required
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <AssignmentIndIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <div className="clients-form__body--big-field media-container">
+                                <div style={{ gridColumn: '1 / 3' }}>
                                     {client.image === '' ? (
                                         <IconButton
                                             aria-label="upload picture"
@@ -350,9 +320,40 @@ export default function ClientsForm({
                                             />
                                         </Badge>
                                     )}
+                                </div>
+                                <StyledTextField
+                                    name={'name'}
+                                    onChange={handleChange}
+                                    value={client.name}
+                                    variant="outlined"
+                                    label={'Name'}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AccountCircleIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <StyledTextField
+                                    name={'surname'}
+                                    onChange={handleChange}
+                                    value={client.surname}
+                                    variant="outlined"
+                                    label={'Surname'}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AssignmentIndIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <div className="clients-form__body--big-field media-container">
                                     <StyledTextField
                                         name={'instagramLink'}
-                                        className="media-container__link"
                                         error={formErrors.instagramLink}
                                         helperText={formErrors.instagramLink}
                                         onChange={handleChange}
