@@ -10,51 +10,51 @@ const getAllTasks = async (request, response) => {
     response.send(tasksCollection)
 }
 
-const deleteTask = (request, response) => {
-    getCollections().collectionTasks.deleteOne(
-        { _id: ObjectId(request.params.id) },
-        (err, docs) => {
-            if (err) {
-                console.log(err)
-                return response.sendStatus(500)
+const editTask = async (request, response) => {
+    const Task = await getCollections().collectionTasks
+    try {
+        await Task.updateOne(
+            { _id: request.params.id },
+            {
+                $set: {
+                    completed: request.body.completed,
+                    doneAt: request.body.doneAt,
+                },
             }
-            response.sendStatus(200)
-        }
-    )
+        )
+        response.sendStatus(200)
+    } catch (err) {
+        console.log(err)
+        response.sendStatus(500)
+    }
 }
 
-const editTask = (request, response) => {
-    getCollections().collectionTasks.updateOne(
-        { _id: ObjectId(request.params.id) },
-        {
-            $set: {
-                completed: request.body.completed,
-                doneAt: request.body.doneAt,
-            },
-        },
-        err => {
-            if (err) {
-                return response.sendStatus(500)
-            }
-            response.sendStatus(200)
-        }
-    )
+const deleteTask = async (request, response) => {
+    const Task = await getCollections().collectionTasks
+    try {
+        await Task.deleteOne({ _id: request.params.id })
+        response.sendStatus(200)
+    } catch (err) {
+        console.log(err)
+        response.sendStatus(500)
+    }
 }
 
-const createTask = (request, response) => {
-    if (request.body.taskName) {
-        const task = { ...request.body }
-        getCollections().collectionTasks.insertOne(task, (err, result) => {
-            if (err) {
-                return response.sendStatus(500)
-            } else {
-                response.send(result.ops[0]._id)
-            }
-        })
+const createTask = async (request, response) => {
+    if (request.body?.taskName) {
+        const Task = await getCollections().collectionTasks
+        const taskCreateInput = { ...request.body }
+        try {
+            const result = await Task.create(taskCreateInput)
+            response.send(result._id)
+        } catch (err) {
+            response.sendStatus(500)
+        }
     } else {
         response.send('No task task name')
     }
 }
+
 const sendNotification = async (request, response) => {
     const notificationCollection = await getCollections()
         .collectionTaskNotifications.find()

@@ -11,6 +11,7 @@ const {
     sendTaskNotificationEmailTemplatesToAdministrators,
 } = require('../email-api/taskNotificationEmailAPI')
 const { twentyHoursInMiliseconds } = require('../constants')
+const { taskSchema } = require('../models/index')
 const collections = new Map()
 let outdatedTaskNotificationsInterval
 
@@ -52,9 +53,10 @@ const connectToDatabase = async () => {
             )
         )
 
-        const Task = taskListDB.model(
-            'Task',
-            new mongoose.Schema({}, { collection: 'tasks' })
+        const Task = taskListDB.model('Task', taskSchema, 'tasks')
+        const TaskNotification = taskListDB.model(
+            'TaskNotification',
+            new mongoose.Schema({}, { collection: 'notificationSwitch' })
         )
         const Client = clientsDB.model(
             'Client',
@@ -78,6 +80,7 @@ const connectToDatabase = async () => {
         collections.set('collectionTranslators', Translator)
         collections.set('collectionAdmins', Admin)
         collections.set('collectionStatements', Statement)
+        collections.set('collectionTaskNotifications', TaskNotification)
 
         // createCurrentYearStatisticsForEveryTranslator(collectionTranslators)
     } catch (error) {
