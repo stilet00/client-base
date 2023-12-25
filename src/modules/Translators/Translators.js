@@ -195,6 +195,18 @@ function Translators() {
                                     )} $`}</b>
                                 </Typography>
                                 <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Voice Messages: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.voiceMessages
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
+                                    {`Photo Attachments: `}
+                                    <b>{`${calculateMonthTotal(
+                                        DEFAULT_CATEGORIES.photoAttachments
+                                    )} $`}</b>
+                                </Typography>
+                                <Typography sx={{ p: 2 }} align={'left'}>
                                     {`Penalties: `}
                                     <b>{`${calculateMonthTotal(
                                         DEFAULT_CATEGORIES.penalties
@@ -327,6 +339,18 @@ function Translators() {
                             {`Letters total: `}
                             <b>{`${calculateMonthTotal(
                                 DEFAULT_CATEGORIES.letters
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Voice Messages: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.voiceMessages
+                            )} $`}</b>
+                        </Typography>
+                        <Typography sx={{ p: 2 }} align={'left'}>
+                            {`Photo Attachments: `}
+                            <b>{`${calculateMonthTotal(
+                                DEFAULT_CATEGORIES.photoAttachments
                             )} $`}</b>
                         </Typography>
                         <Typography sx={{ p: 2 }} align={'left'}>

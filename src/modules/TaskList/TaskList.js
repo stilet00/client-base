@@ -12,9 +12,11 @@ import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 function TaskList() {
     const user = useSelector(state => state.auth.user)
+    const { isAdmin } = useAdminStatus(user)
     const {
         tasks,
         alertOpen,
@@ -41,6 +43,7 @@ function TaskList() {
                             {...item}
                             onDelete={deleteTask}
                             onToggle={toggleTodo}
+                            admin={isAdmin}
                         />
                     </CSSTransition>
                 ))}
@@ -52,25 +55,29 @@ function TaskList() {
         )
     return user ? (
         <>
-            <div className={'taskList-menu'}>
-                <div className={'taskList-menu__switch-container'}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={notificationsAreAllowed}
-                                    onChange={onTaskNotificationsSettingsChange}
-                                />
-                            }
-                            label={
-                                <Typography style={{ fontWeight: 'bold' }}>
-                                    Email notifications
-                                </Typography>
-                            }
-                        />
-                    </FormGroup>
+            {isAdmin && (
+                <div className={'taskList-menu'}>
+                    <div className={'taskList-menu__switch-container'}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={notificationsAreAllowed}
+                                        onChange={
+                                            onTaskNotificationsSettingsChange
+                                        }
+                                    />
+                                }
+                                label={
+                                    <Typography style={{ fontWeight: 'bold' }}>
+                                        Email notifications
+                                    </Typography>
+                                }
+                            />
+                        </FormGroup>
+                    </div>
                 </div>
-            </div>
+            )}
             <div
                 className={'taskList-container scrolled-container animated-box'}
             >
