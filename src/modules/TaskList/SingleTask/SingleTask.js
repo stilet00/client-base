@@ -34,6 +34,7 @@ function SingleTask({
     completed,
     onToggle,
     doneAt,
+    admin,
 }) {
     const toggler = () => {
         let item = {
@@ -153,6 +154,7 @@ function SingleTask({
             >
                 <ColoredButton
                     variant={'outlined'}
+                    disabled={!admin}
                     onClick={() => onDelete(_id)}
                     style={{
                         background: contentContainerColor,
