@@ -10,10 +10,9 @@ import Typography from '@mui/material/Typography'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
 import SingleTranslator from './SingleTranslator/SingleTranslator'
 import '../../styles/modules/Translators.css'
-import ClientsForm from '../Clients/ClientsForm/ClientsForm'
 import Loader from '../../sharedComponents/Loader/Loader'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
-import { useTranslators, useSingleTranslator } from './businessLogic'
+import { useTranslators } from './businessLogic'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -47,7 +46,6 @@ function Translators() {
         openAlert,
         closeAlert,
         alertOpen,
-        clientsFormSubmit,
         deleteClient,
         dragDropHandler,
         dragEndHandler,
@@ -115,9 +113,6 @@ function Translators() {
                             />
                             {isAdmin && (
                                 <>
-                                    <ClientsForm
-                                        onFormSubmit={clientsFormSubmit}
-                                    />
                                     <TranslatorsForm
                                         onFormSubmit={translatorsFormSubmit}
                                     />
@@ -256,7 +251,6 @@ function Translators() {
                     />
                     {isAdmin && (
                         <>
-                            <ClientsForm onFormSubmit={clientsFormSubmit} />
                             <TranslatorsForm
                                 onFormSubmit={translatorsFormSubmit}
                             />

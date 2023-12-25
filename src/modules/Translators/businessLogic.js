@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useRouteMatch } from 'react-router-dom'
-import { MESSAGES } from '../../constants/messages'
+import MESSAGES from 'constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
     addTranslator,
@@ -105,26 +105,17 @@ export const useTranslators = user => {
     useEffect(() => {
         ;(async () => {
             if (user) {
-                getCurrency()
-                    .then(res => {
-                        if (res.status === 200) {
-                            const privatBankDollarRate =
-                                res?.data[1]?.buy ?? '36.57'
-                            setDollarToUahRate(privatBankDollarRate)
-                        }
-                    })
-                    .catch(err => {
-                        showAlertMessage(MESSAGES.somethingWrong)
-                    })
+                const responseWithCurrency = await getCurrency()
+                if (responseWithCurrency.status === 200) {
+                    const privatBankDollarRate =
+                        responseWithCurrency?.data[1]?.buy ?? '36.57'
+                    setDollarToUahRate(privatBankDollarRate)
+                } else {
+                    showAlertMessage(MESSAGES.somethingWrongWithCurrencies)
+                }
                 const responseTranslators = await getTranslators()
                 if (responseTranslators.status === 200) {
                     setTranslators(responseTranslators.data)
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                }
-                const responseClients = await getClients(match.url)
-                if (responseClients.status === 200) {
-                    setClients(responseClients.data)
                 } else {
                     showAlertMessage(MESSAGES.somethingWrong)
                 }
@@ -356,71 +347,15 @@ export const useTranslators = user => {
             })
     }
 
-    const translatorsFormSubmit = useCallback(
-        (e, newTranslator) => {
-            e.preventDefault()
-            if (
-                translators.filter(existingTranslator => {
-                    return (
-                        existingTranslator.name.toLowerCase() ===
-                            newTranslator.name.toLowerCase() &&
-                        existingTranslator.surname.toLowerCase() ===
-                            newTranslator.surname.toLowerCase()
-                    )
-                }).length
-            ) {
-                showAlertMessage(MESSAGES.translatorExist)
-            } else {
-                addTranslator(newTranslator)
-                    .then(res => {
-                        if (res.status === 200) {
-                            setTranslators([
-                                ...translators,
-                                { ...newTranslator, _id: res.data },
-                            ])
-                            showAlertMessage(MESSAGES.addTranslator, 3000)
-                        }
-                    })
-                    .catch(error => {
-                        const erroMessageForShowAlertMessage = {
-                            text:
-                                error?.response?.data?.error ||
-                                'An error occurred',
-                            status: false,
-                        }
-                        showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                    })
-            }
-        },
-        [translators, showAlertMessage]
-    )
-
-    const clientsFormSubmit = useCallback(
-        (e, newClient) => {
-            e.preventDefault()
-
-            addClient(newClient)
-                .then(res => {
-                    if (res.status === 200) {
-                        showAlertMessage(MESSAGES.addClient)
-                        setClients([
-                            ...clients,
-                            { ...newClient, _id: res.data },
-                        ])
-                    }
-                })
-                .catch(error => {
-                    const erroMessageForShowAlertMessage = {
-                        text:
-                            error?.response?.data?.error || 'An error occurred',
-                        status: false,
-                    }
-                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                })
-        },
-        [clients, showAlertMessage]
-    )
-
+    const translatorsFormSubmit = async newTranslator => {
+        const { data, status } = await addTranslator(newTranslator)
+        if (status === 200) {
+            showAlertMessage(MESSAGES.addTranslator)
+            setTranslators([...translators, { ...newTranslator, _id: data }])
+        } else {
+            showAlertMessage(MESSAGES.somethingWrong, 5000)
+        }
+    }
     const balanceDaySubmit = useCallback(
         (translatorId, balanceDay) => {
             let editedTranslator = translators.find(
@@ -599,7 +534,6 @@ export const useTranslators = user => {
         dragStartHandler,
         dragDropHandler,
         deleteClient,
-        clientsFormSubmit,
         translatorsFormSubmit,
         message,
         alertOpen,

@@ -5,6 +5,7 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .authorization-container {

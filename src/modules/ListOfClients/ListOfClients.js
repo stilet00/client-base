@@ -6,7 +6,7 @@ import {
     updateClient,
 } from '../../services/clientsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
-import { getTranslators } from '../../services/translatorsServices/services'
+import Typography from '@mui/material/Typography'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
@@ -28,6 +28,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from '../../sharedComponents/Loader/Loader'
 import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import MESSAGE from 'constants/messages'
+import useSearch from 'sharedHooks/useSearchString'
 
 export default function ListOfClients() {
     const user = useSelector(state => state.auth.user)
@@ -38,8 +40,8 @@ export default function ListOfClients() {
     const [loading, setLoading] = useState(true)
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
-    const [search, setSearch] = useState('')
     const { handleClose, handleOpen, open } = useModal()
+    const { search, onSearchChange } = useSearch()
     const [alertInfo, setAlertInfo] = useState({
         mainTitle: 'no message had been put',
         status: true,
@@ -58,40 +60,21 @@ export default function ListOfClients() {
 
     useEffect(() => {
         if (user) {
-            getTranslators()
-                .then(res => {
-                    if (res.status === 200) {
-                        setLoading(false)
-                        setTranslators(res.data)
-                    }
-                })
-                .catch(err => {
-                    const message = err.message
-                    setLoading(false)
+            ;(async () => {
+                const responseDataWithClients = await getClients()
+                if (responseDataWithClients.status === 200) {
+                    console.log(responseDataWithClients.data)
+                    setClients(responseDataWithClients.data)
+                } else {
                     setAlertInfo({
                         ...alertInfo,
-                        mainTitle: message,
+                        mainTitle: MESSAGE.somethingWrongWithGettingClients,
                         status: false,
                     })
                     openAlert(5000)
-                })
-
-            getClients()
-                .then(res => {
-                    if (res.status === 200) {
-                        setClients(res.data)
-                    }
-                })
-                .catch(err => {
-                    const message = err.message
-                    setLoading(false)
-                    setAlertInfo({
-                        ...alertInfo,
-                        mainTitle: message,
-                        status: false,
-                    })
-                    openAlert(5000)
-                })
+                }
+                setLoading(false)
+            })()
             getPaymentsRequest()
                 .then(res => {
                     if (res.status === 200) {
@@ -110,6 +93,10 @@ export default function ListOfClients() {
                 })
         }
     }, [user])
+
+    useEffect(() => {
+        console.log(`searchChange`)
+    }, [search])
 
     const getUpdatingClient = _id => {
         const clientWithID = clients.find(client => client._id === _id)
@@ -175,39 +162,37 @@ export default function ListOfClients() {
         [clients, alertInfo, openAlert]
     )
 
-    const addNewClient = newClient => {
-        const message = 'clients date had been added'
-        setAlertInfo({
-            ...alertInfo,
-            mainTitle: message,
-            status: true,
-        })
-        openAlert(2000)
-        addClient(newClient)
-            .then(res => {
-                if (res.status === 200) {
-                    setClients([...clients, { ...newClient, _id: res.data }])
-                    setAlertInfo({
-                        ...alertInfo,
-                        mainTitle: 'client had been added',
-                        status: true,
-                    })
-                    openAlert(2000)
-                }
-            })
-            .catch(err => {
-                const message =
-                    err?.response?.data?.error || 'An error occurred'
+    const addNewClient = async newClient => {
+        try {
+            const responseFromAddedClient = await addClient(newClient)
+            if (responseFromAddedClient.status === 200) {
+                setClients([
+                    ...clients,
+                    { ...newClient, _id: responseFromAddedClient.data },
+                ])
                 setAlertInfo({
                     ...alertInfo,
-                    mainTitle: message,
+                    mainTitle: 'client had been added',
+                    status: true,
+                })
+                openAlert(2000)
+            } else {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: MESSAGE.somethingWrongWithAddingClient.text,
                     status: false,
                 })
                 openAlert(5000)
+            }
+        } catch (error) {
+            setAlertInfo({
+                ...alertInfo,
+                mainTitle: MESSAGE.somethingWrongWithAddingClient.text,
+                status: false,
             })
+            openAlert(5000)
+        }
     }
-
-    const deferredSearchValue = useDeferredValue(search)
     const getSortedClients = clients => {
         if (clients.length === 0) {
             return []
@@ -277,9 +262,7 @@ export default function ListOfClients() {
     }
 
     const getFilteredClients = client =>
-        `${client.name} ${client.surname}`
-            .toLowerCase()
-            .includes(deferredSearchValue)
+        `${client.name} ${client.surname}`.toLowerCase()
 
     const closeGraph = () => {
         setShowGraph(false)
@@ -290,10 +273,6 @@ export default function ListOfClients() {
         const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id, category)
         setGraphData(pickedClientSumsPerMonth)
         setShowGraph(true)
-    }
-
-    function onSearchChange(e) {
-        setSearch(e.target.value.toLowerCase())
     }
 
     return user && !loading ? (
@@ -307,33 +286,49 @@ export default function ListOfClients() {
                     onChange={onSearchChange}
                 ></input>
             </div>
-            <div className={'main-container scrolled-container  animated-box'}>
+            <div className={'main-container scrolled-container animated-box'}>
                 <ClientsChartsContainer
                     user={user}
                     values={graphData}
                     open={showGraph}
                     handleClose={closeGraph}
                 />
-
-                <Grid
-                    container
-                    spacing={2}
-                    id="on-scroll__rotate-animation-list"
-                >
-                    {getSortedClients(clients)
-                        .filter(getFilteredClients)
-                        .map(client => (
-                            <Grid key={client._id} item xs={12} md={4} sm={6}>
-                                <SingleClient
+                {clients?.length > 0 && (
+                    <Grid
+                        container
+                        spacing={2}
+                        id="on-scroll__rotate-animation-list"
+                    >
+                        {getSortedClients(clients)
+                            .filter(getFilteredClients)
+                            .map(client => (
+                                <Grid
                                     key={client._id}
-                                    {...client}
-                                    admin={isAdmin}
-                                    handleUpdatingClientsId={getUpdatingClient}
-                                    handleSwitchToGraph={switchToGraph}
-                                />
-                            </Grid>
-                        ))}
-                </Grid>
+                                    item
+                                    xs={12}
+                                    md={4}
+                                    sm={6}
+                                >
+                                    <SingleClient
+                                        key={client._id}
+                                        {...client}
+                                        admin={isAdmin}
+                                        handleUpdatingClientsId={
+                                            getUpdatingClient
+                                        }
+                                        handleSwitchToGraph={switchToGraph}
+                                    />
+                                </Grid>
+                            ))}
+                    </Grid>
+                )}
+                {!clients?.length && (
+                    <Typography
+                        variant="h5"
+                        component="div"
+                        style={{ margin: 'auto' }}
+                    >{`No clients found`}</Typography>
+                )}
             </div>
             <div className="socials button-add-container">
                 <Button

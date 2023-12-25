@@ -10,60 +10,64 @@ const { chatCostBonusInCents } = require('../constants')
 const getAllTranslators = async (req, res) => {
     const hasStatisticsYearsInParams = !!req.query?.params
     try {
-        if (hasStatisticsYearsInParams) {
-            const yearParams = req.query.params
-            const yearsArray = Array.isArray(yearParams)
-                ? yearParams
-                : [yearParams]
+        const translators = await getCollections()
+            .collectionTranslators.find()
+            .exec()
+        res.send(translators)
+        // if (hasStatisticsYearsInParams) {
+        //     const yearParams = req.query.params
+        //     const yearsArray = Array.isArray(yearParams)
+        //         ? yearParams
+        //         : [yearParams]
 
-            const result = await getCollections()
-                .collectionTranslators.aggregate([
-                    {
-                        $unwind: '$statistics',
-                    },
-                    {
-                        $match: {
-                            'statistics.year': { $in: yearsArray },
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 1,
-                            statistics: {
-                                $cond: {
-                                    if: {
-                                        $in: ['$statistics.year', yearsArray],
-                                    },
-                                    then: '$statistics',
-                                    else: null,
-                                },
-                            },
-                            suspended: 1,
-                        },
-                    },
-                    {
-                        $group: {
-                            _id: '$_id',
-                            statistics: { $push: '$statistics' },
-                            suspended: { $first: '$suspended' },
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            statistics: 1,
-                            suspended: 1,
-                        },
-                    },
-                ])
-                .exec()
-            res.send(result)
-        } else {
-            const result = await getCollections()
-                .collectionTranslators.find()
-                .exec()
-            res.send(result)
-        }
+        //     const result = await getCollections()
+        //         .collectionTranslators.aggregate([
+        //             {
+        //                 $unwind: '$statistics',
+        //             },
+        //             {
+        //                 $match: {
+        //                     'statistics.year': { $in: yearsArray },
+        //                 },
+        //             },
+        //             {
+        //                 $project: {
+        //                     _id: 1,
+        //                     statistics: {
+        //                         $cond: {
+        //                             if: {
+        //                                 $in: ['$statistics.year', yearsArray],
+        //                             },
+        //                             then: '$statistics',
+        //                             else: null,
+        //                         },
+        //                     },
+        //                     suspended: 1,
+        //                 },
+        //             },
+        //             {
+        //                 $group: {
+        //                     _id: '$_id',
+        //                     statistics: { $push: '$statistics' },
+        //                     suspended: { $first: '$suspended' },
+        //                 },
+        //             },
+        //             {
+        //                 $project: {
+        //                     _id: 0,
+        //                     statistics: 1,
+        //                     suspended: 1,
+        //                 },
+        //             },
+        //         ])
+        //         .exec()
+        //     res.send(result)
+        // } else {
+        //     const result = await getCollections()
+        //         .collectionTranslators.find()
+        //         .exec()
+        //     res.send(result)
+        // }
     } catch (error) {
         console.error(error)
         res.sendStatus(500)
@@ -143,19 +147,18 @@ const getLastVirtualGift = async (req, res) => {
 }
 
 const addNewTranslator = async (req, res) => {
-    if (!req.body) {
-        res.send('Ошибка при загрузке переводчика')
-    } else {
-        getCollections().collectionTranslators.insertOne(
-            req.body,
-            (err, result) => {
-                if (err) {
-                    return res.sendStatus(500)
-                } else {
-                    res.send(result?.insertedId)
-                }
-            }
-        )
+    try {
+        const Translator = await getCollections().collectionTranslators
+        if (!req.body) {
+            res.send('Ошибка при загрузке переводчика')
+            return
+        }
+        const translator = new Translator(req.body)
+        const result = await translator.save()
+        res.send(result._id)
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(500)
     }
 }
 

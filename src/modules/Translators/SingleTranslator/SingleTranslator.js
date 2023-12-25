@@ -33,6 +33,7 @@ import {
     faArrowAltCircleDown,
     faPersonCircleXmark,
     faPersonCirclePlus,
+    faMoneyCheckDollar,
 } from '@fortawesome/free-solid-svg-icons'
 import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
 import PenaltiesList from '../PenaltiesList/PenaltiesList'
@@ -76,63 +77,66 @@ function SingleTranslator({
         lastVirtualGiftDate,
         giftRequestLoader,
     } = useSingleTranslator(statistics, selectedDate, personalPenalties)
-    const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
-    const translatorPreviousMonthTotalSum =
-        previousMonth === '12'
-            ? calculateTranslatorMonthTotal(
-                  statistics,
-                  false,
-                  previousMonth,
-                  previousYear
-              )
-            : calculateTranslatorMonthTotal(statistics, false, previousMonth)
-    const translatorSalaryForPickedMonth = Math.floor(
-        (calculateTranslatorMonthTotal(
-            statistics,
-            true,
-            selectedDate.format('M'),
-            selectedDate.format('YYYY')
-        ) +
-            bonus?.bonusChatsSum) *
-            TRANSLATORS_SALARY_PERCENT
-    )
+    // const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
+    // const translatorPreviousMonthTotalSum =
+    //     previousMonth === '12'
+    //         ? calculateTranslatorMonthTotal(
+    //               statistics,
+    //               false,
+    //               previousMonth,
+    //               previousYear
+    //           )
+    //         : calculateTranslatorMonthTotal(statistics, false, previousMonth)
+    // const translatorSalaryForPickedMonth = Math.floor(
+    //     (calculateTranslatorMonthTotal(
+    //         statistics,
+    //         true,
+    //         selectedDate.format('M'),
+    //         selectedDate.format('YYYY')
+    //     ) +
+    //         bonus?.bonusChatsSum) *
+    //         TRANSLATORS_SALARY_PERCENT
+    // )
 
-    const getTranslatorSalaryInUah = (salary = 100) => {
-        const currentCurrencyRate = dollarToUahRate
-            ? Number(dollarToUahRate).toFixed(2)
-            : 0
-        const salaryInUahIncludingComissinos =
-            currentCurrencyRate * PAYONEER_COMISSION * salary
-        return salaryInUahIncludingComissinos
-    }
+    // const getTranslatorSalaryInUah = (salary = 100) => {
+    //     const currentCurrencyRate = dollarToUahRate
+    //         ? Number(dollarToUahRate).toFixed(2)
+    //         : 0
+    //     const salaryInUahIncludingComissinos =
+    //         currentCurrencyRate * PAYONEER_COMISSION * salary
+    //     return salaryInUahIncludingComissinos
+    // }
 
-    const translatorSalaryForPickedMonthInUah = Math.floor(
-        getTranslatorSalaryInUah(translatorSalaryForPickedMonth)
-    )
+    // const translatorSalaryForPickedMonthInUah = Math.floor(
+    //     getTranslatorSalaryInUah(translatorSalaryForPickedMonth)
+    // )
 
-    const progressPage =
-        translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
-            <span className={'green-text styled-text-numbers'}>
-                <FontAwesomeIcon icon={faArrowAltCircleUp} />
-                {` ${calculatePercentDifference(
-                    translatorMonthTotalSum,
-                    translatorPreviousMonthTotalSum
-                )} %`}
-            </span>
-        ) : (
-            <span className={'red-text styled-text-numbers'}>
-                <FontAwesomeIcon icon={faArrowAltCircleDown} />
-                {` ${calculatePercentDifference(
-                    translatorMonthTotalSum,
-                    translatorPreviousMonthTotalSum
-                )} %`}
-            </span>
-        )
-    const currentMonth =
-        moment().format('MMMM').length > '5'
-            ? moment().format('MMM')
-            : moment().format('MMMM')
+    // if (!!translatorMonthTotalSum && !!translatorPreviousMonthTotalSum) {
+    //     progressPage =
+    //         translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
+    //             <span className={'green-text styled-text-numbers'}>
+    //                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
+    //                 {` ${calculatePercentDifference(
+    //                     translatorMonthTotalSum,
+    //                     translatorPreviousMonthTotalSum
+    //                 )} %`}
+    //             </span>
+    //         ) : (
+    //             <span className={'red-text styled-text-numbers'}>
+    //                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
+    //                 {` ${calculatePercentDifference(
+    //                     translatorMonthTotalSum,
+    //                     translatorPreviousMonthTotalSum
+    //                 )} %`}
+    //             </span>
+    //         )
+    // }
 
+    const monthStringFormat =
+        moment().format('MMMM').length > '5' ? 'MMM' : 'MMMM'
+    const currentMonth = moment().format(monthStringFormat)
+
+    console.log(`${previousDay}/${currentMonth}/${currentYear}`)
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -144,12 +148,7 @@ function SingleTranslator({
             id={_id}
         >
             <CardContent>
-                <Rating
-                    name="read-only"
-                    value={getTranslatorsRating()}
-                    readOnly
-                    size="small"
-                />
+                <Rating name="read-only" value={5} readOnly size="small" />
                 <div
                     style={{
                         minHeight: 135,
@@ -181,68 +180,82 @@ function SingleTranslator({
                             <b>{suspended.time}</b>
                         </Typography>
                     ) : null}
-                    <Typography
-                        variant="body2"
-                        align={'left'}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <span>Total for {currentMonth}:</span>
-                        {progressPage}
-                        <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        align={'left'}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <span>Middle for {currentMonth}:</span>
-                        <b>{`${calculateMiddleMonthSum()} $ `}</b>
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        align={'left'}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        {`For yesterday: `}
-                        {calculateTranslatorYesterdayTotal(statistics) ? (
-                            <b className="styled-text-numbers">
-                                {`${calculateTranslatorYesterdayTotal(
+
+                    {/* {statistics.length > 0 && (
+                        <>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <span>Total for {currentMonth}:</span>
+                                {progressPage}
+                                <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <span>Middle for {currentMonth}:</span>
+                                <b>{`${calculateMiddleMonthSum()} $ `}</b>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align={'left'}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                {`For yesterday: `}
+                                {calculateTranslatorYesterdayTotal(
                                     statistics
-                                )} $`}
-                            </b>
-                        ) : (
-                            'No data'
-                        )}
-                    </Typography>
-                    {calculatePersonalPenalties()?.thisMonthsPenaltiesArray
-                        .length ? (
-                        <Typography
-                            variant="body2"
-                            align={'left'}
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            Penalties for {`${moment().format('MMMM')}: `}
-                            <PenaltiesList
-                                penaltiesArray={personalPenalties.filter(
-                                    penalty =>
-                                        penalty.date.slice(3) ===
-                                        moment().format('MM YYYY')
+                                ) ? (
+                                    <b className="styled-text-numbers">
+                                        {`${calculateTranslatorYesterdayTotal(
+                                            statistics
+                                        )} $`}
+                                    </b>
+                                ) : (
+                                    'No data'
                                 )}
-                            />
+                            </Typography>
+                            {calculatePersonalPenalties()
+                                ?.thisMonthsPenaltiesArray.length ? (
+                                <Typography
+                                    variant="body2"
+                                    align={'left'}
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    Penalties for{' '}
+                                    {`${moment().format('MMMM')}: `}
+                                    <PenaltiesList
+                                        penaltiesArray={personalPenalties.filter(
+                                            penalty =>
+                                                penalty.date.slice(3) ===
+                                                moment().format('MM YYYY')
+                                        )}
+                                    />
+                                </Typography>
+                            ) : null}
+                        </>
+                    )} */}
+
+                    {statistics.length === 0 && (
+                        <Typography variant="body2">
+                            {`No data for ${currentMonth} yet`}
                         </Typography>
-                    ) : null}
+                    )}
                 </div>
                 {suspended.status ? null : (
                     <>
@@ -262,34 +275,33 @@ function SingleTranslator({
                                     onDragLeave={dragLeaveHandler}
                                     onDrop={e => onBoardDrop(e, _id)}
                                 >
-                                    <Typography variant="caption">
-                                        {`Balance for ${moment(
-                                            `${previousDay}/${currentMonth}/${currentYear}`,
-                                            'D/M/YYYY'
-                                        ).format('DD MMMM')}:`}{' '}
-                                    </Typography>
                                     {clients.filter(client => !client.suspended)
                                         .length ? (
                                         clients
                                             .filter(client => !client.suspended)
                                             .sort((a, b) => {
-                                                return (
-                                                    Number(
-                                                        calculateSumByClient(
-                                                            b._id
-                                                        )
-                                                    ) -
-                                                    Number(
-                                                        calculateSumByClient(
-                                                            a._id
-                                                        )
-                                                    )
-                                                )
+                                                return 0
+                                                // Number(
+                                                //     calculateSumByClient(
+                                                //         b._id
+                                                //     )
+                                                // ) -
+                                                // Number(
+                                                //     calculateSumByClient(
+                                                //         a._id
+                                                //     )
+                                                // )
                                             })
                                             .map(client => (
                                                 <React.Fragment
                                                     key={client._id}
                                                 >
+                                                    <Typography variant="caption">
+                                                        {`Balance for ${moment(
+                                                            `${previousDay}/${currentMonth}/${currentYear}`,
+                                                            `D/${monthStringFormat}/YYYY`
+                                                        ).format('DD MMMM')}:`}
+                                                    </Typography>
                                                     <li
                                                         className={
                                                             'clients-list__name-container'
@@ -321,9 +333,10 @@ function SingleTranslator({
                                                         )}
                                                     </li>
                                                     {Number(
-                                                        calculateSumByClient(
-                                                            client._id
-                                                        )
+                                                        // calculateSumByClient(
+                                                        //     client._id
+                                                        // )
+                                                        0
                                                     ) ? (
                                                         <li
                                                             className={
@@ -334,9 +347,12 @@ function SingleTranslator({
                                                                 className={specialColorNeeded(
                                                                     client._id
                                                                 )}
-                                                            >{`${calculateSumByClient(
+                                                            >
+                                                                {/* {`${calculateSumByClient(
                                                                 client._id
-                                                            )} $`}</b>
+                                                            )} $`} */}
+                                                                0
+                                                            </b>
                                                         </li>
                                                     ) : (
                                                         <li
@@ -402,7 +418,7 @@ function SingleTranslator({
                                 </AccordionDetails>
                             </Accordion>
                         ) : null}
-                        {admin && (
+                        {/* {admin && (
                             <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
@@ -473,8 +489,8 @@ function SingleTranslator({
                                     ) : null}
                                 </AccordionDetails>
                             </Accordion>
-                        )}
-                        <LoadingButton
+                        )} */}
+                        {/* <LoadingButton
                             size="small"
                             sx={{
                                 borderColor: '#fff',
@@ -512,7 +528,7 @@ function SingleTranslator({
                             variant="outlined"
                         >
                             {lastVirtualGiftDate ?? 'Last virtual gift was at:'}
-                        </LoadingButton>
+                        </LoadingButton> */}
                     </>
                 )}
             </CardContent>

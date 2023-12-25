@@ -108,13 +108,10 @@ export const DEFAULT_ERROR = {
 export const DEFAULT_TRANSLATOR = {
     name: '',
     surname: '',
-    clients: [],
-    statistics: DEFAULT_BALANCE_DATA,
     suspended: {
         status: false,
         time: null,
     },
-    personalPenalties: [],
     email: null,
 }
 

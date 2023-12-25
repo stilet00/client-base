@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
         "module": "ES6",
-        "jsx": "preserve"
+        "jsx": "preserve",
+        "baseUrl": "src",
+        "paths": {
+            "*": ["src/*", "src/sharedHooksFolder/*"]
+        }
     },
+    "include": ["src"],
     "exclude": ["node_modules", "**/node_modules/*"]
 }

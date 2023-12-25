@@ -4,9 +4,9 @@ const DBConnectionCredentials = process.env.DATABASE.replace(
 )
 const mongoose = require('mongoose')
 const { changeDatabaseInConnectionString } = require('./utils')
-const { taskSchema } = require('../models/taskListDatabaseModels')
-const { clientSchema } = require('../models/clientsDatabase')
-const { translatorSchema } = require('../models/translatorsDatabaseModels')
+const { TaskSchema } = require('../models/taskListDatabaseModels')
+const { ClientSchema } = require('../models/clientsDatabase')
+const { TranslatorSchema } = require('../models/translatorsDatabaseModels')
 const { PaymentSchema } = require('../models/statementsDatabaseModels')
 
 const collections = new Map()
@@ -19,15 +19,15 @@ const connectToDatabase = async () => {
                 'clientBase'
             )
         )
-        const Task = clientBaseDB.model('Task', taskSchema, 'tasksCollection')
+        const Task = clientBaseDB.model('Task', TaskSchema, 'tasksCollection')
         const Client = clientBaseDB.model(
             'Client',
-            clientSchema,
+            ClientSchema,
             'clientsCollection'
         )
         const Translator = clientBaseDB.model(
             'Translator',
-            translatorSchema,
+            TranslatorSchema,
             'translatorCollection'
         )
         const Admin = clientBaseDB.model(

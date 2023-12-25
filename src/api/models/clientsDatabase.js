@@ -7,12 +7,12 @@ const ClientSchema = new mongoose.Schema({
     instagramLink: { type: String, required: true },
     suspended: { type: Boolean, default: false },
     svadba: {
-        login: { type: String, required: true },
-        password: { type: String, required: true },
+        login: { type: String, required: false },
+        password: { type: String, required: false },
     },
     dating: {
-        login: { type: String, required: true },
-        password: { type: String, required: true },
+        login: { type: String, required: false },
+        password: { type: String, required: false },
     },
     translators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Translator' }],
     image: { type: String, required: false },

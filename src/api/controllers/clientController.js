@@ -1,5 +1,6 @@
+const mongoose = require('mongoose')
+
 const { getCollections } = require('../database/collections')
-let ObjectId = require('mongodb').ObjectID
 const sharp = require('sharp')
 
 const clientImageConverter = async image => {
@@ -21,22 +22,20 @@ const clientImageConverter = async image => {
     }
 }
 const getAllClients = async (request, response) => {
-    const noImageRequest = !!request.query?.params
-    let clientsWithoutImages = []
-    if (noImageRequest) {
-        clientsWithoutImages = await getCollections()
-            .collectionClients.aggregate([
-                { $project: { image: 0 } },
-                { $sort: { name: 1 } },
-            ])
-            .exec()
-    } else {
-        clientsWithoutImages = await getCollections()
-            .collectionClients.find()
-            .sort({ name: 1 })
-            .exec()
+    try {
+        const noImageRequest = !!request.query?.params
+        let query = getCollections().collectionClients.find()
+
+        if (noImageRequest) {
+            query = query.select('-image')
+        }
+
+        const clients = await query.exec()
+        response.send(clients)
+    } catch (error) {
+        console.error(error)
+        response.sendStatus(500)
     }
-    response.send(clientsWithoutImages)
 }
 
 const addNewClient = async function (request, response, next) {
@@ -45,72 +44,30 @@ const addNewClient = async function (request, response, next) {
             return response.status(400).send('Ошибка при загрузке клиентки')
         }
 
-        const { image } = request.body
-        const resizedImage = await clientImageConverter(image)
+        let { image } = request.body
+        if (!!image) {
+            image = await clientImageConverter(image)
+        }
 
         const newClientDataWithResizedImage = {
             ...request.body,
-            image: resizedImage,
+            image: image ?? '',
         }
 
-        const result = await getCollections().collectionClients.insertOne(
-            newClientDataWithResizedImage
-        )
+        const Client = await getCollections().collectionClients
+        const newClient = new Client(newClientDataWithResizedImage)
+        const validationError = newClient.validateSync()
+        if (validationError) {
+            console.error('Validation failed:', validationError)
+            return response.status(400).send('Validation failed')
+        }
+        const result = await newClient.save()
 
-        response.status(201).send(result?.insertedId)
+        response.status(200).send(result._id)
     } catch (error) {
         console.error(error)
-        response.status(500).send('Internal Server Error')
+        response.status(500).send('Failed to add client')
     }
-}
-
-const editArrayOfClientsInTranslators = async info => {
-    const { _id, name, surname } = info
-    const translatorsWithEditedClient = await getCollections()
-        .collectionTranslators.find({
-            clients: {
-                $elemMatch: {
-                    _id: _id,
-                },
-            },
-        })
-        .exec()
-    if (translatorsWithEditedClient.length > 0) {
-        for (let translator of translatorsWithEditedClient) {
-            const arrayWithChangedClientsNames = translator.clients.map(
-                client => {
-                    if (client._id === _id) {
-                        const clientWithChangedData = {
-                            ...client,
-                            name: name,
-                            surname: surname,
-                        }
-                        return clientWithChangedData
-                    } else {
-                        return client
-                    }
-                }
-            )
-            changeClientNameInTranslatorsDataBase(
-                translator._id,
-                arrayWithChangedClientsNames
-            )
-        }
-    }
-}
-
-const changeClientNameInTranslatorsDataBase = async (
-    id,
-    arrayWithChangedClientsNames
-) => {
-    await getCollections().collectionTranslators.updateOne(
-        { _id: ObjectId(id) },
-        {
-            $set: {
-                clients: arrayWithChangedClientsNames,
-            },
-        }
-    )
 }
 
 const updateClient = async (request, response) => {
@@ -131,8 +88,30 @@ const updateClient = async (request, response) => {
 
         const resizedImage = await clientImageConverter(image)
 
-        const result = await getCollections().collectionClients.updateOne(
-            { _id: ObjectId(request.params.id) },
+        const Client = await getCollections().collectionClients
+        const newClient = new Client({
+            name,
+            surname,
+            bankAccount,
+            instagramLink,
+            suspended,
+            image: resizedImage,
+            svadba: {
+                login: svadba.login,
+                password: svadba.password,
+            },
+            dating: {
+                login: dating.login,
+                password: dating.password,
+            },
+        })
+        const validationError = newClient.validateSync()
+        if (validationError) {
+            console.error('Validation failed:', validationError)
+            return response.status(400).send('Validation failed')
+        }
+        const result = await Client.updateOne(
+            { _id: new mongoose.Types.ObjectId(request.params.id) },
             {
                 $set: {
                     name,
@@ -152,15 +131,11 @@ const updateClient = async (request, response) => {
                 },
             }
         )
-
-        if (result.matchedCount === 0) {
+        if (!result.acknowledged) {
             return response.sendStatus(404)
         }
-
-        const message = 'клиентка сохранена'
+        const message = `Клиента ${name} ${surname} успешно обновлена`
         response.send(message)
-
-        editArrayOfClientsInTranslators(request.body)
     } catch (error) {
         console.error(error)
         response.sendStatus(500)

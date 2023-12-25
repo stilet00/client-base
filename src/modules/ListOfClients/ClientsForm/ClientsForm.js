@@ -29,6 +29,10 @@ import {
     StyledTextField,
 } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
+const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
+const regExpForCard = /[^0-9\s]/g
+const regExpForEmail = /\S+@\S+\.\S+/
+
 export default function ClientsForm({
     editedClient,
     onAddNewClient,
@@ -43,15 +47,8 @@ export default function ClientsForm({
     const [formErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(formErrors)
     const arrayOfEditedClientsFields = Object.keys(editedClient)
-    const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
-    const regExpForCard = /[^0-9\s]/g
-    const regExpForEmail = /\S+@\S+\.\S+/
 
-    useEffect(() => {
-        if (arrayOfEditedClientsFields.length > 0) {
-            setClient(editedClient)
-        }
-    }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)])
+    console.log(client)
 
     const site = {
         login:
@@ -155,20 +152,18 @@ export default function ClientsForm({
         setClient(newState)
     }
 
-    function onFormSubmit(e, client) {
-        e.preventDefault()
+    async function onFormSubmit(client) {
         if (arrayOfEditedClientsFields.length > 0) {
-            onEditClientData(client)
+            await onEditClientData(client)
             clearEditedClient()
         } else {
-            onAddNewClient(client)
+            await onAddNewClient(client)
         }
-        clearClient()
-        handleClose()
         setSiteFilter('svadba')
     }
 
     function clearClient() {
+        console.log('cleaning')
         setClient(DEFAULT_CLIENT)
     }
 
@@ -225,6 +220,19 @@ export default function ClientsForm({
         reader.readAsDataURL(file)
     }
 
+    useEffect(() => {
+        if (arrayOfEditedClientsFields.length > 0) {
+            setClient(editedClient)
+        }
+    }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)])
+
+    useEffect(
+        () => () => {
+            clearClient()
+        },
+        []
+    )
+
     return (
         <>
             <StyledModal
@@ -247,13 +255,7 @@ export default function ClientsForm({
             >
                 <Fade in={open}>
                     <div className={'form-container clients-form'}>
-                        <form
-                            onSubmit={e => {
-                                onFormSubmit(e, client)
-                                clearClient()
-                                setTimeout(handleClose, 1100)
-                            }}
-                        >
+                        <form>
                             <h2
                                 id="transition-modal-title"
                                 className="clients-from__header"
@@ -560,7 +562,11 @@ export default function ClientsForm({
                                 )}
                             </div>
                             <Button
-                                type={'submit'}
+                                type={'button'}
+                                onClick={async () => {
+                                    await onFormSubmit(client)
+                                    handleClose()
+                                }}
                                 fullWidth
                                 disabled={
                                     fieldsAreEmpty ||

@@ -24,23 +24,24 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            getClients(match.url).then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                }
-            })
+            // getClients(match.url).then(res => {
+            //     if (res.status === 200) {
+            //         setClients(res.data)
+            //     }
+            // })
 
             getTranslators(selectedYear).then(res => {
                 if (res.status === 200) {
-                    setTranslators(res.data)
+                    console.log(res.data)
+                    // setTranslators(res.data)
                 }
             })
 
-            getPaymentsRequest().then(res => {
-                if (res.status === 200) {
-                    setStatments(res.data)
-                }
-            })
+            // getPaymentsRequest().then(res => {
+            //     if (res.status === 200) {
+            //         setStatments(res.data)
+            //     }
+            // })
         }
     }, [user, selectedYear])
 

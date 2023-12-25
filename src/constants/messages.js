@@ -1,4 +1,4 @@
-export const MESSAGES = {
+const MESSAGES = {
     addTranslator: {
         text: 'Translator has been added!',
         status: true,
@@ -63,6 +63,11 @@ export const MESSAGES = {
         status: false,
     },
 
+    somethingWrongWithCurrencies: {
+        text: 'Something went wrong while getting currencies :(',
+        status: false,
+    },
+
     changesSaved: {
         text: 'Changes have been saved',
         status: true,
@@ -77,4 +82,15 @@ export const MESSAGES = {
         text: 'Emails to the administrators and translators have been sent',
         status: true,
     },
+
+    somethingWrongWithAddingClient: {
+        text: 'Something went wrong while adding client :(',
+        status: false,
+    },
+    somethingWrongWithGettingClients: {
+        text: 'Something went wrong while getting clients :(',
+        status: false,
+    },
 }
+
+export default MESSAGES
