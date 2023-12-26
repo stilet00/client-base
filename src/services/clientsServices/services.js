@@ -7,9 +7,9 @@ import {
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClients(params = null) {
-    const queryParams = params
-        ? `?params=${encodeURIComponent(getURLStringWithoutFirstSlash(params))}`
+export function getClients({ url = null, searchQuery = '' }) {
+    const queryParams = url
+        ? `?params=${encodeURIComponent(getURLStringWithoutFirstSlash(url))}`
         : ''
 
     return axios.get(

@@ -23,6 +23,7 @@ const clientImageConverter = async image => {
 }
 const getAllClients = async (request, response) => {
     try {
+        console.log(request.query?.params)
         const noImageRequest = !!request.query?.params
         let query = getCollections().collectionClients.find()
 

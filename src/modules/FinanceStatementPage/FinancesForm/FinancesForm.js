@@ -33,7 +33,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
-        getClients(url).then(res => {
+        getClients({ url }).then(res => {
             if (res.status === 200) {
                 setReceivers(
                     res.data.map(client => {

@@ -48,8 +48,6 @@ export default function ClientsForm({
     const arrayWithErrors = Object.keys(formErrors)
     const arrayOfEditedClientsFields = Object.keys(editedClient)
 
-    console.log(client)
-
     const site = {
         login:
             siteFilter === 'svadba' ? client.svadba.login : client.dating.login,

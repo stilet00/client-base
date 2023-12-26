@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useResolvedPath } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {
     getClients,
@@ -42,7 +41,7 @@ export default function ListOfClients() {
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
     const { handleClose, handleOpen, open } = useModal()
-    const { search, onSearchChange } = useSearch()
+    const { queryString, changeSearchParams } = useSearch()
     const [alertInfo, setAlertInfo] = useState({
         mainTitle: 'no message had been put',
         status: true,
@@ -58,12 +57,12 @@ export default function ListOfClients() {
         currentYear,
     } = useClientsList(translators)
     const { isAdmin } = useAdminStatus(user)
-    const url = useResolvedPath('').pathname
+    console.log(queryString)
 
     useEffect(() => {
         if (user) {
             ;(async () => {
-                const responseDataWithClients = await getClients()
+                const responseDataWithClients = await getClients({})
                 if (responseDataWithClients.status === 200) {
                     console.log(responseDataWithClients.data)
                     setClients(responseDataWithClients.data)
@@ -96,24 +95,24 @@ export default function ListOfClients() {
         }
     }, [user])
 
-    useEffect(() => {
-        ;(async () => {
-            setLoading(true)
-            const responseDataWithClients = await getClients({ search })
-            if (responseDataWithClients.status === 200) {
-                console.log(responseDataWithClients.data)
-                setClients(responseDataWithClients.data)
-            } else {
-                setAlertInfo({
-                    ...alertInfo,
-                    mainTitle: MESSAGE.somethingWrongWithGettingClients,
-                    status: false,
-                })
-                openAlert(5000)
-            }
-            setLoading(false)
-        })()
-    }, [url])
+    // useEffect(() => {
+    //     ;(async () => {
+    //         setLoading(true)
+    //         const responseDataWithClients = await getClients({})
+    //         if (responseDataWithClients.status === 200) {
+    //             console.log(responseDataWithClients.data)
+    //             setClients(responseDataWithClients.data)
+    //         } else {
+    //             setAlertInfo({
+    //                 ...alertInfo,
+    //                 mainTitle: MESSAGE.somethingWrongWithGettingClients,
+    //                 status: false,
+    //             })
+    //             openAlert(5000)
+    //         }
+    //         setLoading(false)
+    //     })()
+    // }, [queryParams])
 
     const getUpdatingClient = _id => {
         const clientWithID = clients.find(client => client._id === _id)
@@ -299,8 +298,10 @@ export default function ListOfClients() {
                     className="search-input"
                     type="text"
                     placeholder="Search for..."
-                    value={search}
-                    onChange={onSearchChange}
+                    value={queryString}
+                    onChange={e => {
+                        changeSearchParams(e.target.value)
+                    }}
                 ></input>
             </div>
             <div className={'main-container scrolled-container animated-box'}>
