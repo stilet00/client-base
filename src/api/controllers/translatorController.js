@@ -8,7 +8,7 @@ const {
 const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (req, res) => {
-    const hasStatisticsYearsInParams = !!req.query?.params
+    const hasStatisticsYearsInParams = !!req.query?.yearParams
     try {
         const translators = await getCollections()
             .collectionTranslators.find()

@@ -30,7 +30,7 @@ export const useOverview = user => {
                 }
             })
 
-            getTranslators(selectedYear).then(res => {
+            getTranslators({ yearParams: selectedYear }).then(res => {
                 if (res.status === 200) {
                     console.log(res.data)
                     // setTranslators(res.data)

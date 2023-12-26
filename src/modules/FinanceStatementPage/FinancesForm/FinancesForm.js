@@ -43,7 +43,7 @@ export default function FinancesForm({ handleNewPayment }) {
                 )
             }
         })
-        getTranslators().then(res => {
+        getTranslators({}).then(res => {
             if (res.status === 200) {
                 const notSuspendedTranslators = res.data.filter(
                     translator => !translator.suspended.status

@@ -4,10 +4,16 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const translatorsURL = rootURL + 'translators/'
 
-export function getTranslators(statisticsYear = null) {
-    const queryParams = statisticsYear
-        ? `?params=${encodeURIComponent(statisticsYear)}`
-        : ''
+export function getTranslators({ yearParams = null, searchQuery = '' }) {
+    let queryParams = ''
+    if (yearParams) {
+        queryParams = `?yearParams=${encodeURIComponent(yearParams)}`
+    }
+    if (searchQuery) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `searchQuery=${encodeURIComponent(searchQuery)}`
+    }
     return axios.get(
         translatorsURL + 'get/' + queryParams,
         getConfigForAxiosAuthenticatedRequest()

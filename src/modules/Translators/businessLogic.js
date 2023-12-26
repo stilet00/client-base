@@ -21,7 +21,6 @@ import {
 } from '../../constants/constants'
 
 import {
-    addClient,
     getClients,
     removeClient,
 } from '../../services/clientsServices/services'
@@ -112,7 +111,7 @@ export const useTranslators = user => {
                 } else {
                     showAlertMessage(MESSAGES.somethingWrongWithCurrencies)
                 }
-                const responseTranslators = await getTranslators()
+                const responseTranslators = await getTranslators({})
                 if (responseTranslators.status === 200) {
                     setTranslators(responseTranslators.data)
                 } else {
@@ -187,29 +186,27 @@ export const useTranslators = user => {
     }, [])
 
     const saveChangedTranslator = useCallback(
-        (editedTranslator, message) => {
-            updateTranslator(editedTranslator)
-                .then(res => {
-                    if (res.status === 200) {
-                        showAlertMessage(message)
-                        setTranslators(
-                            translators.map(item => {
-                                return item._id === editedTranslator._id
-                                    ? editedTranslator
-                                    : item
-                            })
+        async (editedTranslator, message) => {
+            try {
+                const res = await updateTranslator(editedTranslator)
+                if (res.status === 200) {
+                    showAlertMessage(message)
+                    setTranslators(
+                        translators.map(item =>
+                            item._id === editedTranslator._id
+                                ? editedTranslator
+                                : item
                         )
-                    }
-                })
-                .catch(error => {
-                    const erroMessageForShowAlertMessage = {
-                        text:
-                            error?.response?.data?.error || 'An error occurred',
-                        status: false,
-                    }
-                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                    console.error('An error occurred:', error) // Log the error for debugging
-                })
+                    )
+                }
+            } catch (error) {
+                const erroMessageForShowAlertMessage = {
+                    text: error?.response?.data?.error || 'An error occurred',
+                    status: false,
+                }
+                showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                console.error('An error occurred:', error)
+            }
         },
         [translators, showAlertMessage]
     )
@@ -227,19 +224,21 @@ export const useTranslators = user => {
                 item => item._id === translatorID
             )
 
-            if (
-                editedTranslator.clients.filter(
-                    item => item._id === currentClient._id
-                ).length > 0
-            ) {
-                showAlertMessage(MESSAGES.clientExist)
-            } else {
-                editedTranslator = insertClient(editedTranslator, currentClient)
-                saveChangedTranslator(
-                    editedTranslator,
-                    MESSAGES.translatorFilled
-                )
-            }
+            console.log(editedTranslator)
+
+            // if (
+            //     editedTranslator.clients.filter(
+            //         item => item._id === currentClient._id
+            //     ).length > 0
+            // ) {
+            //     showAlertMessage(MESSAGES.clientExist)
+            // } else {
+            //     editedTranslator = insertClient(editedTranslator, currentClient)
+            //     saveChangedTranslator(
+            //         editedTranslator,
+            //         MESSAGES.translatorFilled
+            //     )
+            // }
         },
         [translators, currentClient, showAlertMessage, showAlertMessage]
     )

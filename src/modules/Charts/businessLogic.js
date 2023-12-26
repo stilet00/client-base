@@ -41,7 +41,7 @@ export const useChartsContainer = user => {
 
     useEffect(() => {
         if (user) {
-            getTranslators().then(res => {
+            getTranslators({}).then(res => {
                 if (res.status === 200) {
                     const statisticsYearsArray = res.data.map(item =>
                         item.statistics.find(item => item.year === selectedYear)
