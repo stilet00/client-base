@@ -7,11 +7,16 @@ import {
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClients({ url = null, searchQuery = '' }) {
-    const queryParams = url
-        ? `?params=${encodeURIComponent(getURLStringWithoutFirstSlash(url))}`
-        : ''
-
+export function getClients({ noImageParams = false, searchQuery = '' }) {
+    let queryParams = ''
+    if (noImageParams) {
+        queryParams = `?noImageParams=${noImageParams}`
+    }
+    if (searchQuery) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `searchQuery=${encodeURIComponent(searchQuery)}`
+    }
     return axios.get(
         clientsURL + 'get/' + queryParams,
         getConfigForAxiosAuthenticatedRequest()

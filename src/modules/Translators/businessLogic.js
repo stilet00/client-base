@@ -38,7 +38,6 @@ import {
 
 export const useTranslators = user => {
     const [message, setMessage] = useState(MESSAGES.addTranslator)
-    const url = useResolvedPath('').pathname
     const [clients, setClients] = useState([])
     const [chatsBonus, setChatsBonus] = useState([])
 
@@ -117,7 +116,17 @@ export const useTranslators = user => {
                 if (responseTranslators.status === 200) {
                     setTranslators(responseTranslators.data)
                 } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
+                    showAlertMessage(
+                        MESSAGES.somethingWrongWithGettingTranslators
+                    )
+                }
+                const responseClients = await getClients({
+                    noImageParams: true,
+                })
+                if (responseClients.status === 200) {
+                    setClients(responseClients.data)
+                } else {
+                    showAlertMessage(MESSAGES.somethingWrongWithGettingClients)
                 }
                 setLoading(false)
             }

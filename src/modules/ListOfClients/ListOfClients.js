@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useDeferredValue } from 'react'
 import { useSelector } from 'react-redux'
 import {
     getClients,
@@ -30,6 +30,7 @@ import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import MESSAGE from 'constants/messages'
 import useSearch from 'sharedHooks/useSearchString'
+import useDebounce from 'sharedHooks/useDebounce'
 
 export default function ListOfClients() {
     const user = useSelector(state => state.auth.user)
@@ -57,7 +58,6 @@ export default function ListOfClients() {
         currentYear,
     } = useClientsList(translators)
     const { isAdmin } = useAdminStatus(user)
-    console.log(queryString)
 
     useEffect(() => {
         if (user) {
@@ -95,24 +95,28 @@ export default function ListOfClients() {
         }
     }, [user])
 
-    // useEffect(() => {
-    //     ;(async () => {
-    //         setLoading(true)
-    //         const responseDataWithClients = await getClients({})
-    //         if (responseDataWithClients.status === 200) {
-    //             console.log(responseDataWithClients.data)
-    //             setClients(responseDataWithClients.data)
-    //         } else {
-    //             setAlertInfo({
-    //                 ...alertInfo,
-    //                 mainTitle: MESSAGE.somethingWrongWithGettingClients,
-    //                 status: false,
-    //             })
-    //             openAlert(5000)
-    //         }
-    //         setLoading(false)
-    //     })()
-    // }, [queryParams])
+    useDebounce(
+        async () => {
+            setLoading(true)
+            const responseDataWithClients = await getClients({
+                searchQuery: queryString,
+            })
+            if (responseDataWithClients.status === 200) {
+                console.log(responseDataWithClients.data)
+                setClients(responseDataWithClients.data)
+            } else {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: MESSAGE.somethingWrongWithGettingClients,
+                    status: false,
+                })
+                openAlert(5000)
+            }
+            setLoading(false)
+        },
+        1000,
+        [queryString]
+    )
 
     const getUpdatingClient = _id => {
         const clientWithID = clients.find(client => client._id === _id)
@@ -291,7 +295,11 @@ export default function ListOfClients() {
         setShowGraph(true)
     }
 
-    return user && !loading ? (
+    if (!user) {
+        return <LoggedOutPage />
+    }
+
+    return (
         <>
             <div>
                 <input
@@ -305,47 +313,54 @@ export default function ListOfClients() {
                 ></input>
             </div>
             <div className={'main-container scrolled-container animated-box'}>
-                <ClientsChartsContainer
-                    user={user}
-                    values={graphData}
-                    open={showGraph}
-                    handleClose={closeGraph}
-                />
-                {clients?.length > 0 && (
-                    <Grid
-                        container
-                        spacing={2}
-                        id="on-scroll__rotate-animation-list"
-                    >
-                        {getSortedClients(clients)
-                            .filter(getFilteredClients)
-                            .map(client => (
-                                <Grid
-                                    key={client._id}
-                                    item
-                                    xs={12}
-                                    md={4}
-                                    sm={6}
-                                >
-                                    <SingleClient
-                                        key={client._id}
-                                        {...client}
-                                        admin={isAdmin}
-                                        handleUpdatingClientsId={
-                                            getUpdatingClient
-                                        }
-                                        handleSwitchToGraph={switchToGraph}
-                                    />
-                                </Grid>
-                            ))}
-                    </Grid>
-                )}
-                {!clients?.length && (
-                    <Typography
-                        variant="h5"
-                        component="div"
-                        style={{ margin: 'auto' }}
-                    >{`No clients found`}</Typography>
+                {loading && <Loader />}
+                {!loading && (
+                    <>
+                        <ClientsChartsContainer
+                            user={user}
+                            values={graphData}
+                            open={showGraph}
+                            handleClose={closeGraph}
+                        />
+                        {clients?.length > 0 && (
+                            <Grid
+                                container
+                                spacing={2}
+                                id="on-scroll__rotate-animation-list"
+                            >
+                                {getSortedClients(clients)
+                                    .filter(getFilteredClients)
+                                    .map(client => (
+                                        <Grid
+                                            key={client._id}
+                                            item
+                                            xs={12}
+                                            md={4}
+                                            sm={6}
+                                        >
+                                            <SingleClient
+                                                key={client._id}
+                                                {...client}
+                                                admin={isAdmin}
+                                                handleUpdatingClientsId={
+                                                    getUpdatingClient
+                                                }
+                                                handleSwitchToGraph={
+                                                    switchToGraph
+                                                }
+                                            />
+                                        </Grid>
+                                    ))}
+                            </Grid>
+                        )}
+                        {!clients?.length && (
+                            <Typography
+                                variant="h5"
+                                component="div"
+                                style={{ margin: 'auto' }}
+                            >{`No clients found`}</Typography>
+                        )}
+                    </>
                 )}
             </div>
             <div className="socials button-add-container">
@@ -377,11 +392,5 @@ export default function ListOfClients() {
                 status={alertInfo.status}
             />
         </>
-    ) : user && loading ? (
-        <div className={'main-container scrolled-container  animated-box'}>
-            <Loader />
-        </div>
-    ) : (
-        <LoggedOutPage />
     )
 }

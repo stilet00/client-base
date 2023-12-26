@@ -24,11 +24,11 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            // getClients({url: match.url}).then(res => {
-            //     if (res.status === 200) {
-            //         setClients(res.data)
-            //     }
-            // })
+            getClients({ noImageParams: true }).then(res => {
+                if (res.status === 200) {
+                    setClients(res.data)
+                }
+            })
 
             getTranslators(selectedYear).then(res => {
                 if (res.status === 200) {

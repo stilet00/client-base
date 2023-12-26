@@ -23,9 +23,20 @@ const clientImageConverter = async image => {
 }
 const getAllClients = async (request, response) => {
     try {
-        console.log(request.query?.params)
-        const noImageRequest = !!request.query?.params
-        let query = getCollections().collectionClients.find()
+        const noImageRequest = !!request.query?.noImageParams
+        const searchQuery = request.query?.searchQuery || ''
+        let queryCondition = {}
+        console.log(request.query)
+        if (searchQuery) {
+            queryCondition = {
+                $or: [
+                    { name: { $regex: searchQuery, $options: 'i' } },
+                    { surname: { $regex: searchQuery, $options: 'i' } },
+                ],
+            }
+        }
+
+        let query = getCollections().collectionClients.find(queryCondition)
 
         if (noImageRequest) {
             query = query.select('-image')
