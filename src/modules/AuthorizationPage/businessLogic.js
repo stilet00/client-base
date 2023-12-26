@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../../features/authSlice'
 import firebase from 'firebase'
@@ -19,7 +19,7 @@ export const useAuthorizationPage = () => {
         password: DEFAULT_ERROR,
     })
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const buttonElement = useRef(null)
 
@@ -69,7 +69,7 @@ export const useAuthorizationPage = () => {
                                     uid,
                                 })
                             )
-                            history.push('/overview/')
+                            navigate('/overview/')
                         }
                         result.user
                             .getIdToken()

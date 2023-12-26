@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useRouteMatch } from 'react-router-dom'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
+import { useResolvedPath } from 'react-router-dom'
 import MenuItem from '@mui/material/MenuItem'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
@@ -27,7 +25,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function FinancesForm({ handleNewPayment }) {
-    const match = useRouteMatch()
+    const url = useResolvedPath('').pathname
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [fromErrors, setFormErrors] = useState({})
@@ -35,7 +33,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
-        getClients(match.url).then(res => {
+        getClients(url).then(res => {
             if (res.status === 200) {
                 setReceivers(
                     res.data.map(client => {

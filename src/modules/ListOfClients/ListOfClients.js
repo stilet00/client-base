@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useDeferredValue } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useResolvedPath } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {
     getClients,
@@ -57,6 +58,7 @@ export default function ListOfClients() {
         currentYear,
     } = useClientsList(translators)
     const { isAdmin } = useAdminStatus(user)
+    const url = useResolvedPath('').pathname
 
     useEffect(() => {
         if (user) {
@@ -95,8 +97,23 @@ export default function ListOfClients() {
     }, [user])
 
     useEffect(() => {
-        console.log(`searchChange`)
-    }, [search])
+        ;(async () => {
+            setLoading(true)
+            const responseDataWithClients = await getClients({ search })
+            if (responseDataWithClients.status === 200) {
+                console.log(responseDataWithClients.data)
+                setClients(responseDataWithClients.data)
+            } else {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: MESSAGE.somethingWrongWithGettingClients,
+                    status: false,
+                })
+                openAlert(5000)
+            }
+            setLoading(false)
+        })()
+    }, [url])
 
     const getUpdatingClient = _id => {
         const clientWithID = clients.find(client => client._id === _id)

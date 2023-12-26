@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import { useResolvedPath } from 'react-router-dom'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
 import { getPaymentsRequest } from '../../services/financesStatement/services'
@@ -11,7 +11,7 @@ import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
-    const match = useRouteMatch()
+    const url = useResolvedPath('').pathname
     const [statements, setStatments] = useState([])
 
     const [translators, setTranslators] = useState([])

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import { useResolvedPath } from 'react-router-dom'
 import MESSAGES from 'constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -38,7 +38,7 @@ import {
 
 export const useTranslators = user => {
     const [message, setMessage] = useState(MESSAGES.addTranslator)
-    const match = useRouteMatch()
+    const url = useResolvedPath('').pathname
     const [clients, setClients] = useState([])
     const [chatsBonus, setChatsBonus] = useState([])
 
