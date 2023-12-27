@@ -10,7 +10,6 @@ const getBalanceDay = async (req, res) => {
             client: new ObjectId(clientId),
             dateTimeId: dateTimeId,
         })
-        console.log(balanceDay)
         res.send(balanceDay)
     } catch (error) {
         console.error(error)
@@ -18,6 +17,55 @@ const getBalanceDay = async (req, res) => {
     }
 }
 
+const createBalanceDay = async (req, res) => {
+    try {
+        const { translator, client, dateTimeId, statistics } = req.body
+        const translatorId = new ObjectId(translator._id)
+        const clientId = new ObjectId(client._id)
+
+        const BalanceDay = await getCollections().collectionBalanceDays
+        const Translator = await getCollections().collectionTranslators
+
+        const newBalanceDay = new BalanceDay({
+            translator: translatorId,
+            client: clientId,
+            dateTimeId,
+            statistics,
+        })
+        await newBalanceDay.save()
+        await Translator.updateOne(
+            { _id: translatorId },
+            { $push: { statistics: newBalanceDay._id } }
+        )
+        res.send(newBalanceDay)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
+const updateBalanceDay = async (req, res) => {
+    try {
+        const { _id: id, statistics } = req.body
+
+        const BalanceDay = await getCollections().collectionBalanceDays
+        const updatedBalanceDay = await BalanceDay.findByIdAndUpdate(
+            id,
+            {
+                statistics,
+            },
+            { new: true }
+        )
+
+        res.send(updatedBalanceDay)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     getBalanceDay,
+    createBalanceDay,
+    updateBalanceDay,
 }

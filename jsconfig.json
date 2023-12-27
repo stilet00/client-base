@@ -10,7 +10,8 @@
                 "src/sharedComponents/*",
                 "src/sharedFunctions/*",
                 "src/services/*",
-                "src/modules/*"
+                "src/modules/*",
+                "src/styles/*"
             ]
         }
     },

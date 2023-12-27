@@ -51,7 +51,6 @@ function SingleTranslator({
     dragOverHandler,
     onBoardDrop,
     dragLeaveHandler,
-    balanceDaySubmit,
     suspendTranslator,
     suspended,
     suspendClient,
@@ -64,6 +63,7 @@ function SingleTranslator({
     dollarToUahRate,
     admin,
     bonus,
+    updateBalanceDayIsLoading,
 }) {
     const {
         calculateSumByClient,
@@ -533,9 +533,7 @@ function SingleTranslator({
             <CardActions>
                 {clients.length && !suspended.status ? (
                     <EditBalanceForm
-                        balanceDaySubmit={balanceDay =>
-                            balanceDaySubmit(_id, balanceDay)
-                        }
+                        updateBalanceDayIsLoading={updateBalanceDayIsLoading}
                         translatorId={_id}
                         name={name}
                         surname={surname}

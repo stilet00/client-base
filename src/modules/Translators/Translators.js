@@ -52,7 +52,6 @@ function Translators() {
         dragStartHandler,
         message,
         translatorsFormSubmit,
-        balanceDaySubmit,
         alertStatusConfirmation,
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
@@ -69,6 +68,7 @@ function Translators() {
         dollarToUahRate,
         getBonusesForChats,
         chatsBonus,
+        updateBalanceDayIsLoading,
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -376,7 +376,9 @@ function Translators() {
                             dragOverHandler={dragOverHandler}
                             onBoardDrop={onBoardDrop}
                             dragLeaveHandler={dragLeaveHandler}
-                            balanceDaySubmit={balanceDaySubmit}
+                            updateBalanceDayIsLoading={
+                                updateBalanceDayIsLoading
+                            }
                             alertStatusConfirmation={alertStatusConfirmation}
                             openAlertConfirmation={openAlertConfirmation}
                             closeAlertConfirmationNoReload={

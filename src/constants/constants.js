@@ -80,16 +80,21 @@ export class DEFAULT_MONTH_CHART {
 
 export class EMPTY_BALANCE_DAY {
     constructor(clientId) {
-        this.chats = 0
-        this.letters = 0
-        this.dating = 0
-        this.virtualGiftsSvadba = 0
-        this.virtualGiftsDating = 0
-        this.photoAttachments = 0
-        this.phoneCalls = 0
-        this.voiceMessages = 0
-        this.penalties = 0
-        this.comments = ''
+        this.dateTimeId = moment().format('DD MM YYYY')
+        this.client = { _id: '' }
+        this.translator = { _id: '' }
+        this.statistics = {
+            chats: 0,
+            letters: 0,
+            dating: 0,
+            virtualGiftsSvadba: 0,
+            virtualGiftsDating: 0,
+            photoAttachments: 0,
+            phoneCalls: 0,
+            voiceMessages: 0,
+            penalties: 0,
+            comments: '',
+        }
     }
 }
 

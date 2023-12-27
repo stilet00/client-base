@@ -1,9 +1,10 @@
-let rootURL = '/'
-let tasksURL = rootURL + 'tasks/'
-let balanceURL = rootURL + 'balance/'
-let clientsURL = rootURL + 'clients/'
-let translatorsURL = rootURL + 'translators/'
-let financeStatementsURL = rootURL + 'statements/'
+const rootURL = '/'
+const tasksURL = rootURL + 'tasks/'
+const balanceURL = rootURL + 'balance/'
+const clientsURL = rootURL + 'clients/'
+const translatorsURL = rootURL + 'translators/'
+const financeStatementsURL = rootURL + 'statements/'
+const balanceDayURL = rootURL + 'balance-day/'
 
 module.exports = {
     rootURL,
@@ -12,4 +13,5 @@ module.exports = {
     clientsURL,
     translatorsURL,
     financeStatementsURL,
+    balanceDayURL,
 }

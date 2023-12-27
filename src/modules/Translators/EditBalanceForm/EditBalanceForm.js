@@ -39,14 +39,15 @@ import {
     StyledFormControl,
 } from 'sharedComponents/StyledMaterial/styledMaterialComponents'
 import AlertMessage from 'sharedComponents/AlertMessage/AlertMessage'
+import Loader from 'sharedComponents/Loader/Loader'
 
 export default function EditBalanceForm({
-    balanceDaySubmit,
     name,
     surname,
     clients,
     admin,
     translatorId,
+    updateBalanceDayIsLoading,
 }) {
     const {
         handleOpen,
@@ -61,18 +62,19 @@ export default function EditBalanceForm({
         selectedClient,
         handleClientChange,
         handleChange,
-        onSavePressed,
         messageFromBalanceDayForm,
         alertOpen,
         openAlert,
         closeAlert,
         currentBalanceDay,
-    } = useBalanceForm({
+        getBalanceDayIsLoading,
         balanceDaySubmit,
+    } = useBalanceForm({
         clients,
         translatorId,
     })
     const voiceMessageCheck = () => currentBalanceDay?.voiceMessages ?? 0
+    const currentBalanceDayStatistics = currentBalanceDay?.statistics
     return (
         <>
             <Button
@@ -228,7 +230,16 @@ export default function EditBalanceForm({
                                         </Select>
                                     </StyledFormControl>
                                 </div>
-                                {!!currentBalanceDay ? (
+                                {updateBalanceDayIsLoading && (
+                                    <Loader
+                                        style={{
+                                            color: 'black',
+                                            margin: '0 auto',
+                                        }}
+                                        loaderColor={`black`}
+                                    />
+                                )}
+                                {!updateBalanceDayIsLoading && (
                                     <>
                                         <p>Finances:</p>
                                         <div className="balance-form__finances">
@@ -246,7 +257,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.chats
+                                                                    currentBalanceDayStatistics.chats
                                                                 }
                                                                 variant="outlined"
                                                                 label={'Chats'}
@@ -278,7 +289,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.letters
+                                                                    currentBalanceDayStatistics.letters
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -314,7 +325,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.virtualGiftsSvadba
+                                                                    currentBalanceDayStatistics.virtualGiftsSvadba
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -350,7 +361,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.penalties
+                                                                    currentBalanceDayStatistics.penalties
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -386,7 +397,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.dating
+                                                                    currentBalanceDayStatistics.dating
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -420,7 +431,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.phoneCalls
+                                                                    currentBalanceDayStatistics.phoneCalls
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -456,7 +467,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.virtualGiftsDating
+                                                                    currentBalanceDayStatistics.virtualGiftsDating
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -553,7 +564,7 @@ export default function EditBalanceForm({
                                                                             !admin
                                                                         }
                                                                         value={
-                                                                            currentBalanceDay.comments ||
+                                                                            currentBalanceDayStatistics.comments ||
                                                                             ''
                                                                         }
                                                                         onChange={
@@ -588,7 +599,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.penalties
+                                                                    currentBalanceDayStatistics.penalties
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -619,7 +630,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.letters
+                                                                    currentBalanceDayStatistics.letters
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"
@@ -657,7 +668,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.photoAttachments
+                                                                    currentBalanceDayStatistics.photoAttachments
                                                                 }
                                                                 size="small"
                                                                 disabled={
@@ -691,7 +702,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    currentBalanceDay.chats
+                                                                    currentBalanceDayStatistics.chats
                                                                 }
                                                                 variant="outlined"
                                                                 label={
@@ -746,7 +757,7 @@ export default function EditBalanceForm({
                                                                             4
                                                                         }
                                                                         value={
-                                                                            currentBalanceDay.comments ||
+                                                                            currentBalanceDayStatistics.comments ||
                                                                             ''
                                                                         }
                                                                         onChange={
@@ -775,17 +786,17 @@ export default function EditBalanceForm({
                                         >
                                             <strong>Day balance: </strong>
                                             {calculateBalanceDaySum(
-                                                currentBalanceDay
+                                                currentBalanceDay.statistics
                                             ).toFixed(2) + ' $'}
                                         </p>
-                                        {currentBalanceDay.comments ? (
+                                        {currentBalanceDayStatistics.comments ? (
                                             <p
                                                 style={{
                                                     margin: '0 8px',
                                                 }}
                                             >
                                                 <strong>Day comment: </strong>
-                                                {` ${currentBalanceDay.comments}.`}
+                                                {` ${currentBalanceDayStatistics.comments}.`}
                                             </p>
                                         ) : null}
                                         <div className="balance-form__actions">
@@ -793,7 +804,11 @@ export default function EditBalanceForm({
                                                 <Button
                                                     variant={'outlined'}
                                                     type={'button'}
-                                                    onClick={onSavePressed}
+                                                    onClick={async () =>
+                                                        balanceDaySubmit({
+                                                            currentBalanceDay,
+                                                        })
+                                                    }
                                                     disabled={!admin}
                                                     className={
                                                         'balance-form__actions--button'
@@ -833,14 +848,6 @@ export default function EditBalanceForm({
                                             </Button>
                                         </div>
                                     </>
-                                ) : (
-                                    <Typography
-                                        className={'balance-form__no-data'}
-                                        variant="h5"
-                                        align={'center'}
-                                    >
-                                        Client wasn't assigned at this date.
-                                    </Typography>
                                 )}
                             </form>
                         </div>

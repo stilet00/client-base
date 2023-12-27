@@ -91,3 +91,23 @@ export function getBalanceDay({ translatorId, clientId, dateTimeId }) {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function createBalanceDay({ newBalanceDay }) {
+    return axios.post(
+        balanceDayURL + `create`,
+        {
+            ...newBalanceDay,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function updateBalanceDay({ balanceDayToSubmit }) {
+    return axios.put(
+        balanceDayURL + `update`,
+        {
+            ...balanceDayToSubmit,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}

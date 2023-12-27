@@ -11,6 +11,7 @@ const {
     translatorsURL,
     financeStatementsURL,
     tasksURL,
+    balanceDayURL,
 } = require('./src/api/routes/routes')
 const {
     getLastVirtualGift,
@@ -42,7 +43,11 @@ const {
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
 const { getCollections } = require('./src/api/database/collections')
-const { getBalanceDay } = require('./src/api/controllers/balanceDayController')
+const {
+    getBalanceDay,
+    createBalanceDay,
+    updateBalanceDay,
+} = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
 const PORT = process.env.PORT || 80
@@ -147,7 +152,9 @@ app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
 app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 
 // balance day api
-app.get(rootURL + 'balance-day', isAuthenticated, getBalanceDay)
+app.get(balanceDayURL, isAuthenticated, getBalanceDay)
+app.post(balanceDayURL + 'create', isAuthenticated, createBalanceDay)
+app.put(balanceDayURL + 'update', isAuthenticated, updateBalanceDay)
 
 // DB connection and server starts
 const startServer = async () => {

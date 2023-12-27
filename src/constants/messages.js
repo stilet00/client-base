@@ -103,6 +103,14 @@ const MESSAGES = {
         text: 'Something went wrong while getting balance day :(',
         status: false,
     },
+    somethingWentWrongWithSavingBalanceDay: {
+        text: 'Something went wrong while saving balance day :(',
+        status: false,
+    },
+    balanceDayHaveBeenSaved: {
+        text: 'Balance day have been saved!',
+        status: true,
+    },
 }
 
 export default MESSAGES
