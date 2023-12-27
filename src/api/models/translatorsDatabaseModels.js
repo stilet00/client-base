@@ -1,31 +1,20 @@
 const mongoose = require('mongoose')
 
-const DaySchema = new mongoose.Schema({
-    dayId: String,
+const BalanceDaySchema = new mongoose.Schema({
+    dateTimeId: String, // Date in format DD MM YYYY
     translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
-    clients: [
-        {
-            client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' },
-            chats: Number,
-            letters: Number,
-            dating: Number,
-            virtualGiftsSvadba: Number,
-            virtualGiftsDating: Number,
-            photoAttachments: Number,
-            phoneCalls: Number,
-            penalties: Number,
-            comments: String,
-        },
-    ],
-})
-
-const MonthSchema = new mongoose.Schema({
-    days: [DaySchema],
-})
-
-const YearSchema = new mongoose.Schema({
-    year: String,
-    months: [MonthSchema],
+    client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' },
+    statistics: {
+        chats: Number,
+        letters: Number,
+        dating: Number,
+        virtualGiftsSvadba: Number,
+        virtualGiftsDating: Number,
+        photoAttachments: Number,
+        phoneCalls: Number,
+        penalties: Number,
+        comments: String,
+    },
 })
 
 const SuspendedStatusSchema = new mongoose.Schema({
@@ -49,7 +38,7 @@ const TranslatorSchema = new mongoose.Schema({
         required: [true, 'Please tell us your name!'],
     },
     clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }],
-    statistics: [YearSchema],
+    statistics: [BalanceDaySchema],
     edited: Boolean,
     suspended: SuspendedStatusSchema,
     personalPenalties: [PersonalPenaltiesSchema],
@@ -68,4 +57,5 @@ const TranslatorSchema = new mongoose.Schema({
 
 module.exports = {
     TranslatorSchema,
+    BalanceDaySchema,
 }

@@ -6,7 +6,10 @@ const mongoose = require('mongoose')
 const { changeDatabaseInConnectionString } = require('./utils')
 const { TaskSchema } = require('../models/taskListDatabaseModels')
 const { ClientSchema } = require('../models/clientsDatabase')
-const { TranslatorSchema } = require('../models/translatorsDatabaseModels')
+const {
+    TranslatorSchema,
+    BalanceDaySchema,
+} = require('../models/translatorsDatabaseModels')
 const { PaymentSchema } = require('../models/statementsDatabaseModels')
 
 const collections = new Map()
@@ -40,29 +43,39 @@ const connectToDatabase = async () => {
                 collection: 'statementsCollection',
             })
         )
+        const BalanceDay = clientBaseDB.model(
+            'BalanceDay',
+            BalanceDaySchema,
+            'balanceDayCollection'
+        )
         collections.set('collectionTasks', Task)
         collections.set('collectionClients', Client)
         collections.set('collectionClientsOnTranslators', Client)
         collections.set('collectionTranslators', Translator)
         collections.set('collectionAdmins', Admin)
         collections.set('collectionStatements', Statement)
+        collections.set('collectionBalanceDays', BalanceDay)
     } catch (error) {
         console.log(error)
     }
 }
 
+const COLLECTION_NAMES = [
+    'collectionTasks',
+    'collectionBalance',
+    'collectionTaskNotifications',
+    'collectionClients',
+    'collectionTranslators',
+    'collectionStatements',
+    'collectionAdmins',
+    'collectionBalanceDays',
+]
+
 const getCollections = () => {
-    return {
-        collectionTasks: collections.get('collectionTasks'),
-        collectionBalance: collections.get('collectionBalance'),
-        collectionTaskNotifications: collections.get(
-            'collectionTaskNotifications'
-        ),
-        collectionClients: collections.get('collectionClients'),
-        collectionTranslators: collections.get('collectionTranslators'),
-        collectionStatements: collections.get('collectionStatements'),
-        collectionAdmins: collections.get('collectionAdmins'),
-    }
+    return COLLECTION_NAMES.reduce((collectionsObject, collectionName) => {
+        collectionsObject[collectionName] = collections.get(collectionName)
+        return collectionsObject
+    }, {})
 }
 
 module.exports = {

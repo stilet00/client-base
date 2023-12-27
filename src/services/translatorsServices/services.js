@@ -3,8 +3,13 @@ import { rootURL } from '../rootURL'
 import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const translatorsURL = rootURL + 'translators/'
+const balanceDayURL = rootURL + 'balance-day/'
 
-export function getTranslators({ yearParams = null, searchQuery = '' }) {
+export function getTranslators({
+    yearParams = null,
+    searchQuery = '',
+    shouldGetClients = false,
+}) {
     let queryParams = ''
     if (yearParams) {
         queryParams = `?yearParams=${encodeURIComponent(yearParams)}`
@@ -13,6 +18,9 @@ export function getTranslators({ yearParams = null, searchQuery = '' }) {
         queryParams +=
             (queryParams ? '&' : '?') +
             `searchQuery=${encodeURIComponent(searchQuery)}`
+    }
+    if (shouldGetClients) {
+        queryParams += (queryParams ? '&' : '?') + 'shouldGetClients=true'
     }
     return axios.get(
         translatorsURL + 'get/' + queryParams,
@@ -72,6 +80,14 @@ export function requestBonusesForChats(data) {
     return axios.post(
         translatorsURL + 'chat-bonus',
         data,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function getBalanceDay({ translatorId, clientId, dateTimeId }) {
+    return axios.get(
+        balanceDayURL +
+            `?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${dateTimeId}`,
         getConfigForAxiosAuthenticatedRequest()
     )
 }

@@ -78,9 +78,8 @@ export class DEFAULT_MONTH_CHART {
     }
 }
 
-export class DEFAULT_DAY_CLIENT {
+export class EMPTY_BALANCE_DAY {
     constructor(clientId) {
-        this.id = clientId
         this.chats = 0
         this.letters = 0
         this.dating = 0

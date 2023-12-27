@@ -41,6 +41,7 @@ export default function PersonalPenaltyForm({
                     onClick={handleOpen}
                     size={'small'}
                     color="error"
+                    sx={{ ml: `0px !important` }}
                 >
                     <GavelIcon />
                 </IconButton>

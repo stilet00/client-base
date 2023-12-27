@@ -26,7 +26,6 @@ const getAllClients = async (request, response) => {
         const noImageRequest = !!request.query?.noImageParams
         const searchQuery = request.query?.searchQuery || ''
         let queryCondition = {}
-        console.log(request.query)
         if (searchQuery) {
             queryCondition = {
                 $or: [

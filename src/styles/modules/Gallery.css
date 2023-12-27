@@ -217,6 +217,7 @@
 }
 .gallery-container .inner-gallery-container .translator-item .MuiCardActions-root {
   padding: 4px 16px 8px 16px;
+  gap: 10px;
 }
 .gallery-container .inner-gallery-container .translator-item .clients-list {
   box-sizing: border-box;

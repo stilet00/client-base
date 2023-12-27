@@ -42,6 +42,7 @@ const {
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
 const { getCollections } = require('./src/api/database/collections')
+const { getBalanceDay } = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
 const PORT = process.env.PORT || 80
@@ -144,6 +145,9 @@ app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)
 app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
 app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
+
+// balance day api
+app.get(rootURL + 'balance-day', isAuthenticated, getBalanceDay)
 
 // DB connection and server starts
 const startServer = async () => {

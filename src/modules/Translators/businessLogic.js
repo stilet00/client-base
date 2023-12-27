@@ -11,15 +11,16 @@ import {
     sendLastVirtualGiftDateRequest,
     requestBonusesForChats,
     assignClientToTranslatorRequest,
-} from '../../services/translatorsServices/services'
-import { getCurrency } from '../../services/currencyServices'
+    getBalanceDay,
+} from 'services/translatorsServices/services'
+import { getCurrency } from 'services/currencyServices'
 import {
     currentMonth,
     currentYear,
-    DEFAULT_DAY_CLIENT,
+    EMPTY_BALANCE_DAY,
     previousMonth,
     previousYear,
-} from '../../constants/constants'
+} from 'constants/constants'
 
 import {
     getClients,
@@ -37,7 +38,6 @@ import {
 } from '../../sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
-    const [message, setMessage] = useState(MESSAGES.addTranslator)
     const [clients, setClients] = useState([])
     const [chatsBonus, setChatsBonus] = useState([])
 
@@ -54,7 +54,7 @@ export const useTranslators = user => {
 
     const [mailoutInProgress, setMailoutInProgress] = useState(false)
 
-    const { alertOpen, closeAlert, openAlert } = useAlert()
+    const { alertOpen, closeAlert, openAlert, message, setMessage } = useAlert()
 
     const [deletedTranslator, setDeletedTranslator] = useState(null)
 
@@ -110,15 +110,15 @@ export const useTranslators = user => {
                         responseWithCurrency?.data[1]?.buy ?? '36.57'
                     setDollarToUahRate(privatBankDollarRate)
                 } else {
-                    showAlertMessage(MESSAGES.somethingWrongWithCurrencies)
+                    openAlert(MESSAGES.somethingWrongWithCurrencies)
                 }
-                const responseTranslators = await getTranslators({})
+                const responseTranslators = await getTranslators({
+                    shouldGetClients: true,
+                })
                 if (responseTranslators.status === 200) {
                     setTranslators(responseTranslators.data)
                 } else {
-                    showAlertMessage(
-                        MESSAGES.somethingWrongWithGettingTranslators
-                    )
+                    openAlert(MESSAGES.somethingWrongWithGettingTranslators)
                 }
                 const responseClients = await getClients({
                     noImageParams: true,
@@ -126,20 +126,12 @@ export const useTranslators = user => {
                 if (responseClients.status === 200) {
                     setClients(responseClients.data)
                 } else {
-                    showAlertMessage(MESSAGES.somethingWrongWithGettingClients)
+                    openAlert(MESSAGES.somethingWrongWithGettingClients)
                 }
                 setLoading(false)
             }
         })()
     }, [user])
-
-    const showAlertMessage = useCallback(
-        (alertMessage, duration = 1000) => {
-            setMessage(alertMessage)
-            openAlert(duration)
-        },
-        [openAlert]
-    )
 
     const toggleDrawer = useCallback(
         (anchor, open) => event => {
@@ -191,7 +183,7 @@ export const useTranslators = user => {
             try {
                 const res = await updateTranslator(editedTranslator)
                 if (res.status === 200) {
-                    showAlertMessage(message)
+                    openAlert(message)
                     setTranslators(
                         translators.map(item =>
                             item._id === editedTranslator._id
@@ -205,11 +197,11 @@ export const useTranslators = user => {
                     text: error?.response?.data?.error || 'An error occurred',
                     status: false,
                 }
-                showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                openAlert(erroMessageForShowAlertMessage, 5000)
                 console.error('An error occurred:', error)
             }
         },
-        [translators, showAlertMessage]
+        [translators, openAlert]
     )
 
     const assignClientToTranslator = async ({ translatorId, clientId }) => {
@@ -221,7 +213,7 @@ export const useTranslators = user => {
                 item => item._id === currentClient._id
             )
         ) {
-            showAlertMessage(MESSAGES.clientExist)
+            openAlert(MESSAGES.clientExist)
             return
         }
         const responseFromAssignClientToTranslator =
@@ -240,7 +232,7 @@ export const useTranslators = user => {
             )
         }
         if (responseFromAssignClientToTranslator.status !== 200) {
-            showAlertMessage(MESSAGES.somethingWrongWithAssigningClient)
+            openAlert(MESSAGES.somethingWrongWithAssigningClient)
         }
     }
 
@@ -257,22 +249,22 @@ export const useTranslators = user => {
                 clientId: currentClient._id,
             })
         },
-        [translators, currentClient, showAlertMessage, showAlertMessage]
+        [translators, currentClient, openAlert, openAlert]
     )
 
     const deleteClient = useCallback(
         id => {
             removeClient(id).then(res => {
                 if (res.status === 200) {
-                    showAlertMessage(MESSAGES.clientDeleted)
+                    openAlert(MESSAGES.clientDeleted)
                     setClients(clients.filter(item => item._id !== id))
                 } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
+                    openAlert(MESSAGES.somethingWrong)
                     console.log(res.data)
                 }
             })
         },
-        [clients, showAlertMessage]
+        [clients, openAlert]
     )
 
     const startTranslatorDelete = useCallback(
@@ -302,13 +294,13 @@ export const useTranslators = user => {
                 )
                 setMessage(MESSAGES.addTranslator)
             } else {
-                showAlertMessage(MESSAGES.somethingWrong)
+                openAlert(MESSAGES.somethingWrong)
                 console.log(res.data)
             }
         })
     }, [
         translators,
-        showAlertMessage,
+        openAlert,
         closeAlertConfirmationNoReload,
         deletedTranslator,
     ])
@@ -325,7 +317,7 @@ export const useTranslators = user => {
                         )}`,
                         status: true,
                     }
-                    showAlertMessage(messageAboutEmailsReceived, 20000)
+                    openAlert(messageAboutEmailsReceived, 20000)
                     setMailoutInProgress(false)
                 }
             })
@@ -335,7 +327,7 @@ export const useTranslators = user => {
                     text: error?.response?.data?.error || 'An error occurred',
                     status: false,
                 }
-                showAlertMessage(erroMessageForShowAlertMessage, 5000) // Handle error case
+                openAlert(erroMessageForShowAlertMessage, 5000) // Handle error case
                 console.error('An error occurred:', error) // Log the error for debugging
                 setMailoutInProgress(false)
             })
@@ -344,10 +336,10 @@ export const useTranslators = user => {
     const translatorsFormSubmit = async newTranslator => {
         const { data, status } = await addTranslator(newTranslator)
         if (status === 200) {
-            showAlertMessage(MESSAGES.addTranslator)
+            openAlert(MESSAGES.addTranslator)
             setTranslators([...translators, { ...newTranslator, _id: data }])
         } else {
-            showAlertMessage(MESSAGES.somethingWrong, 5000)
+            openAlert(MESSAGES.somethingWrong, 5000)
         }
     }
     const balanceDaySubmit = useCallback(
@@ -356,7 +348,7 @@ export const useTranslators = user => {
                 item => item._id === translatorId
             )
             const newStatistics = editedTranslator.statistics.map(year => {
-                const newMonths = year.months.map(month => {
+                const newMonths = year?.months.map(month => {
                     return month.map(day => {
                         return day.id === balanceDay.id ? balanceDay : day
                     })
@@ -554,108 +546,75 @@ export const useTranslators = user => {
     }
 }
 
-export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
+export const useBalanceForm = ({ balanceDaySubmit, clients, translatorId }) => {
     const { open, handleOpen, handleClose } = useModal()
-
     const [selectedClient, setSelectedClient] = useState(
         clients.filter(client => !client.suspended)[0]?._id
     )
-
     const [selectedYear, setSelectedYear] = useState(
-        currentMonth === '1' && moment().format('D') === '1'
-            ? previousYear
-            : currentYear
+        moment().subtract(1, 'day').format('YYYY')
     )
-
     const [selectedMonth, setSelectedMonth] = useState(
-        moment().format('D') === '1' ? previousMonth : currentMonth
+        moment().subtract(1, 'day').format('M')
     )
-
     const [selectedDay, setSelectedDay] = useState(
         moment().subtract(1, 'day').format('D')
     )
-
-    const [currentBalanceDay, setCurrentBalanceDay] = useState(
-        findTodayBalance()
-    )
-
+    const [currentBalanceDay, setCurrentBalanceDay] = useState(null)
+    const { alertOpen, closeAlert, openAlert, message } = useAlert()
     useEffect(() => {
-        setCurrentBalanceDay(findTodayBalance())
-    }, [selectedYear, selectedMonth, selectedDay, statistics])
+        ;(async () => {
+            const responseWithBalanceDay = await getBalanceDay({
+                translatorId,
+                clientId: selectedClient,
+                dateTimeId: `${selectedDay} ${selectedMonth} ${selectedYear}`,
+            })
+            if (responseWithBalanceDay.status === 200) {
+                const balanceDayExists = !!responseWithBalanceDay.data
+                if (balanceDayExists) {
+                    setCurrentBalanceDay(responseWithBalanceDay.data)
+                }
+                if (!balanceDayExists) {
+                    const emptyBalanceDay = new EMPTY_BALANCE_DAY()
+                    setCurrentBalanceDay(emptyBalanceDay)
+                }
+            } else {
+                openAlert(MESSAGES.somethingWrongWithGettingBalanceDay)
+            }
+        })()
+    }, [selectedYear, selectedMonth, selectedDay, translatorId, selectedClient])
 
-    function findYear() {
-        return statistics.find(item => item.year === selectedYear)
-    }
-
-    function findMonth() {
-        return findYear().months.find(
-            (item, index) => index + 1 === Number(selectedMonth)
-        )
-    }
-
-    function findTodayBalance() {
-        return findMonth().find(
-            (item, index) => index + 1 === Number(selectedDay)
-        )
-    }
-
-    const handleYear = event => {
+    const handleYearChange = event => {
         setSelectedYear(event.target.value)
     }
 
-    const handleMonth = event => {
-        const searchedMonth = findYear().months.find(
-            (item, index) => index + 1 === Number(event.target.value)
-        )
-        if (Number(selectedDay) > searchedMonth.length) {
-            setSelectedDay(String(searchedMonth.length))
-            setSelectedMonth(event.target.value)
-        }
+    const handleMonthChange = event => {
         setSelectedMonth(event.target.value)
     }
 
-    const handleDay = event => {
+    const handleDayChange = event => {
         setSelectedDay(event.target.value)
     }
 
-    const handleClient = e => {
+    const handleClientChange = e => {
         setSelectedClient(e.target.value)
     }
 
     const handleChange = useCallback(
         e => {
-            const editedClientsBalance = currentBalanceDay.clients.map(
-                client => {
-                    if (client.id === selectedClient) {
-                        return e.target.type === 'textarea'
-                            ? { ...client, [e.target.name]: e.target.value }
-                            : {
-                                  ...client,
-                                  [e.target.name]: Number(e.target.value),
-                              }
-                    } else {
-                        return client
-                    }
-                }
-            )
-
-            setCurrentBalanceDay({
+            const editedBalanceDay = {
                 ...currentBalanceDay,
-                clients: editedClientsBalance,
+                [e.target.name]:
+                    e.target.type === 'textarea'
+                        ? e.target.value
+                        : Number(e.target.value),
+            }
+            setCurrentBalanceDay({
+                editedBalanceDay,
             })
         },
         [selectedClient, currentBalanceDay]
     )
-
-    function findClientById(id) {
-        if (id) {
-            return currentBalanceDay.clients.find(item => item.id === id)
-        } else {
-            return currentBalanceDay.clients.find(
-                item => item.id === selectedClient
-            )
-        }
-    }
 
     function onSavePressed() {
         balanceDaySubmit(currentBalanceDay)
@@ -665,19 +624,20 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
         open,
         handleClose,
         selectedYear,
-        handleYear,
+        handleYearChange,
         selectedMonth,
-        handleMonth,
-        findYear,
+        handleMonthChange,
         selectedDay,
-        handleDay,
-        findMonth,
+        handleDayChange,
         selectedClient,
-        handleClient,
+        handleClientChange,
         handleChange,
-        findClientById,
         onSavePressed,
         currentBalanceDay,
+        messageFromBalanceDayForm: message,
+        alertOpen,
+        closeAlert,
+        openAlert,
     }
 }
 
@@ -745,7 +705,7 @@ export const useSingleTranslator = (
         const yearStatistics = statistics.find(
             item => item.year === moment().format('YYYY')
         )
-        const monthStatistics = yearStatistics.months.find(
+        const monthStatistics = yearStatistics?.months.find(
             (item, index) =>
                 index + 1 === Number(moment().subtract(1, 'day').format('M'))
         )
@@ -760,7 +720,7 @@ export const useSingleTranslator = (
     }
 
     function findMonth(monthFilter = currentMonth) {
-        return findYear().months.find(
+        return findYear()?.months.find(
             (item, index) => index + 1 === Number(monthFilter)
         )
     }

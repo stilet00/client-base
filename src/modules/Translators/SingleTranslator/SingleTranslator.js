@@ -135,8 +135,6 @@ function SingleTranslator({
     const monthStringFormat =
         moment().format('MMMM').length > '5' ? 'MMM' : 'MMMM'
     const currentMonth = moment().format(monthStringFormat)
-
-    console.log(`${previousDay}/${currentMonth}/${currentYear}`)
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -538,11 +536,10 @@ function SingleTranslator({
                         balanceDaySubmit={balanceDay =>
                             balanceDaySubmit(_id, balanceDay)
                         }
+                        translatorId={_id}
                         name={name}
                         surname={surname}
-                        statistics={statistics}
                         clients={clients}
-                        id={_id}
                         admin={admin}
                     />
                 ) : null}

@@ -99,6 +99,10 @@ const MESSAGES = {
         text: 'Something went wrong while assigning client :(',
         status: false,
     },
+    somethingWrongWithGettingBalanceDay: {
+        text: 'Something went wrong while getting balance day :(',
+        status: false,
+    },
 }
 
 export default MESSAGES

@@ -8,11 +8,15 @@ const {
 const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (req, res) => {
-    const hasStatisticsYearsInParams = !!req.query?.yearParams
     try {
-        const translators = await getCollections()
-            .collectionTranslators.find()
-            .exec()
+        const hasStatisticsYearsInParams = !!req.query?.yearParams
+        const hasSearchQuery = !!req.query?.searchQuery
+        const hasShouldGetClients = !!req.query?.shouldGetClients
+        let query = getCollections().collectionTranslators.find()
+        if (hasShouldGetClients) {
+            query = query.populate('clients')
+        }
+        const translators = await query.exec()
         res.send(translators)
         // if (hasStatisticsYearsInParams) {
         //     const yearParams = req.query.params

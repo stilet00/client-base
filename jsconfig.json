@@ -4,7 +4,14 @@
         "jsx": "preserve",
         "baseUrl": "src",
         "paths": {
-            "*": ["src/*", "src/sharedHooksFolder/*"]
+            "*": [
+                "src/*",
+                "src/sharedHooksFolder/*",
+                "src/sharedComponents/*",
+                "src/sharedFunctions/*",
+                "src/services/*",
+                "src/modules/*"
+            ]
         }
     },
     "include": ["src"],
