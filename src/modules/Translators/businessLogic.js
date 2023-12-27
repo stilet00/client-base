@@ -10,6 +10,7 @@ import {
     sendNotificationEmailsRequest,
     sendLastVirtualGiftDateRequest,
     requestBonusesForChats,
+    assignClientToTranslatorRequest,
 } from '../../services/translatorsServices/services'
 import { getCurrency } from '../../services/currencyServices'
 import {
@@ -211,68 +212,53 @@ export const useTranslators = user => {
         [translators, showAlertMessage]
     )
 
+    const assignClientToTranslator = async ({ translatorId, clientId }) => {
+        let editedTranslator = translators.find(
+            item => item._id === translatorId
+        )
+        if (
+            editedTranslator.clients.some(
+                item => item._id === currentClient._id
+            )
+        ) {
+            showAlertMessage(MESSAGES.clientExist)
+            return
+        }
+        const responseFromAssignClientToTranslator =
+            await assignClientToTranslatorRequest({ translatorId, clientId })
+        if (responseFromAssignClientToTranslator.status === 200) {
+            const editedTranslator = translators.find(
+                item => item._id === translatorId
+            )
+            editedTranslator.clients.push({
+                ...currentClient,
+            })
+            setTranslators(
+                translators.map(item =>
+                    item._id === editedTranslator._id ? editedTranslator : item
+                )
+            )
+        }
+        if (responseFromAssignClientToTranslator.status !== 200) {
+            showAlertMessage(MESSAGES.somethingWrongWithAssigningClient)
+        }
+    }
+
     const onBoardDrop = useCallback(
-        (e, translatorID) => {
+        async (e, translatorID) => {
             e.preventDefault()
             if (e.target.tagName === 'UL') {
                 e.target.style.background = 'none'
             } else if (e.target.tagName === 'LI') {
                 e.target.parentNode.style.background = 'none'
             }
-
-            let editedTranslator = translators.find(
-                item => item._id === translatorID
-            )
-
-            console.log(editedTranslator)
-
-            // if (
-            //     editedTranslator.clients.filter(
-            //         item => item._id === currentClient._id
-            //     ).length > 0
-            // ) {
-            //     showAlertMessage(MESSAGES.clientExist)
-            // } else {
-            //     editedTranslator = insertClient(editedTranslator, currentClient)
-            //     saveChangedTranslator(
-            //         editedTranslator,
-            //         MESSAGES.translatorFilled
-            //     )
-            // }
+            await assignClientToTranslator({
+                translatorId: translatorID,
+                clientId: currentClient._id,
+            })
         },
         [translators, currentClient, showAlertMessage, showAlertMessage]
     )
-
-    const insertClient = useCallback((translator, client) => {
-        const clientBalanceDay = new DEFAULT_DAY_CLIENT(client._id)
-        const updatedStatistics = translator.statistics.map(item => {
-            if (item.year === currentYear) {
-                const updatedMonths = item.months.map((month, index) => {
-                    if (index + 1 >= Number(currentMonth)) {
-                        return month.map(day => {
-                            return {
-                                ...day,
-                                clients: [...day.clients, clientBalanceDay],
-                            }
-                        })
-                    } else {
-                        return month
-                    }
-                })
-                return { ...item, months: updatedMonths }
-            } else {
-                return item
-            }
-        })
-
-        translator = {
-            ...translator,
-            statistics: updatedStatistics,
-            clients: [...translator.clients, client],
-        }
-
-        return translator
-    }, [])
 
     const deleteClient = useCallback(
         id => {

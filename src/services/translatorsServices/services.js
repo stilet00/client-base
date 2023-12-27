@@ -43,6 +43,17 @@ export function updateTranslator(translator) {
     )
 }
 
+export function assignClientToTranslatorRequest({ clientId, translatorId }) {
+    return axios.put(
+        translatorsURL + 'assign-client',
+        {
+            clientId,
+            translatorId,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
 export function sendNotificationEmailsRequest() {
     return axios.get(
         translatorsURL + 'send-emails',

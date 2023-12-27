@@ -334,6 +334,34 @@ const calculateBonuses = async (req, res) => {
     }
 }
 
+const assignClientToTranslator = async (req, res) => {
+    try {
+        const { clientId, translatorId } = req.body
+        const collections = await getCollections()
+        const Translators = collections.collectionTranslators
+        const Clients = collections.collectionClients
+
+        const translatorResult = await Translators.updateOne(
+            { _id: ObjectId(translatorId) },
+            { $addToSet: { clients: ObjectId(clientId) } }
+        )
+
+        const clientResult = await Clients.updateOne(
+            { _id: ObjectId(clientId) },
+            { $addToSet: { translators: ObjectId(translatorId) } }
+        )
+
+        if (translatorResult.nModified === 0 && clientResult.nModified === 0) {
+            res.status(400).send('Client and translator are already connected')
+        } else {
+            res.status(200).send('Client and translator successfully connected')
+        }
+    } catch (error) {
+        console.error('An error occurred:', error)
+        res.status(500).send('An error occurred')
+    }
+}
+
 module.exports = {
     getAllTranslators,
     getLastVirtualGift,
@@ -343,4 +371,5 @@ module.exports = {
     sendEmailsToTranslators,
     balanceMailout,
     calculateBonuses,
+    assignClientToTranslator,
 }

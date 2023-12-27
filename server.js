@@ -20,6 +20,7 @@ const {
     deleteTranslator,
     sendEmailsToTranslators,
     calculateBonuses,
+    assignClientToTranslator,
 } = require('./src/api/controllers/translatorController')
 const {
     getAllTasks,
@@ -131,6 +132,11 @@ app.get(
 )
 app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
 app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
+app.put(
+    translatorsURL + 'assign-client',
+    isAuthenticated,
+    assignClientToTranslator
+)
 app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
 app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 

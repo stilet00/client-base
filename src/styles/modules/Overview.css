@@ -4,6 +4,7 @@
   max-width: 700px;
   max-height: 80dvh;
 }
+
 .green-text {
   margin-left: 0.5rem;
   font-weight: bold;
@@ -56,4 +57,6 @@
     max-width: 45%;
     text-align: right !important;
   }
-}/*# sourceMappingURL=Overview.css.map */
+}
+
+/*# sourceMappingURL=Overview.css.map */

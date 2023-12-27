@@ -72,7 +72,7 @@
         "start": "node -r dotenv/config server.js",
         "build": "react-scripts build",
         "serve": "nodemon -r dotenv/config server.js",
-        "sass:watch": "npx sass --watch sass:css",
+        "sass:watch": "npx sass --watch src:src",
         "dev": "react-scripts start",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

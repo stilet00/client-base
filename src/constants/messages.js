@@ -95,6 +95,10 @@ const MESSAGES = {
         text: 'Something went wrong while getting translators :(',
         status: false,
     },
+    somethingWrongWithAssigningClient: {
+        text: 'Something went wrong while assigning client :(',
+        status: false,
+    },
 }
 
 export default MESSAGES
