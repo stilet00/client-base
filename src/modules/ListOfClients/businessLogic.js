@@ -56,7 +56,7 @@ export const useClientsList = translators => {
                     })
                 })
             })
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator?.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
             thisYearStat?.months.forEach(month => {
@@ -84,13 +84,13 @@ export const useClientsList = translators => {
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
             const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
             thisMonthStat?.forEach(day => {
-                const clientBalanceDay = day.clients.find(
+                const clientBalanceDay = day.clients?.find(
                     client => client.id === clientId
                 )
                 if (clientBalanceDay) {
@@ -129,7 +129,7 @@ export const useClientsList = translators => {
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 
@@ -186,7 +186,6 @@ export const useClientsList = translators => {
         return 0
     }
 
-
     function getArrayOfBalancePerDay(
         clientId,
         category = null,
@@ -200,14 +199,14 @@ export const useClientsList = translators => {
         }
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 
             const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
             const findPreviousMonthStat = date => {
                 if (date.format('M') === '1') {
-                    const previousYearStat = translator.statistics.find(
+                    const previousYearStat = translator.statistics?.find(
                         year =>
                             year.year ===
                             moment().subtract(1, 'year').format('YYYY')

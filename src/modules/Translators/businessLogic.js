@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useQuery, useMutation } from 'react-query'
+import { useSelector } from 'react-redux'
 import MESSAGES from 'constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -9,62 +10,54 @@ import {
     updateTranslator,
     sendNotificationEmailsRequest,
     sendLastVirtualGiftDateRequest,
-    requestBonusesForChats,
+    getBonusesForChatsRequest,
     assignClientToTranslatorRequest,
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
+    getBalanceDaysRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
 import {
     currentMonth,
     currentYear,
     EMPTY_BALANCE_DAY,
-    previousMonth,
-    previousYear,
 } from 'constants/constants'
 
-import {
-    getClients,
-    removeClient,
-} from '../../services/clientsServices/services'
-import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
+import { getClients, removeClient } from 'services/clientsServices/services'
+import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
 import moment from 'moment'
-import useModal from '../../sharedHooks/useModal'
+import useModal from 'sharedHooks/useModal'
 import {
     calculateBalanceDayAllClients,
     calculateBalanceDaySum,
     calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
     getNumberWithHundreds,
-} from '../../sharedFunctions/sharedFunctions'
+} from 'sharedFunctions/sharedFunctions'
+
+const convertDateToIsoString = ({ selectedDay, selectedMonth, selectedYear }) =>
+    moment(`${selectedDay} ${selectedMonth} ${selectedYear}`, 'DD MM YYYY')
+        .startOf('day')
+        .format()
 
 export const useTranslators = user => {
     const [clients, setClients] = useState([])
     const [chatsBonus, setChatsBonus] = useState([])
-
     const [translators, setTranslators] = useState([])
-
     const [currentClient, setCurrentClient] = useState(null)
     const [dollarToUahRate, setDollarToUahRate] = useState(null)
-
     const [state, setState] = useState({
         left: false,
     })
-
     const [loading, setLoading] = useState(true)
-
     const [mailoutInProgress, setMailoutInProgress] = useState(false)
-
     const { alertOpen, closeAlert, openAlert, message, setMessage } = useAlert()
-
     const [deletedTranslator, setDeletedTranslator] = useState(null)
-
     const [translatorFilter, setTranslatorFilter] = useState({
         suspended: true,
-        date: moment().subtract(1, 'month'),
+        date: moment().subtract(1, 'day'),
     })
-
     const {
         alertStatusConfirmation,
         openAlertConfirmation,
@@ -103,37 +96,63 @@ export const useTranslators = user => {
         [translators, translatorFilter]
     )
 
+    const fetchCurrency = async () => {
+        const response = await getCurrency()
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithCurrencies)
+        return response.data[1]?.buy ?? '36.57'
+    }
+
+    const fetchTranslators = async () => {
+        const response = await getTranslators({ shouldGetClients: true })
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithGettingTranslators)
+        return response.data
+    }
+
+    const fetchClients = async () => {
+        const response = await getClients({ noImageParams: true })
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithGettingClients)
+        return response.data
+    }
+
+    const { isLoading: currencyIsLoading } = useQuery(
+        'currency',
+        fetchCurrency,
+        {
+            enabled: !!user,
+            onSuccess: data => setDollarToUahRate(data),
+            onError: () => openAlert(MESSAGES.somethingWrongWithCurrencies),
+        }
+    )
+
+    const { isLoading: translatorsAreLoading } = useQuery(
+        'translators',
+        fetchTranslators,
+        {
+            enabled: !!user,
+            onSuccess: data => setTranslators(data),
+            onError: () =>
+                openAlert(MESSAGES.somethingWrongWithGettingTranslators),
+        }
+    )
+
+    const { isLoading: clientsAreLoading } = useQuery('clients', fetchClients, {
+        enabled: !!user,
+        onSuccess: data => setClients(data),
+        onError: () => openAlert(MESSAGES.somethingWrongWithGettingClients),
+    })
+
     useEffect(() => {
-        ;(async () => {
-            if (user) {
-                const responseWithCurrency = await getCurrency()
-                if (responseWithCurrency.status === 200) {
-                    const privatBankDollarRate =
-                        responseWithCurrency?.data[1]?.buy ?? '36.57'
-                    setDollarToUahRate(privatBankDollarRate)
-                } else {
-                    openAlert(MESSAGES.somethingWrongWithCurrencies)
-                }
-                const responseTranslators = await getTranslators({
-                    shouldGetClients: true,
-                })
-                if (responseTranslators.status === 200) {
-                    setTranslators(responseTranslators.data)
-                } else {
-                    openAlert(MESSAGES.somethingWrongWithGettingTranslators)
-                }
-                const responseClients = await getClients({
-                    noImageParams: true,
-                })
-                if (responseClients.status === 200) {
-                    setClients(responseClients.data)
-                } else {
-                    openAlert(MESSAGES.somethingWrongWithGettingClients)
-                }
-                setLoading(false)
-            }
-        })()
-    }, [user])
+        if (
+            !currencyIsLoading &&
+            !translatorsAreLoading &&
+            !clientsAreLoading
+        ) {
+            setLoading(false)
+        }
+    }, [currencyIsLoading, translatorsAreLoading, clientsAreLoading])
 
     const toggleDrawer = useCallback(
         (anchor, open) => event => {
@@ -465,25 +484,30 @@ export const useTranslators = user => {
         },
         [translators]
     )
-    const getBonusesForChats = (
-        date = translatorFilter?.date,
-        category = 'chats'
-    ) => {
-        const data = {
-            year: date.format('YYYY'),
-            month: date.format('M'),
-            category,
-        }
-        requestBonusesForChats(data)
-            .then(res => {
-                if (res.status === 200) {
-                    setChatsBonus(res.data)
-                }
-            })
-            .catch(err => {
-                setChatsBonus([])
-            })
+
+    const getBonusesForChats = async () => {
+        const response = await getBonusesForChatsRequest({
+            dateTimeFilter: translatorFilter.date.format(),
+            category: 'chats',
+        })
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithGettingTranslators)
+        return response.data
     }
+
+    const { isError, isLoading } = useQuery(
+        ['chatsBonus', translatorFilter.date, 'chats'],
+        getBonusesForChats,
+        {
+            retry: false,
+            onSuccess: data => {
+                setChatsBonus(data)
+            },
+            onError: () => {
+                setChatsBonus([])
+            },
+        }
+    )
 
     return {
         translators,
@@ -554,7 +578,11 @@ export const useBalanceForm = ({ clients, translatorId }) => {
             getBalanceDay({
                 translatorId,
                 clientId: selectedClient,
-                dateTimeId: `${selectedDay} ${selectedMonth} ${selectedYear}`,
+                dateTimeId: convertDateToIsoString({
+                    selectedDay,
+                    selectedMonth,
+                    selectedYear,
+                }),
             }),
         {
             onSuccess: response => {
@@ -566,7 +594,11 @@ export const useBalanceForm = ({ clients, translatorId }) => {
                     const emptyBalanceDay = new EMPTY_BALANCE_DAY()
                     setCurrentBalanceDay({
                         ...emptyBalanceDay,
-                        dateTimeId: `${selectedDay} ${selectedMonth} ${selectedYear}`,
+                        dateTimeId: convertDateToIsoString({
+                            selectedDay,
+                            selectedMonth,
+                            selectedYear,
+                        }),
                         client: { _id: selectedClient },
                         translator: { _id: translatorId },
                     })
@@ -658,32 +690,35 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     }
 }
 
-export const useSingleTranslator = (
-    statistics,
+export const useSingleTranslator = ({
     selectedDate,
-    personalPenalties
-) => {
+    personalPenalties,
+    translatorId,
+}) => {
     const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
-    const calculateTranslatorYesterdayTotal = statistics => {
-        const day = statistics
-            .find(
-                year => year.year === moment().subtract(1, 'day').format('YYYY')
-            )
-            ?.months.find(
-                (month, index) =>
-                    index + 1 ===
-                    Number(moment().subtract(1, 'day').format('M'))
-            )
-            .find(day => {
-                return (
-                    day.id ===
-                        moment().subtract(1, 'day').format('DD MM YYYY') ||
-                    day.id === moment().format('DD MM YYYY')
-                )
-            })
-        return calculateBalanceDayAllClients(day)
+    const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
+    const { alertOpen, closeAlert, openAlert, message } = useAlert()
+    const user = useSelector(state => state.auth.user)
+    const fetchBalanceDays = async () => {
+        const response = await getBalanceDaysRequest({
+            dateTimeFilter: selectedDate?.startOf('day').format(),
+            translatorId,
+        })
+        if (response.status !== 200) {
+            throw new Error(MESSAGES.somethingWrongWithBalanceDays)
+        }
+        return response.data
     }
+    const { isLoading: balanceDaysIsLoading } = useQuery(
+        'balanceDays',
+        fetchBalanceDays,
+        {
+            enabled: !!user,
+            onSuccess: data => setTranslatorBalanceDays(data),
+            onError: () => openAlert(MESSAGES.somethingWrongWithBalanceDays),
+        }
+    )
 
     const calculatePersonalPenalties = () => {
         const thisMonthsPenaltiesArray = []
@@ -706,58 +741,37 @@ export const useSingleTranslator = (
             : null
     }
 
-    const calculateTranslatorDayTotal = statistics => {
-        const day = statistics
-            .find(year => year.year === selectedDate.format('YYYY'))
-            ?.months.find(
-                (month, index) => index + 1 === Number(selectedDate.format('M'))
+    function findYesterdayStatisticObjectForClient(clientId) {
+        return translatorBalanceDays.find(balanceDay => {
+            return (
+                balanceDay.client === clientId &&
+                moment(balanceDay.dateTimeId).isSame(
+                    moment().subtract(1, 'day').startOf('day'),
+                    'day'
+                )
             )
-            .find(day => {
-                return day.id === selectedDate.format('DD MM YYYY')
-            })
-        return calculateBalanceDayAllClients(day)
-    }
-
-    function findYesterdayStatisticObject() {
-        const yearStatistics = statistics.find(
-            item => item.year === moment().format('YYYY')
-        )
-        const monthStatistics = yearStatistics?.months.find(
-            (item, index) =>
-                index + 1 === Number(moment().subtract(1, 'day').format('M'))
-        )
-        const yesterdayStatistics = monthStatistics.find(
-            item => item.id === moment().subtract(1, 'day').format('DD MM YYYY')
-        )
-        return yesterdayStatistics
-    }
-
-    function findYear(yearFilter = currentYear) {
-        return statistics.find(item => item.year === yearFilter)
-    }
-
-    function findMonth(monthFilter = currentMonth) {
-        return findYear()?.months.find(
-            (item, index) => index + 1 === Number(monthFilter)
-        )
+        })
     }
 
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayStatisticObject()?.clients.find(
-            item => item.id === clientId
-        )
-        return clientObject
-            ? calculateBalanceDaySum(clientObject).toFixed(2)
-            : null
+        const balanceDayForCurrentClientForYesterday =
+            findYesterdayStatisticObjectForClient(clientId)
+        if (!!balanceDayForCurrentClientForYesterday) {
+            return calculateBalanceDaySum(
+                balanceDayForCurrentClientForYesterday.statistics
+            ).toFixed(2)
+        }
+
+        return 0
     }
 
-    function calculateMiddleMonthSum(monthFilter) {
+    function calculateMiddleMonthSum(selectedDate) {
         let sum = []
-
-        findMonth(monthFilter).forEach((day, index) => {
-            if (index === 0 || index + 1 < moment().format('D')) {
-                sum.push(Number(calculateBalanceDayAllClients(day)))
-            }
+        const balanceDaysOfSelectedMonth = translatorBalanceDays.filter(
+            ({ dateTimeId }) => moment(dateTimeId).isSame(selectedDate, 'month')
+        )
+        balanceDaysOfSelectedMonth.forEach(balanceDay => {
+            sum.push(calculateBalanceDaySum(balanceDay.statistics))
         })
 
         return getMiddleValueFromArray(sum)
@@ -778,9 +792,7 @@ export const useSingleTranslator = (
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayStatisticObject()?.clients.find(
-            item => item.id === clientId
-        )
+        const clientObject = findYesterdayStatisticObjectForClient(clientId)
 
         if (clientObject.virtualGiftsSvadba) {
             return 'clients-list__finance-container--pink_text'
@@ -813,11 +825,11 @@ export const useSingleTranslator = (
         specialColorNeeded,
         getTranslatorsRating,
         calculateMiddleMonthSum,
-        calculateTranslatorYesterdayTotal,
-        calculateTranslatorDayTotal,
         calculatePersonalPenalties,
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
+        balanceDaysIsLoading,
+        translatorBalanceDays,
     }
 }

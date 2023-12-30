@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const BalanceDaySchema = new mongoose.Schema({
-    dateTimeId: String, // Date in format DD MM YYYY
+    dateTimeId: Date,
     translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
     client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' },
     statistics: {

@@ -47,6 +47,7 @@ const {
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
+    getBalanceDaysForTranslators,
 } = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
@@ -55,7 +56,7 @@ let app = express()
 
 const limiter = rateLimit({
     windowMs: 2000,
-    max: 10,
+    max: 100,
     message: 'Too many requests from this IP, please try again later.',
 })
 
@@ -152,9 +153,10 @@ app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
 app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 
 // balance day api
-app.get(balanceDayURL, isAuthenticated, getBalanceDay)
 app.post(balanceDayURL + 'create', isAuthenticated, createBalanceDay)
 app.put(balanceDayURL + 'update', isAuthenticated, updateBalanceDay)
+app.get(balanceDayURL + 'all', isAuthenticated, getBalanceDaysForTranslators)
+app.get(balanceDayURL, isAuthenticated, getBalanceDay)
 
 // DB connection and server starts
 const startServer = async () => {

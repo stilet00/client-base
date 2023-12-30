@@ -67,33 +67,23 @@ export function getTotalDaysOfMonth(year, monthNumber) {
 }
 
 export const calculateTranslatorMonthTotal = (
-    statistics,
+    balanceDays,
     forFullMonth = true,
     monthFilter = currentMonth,
     yearFilter = currentYear,
     onlySvadba = false,
     category = null
 ) => {
-    const month = statistics
-        .find(year => year.year === yearFilter)
-        ?.months.find((month, index) => index + 1 === Number(monthFilter))
-
     let total
-
     if (forFullMonth) {
-        total = month?.reduce((sum, current) => {
+        total = balanceDays?.reduce((sum, current) => {
             return (
                 sum +
-                current.clients.reduce((sum, current) => {
-                    return (
-                        sum +
-                        calculateBalanceDaySum(current, onlySvadba, category)
-                    )
-                }, 0)
+                calculateBalanceDaySum(current.statistics, onlySvadba, category)
             )
         }, 0)
     } else {
-        total = month?.reduce((sum, current, index) => {
+        total = balanceDays?.reduce((sum, current, index) => {
             return index + 1 < Number(moment().format('D'))
                 ? sum +
                       current.clients.reduce((sum, current) => {

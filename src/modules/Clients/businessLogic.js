@@ -41,7 +41,7 @@ export const useClientsList = translators => {
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator?.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 
@@ -88,7 +88,7 @@ export const useClientsList = translators => {
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator?.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 

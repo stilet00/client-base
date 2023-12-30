@@ -52,7 +52,11 @@ const isAuthenticated = (request, response, next) => {
                 }
             })
             .catch(error => {
-                console.log(error)
+                if (!!error.message) {
+                    console.log(error.message)
+                } else {
+                    console.log(error)
+                }
                 response.sendStatus(401)
             })
     } catch (error) {

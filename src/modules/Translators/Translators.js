@@ -83,9 +83,7 @@ function Translators() {
 
     const open = Boolean(anchorEl)
     const id = open ? 'simple-popover' : undefined
-    useEffect(() => {
-        getBonusesForChats(translatorFilter.date, 'chats')
-    }, [user, translatorFilter.date])
+    console.log(chatsBonus)
     return user ? (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
@@ -219,18 +217,6 @@ function Translators() {
                                     />
                                     Hide suspended
                                 </div>
-                                <div className="gallery-menu__date-container">
-                                    <MobileDatePicker
-                                        label="Balance date"
-                                        value={translatorFilter.date}
-                                        name={'date'}
-                                        onChange={changeFilter}
-                                        disabled={!isAdmin}
-                                        renderInput={params => (
-                                            <TextField {...params} />
-                                        )}
-                                    />
-                                </div>
                             </div>
                         </AccordionDetails>
                     </Accordion>
@@ -276,7 +262,7 @@ function Translators() {
                     >
                         Show total
                     </StyledButton>
-                    <Popover
+                    {/* <Popover
                         id={id}
                         open={open}
                         anchorEl={anchorEl}
@@ -334,7 +320,7 @@ function Translators() {
                             {`Total by ${moment().format('D MMMM')}: `}{' '}
                             <b>{`${calculateMonthTotal()} $`}</b>
                         </Typography>
-                    </Popover>
+                    </Popover> */}
                     <div className="gallery-menu__inline-filters">
                         <div className="gallery-menu__filters-label">Menu</div>
                         <div className={'gallery-menu__checkbox-container'}>
@@ -392,8 +378,8 @@ function Translators() {
                             }
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
-                            bonus={chatsBonus.find(
-                                bonus => bonus._id === item._id
+                            chatBonus={chatsBonus.find(
+                                bonus => bonus.translatorId === item._id
                             )}
                         />
                     ))

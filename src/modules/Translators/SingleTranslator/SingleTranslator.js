@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import EditBalanceForm from '../EditBalanceForm/EditBalanceForm'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Typography from '@mui/material/Typography'
@@ -17,13 +17,10 @@ import { useSingleTranslator } from '../businessLogic'
 import {
     calculatePercentDifference,
     calculateTranslatorMonthTotal,
-} from '../../../sharedFunctions/sharedFunctions'
-import {
-    currentYear,
-    previousYear,
-    previousDay,
-    previousMonth,
-} from '../../../constants/constants'
+    calculateBalanceDaySum,
+    getSumFromArray,
+} from 'sharedFunctions/sharedFunctions'
+import { currentYear, previousDay } from '../../../constants/constants'
 import { IconButton, Rating } from '@mui/material'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
@@ -33,7 +30,6 @@ import {
     faArrowAltCircleDown,
     faPersonCircleXmark,
     faPersonCirclePlus,
-    faMoneyCheckDollar,
 } from '@fortawesome/free-solid-svg-icons'
 import PersonalPenaltyForm from '../PersonalPenaltyForm/PersonalPenaltyForm'
 import PenaltiesList from '../PenaltiesList/PenaltiesList'
@@ -41,13 +37,22 @@ import EditTranslatorEmailForm from '../EditTranslatorEmailForm/EditTranslatorEm
 import LoadingButton from '@mui/lab/LoadingButton'
 import RedeemIcon from '@mui/icons-material/Redeem'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
+import Loader from 'sharedComponents/Loader/Loader'
+
+const getTranslatorSalaryInUah = (dollarToUahRate, salary = 100) => {
+    const currentCurrencyRate = dollarToUahRate
+        ? Number(dollarToUahRate).toFixed(2)
+        : 0
+    const salaryInUahIncludingComissinos =
+        currentCurrencyRate * PAYONEER_COMISSION * salary
+    return salaryInUahIncludingComissinos
+}
 
 function SingleTranslator({
     name,
     surname,
     clients,
     _id,
-    statistics,
     dragOverHandler,
     onBoardDrop,
     dragLeaveHandler,
@@ -62,7 +67,7 @@ function SingleTranslator({
     wantsToReceiveEmails,
     dollarToUahRate,
     admin,
-    bonus,
+    chatBonus,
     updateBalanceDayIsLoading,
 }) {
     const {
@@ -70,71 +75,70 @@ function SingleTranslator({
         specialColorNeeded,
         getTranslatorsRating,
         calculateMiddleMonthSum,
-        calculateTranslatorYesterdayTotal,
-        calculateTranslatorDayTotal,
         calculatePersonalPenalties,
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
-    } = useSingleTranslator(statistics, selectedDate, personalPenalties)
-    // const translatorMonthTotalSum = calculateTranslatorMonthTotal(statistics)
-    // const translatorPreviousMonthTotalSum =
-    //     previousMonth === '12'
-    //         ? calculateTranslatorMonthTotal(
-    //               statistics,
-    //               false,
-    //               previousMonth,
-    //               previousYear
-    //           )
-    //         : calculateTranslatorMonthTotal(statistics, false, previousMonth)
-    // const translatorSalaryForPickedMonth = Math.floor(
-    //     (calculateTranslatorMonthTotal(
-    //         statistics,
-    //         true,
-    //         selectedDate.format('M'),
-    //         selectedDate.format('YYYY')
-    //     ) +
-    //         bonus?.bonusChatsSum) *
-    //         TRANSLATORS_SALARY_PERCENT
-    // )
+        balanceDaysIsLoading,
+        translatorBalanceDays,
+    } = useSingleTranslator({
+        translatorId: _id,
+        selectedDate,
+        personalPenalties,
+    })
+    const translatorMonthTotalSum = calculateTranslatorMonthTotal(
+        translatorBalanceDays
+    )
+    const translatorPreviousMonthTotalSum = 0
+    const translatorSalaryForPickedMonth = Math.floor(
+        (calculateTranslatorMonthTotal(
+            translatorBalanceDays,
+            true,
+            selectedDate.format('M'),
+            selectedDate.format('YYYY')
+        ) +
+            chatBonus?.bonusCategorySum) *
+            TRANSLATORS_SALARY_PERCENT
+    )
 
-    // const getTranslatorSalaryInUah = (salary = 100) => {
-    //     const currentCurrencyRate = dollarToUahRate
-    //         ? Number(dollarToUahRate).toFixed(2)
-    //         : 0
-    //     const salaryInUahIncludingComissinos =
-    //         currentCurrencyRate * PAYONEER_COMISSION * salary
-    //     return salaryInUahIncludingComissinos
-    // }
+    const translatorSalaryForPickedMonthInUah = Math.floor(
+        getTranslatorSalaryInUah(
+            dollarToUahRate,
+            translatorSalaryForPickedMonth
+        )
+    )
 
-    // const translatorSalaryForPickedMonthInUah = Math.floor(
-    //     getTranslatorSalaryInUah(translatorSalaryForPickedMonth)
-    // )
+    let progressPage = null
 
-    // if (!!translatorMonthTotalSum && !!translatorPreviousMonthTotalSum) {
-    //     progressPage =
-    //         translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
-    //             <span className={'green-text styled-text-numbers'}>
-    //                 <FontAwesomeIcon icon={faArrowAltCircleUp} />
-    //                 {` ${calculatePercentDifference(
-    //                     translatorMonthTotalSum,
-    //                     translatorPreviousMonthTotalSum
-    //                 )} %`}
-    //             </span>
-    //         ) : (
-    //             <span className={'red-text styled-text-numbers'}>
-    //                 <FontAwesomeIcon icon={faArrowAltCircleDown} />
-    //                 {` ${calculatePercentDifference(
-    //                     translatorMonthTotalSum,
-    //                     translatorPreviousMonthTotalSum
-    //                 )} %`}
-    //             </span>
-    //         )
-    // }
+    if (!!translatorMonthTotalSum && !!translatorPreviousMonthTotalSum) {
+        progressPage =
+            translatorMonthTotalSum >= translatorPreviousMonthTotalSum ? (
+                <span className={'green-text styled-text-numbers'}>
+                    <FontAwesomeIcon icon={faArrowAltCircleUp} />
+                    {` ${calculatePercentDifference(
+                        translatorMonthTotalSum,
+                        translatorPreviousMonthTotalSum
+                    )} %`}
+                </span>
+            ) : (
+                <span className={'red-text styled-text-numbers'}>
+                    <FontAwesomeIcon icon={faArrowAltCircleDown} />
+                    {` ${calculatePercentDifference(
+                        translatorMonthTotalSum,
+                        translatorPreviousMonthTotalSum
+                    )} %`}
+                </span>
+            )
+    }
 
     const monthStringFormat =
-        moment().format('MMMM').length > '5' ? 'MMM' : 'MMMM'
-    const currentMonth = moment().format(monthStringFormat)
+        moment(selectedDate).format('MMMM').length > '5' ? 'MMM' : 'MMMM'
+    const currentMonth = moment(selectedDate).format(monthStringFormat)
+    const balanceDaysForSelectedDate = translatorBalanceDays.filter(
+        ({ dateTimeId }) =>
+            moment(dateTimeId).format('DD MMMM YYYY') ===
+            selectedDate.format('DD MMMM YYYY')
+    )
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -146,7 +150,14 @@ function SingleTranslator({
             id={_id}
         >
             <CardContent>
-                <Rating name="read-only" value={5} readOnly size="small" />
+                {!balanceDaysIsLoading && (
+                    <Rating
+                        name="read-only"
+                        value={getTranslatorsRating()}
+                        readOnly
+                        size="small"
+                    />
+                )}
                 <div
                     style={{
                         minHeight: 135,
@@ -178,360 +189,405 @@ function SingleTranslator({
                             <b>{suspended.time}</b>
                         </Typography>
                     ) : null}
-
-                    {/* {statistics.length > 0 && (
+                    {balanceDaysIsLoading && <Loader />}
+                    {!balanceDaysIsLoading && (
                         <>
-                            <Typography
-                                variant="body2"
-                                align={'left'}
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                <span>Total for {currentMonth}:</span>
-                                {progressPage}
-                                <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                align={'left'}
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                <span>Middle for {currentMonth}:</span>
-                                <b>{`${calculateMiddleMonthSum()} $ `}</b>
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                align={'left'}
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                {`For yesterday: `}
-                                {calculateTranslatorYesterdayTotal(
-                                    statistics
-                                ) ? (
-                                    <b className="styled-text-numbers">
-                                        {`${calculateTranslatorYesterdayTotal(
-                                            statistics
-                                        )} $`}
-                                    </b>
-                                ) : (
-                                    'No data'
-                                )}
-                            </Typography>
-                            {calculatePersonalPenalties()
-                                ?.thisMonthsPenaltiesArray.length ? (
-                                <Typography
-                                    variant="body2"
-                                    align={'left'}
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                    }}
-                                >
-                                    Penalties for{' '}
-                                    {`${moment().format('MMMM')}: `}
-                                    <PenaltiesList
-                                        penaltiesArray={personalPenalties.filter(
-                                            penalty =>
-                                                penalty.date.slice(3) ===
-                                                moment().format('MM YYYY')
-                                        )}
-                                    />
-                                </Typography>
-                            ) : null}
-                        </>
-                    )} */}
-
-                    {statistics.length === 0 && (
-                        <Typography variant="body2">
-                            {`No data for ${currentMonth} yet`}
-                        </Typography>
-                    )}
-                </div>
-                {suspended.status ? null : (
-                    <>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Active clients</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <ul
-                                    className={'clients-list'}
-                                    id={_id}
-                                    onDragOver={dragOverHandler}
-                                    onDragLeave={dragLeaveHandler}
-                                    onDrop={e => onBoardDrop(e, _id)}
-                                >
-                                    {clients.filter(client => !client.suspended)
-                                        .length ? (
-                                        clients
-                                            .filter(client => !client.suspended)
-                                            .sort((a, b) => {
-                                                return 0
-                                                // Number(
-                                                //     calculateSumByClient(
-                                                //         b._id
-                                                //     )
-                                                // ) -
-                                                // Number(
-                                                //     calculateSumByClient(
-                                                //         a._id
-                                                //     )
-                                                // )
-                                            })
-                                            .map(client => (
-                                                <React.Fragment
-                                                    key={client._id}
-                                                >
-                                                    <Typography variant="caption">
-                                                        {`Balance for ${moment(
-                                                            `${previousDay}/${currentMonth}/${currentYear}`,
-                                                            `D/${monthStringFormat}/YYYY`
-                                                        ).format('DD MMMM')}:`}
-                                                    </Typography>
-                                                    <li
-                                                        className={
-                                                            'clients-list__name-container'
-                                                        }
-                                                        id={client._id}
-                                                    >
-                                                        <p>
-                                                            {`${client.name} ${client.surname}`}
-                                                        </p>
-                                                        {admin && (
-                                                            <IconButton
-                                                                color={
-                                                                    'primary'
-                                                                }
-                                                                variant={
-                                                                    'contained'
-                                                                }
-                                                                size={'small'}
-                                                                onClick={() =>
-                                                                    suspendClient(
-                                                                        _id,
-                                                                        client._id
-                                                                    )
-                                                                }
-                                                                component="span"
-                                                            >
-                                                                <HighlightOffIcon />
-                                                            </IconButton>
-                                                        )}
-                                                    </li>
-                                                    {Number(
-                                                        // calculateSumByClient(
-                                                        //     client._id
-                                                        // )
-                                                        0
-                                                    ) ? (
-                                                        <li
-                                                            className={
-                                                                'clients-list__finance-container'
-                                                            }
-                                                        >
-                                                            <b
-                                                                className={specialColorNeeded(
-                                                                    client._id
-                                                                )}
-                                                            >
-                                                                {/* {`${calculateSumByClient(
-                                                                client._id
-                                                            )} $`} */}
-                                                                0
-                                                            </b>
-                                                        </li>
-                                                    ) : (
-                                                        <li
-                                                            className={
-                                                                'clients-list__finance-container'
-                                                            }
-                                                        >
-                                                            No balance for
-                                                            yesterday
-                                                        </li>
-                                                    )}
-                                                </React.Fragment>
-                                            ))
-                                    ) : (
-                                        <p>Drag client here...</p>
-                                    )}
-                                </ul>
-                            </AccordionDetails>
-                        </Accordion>
-                        {clients.filter(client => client.suspended).length ? (
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header-2"
-                                >
-                                    <Typography>Suspended clients</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <ul className={'clients-list'} id={_id}>
-                                        {clients
-                                            .filter(client => client.suspended)
-                                            .map(client => (
-                                                <li
-                                                    className={
-                                                        'clients-list__name-container'
-                                                    }
-                                                    id={client._id}
-                                                    key={client._id}
-                                                >
-                                                    <p>{`${client.name} ${client.surname}`}</p>
-                                                    {admin && (
-                                                        <IconButton
-                                                            color={'success'}
-                                                            variant={
-                                                                'contained'
-                                                            }
-                                                            size={'small'}
-                                                            onClick={() =>
-                                                                suspendClient(
-                                                                    _id,
-                                                                    client._id
-                                                                )
-                                                            }
-                                                            component="span"
-                                                        >
-                                                            <AddCircleOutlineIcon />
-                                                        </IconButton>
-                                                    )}
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </AccordionDetails>
-                            </Accordion>
-                        ) : null}
-                        {/* {admin && (
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header-2"
-                                >
-                                    <Typography>Filtered balance</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography variant="body2">
+                            {translatorBalanceDays.length > 0 && (
+                                <>
+                                    <Typography
+                                        variant="body2"
+                                        align={'left'}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <span>Total for {currentMonth}:</span>
+                                        {progressPage}
+                                        <b className="styled-text-numbers">{`${translatorMonthTotalSum} $`}</b>
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        align={'left'}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <span>Middle for {currentMonth}:</span>
+                                        <b>{`${calculateMiddleMonthSum(
+                                            selectedDate
+                                        )} $ `}</b>
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        align={'left'}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
                                         {`For ${selectedDate.format(
-                                            'DD MMMM'
+                                            'MM/DD/YYYY'
                                         )}: `}
-                                        <b>{`${calculateTranslatorDayTotal(
-                                            statistics
-                                        )} $`}</b>
+                                        {!!balanceDaysForSelectedDate.length >
+                                        0 ? (
+                                            <b className="styled-text-numbers">
+                                                {`${getSumFromArray(
+                                                    balanceDaysForSelectedDate.map(
+                                                        balanceDay =>
+                                                            calculateBalanceDaySum(
+                                                                balanceDay.statistics
+                                                            )
+                                                    )
+                                                )} $`}
+                                            </b>
+                                        ) : (
+                                            <b>{`No data`}</b>
+                                        )}
                                     </Typography>
-                                    <Typography variant="body2">
-                                        {`Total for ${selectedDate.format(
-                                            'MMMM'
-                                        )}: `}
-                                        <b>{`${calculateTranslatorMonthTotal(
-                                            statistics,
-                                            true,
-                                            selectedDate.format('M'),
-                                            selectedDate.format('YYYY')
-                                        )} $`}</b>
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {`Chats bonus in ${selectedDate.format(
-                                            'MMMM'
-                                        )}: `}
-                                        <b>{`${bonus?.bonusChatsSum} $`}</b>
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {`Salary for ${selectedDate.format(
-                                            'MMMM'
-                                        )}: `}
-                                        <b>{`${translatorSalaryForPickedMonth} $`}</b>
-                                    </Typography>
-                                    {dollarToUahRate ? (
-                                        <Typography variant="body2">
-                                            {`Salary: `}
-                                            <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
-                                        </Typography>
-                                    ) : null}
-
+                                    {admin && (
+                                        <>
+                                            <Typography
+                                                variant="body2"
+                                                align="left"
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent:
+                                                        'space-between',
+                                                }}
+                                            >
+                                                {`Chats bonus in ${currentMonth}: `}
+                                                <b>{`${chatBonus?.bonusCategorySum} $`}</b>
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                align="left"
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent:
+                                                        'space-between',
+                                                }}
+                                            >
+                                                {`Salary for ${currentMonth}: `}
+                                                <b>{`${translatorSalaryForPickedMonth} $`}</b>
+                                            </Typography>
+                                            {dollarToUahRate ? (
+                                                <Typography
+                                                    variant="body2"
+                                                    align="left"
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}
+                                                >
+                                                    {`Salary: `}
+                                                    <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                                </Typography>
+                                            ) : null}
+                                            {calculatePersonalPenalties()
+                                                ?.selectedDatePenaltiesArray
+                                                .length ? (
+                                                <Typography
+                                                    variant="body2"
+                                                    align={'left'}
+                                                >
+                                                    Penalties for{' '}
+                                                    {`${selectedDate.format(
+                                                        'MMMM'
+                                                    )}: `}
+                                                    <PenaltiesList
+                                                        penaltiesArray={personalPenalties.filter(
+                                                            penalty =>
+                                                                penalty.date.slice(
+                                                                    3
+                                                                ) ===
+                                                                moment(
+                                                                    selectedDate
+                                                                ).format(
+                                                                    'MM YYYY'
+                                                                )
+                                                        )}
+                                                    />
+                                                </Typography>
+                                            ) : null}
+                                        </>
+                                    )}
                                     {calculatePersonalPenalties()
-                                        ?.selectedDatePenaltiesArray.length ? (
+                                        ?.thisMonthsPenaltiesArray.length ? (
                                         <Typography
                                             variant="body2"
                                             align={'left'}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                            }}
                                         >
                                             Penalties for{' '}
-                                            {`${selectedDate.format('MMMM')}: `}
+                                            {`${moment().format('MMMM')}: `}
                                             <PenaltiesList
                                                 penaltiesArray={personalPenalties.filter(
                                                     penalty =>
                                                         penalty.date.slice(
                                                             3
                                                         ) ===
-                                                        moment(
-                                                            selectedDate
-                                                        ).format('MM YYYY')
+                                                        moment().format(
+                                                            'MM YYYY'
+                                                        )
                                                 )}
                                             />
                                         </Typography>
                                     ) : null}
-                                </AccordionDetails>
-                            </Accordion>
-                        )} */}
-                        {/* <LoadingButton
-                            size="small"
-                            sx={{
-                                borderColor: '#fff',
-                                color: 'rgba(0, 0, 0, 0.87)',
-                                width: '100%',
-                                transition:
-                                    'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                backgroundColor: '#fff',
-                                boxShadow:
-                                    '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
-                                marginTop: '5px',
-                                '&:hover': {
-                                    backgroundColor: '#fff',
-                                    borderColor: 'rgba(0, 0, 0, 0.87)',
-                                },
-                                '&.Mui-disabled': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                    color: 'rgb(224,224,224)',
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                    },
-                                },
-                            }}
-                            onClick={e => getLastVirtualGiftDate(_id)}
-                            disabled={lastVirtualGiftDate}
-                            endIcon={
-                                lastVirtualGiftDate === 'No gifts found' ? (
-                                    <SentimentVeryDissatisfiedIcon />
-                                ) : (
-                                    <RedeemIcon />
-                                )
-                            }
-                            loading={giftRequestLoader}
-                            loadingPosition="end"
-                            variant="outlined"
-                        >
-                            {lastVirtualGiftDate ?? 'Last virtual gift was at:'}
-                        </LoadingButton> */}
-                    </>
-                )}
+                                </>
+                            )}
+                            {translatorBalanceDays.length === 0 && (
+                                <Typography variant="body2">
+                                    {`No data for ${currentMonth} yet`}
+                                </Typography>
+                            )}
+                            {suspended.status ? null : (
+                                <>
+                                    <Accordion>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography>
+                                                Active clients
+                                            </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <ul
+                                                className={'clients-list'}
+                                                id={_id}
+                                                onDragOver={dragOverHandler}
+                                                onDragLeave={dragLeaveHandler}
+                                                onDrop={e =>
+                                                    onBoardDrop(e, _id)
+                                                }
+                                            >
+                                                {clients.filter(
+                                                    client => !client.suspended
+                                                ).length ? (
+                                                    clients
+                                                        .filter(
+                                                            client =>
+                                                                !client.suspended
+                                                        )
+                                                        .sort((a, b) => {
+                                                            return (
+                                                                Number(
+                                                                    calculateSumByClient(
+                                                                        b._id
+                                                                    )
+                                                                ) -
+                                                                Number(
+                                                                    calculateSumByClient(
+                                                                        a._id
+                                                                    )
+                                                                )
+                                                            )
+                                                        })
+                                                        .map(client => (
+                                                            <React.Fragment
+                                                                key={client._id}
+                                                            >
+                                                                <Typography variant="caption">
+                                                                    {`Balance for ${moment(
+                                                                        `${previousDay}/${currentMonth}/${currentYear}`,
+                                                                        `D/${monthStringFormat}/YYYY`
+                                                                    ).format(
+                                                                        'DD MMMM'
+                                                                    )}:`}
+                                                                </Typography>
+                                                                <li
+                                                                    className={
+                                                                        'clients-list__name-container'
+                                                                    }
+                                                                    id={
+                                                                        client._id
+                                                                    }
+                                                                >
+                                                                    <p>
+                                                                        {`${client.name} ${client.surname}`}
+                                                                    </p>
+                                                                    {admin && (
+                                                                        <IconButton
+                                                                            color={
+                                                                                'primary'
+                                                                            }
+                                                                            variant={
+                                                                                'contained'
+                                                                            }
+                                                                            size={
+                                                                                'small'
+                                                                            }
+                                                                            onClick={() =>
+                                                                                suspendClient(
+                                                                                    _id,
+                                                                                    client._id
+                                                                                )
+                                                                            }
+                                                                            component="span"
+                                                                        >
+                                                                            <HighlightOffIcon />
+                                                                        </IconButton>
+                                                                    )}
+                                                                </li>
+                                                                {Number(
+                                                                    calculateSumByClient(
+                                                                        client._id
+                                                                    )
+                                                                ) ? (
+                                                                    <li
+                                                                        className={
+                                                                            'clients-list__finance-container'
+                                                                        }
+                                                                    >
+                                                                        <b
+                                                                            className={specialColorNeeded(
+                                                                                client._id
+                                                                            )}
+                                                                        >
+                                                                            {`${calculateSumByClient(
+                                                                                client._id
+                                                                            )} $`}
+                                                                        </b>
+                                                                    </li>
+                                                                ) : (
+                                                                    <li
+                                                                        className={
+                                                                            'clients-list__finance-container'
+                                                                        }
+                                                                    >
+                                                                        {`No balance for yesterday`}
+                                                                    </li>
+                                                                )}
+                                                            </React.Fragment>
+                                                        ))
+                                                ) : (
+                                                    <p>Drag client here...</p>
+                                                )}
+                                            </ul>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    {clients.filter(client => client.suspended)
+                                        .length ? (
+                                        <Accordion>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header-2"
+                                            >
+                                                <Typography>
+                                                    Suspended clients
+                                                </Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <ul
+                                                    className={'clients-list'}
+                                                    id={_id}
+                                                >
+                                                    {clients
+                                                        .filter(
+                                                            client =>
+                                                                client.suspended
+                                                        )
+                                                        .map(client => (
+                                                            <li
+                                                                className={
+                                                                    'clients-list__name-container'
+                                                                }
+                                                                id={client._id}
+                                                                key={client._id}
+                                                            >
+                                                                <p>{`${client.name} ${client.surname}`}</p>
+                                                                {admin && (
+                                                                    <IconButton
+                                                                        color={
+                                                                            'success'
+                                                                        }
+                                                                        variant={
+                                                                            'contained'
+                                                                        }
+                                                                        size={
+                                                                            'small'
+                                                                        }
+                                                                        onClick={() =>
+                                                                            suspendClient(
+                                                                                _id,
+                                                                                client._id
+                                                                            )
+                                                                        }
+                                                                        component="span"
+                                                                    >
+                                                                        <AddCircleOutlineIcon />
+                                                                    </IconButton>
+                                                                )}
+                                                            </li>
+                                                        ))}
+                                                </ul>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    ) : null}
+                                    <LoadingButton
+                                        size="small"
+                                        sx={{
+                                            borderColor: '#fff',
+                                            color: 'rgba(0, 0, 0, 0.87)',
+                                            width: '100%',
+                                            transition:
+                                                'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                            backgroundColor: '#fff',
+                                            boxShadow:
+                                                '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+                                            marginTop: '12px',
+                                            '&:hover': {
+                                                backgroundColor: '#fff',
+                                                borderColor:
+                                                    'rgba(0, 0, 0, 0.87)',
+                                            },
+                                            '&.Mui-disabled': {
+                                                backgroundColor:
+                                                    'rgba(0, 0, 0, 0.7)',
+                                                color: 'rgb(224,224,224)',
+                                                '&:hover': {
+                                                    backgroundColor:
+                                                        'rgba(0, 0, 0, 0.7)',
+                                                },
+                                            },
+                                        }}
+                                        onClick={e =>
+                                            getLastVirtualGiftDate(_id)
+                                        }
+                                        disabled={lastVirtualGiftDate}
+                                        endIcon={
+                                            lastVirtualGiftDate ===
+                                            'No gifts found' ? (
+                                                <SentimentVeryDissatisfiedIcon />
+                                            ) : (
+                                                <RedeemIcon />
+                                            )
+                                        }
+                                        loading={giftRequestLoader}
+                                        loadingPosition="end"
+                                        variant="outlined"
+                                    >
+                                        {lastVirtualGiftDate ??
+                                            'Last virtual gift was at:'}
+                                    </LoadingButton>
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
             </CardContent>
             <CardActions>
-                {clients.length && !suspended.status ? (
+                {clients.length &&
+                !suspended.status &&
+                !balanceDaysIsLoading ? (
                     <EditBalanceForm
                         updateBalanceDayIsLoading={updateBalanceDayIsLoading}
                         translatorId={_id}
@@ -568,4 +624,4 @@ function SingleTranslator({
         </Card>
     )
 }
-export default memo(SingleTranslator)
+export default SingleTranslator

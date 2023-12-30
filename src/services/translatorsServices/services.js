@@ -76,7 +76,7 @@ export function sendLastVirtualGiftDateRequest(id) {
     )
 }
 
-export function requestBonusesForChats(data) {
+export function getBonusesForChatsRequest(data) {
     return axios.post(
         translatorsURL + 'chat-bonus',
         data,
@@ -108,6 +108,16 @@ export function updateBalanceDay({ balanceDayToSubmit }) {
         {
             ...balanceDayToSubmit,
         },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function getBalanceDaysRequest({
+    dateTimeFilter = '',
+    translatorId = '',
+}) {
+    return axios.get(
+        `${balanceDayURL}all?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
         getConfigForAxiosAuthenticatedRequest()
     )
 }

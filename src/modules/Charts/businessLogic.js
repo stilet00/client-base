@@ -44,7 +44,9 @@ export const useChartsContainer = user => {
             getTranslators({}).then(res => {
                 if (res.status === 200) {
                     const statisticsYearsArray = res.data.map(item =>
-                        item.statistics.find(item => item.year === selectedYear)
+                        item.statistics?.find(
+                            item => item.year === selectedYear
+                        )
                     )
 
                     const yearList = res.data.reduce((result, item) => {

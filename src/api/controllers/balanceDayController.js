@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { getCollections } = require('../database/collections')
 const ObjectId = require('mongodb').ObjectID
 
@@ -64,8 +65,38 @@ const updateBalanceDay = async (req, res) => {
     }
 }
 
+const getBalanceDaysForTranslators = async (req, res) => {
+    try {
+        const { translatorId, dateTimeFilter } = req.query
+        const BalanceDay = await getCollections().collectionBalanceDays
+        let query = {}
+        if (translatorId) {
+            query.translator = translatorId
+        }
+        if (dateTimeFilter) {
+            const endOfMonthInFilter = moment(dateTimeFilter)
+                .endOf('month')
+                .toISOString()
+            const startOfPreviousMonthInFilter = moment(dateTimeFilter)
+                .subtract(1, 'months')
+                .startOf('month')
+                .toISOString()
+            query.dateTimeId = {
+                $gte: startOfPreviousMonthInFilter,
+                $lte: endOfMonthInFilter,
+            }
+        }
+        const balanceDays = await BalanceDay.find(query).exec()
+        res.send(balanceDays)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
+    getBalanceDaysForTranslators,
 }

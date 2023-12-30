@@ -235,106 +235,53 @@ const sendEmailsToTranslators = (req, res) => {
 }
 
 const calculateBonuses = async (req, res) => {
-    if (!req.body) {
-        res.send('Ошибка при загрузке переводчика')
-    } else {
-        try {
-            const year = req.body.year || '2023'
-            const month = parseInt(req.body.month) || 1 // making sure months will be integer
-            const category = req.body.category || 'chats'
-            const { collectionTranslators } = getCollections()
-            const pipeline = [
-                {
-                    $unwind: '$statistics',
-                },
-                {
-                    $match: {
-                        'statistics.year': year,
-                    },
-                },
-                {
-                    $project: {
-                        currentMonth: {
-                            $arrayElemAt: ['$statistics.months', month - 1],
-                        },
-                    },
-                },
-                {
-                    $project: {
-                        clients: '$currentMonth.clients',
-                    },
-                },
-                {
-                    $project: {
-                        clients: {
-                            $reduce: {
-                                input: '$clients',
-                                initialValue: [],
-                                in: {
-                                    $concatArrays: [
-                                        '$$value',
-                                        {
-                                            $filter: {
-                                                input: '$$this',
-                                                as: 'element',
-                                                cond: {
-                                                    $gt: [
-                                                        '$$element.' + category,
-                                                        0,
-                                                    ],
-                                                },
-                                            },
-                                        },
-                                    ],
-                                },
-                            },
-                        },
-                    },
-                },
-                {
-                    $unwind: '$clients',
-                },
-                {
-                    $group: {
-                        _id: '$_id',
-                        totalChatsSum: {
-                            $sum: { $toDouble: '$clients.' + category },
-                        },
-                    },
-                },
-                {
-                    $addFields: {
-                        roundedTotalChatsSum: {
-                            $round: ['$totalChatsSum', 2],
-                        },
-                        bonusChatsSum: {
-                            $round: [
-                                {
-                                    $divide: [
-                                        '$totalChatsSum',
-                                        chatCostBonusInCents,
-                                    ],
-                                },
-                                2,
-                            ],
-                        },
-                    },
-                },
-                {
-                    $project: {
-                        totalChatsSum: '$roundedTotalChatsSum',
-                        bonusChatsSum: 1,
-                    },
-                },
-            ]
-
-            const chatPerMonthSum = await collectionTranslators
-                .aggregate(pipeline)
-                .exec()
-            res.send(chatPerMonthSum)
-        } catch (err) {
-            res.status(500).send(err.message)
+    try {
+        console.log(`calculateBonuses`)
+        if (!req.body) {
+            return res.status(400).send('Bad Request: No body in the request')
         }
+
+        const { dateTimeFilter, category } = req.body
+        const BalanceDay = await getCollections().collectionBalanceDays
+        const startOfMonth = moment(dateTimeFilter)
+            .startOf('month')
+            .toISOString()
+        const endOfMonth = moment(dateTimeFilter).endOf('month').toISOString()
+        const pipeline = [
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $gte: ['$dateTimeId', new Date(startOfMonth)] },
+                            { $lte: ['$dateTimeId', new Date(endOfMonth)] },
+                        ],
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: '$translator',
+                    bonusCategorySum: { $sum: `$statistics.${category}` },
+                },
+            },
+        ]
+        const result = await BalanceDay.aggregate(pipeline).exec()
+        if (result.length === 0) {
+            return res
+                .status(404)
+                .send('No data found for the specified filters')
+        }
+        res.send(
+            result.map(chatBonusObject => {
+                return {
+                    translatorId: chatBonusObject._id,
+                    bonusCategorySum: chatBonusObject.bonusCategorySum,
+                }
+            })
+        )
+    } catch (err) {
+        console.error(err)
+        res.status(500).send(err.message)
     }
 }
 

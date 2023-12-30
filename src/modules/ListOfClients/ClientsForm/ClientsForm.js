@@ -161,7 +161,6 @@ export default function ClientsForm({
     }
 
     function clearClient() {
-        console.log('cleaning')
         setClient(DEFAULT_CLIENT)
     }
 
