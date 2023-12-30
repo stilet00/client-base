@@ -56,15 +56,6 @@ export default function EditTranslatorEmailForm(props) {
                 <Fade in={open}>
                     <div className={'form-container'}>
                         <form
-                            onSubmit={e => {
-                                e.preventDefault()
-                                props.updateTranslatorEmail(
-                                    email,
-                                    props.id,
-                                    wantsToReceiveEmails
-                                )
-                                handleClose()
-                            }}
                             style={{
                                 alignItems: 'flex-start',
                             }}
@@ -110,9 +101,19 @@ export default function EditTranslatorEmailForm(props) {
                                 }
                                 label="Wishes to receive emails"
                             />
-
                             <Button
-                                type={'submit'}
+                                type={'button'}
+                                onClick={async () => {
+                                    const translatorHasBeenUpdated =
+                                        await props.updateTranslatorEmail(
+                                            email,
+                                            props.id,
+                                            wantsToReceiveEmails
+                                        )
+                                    if (translatorHasBeenUpdated) {
+                                        handleClose()
+                                    }
+                                }}
                                 variant={'contained'}
                                 color="primary"
                                 disabled={!emailRegExp.test(email)}

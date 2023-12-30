@@ -166,29 +166,41 @@ const addNewTranslator = async (req, res) => {
     }
 }
 
-const updateTranslator = (req, res) => {
-    getCollections().collectionTranslators.updateOne(
-        { _id: ObjectId(req.params.id) },
-        {
-            $set: {
-                name: req.body.name,
-                surname: req.body.surname,
-                clients: req.body.clients,
-                statistics: req.body.statistics,
-                suspended: req.body.suspended,
-                personalPenalties: req.body.personalPenalties,
-                email: req.body.email,
-                wantsToReceiveEmails: req.body.wantsToReceiveEmails,
-            },
-        },
-        err => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            const message = 'Переводчик сохранен'
-            res.send(message)
+const updateTranslator = async (req, res) => {
+    try {
+        const Translator = await getCollections().collectionTranslators
+        const newTranslatorData = {
+            name: req.body.name,
+            surname: req.body.surname,
+            clients: req.body.clients,
+            statistics: req.body.statistics,
+            suspended: req.body.suspended,
+            personalPenalties: req.body.personalPenalties,
+            email: req.body.email,
+            wantsToReceiveEmails: req.body.wantsToReceiveEmails,
         }
-    )
+        const translator = new Translator(newTranslatorData)
+        try {
+            await translator.validate()
+            await Translator.updateOne(
+                { _id: ObjectId(req.params.id) },
+                { $set: newTranslatorData }
+            )
+            const message = 'Translator has been saved'
+            res.send(message)
+        } catch (err) {
+            if (err) {
+                return res.status(400).send(err)
+            }
+        }
+    } catch (error) {
+        if (!!error.message) {
+            console.error(error.message)
+        } else {
+            console.error(error)
+        }
+        res.sendStatus(500)
+    }
 }
 
 const deleteTranslator = (req, res) => {

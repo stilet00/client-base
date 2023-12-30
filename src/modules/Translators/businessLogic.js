@@ -213,6 +213,7 @@ export const useTranslators = user => {
                         )
                     )
                 }
+                return true
             } catch (error) {
                 const erroMessageForShowAlertMessage = {
                     text: error?.response?.data?.error || 'An error occurred',
@@ -220,6 +221,7 @@ export const useTranslators = user => {
                 }
                 openAlert(erroMessageForShowAlertMessage, 5000)
                 console.error('An error occurred:', error)
+                return false
             }
         },
         [translators, openAlert]
@@ -469,21 +471,18 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const updateTranslatorEmail = useCallback(
-        (email, id, wantsToReceiveEmails) => {
-            let editedTranslator = translators.find(item => item._id === id)
-            editedTranslator = {
-                ...editedTranslator,
-                email,
-                wantsToReceiveEmails,
-            }
-            saveChangedTranslator(
-                editedTranslator,
-                MESSAGES.translatorEmailUpdated
-            )
-        },
-        [translators]
-    )
+    const updateTranslatorEmail = async (email, id, wantsToReceiveEmails) => {
+        let editedTranslator = translators.find(item => item._id === id)
+        editedTranslator = {
+            ...editedTranslator,
+            email,
+            wantsToReceiveEmails,
+        }
+        return saveChangedTranslator(
+            editedTranslator,
+            MESSAGES.translatorEmailUpdated
+        )
+    }
 
     const getBonusesForChats = async () => {
         const response = await getBonusesForChatsRequest({
