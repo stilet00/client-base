@@ -24,12 +24,11 @@ import {
     EMPTY_BALANCE_DAY,
 } from 'constants/constants'
 
-import { getClients, removeClient } from 'services/clientsServices/services'
+import { removeClient } from 'services/clientsServices/services'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
 import moment from 'moment'
 import useModal from 'sharedHooks/useModal'
 import {
-    calculateBalanceDayAllClients,
     calculateBalanceDaySum,
     calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
@@ -42,7 +41,6 @@ const convertDateToIsoString = ({ selectedDay, selectedMonth, selectedYear }) =>
         .format()
 
 export const useTranslators = user => {
-    const [clients, setClients] = useState([])
     const [chatsBonus, setChatsBonus] = useState([])
     const [translators, setTranslators] = useState([])
     const [currentClient, setCurrentClient] = useState(null)
@@ -110,13 +108,6 @@ export const useTranslators = user => {
         return response.data
     }
 
-    const fetchClients = async () => {
-        const response = await getClients({ noImageParams: true })
-        if (response.status !== 200)
-            throw new Error(MESSAGES.somethingWrongWithGettingClients)
-        return response.data
-    }
-
     const { isLoading: currencyIsLoading } = useQuery(
         'currency',
         fetchCurrency,
@@ -138,21 +129,11 @@ export const useTranslators = user => {
         }
     )
 
-    const { isLoading: clientsAreLoading } = useQuery('clients', fetchClients, {
-        enabled: !!user,
-        onSuccess: data => setClients(data),
-        onError: () => openAlert(MESSAGES.somethingWrongWithGettingClients),
-    })
-
     useEffect(() => {
-        if (
-            !currencyIsLoading &&
-            !translatorsAreLoading &&
-            !clientsAreLoading
-        ) {
+        if (!currencyIsLoading && !translatorsAreLoading) {
             setLoading(false)
         }
-    }, [currencyIsLoading, translatorsAreLoading, clientsAreLoading])
+    }, [currencyIsLoading, translatorsAreLoading])
 
     const toggleDrawer = useCallback(
         (anchor, open) => event => {
@@ -273,20 +254,6 @@ export const useTranslators = user => {
             })
         },
         [translators, currentClient, openAlert, openAlert]
-    )
-
-    const deleteClient = useCallback(
-        id => {
-            removeClient(id).then(res => {
-                if (res.status === 200) {
-                    openAlert(MESSAGES.clientDeleted)
-                    setClients(clients.filter(item => item._id !== id))
-                } else {
-                    openAlert(MESSAGES.somethingWrong)
-                }
-            })
-        },
-        [clients, openAlert]
     )
 
     const startTranslatorDelete = useCallback(
@@ -518,11 +485,9 @@ export const useTranslators = user => {
         loading,
         toggleDrawer,
         state,
-        clients,
         dragEndHandler,
         dragStartHandler,
         dragDropHandler,
-        deleteClient,
         translatorsFormSubmit,
         message,
         alertOpen,

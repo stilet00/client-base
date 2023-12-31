@@ -36,7 +36,6 @@ function Translators() {
     const { screenIsSmall } = useWindowDimensions()
     const {
         translators,
-        clients,
         dragLeaveHandler,
         dragOverHandler,
         loading,
@@ -46,7 +45,6 @@ function Translators() {
         openAlert,
         closeAlert,
         alertOpen,
-        deleteClient,
         dragDropHandler,
         dragEndHandler,
         dragStartHandler,
@@ -83,7 +81,6 @@ function Translators() {
 
     const open = Boolean(anchorEl)
     const id = open ? 'simple-popover' : undefined
-    console.log(chatsBonus)
     return user ? (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
@@ -98,7 +95,6 @@ function Translators() {
                         </AccordionSummary>
                         <AccordionDetails>
                             <ClientsList
-                                clients={clients}
                                 toggleDrawer={toggleDrawer}
                                 state={state}
                                 dragStartHandler={dragStartHandler}
@@ -106,8 +102,6 @@ function Translators() {
                                 dragLeaveHandler={dragLeaveHandler}
                                 dragEndHandler={dragEndHandler}
                                 dragDropHandler={dragDropHandler}
-                                deleteClient={deleteClient}
-                                translators={translators}
                             />
                             {isAdmin && (
                                 <>
@@ -224,7 +218,6 @@ function Translators() {
             ) : (
                 <div className="bigScreen-translator-menu">
                     <ClientsList
-                        clients={clients}
                         toggleDrawer={toggleDrawer}
                         state={state}
                         dragStartHandler={dragStartHandler}
@@ -232,8 +225,6 @@ function Translators() {
                         dragLeaveHandler={dragLeaveHandler}
                         dragEndHandler={dragEndHandler}
                         dragDropHandler={dragDropHandler}
-                        deleteClient={deleteClient}
-                        translators={translators}
                     />
                     {isAdmin && (
                         <>
