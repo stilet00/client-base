@@ -248,7 +248,6 @@ const sendEmailsToTranslators = (req, res) => {
 
 const calculateBonuses = async (req, res) => {
     try {
-        console.log(`calculateBonuses`)
         if (!req.body) {
             return res.status(400).send('Bad Request: No body in the request')
         }
@@ -325,6 +324,28 @@ const assignClientToTranslator = async (req, res) => {
     }
 }
 
+const addPersonalPenaltyToTranslator = async (req, res) => {
+    try {
+        const collections = await getCollections()
+        const Translator = collections.collectionTranslators
+        const { translator: translatorId, date, amount, description } = req.body
+        const translator = await Translator.findById(translatorId)
+        if (!translator) {
+            return res.status(404).send('Translator not found')
+        }
+        const penalty = { translator: translatorId, date, amount, description }
+        translator.personalPenalties.push(penalty)
+
+        await translator.save()
+        res.status(200).send(
+            'Personal penalty successfully added to translator'
+        )
+    } catch (error) {
+        console.error('An error occurred:', error)
+        res.status(500).send('An error occurred')
+    }
+}
+
 module.exports = {
     getAllTranslators,
     getLastVirtualGift,
@@ -335,4 +356,5 @@ module.exports = {
     balanceMailout,
     calculateBonuses,
     assignClientToTranslator,
+    addPersonalPenaltyToTranslator,
 }

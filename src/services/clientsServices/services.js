@@ -2,7 +2,6 @@ import axios from 'axios'
 import { rootURL } from '../rootURL'
 import {
     getConfigForAxiosAuthenticatedRequest,
-    getURLStringWithoutFirstSlash,
 } from '../utils'
 
 const clientsURL = rootURL + 'clients/'

@@ -5,6 +5,7 @@ const clientsURL = rootURL + 'clients/'
 const translatorsURL = rootURL + 'translators/'
 const financeStatementsURL = rootURL + 'statements/'
 const balanceDayURL = rootURL + 'balance-day/'
+const personalPenaltiesURL = rootURL + 'personal-penalty/'
 
 module.exports = {
     rootURL,
@@ -14,4 +15,5 @@ module.exports = {
     translatorsURL,
     financeStatementsURL,
     balanceDayURL,
+    personalPenaltiesURL,
 }

@@ -19,12 +19,13 @@ const BalanceDaySchema = new mongoose.Schema({
 
 const SuspendedStatusSchema = new mongoose.Schema({
     status: Boolean,
-    time: String,
+    time: Date,
 })
 
 const PersonalPenaltiesSchema = new mongoose.Schema({
-    date: String,
-    amount: String,
+    translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
+    date: Date,
+    amount: Number,
     description: String,
 })
 

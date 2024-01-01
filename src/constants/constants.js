@@ -57,9 +57,10 @@ export const DEFAULT_CLIENT = {
 }
 
 export const DEFAULT_PENALTY = {
-    date: moment().format('DD MM YYYY'),
+    date: moment().format(),
     amount: 0,
     description: '',
+    translator: '',
 }
 
 class DEFAULT_DAY_BALANCE {

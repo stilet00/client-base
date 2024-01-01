@@ -59,7 +59,6 @@ function Translators() {
         changeFilter,
         memoizedFilteredTranslators,
         translatorFilter,
-        addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
@@ -223,9 +222,6 @@ function Translators() {
                             suspendTranslator={suspendTranslator}
                             suspendClient={suspendClient}
                             selectedDate={translatorFilter.date}
-                            addPersonalPenaltyToTranslator={
-                                addPersonalPenaltyToTranslator
-                            }
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
                             chatBonus={chatsBonus.find(

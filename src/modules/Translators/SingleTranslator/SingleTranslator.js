@@ -60,7 +60,6 @@ function SingleTranslator({
     suspended,
     suspendClient,
     selectedDate,
-    addPersonalPenaltyToTranslator,
     personalPenalties,
     email,
     updateTranslatorEmail,
@@ -186,7 +185,11 @@ function SingleTranslator({
                             {suspended.status
                                 ? `Suspended since: `
                                 : `Activated since: `}
-                            <b>{suspended.time}</b>
+                            <b>
+                                {moment(suspended.time).format(
+                                    'YYYY/MM/DD HH:mm [UTC]'
+                                )}
+                            </b>
                         </Typography>
                     ) : null}
                     {balanceDaysIsLoading && <Loader />}
@@ -585,7 +588,7 @@ function SingleTranslator({
                 </div>
             </CardContent>
             <CardActions>
-                {clients.length &&
+                {clients?.length &&
                 !suspended.status &&
                 !balanceDaysIsLoading ? (
                     <EditBalanceForm
@@ -615,9 +618,6 @@ function SingleTranslator({
                     <PersonalPenaltyForm
                         suspended={suspended.status}
                         id={_id}
-                        addPersonalPenaltyToTranslator={
-                            addPersonalPenaltyToTranslator
-                        }
                     />
                 )}
             </CardActions>

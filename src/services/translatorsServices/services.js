@@ -4,6 +4,7 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const translatorsURL = rootURL + 'translators/'
 const balanceDayURL = rootURL + 'balance-day/'
+const personalPenaltyURL = rootURL + 'personal-penalty/'
 
 export function getTranslators({
     yearParams = null,
@@ -118,6 +119,14 @@ export function getBalanceDaysRequest({
 }) {
     return axios.get(
         `${balanceDayURL}all?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export async function createPersonalPenalty({ personalPenaltyData }) {
+    return axios.post(
+        `${personalPenaltyURL}create`,
+        personalPenaltyData,
         getConfigForAxiosAuthenticatedRequest()
     )
 }

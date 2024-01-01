@@ -12,6 +12,7 @@ const {
     financeStatementsURL,
     tasksURL,
     balanceDayURL,
+    personalPenaltiesURL,
 } = require('./src/api/routes/routes')
 const {
     getLastVirtualGift,
@@ -22,6 +23,7 @@ const {
     sendEmailsToTranslators,
     calculateBonuses,
     assignClientToTranslator,
+    addPersonalPenaltyToTranslator,
 } = require('./src/api/controllers/translatorController')
 const {
     getAllTasks,
@@ -146,6 +148,11 @@ app.put(
 )
 app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
 app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
+app.post(
+    personalPenaltiesURL + 'create',
+    [...adminRules],
+    addPersonalPenaltyToTranslator
+)
 
 // statements api
 app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)

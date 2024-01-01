@@ -115,6 +115,10 @@ const MESSAGES = {
         text: 'Something went wrong while getting balance days :(',
         status: false,
     },
+    somethingWentWrongWithPersonalPenalty: {
+        text: 'Something went wrong while saving personal penalty :(',
+        status: false,
+    },
 }
 
 export default MESSAGES

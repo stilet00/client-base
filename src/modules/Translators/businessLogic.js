@@ -341,7 +341,7 @@ export const useTranslators = user => {
                 ...editedTranslator,
                 suspended: {
                     status: !editedTranslator.suspended.status,
-                    time: moment().format('DD MMMM YYYY'),
+                    time: moment().format(),
                 },
             }
 
@@ -350,33 +350,6 @@ export const useTranslators = user => {
                 : MESSAGES.translatorActivated
 
             saveChangedTranslator(editedTranslator, message)
-        },
-        [translators]
-    )
-
-    const addPersonalPenaltyToTranslator = useCallback(
-        (id, penalty) => {
-            let editedTranslator = translators.find(
-                translator => translator._id === id
-            )
-            if (editedTranslator.personalPenalties) {
-                editedTranslator = {
-                    ...editedTranslator,
-                    personalPenalties: [
-                        ...editedTranslator.personalPenalties,
-                        penalty,
-                    ],
-                }
-            } else {
-                editedTranslator = {
-                    ...editedTranslator,
-                    personalPenalties: [penalty],
-                }
-            }
-            saveChangedTranslator(
-                editedTranslator,
-                MESSAGES.personalPenaltyApplied
-            )
         },
         [translators]
     )
@@ -468,7 +441,6 @@ export const useTranslators = user => {
         changeFilter,
         memoizedFilteredTranslators,
         translatorFilter,
-        addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
