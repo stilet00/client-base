@@ -31,6 +31,7 @@ const StyledButton = styled(Button)`
         color: black;
     }
 `
+
 function Translators() {
     const user = useSelector(state => state.auth.user)
     const { screenIsSmall } = useWindowDimensions()
@@ -53,7 +54,6 @@ function Translators() {
         alertStatusConfirmation,
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
-        calculateMonthTotal,
         suspendTranslator,
         suspendClient,
         changeFilter,
@@ -64,7 +64,6 @@ function Translators() {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        getBonusesForChats,
         chatsBonus,
         updateBalanceDayIsLoading,
     } = useTranslators(user)
@@ -124,79 +123,6 @@ function Translators() {
                                     </StyledButton>
                                 </>
                             )}
-                            <StyledButton
-                                aria-describedby={id}
-                                onClick={handleClick}
-                                fullWidth={screenIsSmall}
-                                startIcon={
-                                    <FontAwesomeIcon icon={faPiggyBank} />
-                                }
-                            >
-                                Show total
-                            </StyledButton>
-                            <Popover
-                                id={id}
-                                open={open}
-                                anchorEl={anchorEl}
-                                onClose={handleClose}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                className={'sum-popover'}
-                            >
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Dating total: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.dating
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Gifts svadba: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.virtualGiftsSvadba
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Gifts dating: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.virtualGiftsDating
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Phone calls: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.phoneCalls
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Chats total: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.chats
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Letters total: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.letters
-                                    )} $`}</b>
-                                </Typography>
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Penalties: `}
-                                    <b>{`${calculateMonthTotal(
-                                        DEFAULT_CATEGORIES.penalties
-                                    )} $`}</b>
-                                </Typography>
-                                <Divider />
-                                <Typography sx={{ p: 2 }} align={'left'}>
-                                    {`Total by ${moment().format('D MMMM')}: `}{' '}
-                                    <b>
-                                        <b>{`${calculateMonthTotal().toFixed(
-                                            2
-                                        )} $`}</b>
-                                    </b>
-                                </Typography>
-                            </Popover>
                             <div className="gallery-menu__filters">
                                 <div
                                     className={
@@ -245,73 +171,6 @@ function Translators() {
                             </StyledButton>
                         </>
                     )}
-                    <StyledButton
-                        aria-describedby={id}
-                        onClick={handleClick}
-                        className="translators-container__menu-button"
-                        startIcon={<FontAwesomeIcon icon={faPiggyBank} />}
-                    >
-                        Show total
-                    </StyledButton>
-                    {/* <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                        className={'sum-popover'}
-                    >
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Dating total: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.dating
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Gifts svadba: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.virtualGiftsSvadba
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Gifts dating: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.virtualGiftsDating
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Phone calls: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.phoneCalls
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Chats total: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.chats
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Letters total: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.letters
-                            )} $`}</b>
-                        </Typography>
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Penalties: `}
-                            <b>{`${calculateMonthTotal(
-                                DEFAULT_CATEGORIES.penalties
-                            )} $`}</b>
-                        </Typography>
-                        <Divider />
-                        <Typography sx={{ p: 2 }} align={'left'}>
-                            {`Total by ${moment().format('D MMMM')}: `}{' '}
-                            <b>{`${calculateMonthTotal()} $`}</b>
-                        </Typography>
-                    </Popover> */}
                     <div className="gallery-menu__inline-filters">
                         <div className="gallery-menu__filters-label">Menu</div>
                         <div className={'gallery-menu__checkbox-container'}>

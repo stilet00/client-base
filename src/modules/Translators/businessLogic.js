@@ -331,40 +331,6 @@ export const useTranslators = user => {
         }
     }
 
-    const calculateMonthTotal = useCallback(
-        (categoryName = null) => {
-            let sum = 0
-            if (categoryName) {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        Number(
-                            calculateTranslatorMonthTotal(
-                                translatorsStatistic,
-                                true,
-                                currentMonth,
-                                currentYear,
-                                false,
-                                categoryName
-                            )
-                        )
-                })
-            } else {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        Number(
-                            calculateTranslatorMonthTotal(translatorsStatistic)
-                        )
-                })
-            }
-            return getNumberWithHundreds(sum)
-        },
-        [translators]
-    )
-
     const suspendTranslator = useCallback(
         translatorId => {
             let editedTranslator = translators.find(
@@ -497,7 +463,6 @@ export const useTranslators = user => {
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
         finishTranslatorDelete,
-        calculateMonthTotal,
         suspendTranslator,
         suspendClient,
         changeFilter,
