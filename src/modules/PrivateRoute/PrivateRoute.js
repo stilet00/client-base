@@ -1,22 +1,19 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Route, useNavigate } from 'react-router-dom'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import Loader from '../../sharedComponents/Loader/Loader'
+import { Navigate } from 'react-router-dom'
 
-export default function PrivateRoute({ component: Component, path }) {
+export default function PrivateRoute({ component: Component, ...rest }) {
     const user = useSelector(state => state.auth.user)
     const { isAdmin, isLoading } = useAdminStatus(user)
-    const navigate = useNavigate()
-
     if (isLoading) {
         return <Loader />
     }
 
-    if (!isAdmin) {
-        navigate('/')
-        return null
-    }
-
-    return <Route path={path} element={<Component user={user} />} />
+    return !!isAdmin ? (
+        <Component {...rest} />
+    ) : (
+        <Navigate to="/login" replace />
+    )
 }

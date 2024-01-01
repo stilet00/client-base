@@ -69,10 +69,12 @@ export default function FinancesForm({ handleNewPayment }) {
         setFormErrors(handleFormValidation(newState))
     }
 
-    function submitNewPayment(e) {
-        handleNewPayment(paymentData)
-        clearPaymentsData()
-        handleClose()
+    async function submitNewPayment(e) {
+        const paymentHasBeenSUbmitted = await handleNewPayment(paymentData)
+        if (paymentHasBeenSUbmitted) {
+            clearPaymentsData()
+            handleClose()
+        }
     }
     const handleDateChange = newDate => {
         setPaymentData({ ...paymentData, date: newDate })
@@ -152,13 +154,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 Compose bill
                             </div>
                         </div>
-                        <form
-                            className="payment-form__main"
-                            onSubmit={e => {
-                                e.preventDefault()
-                                submitNewPayment()
-                            }}
-                        >
+                        <form className="payment-form__main">
                             <MobileDatePicker
                                 disableFuture
                                 label="Date of Payment"
@@ -260,7 +256,8 @@ export default function FinancesForm({ handleNewPayment }) {
                                     paymentData.amount === 0 ||
                                     arrayWithErrors.length !== 0
                                 }
-                                type={'submit'}
+                                type={'button'}
+                                onClick={submitNewPayment}
                                 fullWidth
                                 variant={'outlined'}
                             >

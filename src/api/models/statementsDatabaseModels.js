@@ -5,7 +5,7 @@ const PaymentSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     sender: { type: String, required: true },
     comment: { type: String, required: true },
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
 })
 
 module.exports = {

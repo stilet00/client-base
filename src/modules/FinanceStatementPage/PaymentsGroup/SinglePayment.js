@@ -66,7 +66,6 @@ export default function SinglePayment({
                 <div className="list-item__info_aditional-info">
                     <span>Receiver: {receiver}</span>
                     <span>Sender: {sender}</span>
-                    <span>{date}</span>
                 </div>
                 <p className="list-item__info_amount-info">
                     {amount} <span>$</span>

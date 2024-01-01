@@ -11,7 +11,7 @@ export function getPaymentsRequest() {
     )
 }
 
-export function addPaymentRequest(payment) {
+export async function addPaymentRequest(payment) {
     return axios.post(
         financeStatementsURL + 'add/',
         payment,
