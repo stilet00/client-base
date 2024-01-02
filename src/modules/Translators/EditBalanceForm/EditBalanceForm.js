@@ -67,7 +67,6 @@ export default function EditBalanceForm({
         openAlert,
         closeAlert,
         currentBalanceDay,
-        getBalanceDayIsLoading,
         balanceDaySubmit,
     } = useBalanceForm({
         clients,

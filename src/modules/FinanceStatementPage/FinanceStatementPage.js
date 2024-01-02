@@ -34,7 +34,7 @@ export default function FinanceStatementPage() {
 
     useEffect(() => {
         if (user) {
-            getPaymentsRequest()
+            getPaymentsRequest({})
                 .then(res => {
                     if (res.status === 200) {
                         setLoading(false)

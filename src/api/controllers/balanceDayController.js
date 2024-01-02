@@ -94,9 +94,36 @@ const getBalanceDaysForTranslators = async (req, res) => {
     }
 }
 
+const getAllBalanceDays = async (req, res) => {
+    try {
+        const { yearFilter } = req.query
+        const BalanceDay = await getCollections().collectionBalanceDays
+        let query = {}
+        if (yearFilter) {
+            const momentFromYearFilter = moment(yearFilter, 'YYYY')
+            const startOfYearFilter = momentFromYearFilter
+                .startOf('year')
+                .toISOString()
+            const endOfYearFilter = momentFromYearFilter
+                .endOf('month')
+                .toISOString()
+            query.dateTimeId = {
+                $gte: startOfYearFilter,
+                $lte: endOfYearFilter,
+            }
+        }
+        const balanceDays = await BalanceDay.find(query).exec()
+        res.send(balanceDays)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
     getBalanceDaysForTranslators,
+    getAllBalanceDays,
 }

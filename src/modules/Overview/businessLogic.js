@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
-import { useResolvedPath } from 'react-router-dom'
-import { getClients } from '../../services/clientsServices/services'
-import { getTranslators } from '../../services/translatorsServices/services'
-import { getPaymentsRequest } from '../../services/financesStatement/services'
+import { useQuery } from 'react-query'
+import { getClients } from 'services/clientsServices/services'
+import { getTranslators } from 'services/translatorsServices/services'
+import { getBalanceDaysRequest } from 'services/balanceDayServices/index'
+import { getPaymentsRequest } from 'services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
     getNumberWithHundreds,
-} from '../../sharedFunctions/sharedFunctions'
-import { currentMonth, currentYear } from '../../constants/constants'
+} from 'sharedFunctions/sharedFunctions'
+import { currentMonth, currentYear } from 'constants/constants'
+import MESSAGES from 'constants/messages'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
-    const url = useResolvedPath('').pathname
     const [statements, setStatments] = useState([])
-
     const [translators, setTranslators] = useState([])
-
     const [selectedYear, setSelectedYear] = useState(currentYear)
+    const [balanceDays, setBalanceDays] = useState([])
 
     const handleChange = event => {
         setSelectedYear(event.target.value)
@@ -30,20 +30,40 @@ export const useOverview = user => {
                 }
             })
 
-            getTranslators({ yearParams: selectedYear }).then(res => {
+            getTranslators({}).then(res => {
                 if (res.status === 200) {
-                    console.log(res.data)
-                    // setTranslators(res.data)
+                    setTranslators(res.data)
                 }
             })
 
-            // getPaymentsRequest().then(res => {
-            //     if (res.status === 200) {
-            //         setStatments(res.data)
-            //     }
-            // })
+            getPaymentsRequest({ yearFilter: selectedYear }).then(res => {
+                if (res.status === 200) {
+                    setStatments(res.data)
+                }
+            })
         }
     }, [user, selectedYear])
+
+    const fetchBalanceDays = async () => {
+        const response = await getBalanceDaysRequest({
+            yearFilter: selectedYear,
+        })
+        if (response.status !== 200) {
+            throw new Error(MESSAGES.somethingWrongWithBalanceDays)
+        }
+        return response.data
+    }
+    const { isLoading: balanceDaysIsLoading, refetch: refetchBalanceDays } =
+        useQuery('balanceDays', fetchBalanceDays, {
+            enabled: !!user,
+            onSuccess: data => setBalanceDays(data),
+            onError: () =>
+                console.error(MESSAGES.somethingWrongWithBalanceDays),
+        })
+
+    useEffect(() => {
+        refetchBalanceDays()
+    }, [selectedYear])
 
     const calculateMonthTotal = (
         monthNumber = currentMonth,
@@ -54,6 +74,12 @@ export const useOverview = user => {
         let sum = 0
         if (onlySvadba) {
             translators.forEach(translator => {
+                const translatorStatistics = balanceDays.filter(
+                    balanceDay => translator._id === balanceDay.translator
+                )
+                if (!translatorStatistics) {
+                    return
+                }
                 let translatorsStatistic = translator.statistics
                 sum =
                     sum +
@@ -67,11 +93,16 @@ export const useOverview = user => {
             })
         } else {
             translators.forEach(translator => {
-                let translatorsStatistic = translator.statistics
+                const translatorStatistics = balanceDays.filter(
+                    balanceDay => translator._id === balanceDay.translator
+                )
+                if (!translatorStatistics) {
+                    return
+                }
                 sum =
                     sum +
                     calculateTranslatorMonthTotal(
-                        translatorsStatistic,
+                        translatorStatistics,
                         forFullMonth,
                         monthNumber,
                         year

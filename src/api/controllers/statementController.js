@@ -1,10 +1,27 @@
+const moment = require('moment')
 const { getCollections } = require('../database/collections')
-let ObjectId = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 
 const getAllStatements = async (request, response) => {
     try {
+        const yearFilter = request.query.year
+        console.log(`yearFilter: ${yearFilter}`)
         const Statement = await getCollections().collectionStatements
-        const statementsCollection = await Statement.find()
+        let statementsCollection
+        if (yearFilter) {
+            const startDate = moment(yearFilter, 'YYYY')
+                .startOf('year')
+                .format()
+            const endDate = moment(yearFilter, 'YYYY').endOf('year').format()
+            statementsCollection = await Statement.find({
+                date: {
+                    $gte: startDate,
+                    $lt: endDate,
+                },
+            })
+        } else {
+            statementsCollection = await Statement.find()
+        }
         response.send(statementsCollection)
     } catch (err) {
         response.sendStatus(500)

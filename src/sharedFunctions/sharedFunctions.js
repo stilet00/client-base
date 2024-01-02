@@ -83,20 +83,15 @@ export const calculateTranslatorMonthTotal = (
             )
         }, 0)
     } else {
-        total = balanceDays?.reduce((sum, current, index) => {
-            return index + 1 < Number(moment().format('D'))
-                ? sum +
-                      current.clients.reduce((sum, current) => {
-                          return (
-                              sum +
-                              calculateBalanceDaySum(
-                                  current,
-                                  onlySvadba,
-                                  category
-                              )
-                          )
-                      }, 0)
-                : sum
+        const balanceDaysForCurrentPartOFMonth = balanceDays?.filter(
+            ({ dateTimeId }) =>
+                moment(dateTimeId).isSameOrBefore(moment(), 'day')
+        )
+        total = balanceDaysForCurrentPartOFMonth?.reduce((sum, current) => {
+            return (
+                sum +
+                calculateBalanceDaySum(current.statistics, onlySvadba, category)
+            )
         }, 0)
     }
 

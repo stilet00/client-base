@@ -6,15 +6,8 @@ const translatorsURL = rootURL + 'translators/'
 const balanceDayURL = rootURL + 'balance-day/'
 const personalPenaltyURL = rootURL + 'personal-penalty/'
 
-export function getTranslators({
-    yearParams = null,
-    searchQuery = '',
-    shouldGetClients = false,
-}) {
+export function getTranslators({ searchQuery = '', shouldGetClients = false }) {
     let queryParams = ''
-    if (yearParams) {
-        queryParams = `?yearParams=${encodeURIComponent(yearParams)}`
-    }
     if (searchQuery) {
         queryParams +=
             (queryParams ? '&' : '?') +
@@ -113,12 +106,12 @@ export function updateBalanceDay({ balanceDayToSubmit }) {
     )
 }
 
-export function getBalanceDaysRequest({
+export function getBalanceDaysForTranslatorRequest({
     dateTimeFilter = '',
     translatorId = '',
 }) {
     return axios.get(
-        `${balanceDayURL}all?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+        `${balanceDayURL}translators?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
         getConfigForAxiosAuthenticatedRequest()
     )
 }

@@ -15,24 +15,16 @@ import {
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
-    getBalanceDaysRequest,
+    getBalanceDaysForTranslatorRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
-import {
-    currentMonth,
-    currentYear,
-    EMPTY_BALANCE_DAY,
-} from 'constants/constants'
-
-import { removeClient } from 'services/clientsServices/services'
+import { EMPTY_BALANCE_DAY } from 'constants/constants'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
 import moment from 'moment'
 import useModal from 'sharedHooks/useModal'
 import {
     calculateBalanceDaySum,
-    calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
-    getNumberWithHundreds,
 } from 'sharedFunctions/sharedFunctions'
 
 const convertDateToIsoString = ({ selectedDay, selectedMonth, selectedYear }) =>
@@ -466,6 +458,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     )
     const [currentBalanceDay, setCurrentBalanceDay] = useState(null)
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
+    console.log(currentBalanceDay)
     const balanceDayQuery = useQuery(
         [
             'balanceDay',
@@ -493,6 +486,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
                 }
                 if (!balanceDayExists) {
                     const emptyBalanceDay = new EMPTY_BALANCE_DAY()
+                    console.log(`emptyBalanceDay`, emptyBalanceDay)
                     setCurrentBalanceDay({
                         ...emptyBalanceDay,
                         dateTimeId: convertDateToIsoString({
@@ -602,7 +596,7 @@ export const useSingleTranslator = ({
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
     const user = useSelector(state => state.auth.user)
     const fetchBalanceDays = async () => {
-        const response = await getBalanceDaysRequest({
+        const response = await getBalanceDaysForTranslatorRequest({
             dateTimeFilter: selectedDate?.startOf('day').format(),
             translatorId,
         })

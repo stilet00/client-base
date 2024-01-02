@@ -50,6 +50,7 @@ const {
     createBalanceDay,
     updateBalanceDay,
     getBalanceDaysForTranslators,
+    getAllBalanceDays,
 } = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
@@ -162,7 +163,12 @@ app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 // balance day api
 app.post(balanceDayURL + 'create', isAuthenticated, createBalanceDay)
 app.put(balanceDayURL + 'update', isAuthenticated, updateBalanceDay)
-app.get(balanceDayURL + 'all', isAuthenticated, getBalanceDaysForTranslators)
+app.get(
+    balanceDayURL + 'translators',
+    isAuthenticated,
+    getBalanceDaysForTranslators
+)
+app.get(balanceDayURL + 'all', isAuthenticated, getAllBalanceDays)
 app.get(balanceDayURL, isAuthenticated, getBalanceDay)
 
 // DB connection and server starts

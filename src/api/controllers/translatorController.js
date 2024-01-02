@@ -9,7 +9,6 @@ const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (req, res) => {
     try {
-        const hasStatisticsYearsInParams = !!req.query?.yearParams
         const hasSearchQuery = !!req.query?.searchQuery
         const hasShouldGetClients = !!req.query?.shouldGetClients
         let query = getCollections().collectionTranslators.find()
@@ -18,60 +17,6 @@ const getAllTranslators = async (req, res) => {
         }
         const translators = await query.exec()
         res.send(translators)
-        // if (hasStatisticsYearsInParams) {
-        //     const yearParams = req.query.params
-        //     const yearsArray = Array.isArray(yearParams)
-        //         ? yearParams
-        //         : [yearParams]
-
-        //     const result = await getCollections()
-        //         .collectionTranslators.aggregate([
-        //             {
-        //                 $unwind: '$statistics',
-        //             },
-        //             {
-        //                 $match: {
-        //                     'statistics.year': { $in: yearsArray },
-        //                 },
-        //             },
-        //             {
-        //                 $project: {
-        //                     _id: 1,
-        //                     statistics: {
-        //                         $cond: {
-        //                             if: {
-        //                                 $in: ['$statistics.year', yearsArray],
-        //                             },
-        //                             then: '$statistics',
-        //                             else: null,
-        //                         },
-        //                     },
-        //                     suspended: 1,
-        //                 },
-        //             },
-        //             {
-        //                 $group: {
-        //                     _id: '$_id',
-        //                     statistics: { $push: '$statistics' },
-        //                     suspended: { $first: '$suspended' },
-        //                 },
-        //             },
-        //             {
-        //                 $project: {
-        //                     _id: 0,
-        //                     statistics: 1,
-        //                     suspended: 1,
-        //                 },
-        //             },
-        //         ])
-        //         .exec()
-        //     res.send(result)
-        // } else {
-        //     const result = await getCollections()
-        //         .collectionTranslators.find()
-        //         .exec()
-        //     res.send(result)
-        // }
     } catch (error) {
         console.error(error)
         res.sendStatus(500)
@@ -226,7 +171,7 @@ const balanceMailout = async translatorsCollection => {
             return []
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return false
     }
 }
