@@ -60,7 +60,9 @@ const getAllTranslators = async (req, res) => {
             res.send(result)
         } else {
             const result = await getCollections()
-                .collectionTranslators.find()
+                .collectionTranslators.find({
+                    'suspended.status': false,
+                })
                 .toArray()
             res.send(result)
         }
