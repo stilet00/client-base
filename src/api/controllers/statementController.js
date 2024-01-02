@@ -5,7 +5,6 @@ const ObjectId = require('mongodb').ObjectID
 const getAllStatements = async (request, response) => {
     try {
         const yearFilter = request.query.year
-        console.log(`yearFilter: ${yearFilter}`)
         const Statement = await getCollections().collectionStatements
         let statementsCollection
         if (yearFilter) {

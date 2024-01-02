@@ -458,7 +458,6 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     )
     const [currentBalanceDay, setCurrentBalanceDay] = useState(null)
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
-    console.log(currentBalanceDay)
     const balanceDayQuery = useQuery(
         [
             'balanceDay',

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import moment from 'moment'
 import { useQuery } from 'react-query'
 import { getClients } from 'services/clientsServices/services'
 import { getTranslators } from 'services/translatorsServices/services'
@@ -7,42 +8,47 @@ import { getPaymentsRequest } from 'services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
     getNumberWithHundreds,
+    calculateBalanceDaySum,
 } from 'sharedFunctions/sharedFunctions'
 import { currentMonth, currentYear } from 'constants/constants'
 import MESSAGES from 'constants/messages'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
-    const [statements, setStatments] = useState([])
+    const [statements, setStatements] = useState([])
     const [translators, setTranslators] = useState([])
     const [selectedYear, setSelectedYear] = useState(currentYear)
-    const [balanceDays, setBalanceDays] = useState([])
+    const [balanceDaysForSelectedYear, setBalanceDaysForSelectedYear] =
+        useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleChange = event => {
         setSelectedYear(event.target.value)
     }
 
-    useEffect(() => {
-        if (user) {
-            getClients({ noImageParams: true }).then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
-                }
-            })
-
-            getTranslators({}).then(res => {
-                if (res.status === 200) {
-                    setTranslators(res.data)
-                }
-            })
-
-            getPaymentsRequest({ yearFilter: selectedYear }).then(res => {
-                if (res.status === 200) {
-                    setStatments(res.data)
-                }
-            })
+    const fetchClients = async () => {
+        const response = await getClients({ noImageParams: true })
+        if (response.status !== 200) {
+            throw new Error('Something went wrong with clients')
         }
-    }, [user, selectedYear])
+        return response.data
+    }
+
+    const fetchTranslators = async () => {
+        const response = await getTranslators({})
+        if (response.status !== 200) {
+            throw new Error('Something went wrong with translators')
+        }
+        return response.data
+    }
+
+    const fetchPayments = async () => {
+        const response = await getPaymentsRequest({ yearFilter: selectedYear })
+        if (response.status !== 200) {
+            throw new Error('Something went wrong with payments')
+        }
+        return response.data
+    }
 
     const fetchBalanceDays = async () => {
         const response = await getBalanceDaysRequest({
@@ -53,13 +59,62 @@ export const useOverview = user => {
         }
         return response.data
     }
+
+    const { isLoading: clientsAreLoading } = useQuery('clients', fetchClients, {
+        enabled: !!user,
+        onSuccess: data => setClients(data),
+        onError: () => console.error('Something went wrong with clients'),
+    })
+
+    const { isLoading: translatorsAreLoading } = useQuery(
+        'translators',
+        fetchTranslators,
+        {
+            enabled: !!user,
+            onSuccess: data => setTranslators(data),
+            onError: () =>
+                console.error('Something went wrong with translators'),
+        }
+    )
+
+    const { isLoading: paymentsAreLoading } = useQuery(
+        ['payments', selectedYear],
+        fetchPayments,
+        {
+            enabled: !!user,
+            onSuccess: data => setStatements(data),
+            onError: () => console.error('Something went wrong with payments'),
+        }
+    )
+
     const { isLoading: balanceDaysIsLoading, refetch: refetchBalanceDays } =
         useQuery('balanceDays', fetchBalanceDays, {
             enabled: !!user,
-            onSuccess: data => setBalanceDays(data),
+            onSuccess: data => setBalanceDaysForSelectedYear(data),
             onError: () =>
                 console.error(MESSAGES.somethingWrongWithBalanceDays),
         })
+
+    const dataIsLoading =
+        clientsAreLoading ||
+        translatorsAreLoading ||
+        paymentsAreLoading ||
+        balanceDaysIsLoading
+
+    const dataIsLoaded =
+        !clientsAreLoading &&
+        !translatorsAreLoading &&
+        !paymentsAreLoading &&
+        !balanceDaysIsLoading
+
+    useEffect(() => {
+        if (dataIsLoaded) {
+            setIsLoading(false)
+        }
+        if (dataIsLoading) {
+            setIsLoading(true)
+        }
+    }, [dataIsLoading, dataIsLoaded])
 
     useEffect(() => {
         refetchBalanceDays()
@@ -74,17 +129,22 @@ export const useOverview = user => {
         let sum = 0
         if (onlySvadba) {
             translators.forEach(translator => {
-                const translatorStatistics = balanceDays.filter(
+                const translatorStatistics = balanceDaysForSelectedYear.filter(
                     balanceDay => translator._id === balanceDay.translator
                 )
-                if (!translatorStatistics) {
+                const balanceDaysForFilteredMonth = translatorStatistics.filter(
+                    balanceDay =>
+                        moment(balanceDay.dateTimeId).format('M') ===
+                        monthNumber
+                )
+                if (!balanceDaysForFilteredMonth) {
                     return
                 }
-                let translatorsStatistic = translator.statistics
+
                 sum =
                     sum +
                     calculateTranslatorMonthTotal(
-                        translatorsStatistic,
+                        balanceDaysForFilteredMonth,
                         forFullMonth,
                         monthNumber,
                         year,
@@ -93,16 +153,21 @@ export const useOverview = user => {
             })
         } else {
             translators.forEach(translator => {
-                const translatorStatistics = balanceDays.filter(
+                const translatorStatistics = balanceDaysForSelectedYear.filter(
                     balanceDay => translator._id === balanceDay.translator
                 )
-                if (!translatorStatistics) {
+                const balanceDaysForFilteredMonth = translatorStatistics.filter(
+                    balanceDay =>
+                        moment(balanceDay.dateTimeId).format('M') ===
+                        monthNumber
+                )
+                if (!balanceDaysForFilteredMonth) {
                     return
                 }
                 sum =
                     sum +
                     calculateTranslatorMonthTotal(
-                        translatorStatistics,
+                        balanceDaysForFilteredMonth,
                         forFullMonth,
                         monthNumber,
                         year
@@ -113,13 +178,10 @@ export const useOverview = user => {
     }
 
     const calculateYearTotal = () => {
-        let yearSum = 0
-
-        for (let monthNumber = 1; monthNumber < 13; monthNumber++) {
-            yearSum = yearSum + calculateMonthTotal(monthNumber)
-        }
-
-        return Math.round(yearSum)
+        const total = balanceDaysForSelectedYear?.reduce((sum, current) => {
+            return sum + calculateBalanceDaySum(current.statistics)
+        }, 0)
+        return Math.round(total)
     }
 
     return {
@@ -130,5 +192,6 @@ export const useOverview = user => {
         calculateMonthTotal,
         calculateYearTotal,
         statements,
+        isLoading,
     }
 }
