@@ -660,13 +660,13 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 
     function findMonth() {
-        return findYear().months.find(
+        return findYear()?.months.find(
             (item, index) => index + 1 === Number(selectedMonth)
         )
     }
 
     function findTodayBalance() {
-        return findMonth().find(
+        return findMonth()?.find(
             (item, index) => index + 1 === Number(selectedDay)
         )
     }
