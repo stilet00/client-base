@@ -30,8 +30,6 @@ const {
     deleteTask,
     editTask,
     createTask,
-    sendNotification,
-    allowNotifications,
 } = require('./src/api/controllers/taskController')
 const {
     getAllStatements,
@@ -124,8 +122,6 @@ app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
 app.delete(tasksURL + ':id', [...adminRules], deleteTask)
 app.post(tasksURL + 'add', isAuthenticated, createTask)
 app.put(tasksURL + 'edit/:id', [...adminRules], editTask)
-app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
-app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
 // clients api
 app.get(clientsURL + 'get', isAuthenticated, getAllClients)

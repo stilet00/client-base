@@ -24,57 +24,38 @@ function TaskList() {
         newTask,
         toggleTodo,
         loading,
-        notificationsAreAllowed,
-        onTaskNotificationsSettingsChange,
     } = useTaskList(user)
 
-    const page =
-        tasks.length && !loading ? (
-            <TransitionGroup className="todo-list" component={'ul'}>
-                {tasks.map(item => (
-                    <CSSTransition
-                        key={item._id}
-                        timeout={500}
-                        classNames="item"
-                    >
-                        <SingleTask
-                            {...item}
-                            onDelete={deleteTask}
-                            onToggle={toggleTodo}
-                        />
-                    </CSSTransition>
-                ))}
-            </TransitionGroup>
-        ) : loading ? (
-            <Loader />
-        ) : (
-            <h1>No tasks yet</h1>
-        )
-    return user ? (
+    if (!user) {
+        return <LoggedOutPage />
+    }
+    if (loading) {
+        return <Loader />
+    }
+    return (
         <>
-            <div className={'taskList-menu'}>
-                <div className={'taskList-menu__switch-container'}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={notificationsAreAllowed}
-                                    onChange={onTaskNotificationsSettingsChange}
-                                />
-                            }
-                            label={
-                                <Typography style={{ fontWeight: 'bold' }}>
-                                    Email notifications
-                                </Typography>
-                            }
-                        />
-                    </FormGroup>
-                </div>
-            </div>
             <div
                 className={'taskList-container scrolled-container animated-box'}
             >
-                {page}
+                {tasks.length > 0 ? (
+                    <TransitionGroup className="todo-list" component={'ul'}>
+                        {tasks.map(item => (
+                            <CSSTransition
+                                key={item._id}
+                                timeout={500}
+                                classNames="item"
+                            >
+                                <SingleTask
+                                    {...item}
+                                    onDelete={deleteTask}
+                                    onToggle={toggleTodo}
+                                />
+                            </CSSTransition>
+                        ))}
+                    </TransitionGroup>
+                ) : (
+                    <h1>No tasks yet</h1>
+                )}
             </div>
             <div className="socials button-add-container">
                 <Form addTask={newTask} />
@@ -87,8 +68,6 @@ function TaskList() {
                 status={false}
             />
         </>
-    ) : (
-        <LoggedOutPage />
     )
 }
 

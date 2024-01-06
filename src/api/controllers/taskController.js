@@ -1,9 +1,4 @@
-const {
-    sendTaskNotificationEmailTemplatesToAdministrators,
-} = require('../email-api/taskNotificationEmailAPI')
 const { getCollections } = require('../database/collections')
-const { twentyHoursInMiliseconds } = require('../constants')
-let ObjectId = require('mongodb').ObjectID
 
 const getAllTasks = async (request, response) => {
     const tasksCollection = await getCollections().collectionTasks.find().exec()
@@ -55,52 +50,9 @@ const createTask = async (request, response) => {
     }
 }
 
-const sendNotification = async (request, response) => {
-    const notificationCollection = await getCollections()
-        .collectionTaskNotifications.find()
-        .exec()
-    response.send(notificationCollection)
-}
-
-let outdatedTaskNotificationsInterval
-
-async function taskNotificationsMailout() {
-    const taskCollection = await getCollections().collectionTasks.find().exec()
-    sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
-}
-
-const allowNotifications = (request, response) => {
-    const taskNotificationsAreAllowed = request.body.allowed
-    if (taskNotificationsAreAllowed) {
-        outdatedTaskNotificationsInterval = setInterval(
-            taskNotificationsMailout,
-            twentyHoursInMiliseconds
-        )
-    }
-    if (!taskNotificationsAreAllowed) {
-        clearInterval(outdatedTaskNotificationsInterval)
-    }
-    const notificationSettingsDatabaseId = '6346e3ed4620ec03ee702c34'
-    getCollections().collectionTaskNotifications.updateOne(
-        { _id: ObjectId(notificationSettingsDatabaseId) },
-        {
-            $set: {
-                allowed: request.body.allowed,
-            },
-        },
-        err => {
-            if (err) {
-                return response.sendStatus(500)
-            }
-            response.sendStatus(200)
-        }
-    )
-}
 module.exports = {
     getAllTasks,
     deleteTask,
     editTask,
     createTask,
-    sendNotification,
-    allowNotifications,
 }
