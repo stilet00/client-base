@@ -64,7 +64,6 @@ export default function ListOfClients() {
             ;(async () => {
                 const responseDataWithClients = await getClients({})
                 if (responseDataWithClients.status === 200) {
-                    console.log(responseDataWithClients.data)
                     setClients(responseDataWithClients.data)
                 } else {
                     setAlertInfo({
@@ -102,7 +101,6 @@ export default function ListOfClients() {
                 searchQuery: queryString,
             })
             if (responseDataWithClients.status === 200) {
-                console.log(responseDataWithClients.data)
                 setClients(responseDataWithClients.data)
             } else {
                 setAlertInfo({
@@ -165,7 +163,7 @@ export default function ListOfClients() {
                         )
                         openAlert(2000)
                     } else {
-                        console.log(res.data)
+                        throw new Error(`Error: ${res?.status}`)
                     }
                 })
                 .catch(err => {

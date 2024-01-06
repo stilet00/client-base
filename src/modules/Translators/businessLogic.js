@@ -485,7 +485,6 @@ export const useBalanceForm = ({ clients, translatorId }) => {
                 }
                 if (!balanceDayExists) {
                     const emptyBalanceDay = new EMPTY_BALANCE_DAY()
-                    console.log(`emptyBalanceDay`, emptyBalanceDay)
                     setCurrentBalanceDay({
                         ...emptyBalanceDay,
                         dateTimeId: convertDateToIsoString({
@@ -709,7 +708,7 @@ export const useSingleTranslator = ({
                 setGiftRequestLoader(false)
             })
             .catch(err => {
-                console.log(err.message)
+                console.log(err?.message)
                 setGiftRequestLoader(false)
             })
     }
