@@ -55,7 +55,7 @@ function ClientsList({
     }
 
     const { isLoading: clientsAreLoading } = useQuery(
-        ['clients', search],
+        ['clientsForTranslators', search],
         fetchClients,
         {
             enabled: !!user,

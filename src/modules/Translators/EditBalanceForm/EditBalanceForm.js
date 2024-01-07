@@ -91,7 +91,7 @@ export default function EditBalanceForm({
                 onClick={handleOpen}
                 startIcon={<FontAwesomeIcon icon={faMoneyBill1Wave} />}
             >
-                {admin ? 'Edit balance' : 'Show Balance'}
+                {admin ? 'Edit' : 'Show'}
             </Button>
             {open && (
                 <StyledModal
@@ -361,8 +361,7 @@ export default function EditBalanceForm({
                                                                     e.target.select()
                                                                 }
                                                                 value={
-                                                                    findClientById()
-                                                                        ?.photoAttachments
+                                                                    currentBalanceDayStatistics.photoAttachments
                                                                 }
                                                                 size="small"
                                                                 variant="outlined"

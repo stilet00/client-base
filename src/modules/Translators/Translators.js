@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import Button from '@mui/material/Button'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import TranslatorsForm from './TranslatorsForm/TranslatorsForm'
 import SingleTranslator from './SingleTranslator/SingleTranslator'
@@ -14,14 +13,12 @@ import Loader from '../../sharedComponents/Loader/Loader'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTranslators } from './businessLogic'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
-import moment from 'moment/moment'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'
-import { Checkbox, Divider, TextField } from '@mui/material'
+import { Checkbox, TextField } from '@mui/material'
 import { MobileDatePicker } from '@mui/x-date-pickers'
-import { DEFAULT_CATEGORIES } from '../../constants/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPiggyBank, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import styled from 'styled-components'
@@ -67,18 +64,6 @@ function Translators() {
         updateBalanceDayIsLoading,
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
-    const [anchorEl, setAnchorEl] = useState(null)
-
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget)
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    const open = Boolean(anchorEl)
-    const id = open ? 'simple-popover' : undefined
     return user ? (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
@@ -107,7 +92,7 @@ function Translators() {
                                         onFormSubmit={translatorsFormSubmit}
                                     />
                                     <StyledButton
-                                        aria-describedby={id}
+                                        aria-describedby={`send-emails`}
                                         onClick={openAlertConfirmation}
                                         fullWidth={screenIsSmall}
                                         disabled={!isAdmin}
@@ -157,7 +142,7 @@ function Translators() {
                                 onFormSubmit={translatorsFormSubmit}
                             />
                             <StyledButton
-                                aria-describedby={id}
+                                aria-describedby={`send-emails`}
                                 onClick={openAlertConfirmation}
                                 fullWidth={screenIsSmall}
                                 disabled={!isAdmin}

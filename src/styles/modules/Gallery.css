@@ -170,11 +170,6 @@
 .gallery-container .inner-gallery-container .translator-item .MuiCardContent-root {
   margin-bottom: 25px;
 }
-@media (max-width: 650px) {
-  .gallery-container .inner-gallery-container .translator-item .MuiCardContent-root {
-    margin-bottom: 25px;
-  }
-}
 .gallery-container .inner-gallery-container .translator-item--suspended {
   color: rgb(255, 255, 255);
   background: rgba(0, 0, 0, 0.7);

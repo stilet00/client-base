@@ -25,13 +25,17 @@ export const useTaskList = user => {
         return response.data
     }
 
-    const { isLoading: tasksAreLoading } = useQuery('tasks', fetchTasks, {
-        enabled: !!user,
-        onSuccess: data => {
-            setTasks(data)
-        },
-        onError: () => console.error('Something went wrong with tasks'),
-    })
+    const { isLoading: tasksAreLoading } = useQuery(
+        'tasksForTasklist',
+        fetchTasks,
+        {
+            enabled: !!user,
+            onSuccess: data => {
+                setTasks(data)
+            },
+            onError: () => console.error('Something went wrong with tasks'),
+        }
+    )
 
     const newTask = useCallback(
         text => {

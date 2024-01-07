@@ -39,7 +39,7 @@ const TranslatorSchema = new mongoose.Schema({
         required: [true, 'Please tell us your name!'],
     },
     clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }],
-    statistics: [BalanceDaySchema],
+    statistics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BalanceDay' }],
     edited: Boolean,
     suspended: SuspendedStatusSchema,
     personalPenalties: [PersonalPenaltiesSchema],

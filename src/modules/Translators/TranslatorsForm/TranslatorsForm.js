@@ -115,7 +115,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                                 fullWidth
                                 variant={'outlined'}
                             >
-                                Add translator
+                                Create
                             </Button>
                         </form>
                     </div>

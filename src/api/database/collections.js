@@ -11,6 +11,7 @@ const {
     BalanceDaySchema,
 } = require('../models/translatorsDatabaseModels')
 const { PaymentSchema } = require('../models/statementsDatabaseModels')
+const { AdminSchema } = require('../models/adminDatabaseModels')
 
 const collections = new Map()
 
@@ -35,7 +36,8 @@ const connectToDatabase = async () => {
         )
         const Admin = clientBaseDB.model(
             'Admin',
-            new mongoose.Schema({}, { collection: 'adminCollection' })
+            AdminSchema,
+            'adminCollection'
         )
         const Statement = clientBaseDB.model(
             'Statement',

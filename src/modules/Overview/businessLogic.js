@@ -60,14 +60,18 @@ export const useOverview = user => {
         return response.data
     }
 
-    const { isLoading: clientsAreLoading } = useQuery('clients', fetchClients, {
-        enabled: !!user,
-        onSuccess: data => setClients(data),
-        onError: () => console.error('Something went wrong with clients'),
-    })
+    const { isLoading: clientsAreLoading } = useQuery(
+        'clientsForOverview',
+        fetchClients,
+        {
+            enabled: !!user,
+            onSuccess: data => setClients(data),
+            onError: () => console.error('Something went wrong with clients'),
+        }
+    )
 
     const { isLoading: translatorsAreLoading } = useQuery(
-        'translators',
+        'translatorsForOverview',
         fetchTranslators,
         {
             enabled: !!user,
@@ -78,7 +82,7 @@ export const useOverview = user => {
     )
 
     const { isLoading: paymentsAreLoading } = useQuery(
-        ['payments', selectedYear],
+        ['paymentsForOverview', selectedYear],
         fetchPayments,
         {
             enabled: !!user,
@@ -88,7 +92,7 @@ export const useOverview = user => {
     )
 
     const { isLoading: balanceDaysIsLoading, refetch: refetchBalanceDays } =
-        useQuery('balanceDays', fetchBalanceDays, {
+        useQuery('balanceDaysForOverview', fetchBalanceDays, {
             enabled: !!user,
             onSuccess: data => setBalanceDaysForSelectedYear(data),
             onError: () =>

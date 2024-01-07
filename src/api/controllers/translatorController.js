@@ -5,7 +5,6 @@ const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
-const { chatCostBonusInCents } = require('../constants')
 
 const getAllTranslators = async (req, res) => {
     try {
@@ -160,35 +159,48 @@ const deleteTranslator = (req, res) => {
     )
 }
 
-const balanceMailout = async translatorsCollection => {
-    try {
-        if (translatorsCollection.length) {
-            const listOfTranslatorsWhoReceivedEmails =
-                await sendEmailTemplateToTranslators(translatorsCollection)
-            sendEmailTemplateToAdministrators(translatorsCollection)
-            return listOfTranslatorsWhoReceivedEmails
-        } else {
-            return []
-        }
-    } catch (error) {
-        console.error(error)
-        return false
-    }
-}
+const sendEmailsToTranslators = async (req, res) => {
+    const Translator = await getCollections().collectionTranslators
+    const startOfPreviousMonth = moment()
+        .subtract(1, 'month')
+        .startOf('month')
+        .format()
+    const endOfYesterday = moment().subtract(1, 'days').endOf('day').format()
 
-const sendEmailsToTranslators = (req, res) => {
-    getCollections()
-        .collectionTranslators.find()
-        .exec()
-        .then(translators => {
-            balanceMailout(translators).then(emailsWereSentSuccessfully => {
-                if (emailsWereSentSuccessfully.length) {
-                    return res.send(emailsWereSentSuccessfully)
-                } else {
-                    return res.sendStatus(500)
-                }
-            })
+    const queryForBalanceDays = {
+        dateTimeId: {
+            $gte: startOfPreviousMonth,
+            $lte: endOfYesterday,
+        },
+    }
+    const queryForClients = {
+        suspended: false,
+    }
+    const translators = await Translator.find({
+        'suspended.status': false,
+        wantsToReceiveEmails: true,
+        email: { $exists: true, $ne: '' },
+    })
+        .populate({
+            path: 'statistics',
+            match: queryForBalanceDays,
+            populate: {
+                path: 'client',
+            },
         })
+        .populate({
+            path: 'clients',
+            match: queryForClients,
+        })
+        .exec()
+    if (translators.length === 0) {
+        return res.status(200).send('No translators found')
+    }
+    const arrayOfTranslatorNames = await sendEmailTemplateToTranslators(
+        translators
+    )
+    await sendEmailTemplateToAdministrators(translators)
+    return res.status(200).send(arrayOfTranslatorNames)
 }
 
 const calculateBonuses = async (req, res) => {
@@ -298,7 +310,6 @@ module.exports = {
     updateTranslator,
     deleteTranslator,
     sendEmailsToTranslators,
-    balanceMailout,
     calculateBonuses,
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,

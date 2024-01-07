@@ -177,7 +177,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                     <tr>
                                                         <td class="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
-                                                                translatorInfoForEmailLetter.yesterdaySum
+                                                                translatorInfoForEmailLetter.yesterdayTotal
                                                             } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="4">

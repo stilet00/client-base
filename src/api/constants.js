@@ -12,14 +12,7 @@ class DEFAULT_FINANCE_DAY {
     }
 }
 const chatCostBonusInCents = 3
-const administratorsEmailList = [
-    'antonstilet@gmail.com',
-    'safroninanton@gmail.com',
-    'vasiliybabchenkov@gmail.com',
-]
-
 module.exports = {
     DEFAULT_FINANCE_DAY,
-    administratorsEmailList,
     chatCostBonusInCents,
 }

@@ -101,7 +101,7 @@ export const useTranslators = user => {
     }
 
     const { isLoading: currencyIsLoading } = useQuery(
-        'currency',
+        'currencyForTranslators',
         fetchCurrency,
         {
             enabled: !!user,
@@ -111,7 +111,7 @@ export const useTranslators = user => {
     )
 
     const { isLoading: translatorsAreLoading } = useQuery(
-        'translators',
+        'translatorsForTranslators',
         fetchTranslators,
         {
             enabled: !!user,
@@ -285,39 +285,38 @@ export const useTranslators = user => {
         deletedTranslator,
     ])
 
-    const sendNotificationEmails = () => {
+    const sendNotificationEmails = async () => {
         setMailoutInProgress(true)
-        sendNotificationEmailsRequest()
-            .then(res => {
-                if (res.status === 200) {
-                    closeAlertConfirmationNoReload()
-                    const messageAboutEmailsReceived = {
-                        text: `Emails have been sent to: ${res.data.join(
-                            ', '
-                        )}`,
-                        status: true,
-                    }
-                    openAlert(messageAboutEmailsReceived, 20000)
-                    setMailoutInProgress(false)
-                }
-            })
-            .catch(error => {
+        try {
+            const res = await sendNotificationEmailsRequest()
+            if (res.status === 200) {
                 closeAlertConfirmationNoReload()
-                const erroMessageForShowAlertMessage = {
-                    text: error?.response?.data?.error || 'An error occurred',
-                    status: false,
+                const messageAboutEmailsReceived = {
+                    text: `Emails have been sent to: ${res.data.join(', ')}`,
+                    status: true,
                 }
-                openAlert(erroMessageForShowAlertMessage, 5000) // Handle error case
-                console.error('An error occurred:', error) // Log the error for debugging
-                setMailoutInProgress(false)
-            })
+                openAlert(messageAboutEmailsReceived, 20000)
+            }
+        } catch (error) {
+            closeAlertConfirmationNoReload()
+            const erroMessageForShowAlertMessage = {
+                text: error?.response?.data?.error || 'An error occurred',
+                status: false,
+            }
+            openAlert(erroMessageForShowAlertMessage, 5000)
+        } finally {
+            setMailoutInProgress(false)
+        }
     }
 
     const translatorsFormSubmit = async newTranslator => {
         const { data, status } = await addTranslator(newTranslator)
         if (status === 200) {
             openAlert(MESSAGES.addTranslator)
-            setTranslators([...translators, { ...newTranslator, _id: data }])
+            setTranslators([
+                ...translators,
+                { ...newTranslator, clients: [], _id: data },
+            ])
         } else {
             openAlert(MESSAGES.somethingWrong, 5000)
         }
@@ -393,7 +392,7 @@ export const useTranslators = user => {
     }
 
     const { isError, isLoading } = useQuery(
-        ['chatsBonus', translatorFilter.date, 'chats'],
+        ['chatsBonusForTranslators', translatorFilter.date, 'chats'],
         getBonusesForChats,
         {
             retry: false,
@@ -460,7 +459,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
     const balanceDayQuery = useQuery(
         [
-            'balanceDay',
+            'balanceDayForTranslator',
             selectedYear,
             selectedMonth,
             selectedDay,
@@ -591,7 +590,6 @@ export const useSingleTranslator = ({
     const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
-    const { alertOpen, closeAlert, openAlert, message } = useAlert()
     const user = useSelector(state => state.auth.user)
     const fetchBalanceDays = async () => {
         const response = await getBalanceDaysForTranslatorRequest({
@@ -604,12 +602,13 @@ export const useSingleTranslator = ({
         return response.data
     }
     const { isLoading: balanceDaysIsLoading } = useQuery(
-        'balanceDays',
+        `balanceDaysForTranslator${translatorId}`,
         fetchBalanceDays,
         {
             enabled: !!user,
             onSuccess: data => setTranslatorBalanceDays(data),
-            onError: () => openAlert(MESSAGES.somethingWrongWithBalanceDays),
+            onError: () =>
+                console.error(MESSAGES.somethingWrongWithBalanceDays),
         }
     )
 
