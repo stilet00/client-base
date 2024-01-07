@@ -71,6 +71,7 @@ export function sendLastVirtualGiftDateRequest(id) {
 }
 
 export function getBonusesForChatsRequest(data) {
+    console.log(translatorsURL + 'chat-bonus')
     return axios.post(
         translatorsURL + 'chat-bonus',
         data,

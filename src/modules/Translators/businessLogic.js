@@ -391,19 +391,15 @@ export const useTranslators = user => {
         return response.data
     }
 
-    useQuery(
-        ['chatsBonusForTranslators', translatorFilter.date, 'chats'],
-        getBonusesForChats,
-        {
-            retry: false,
-            onSuccess: data => {
-                setChatsBonus(data)
-            },
-            onError: () => {
-                openAlert(MESSAGES.somethingWrongWithChatBonus, 5000)
-            },
-        }
-    )
+    useQuery('chatsBonusForTranslators', getBonusesForChats, {
+        enabled: !!user,
+        onSuccess: data => {
+            setChatsBonus(data)
+        },
+        onError: () => {
+            openAlert(MESSAGES.somethingWrongWithChatBonus, 5000)
+        },
+    })
 
     return {
         translators,

@@ -235,9 +235,7 @@ const calculateBonuses = async (req, res) => {
         ]
         const result = await BalanceDay.aggregate(pipeline).exec()
         if (result.length === 0) {
-            return res
-                .status(404)
-                .send('No data found for the specified filters')
+            return res.status(200).send([])
         }
         res.send(
             result.map(chatBonusObject => {
