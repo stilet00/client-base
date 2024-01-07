@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer'
 import WomanIcon from '@mui/icons-material/Woman'
 import ListItemText from '@mui/material/ListItemText'
 import '../../../styles/modules/Clients.css'
-import { getClients } from 'services/clientsServices/services'
+import { getClientsRequest } from 'services/clientsServices/services'
 import { faListAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from 'sharedHooks/useWindowDimensions'
@@ -45,7 +45,7 @@ function ClientsList({
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
 
     const fetchClients = async () => {
-        const response = await getClients({
+        const response = await getClientsRequest({
             noImageParams: true,
             searchQuery: search,
         })

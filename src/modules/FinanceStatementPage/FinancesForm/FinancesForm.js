@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add'
 import TextField from '@mui/material/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
-import { getClients } from '../../../services/clientsServices/services'
+import { getClientsRequest } from '../../../services/clientsServices/services'
 import { getTranslators } from '../../../services/translatorsServices/services'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
@@ -31,7 +31,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
-        getClients({ noImageParams: true }).then(res => {
+        getClientsRequest({ noImageParams: true }).then(res => {
             if (res.status === 200) {
                 setReceivers(
                     res.data.map(client => {

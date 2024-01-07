@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useDeferredValue } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import {
-    getClients,
+    getClientsRequest,
     addClient,
     updateClient,
 } from '../../services/clientsServices/services'
@@ -62,7 +62,7 @@ export default function ListOfClients() {
     useEffect(() => {
         if (user) {
             ;(async () => {
-                const responseDataWithClients = await getClients({})
+                const responseDataWithClients = await getClientsRequest({})
                 if (responseDataWithClients.status === 200) {
                     setClients(responseDataWithClients.data)
                 } else {
@@ -97,7 +97,7 @@ export default function ListOfClients() {
     useDebounce(
         async () => {
             setLoading(true)
-            const responseDataWithClients = await getClients({
+            const responseDataWithClients = await getClientsRequest({
                 searchQuery: queryString,
             })
             if (responseDataWithClients.status === 200) {

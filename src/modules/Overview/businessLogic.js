@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { useQuery } from 'react-query'
-import { getClients } from 'services/clientsServices/services'
+import { getClientsRequest } from 'services/clientsServices/services'
 import { getTranslators } from 'services/translatorsServices/services'
 import { getBalanceDaysRequest } from 'services/balanceDayServices/index'
 import { getPaymentsRequest } from 'services/financesStatement/services'
@@ -27,7 +27,7 @@ export const useOverview = user => {
     }
 
     const fetchClients = async () => {
-        const response = await getClients({ noImageParams: true })
+        const response = await getClientsRequest({ noImageParams: true })
         if (response.status !== 200) {
             throw new Error('Something went wrong with clients')
         }

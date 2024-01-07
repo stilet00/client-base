@@ -1,12 +1,10 @@
 import axios from 'axios'
 import { rootURL } from '../rootURL'
-import {
-    getConfigForAxiosAuthenticatedRequest,
-} from '../utils'
+import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClients({ noImageParams = false, searchQuery = '' }) {
+export function getClientsRequest({ noImageParams = false, searchQuery = '' }) {
     let queryParams = ''
     if (noImageParams) {
         queryParams = `?noImageParams=${noImageParams}`

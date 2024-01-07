@@ -1,6 +1,5 @@
 import moment from 'moment'
 import '../../styles/modules/Overview.css'
-import SmallLoader from '../../sharedComponents/SmallLoader/SmallLoader'
 import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import { useSelector } from 'react-redux'
 import { useOverview } from './businessLogic'

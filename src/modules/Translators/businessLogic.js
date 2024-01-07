@@ -391,7 +391,7 @@ export const useTranslators = user => {
         return response.data
     }
 
-    const { isError, isLoading } = useQuery(
+    useQuery(
         ['chatsBonusForTranslators', translatorFilter.date, 'chats'],
         getBonusesForChats,
         {
@@ -400,7 +400,7 @@ export const useTranslators = user => {
                 setChatsBonus(data)
             },
             onError: () => {
-                setChatsBonus([])
+                openAlert(MESSAGES.somethingWrongWithChatBonus, 5000)
             },
         }
     )

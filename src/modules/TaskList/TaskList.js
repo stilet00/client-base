@@ -8,10 +8,6 @@ import Loader from '../../sharedComponents/Loader/Loader'
 import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTaskList } from './businessLogic'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
-import Typography from '@mui/material/Typography'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 function TaskList() {
