@@ -184,13 +184,11 @@ export default function Navigation() {
                                 icon={<BarChartIcon />}
                                 value={'/chart'}
                             />
-                            {isAdmin && (
-                                <BottomNavigationAction
-                                    label="Task List"
-                                    icon={<FormatListNumberedIcon />}
-                                    value={'/tasks'}
-                                />
-                            )}
+                            <BottomNavigationAction
+                                label="Task List"
+                                icon={<FormatListNumberedIcon />}
+                                value={'/tasks'}
+                            />
                             <ListItem button onClick={onLogOut}>
                                 <ListItemIcon>
                                     <ExitToAppIcon />

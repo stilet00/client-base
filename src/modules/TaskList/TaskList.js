@@ -12,9 +12,11 @@ import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 function TaskList() {
     const user = useSelector(state => state.auth.user)
+    const { isAdmin } = useAdminStatus(user)
     const {
         tasks,
         alertOpen,
@@ -49,6 +51,7 @@ function TaskList() {
                                     {...item}
                                     onDelete={deleteTask}
                                     onToggle={toggleTodo}
+                                    admin={isAdmin}
                                 />
                             </CSSTransition>
                         ))}

@@ -27,6 +27,7 @@ import Typography from '@mui/material/Typography'
 import { useBalanceForm } from '../businessLogic'
 import { calculateBalanceDaySum } from '../../../sharedFunctions/sharedFunctions'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import { faMoneyBill1Wave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { blue, green, red } from '@mui/material/colors'
@@ -343,6 +344,43 @@ export default function EditBalanceForm({
                                                                         (
                                                                             <InputAdornment position="end">
                                                                                 <CardGiftcardIcon />
+                                                                            </InputAdornment>
+                                                                        ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="balance-form__finances-input">
+                                                            <TextField
+                                                                name={
+                                                                    'photoAttachments'
+                                                                }
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                                onClick={e =>
+                                                                    e.target.select()
+                                                                }
+                                                                value={
+                                                                    findClientById()
+                                                                        ?.photoAttachments
+                                                                }
+                                                                size="small"
+                                                                variant="outlined"
+                                                                label={
+                                                                    'Attachments'
+                                                                }
+                                                                type={'number'}
+                                                                step="0.01"
+                                                                fullWidth
+                                                                required
+                                                                disabled={
+                                                                    !admin
+                                                                }
+                                                                InputProps={{
+                                                                    endAdornment:
+                                                                        (
+                                                                            <InputAdornment position="end">
+                                                                                <AddAPhotoIcon />
                                                                             </InputAdornment>
                                                                         ),
                                                                 }}

@@ -1,6 +1,6 @@
 {
     "name": "Sunrise agency - client base",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "engines": {
         "node": "18.17.1",
         "npm": "9.6.7"

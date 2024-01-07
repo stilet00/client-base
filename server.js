@@ -121,7 +121,7 @@ app.post(rootURL + 'isAdmin', async (req, res) => {
 app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
 app.delete(tasksURL + ':id', [...adminRules], deleteTask)
 app.post(tasksURL + 'add', isAuthenticated, createTask)
-app.put(tasksURL + 'edit/:id', [...adminRules], editTask)
+app.put(tasksURL + 'edit/:id', isAuthenticated, editTask)
 
 // clients api
 app.get(clientsURL + 'get', isAuthenticated, getAllClients)

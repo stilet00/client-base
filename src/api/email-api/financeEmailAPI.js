@@ -32,6 +32,7 @@ const imageNamesArrayForEmail = [
     'dollar-sign.png',
     'voice.png',
     'penalties.png',
+    'attachments.png',
 ]
 
 const createTransport = () => {

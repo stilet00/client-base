@@ -8,17 +8,17 @@ import ChartsContainer from '../Charts/ChartsContainer'
 
 export const privateRoutes = [
     {
-        component: TaskList,
-        path: '/tasks',
-        exact: true,
-    },
-    {
         component: FinanceStatementPage,
         path: '/finances',
         exact: true,
     },
 ]
 export const publicRoutes = [
+    {
+        component: TaskList,
+        path: '/tasks',
+        exact: true,
+    },
     {
         path: '/overview',
         component: Overview,

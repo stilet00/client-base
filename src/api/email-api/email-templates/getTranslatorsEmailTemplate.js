@@ -6,17 +6,9 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                 const amountsForStatisticCategories =
                     statisticsInfoForClient.statistics.map(
                         statisticsCategory => {
-                            if (
-                                Object.keys(statisticsCategory).includes(
-                                    'photoAttachments'
-                                )
-                            ) {
-                                return ''
-                            } else {
-                                return `<td class="container__tbody_amount">${Object.values(
-                                    statisticsCategory
-                                ).join('')}</td>`
-                            }
+                            return `<td class="container__tbody_amount">${Object.values(
+                                statisticsCategory
+                            ).join('')}</td>`
                         }
                     )
                 return `<tr class="${
@@ -128,12 +120,12 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 <table class="container">
                                                     <thead>
                                                     <tr>
-                                                        <td  class="container__tableheader" colspan="9">
+                                                        <td  class="container__tableheader" colspan="10">
                                                             <img src="cid:email-icon" alt="placeholder"></img>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="container__tableheader-greetingsinfo"  colspan="9">
+                                                        <td class="container__tableheader-greetingsinfo"  colspan="10">
                                                                 <h2>
                                                                     Hello ${
                                                                         translatorInfoForEmailLetter.label.split(
@@ -165,6 +157,9 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                             <img src="cid:heart" alt="virtual gifts Dating" width="32" height="32"  alt="Virtual gifts on Dating" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
+                                                            <img src="cid:attachments" width="32" height="32"  alt="Attachments" class="shadow-img"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
                                                             <img src="cid:telephone" width="32" height="32"  alt="Phone calls" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
@@ -180,7 +175,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td class="container__tfoot-td" colspan="2">
+                                                        <td class="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
                                                                 translatorInfoForEmailLetter.yesterdaySum
                                                             } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
@@ -201,12 +196,12 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
     }${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="3">
-                                                        Penalties: <span>🛑 </span><span style="color:${
-                                                            translatorInfoForEmailLetter.curMonthPenalties >
-                                                            0
-                                                                ? 'red'
-                                                                : 'green'
-                                                        }">${
+                                                            Penalties: <span>🛑 </span><span style="color:${
+                                                                translatorInfoForEmailLetter.curMonthPenalties >
+                                                                0
+                                                                    ? 'red'
+                                                                    : 'green'
+                                                            }">${
         translatorInfoForEmailLetter.curMonthPenalties
     }</span>
                                                         </td>

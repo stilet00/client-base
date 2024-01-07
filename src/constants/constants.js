@@ -131,6 +131,7 @@ export const DEFAULT_CATEGORIES = {
     virtualGiftsDating: 'virtualGiftsDating',
     photoAttachments: 'photoAttachments',
     phoneCalls: 'phoneCalls',
+    voiceMessages: 'voiceMessages',
 }
 
 function creatArrayOfYears() {
@@ -256,8 +257,12 @@ export const CHARTS_CATEGORIES = [
         icon: <CardGiftcardIcon sx={{ color: 'red' }} />,
     },
     {
-        name: 'Photo Attachments',
+        name: 'Attachments',
         value: 'photoAttachments',
+    },
+    {
+        name: 'Voice Messages',
+        value: 'voiceMessages',
     },
     {
         name: 'Penalties',
