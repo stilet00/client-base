@@ -15,6 +15,11 @@ export const privateRoutes = [
 ]
 export const publicRoutes = [
     {
+        component: TaskList,
+        path: '/tasks',
+        exact: true,
+    },
+    {
         path: '/overview',
         component: Overview,
         exact: true,
