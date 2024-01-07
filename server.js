@@ -113,8 +113,8 @@ app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
 app.delete(tasksURL + ':id', [...adminRules], deleteTask)
 app.post(tasksURL + 'add', isAuthenticated, createTask)
 app.put(tasksURL + 'edit/:id', isAuthenticated, editTask)
-app.get(tasksURL + 'notifications/', [...adminRules], sendNotification)
-app.put(tasksURL + 'notifications/', [...adminRules], allowNotifications)
+app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
+app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
 // clients api
 app.get(clientsURL + 'get', isAuthenticated, getAllClients)
