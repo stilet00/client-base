@@ -204,9 +204,8 @@ export default function ClientsForm({
     const fieldsAreEmpty =
         client.name === '' ||
         client.surname === '' ||
-        client.instagramLink === ''
-            ? true
-            : false
+        !client.instagramLink ||
+        !client.bancAccount
 
     const handleFileInputChange = e => {
         const file = e.target.files[0]

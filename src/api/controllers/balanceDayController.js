@@ -5,11 +5,12 @@ const ObjectId = require('mongodb').ObjectID
 const getBalanceDay = async (req, res) => {
     try {
         const { dateTimeId, translatorId, clientId } = req.query
+        const decodedDateTimeIdString = decodeURIComponent(dateTimeId)
         const BalanceDay = await getCollections().collectionBalanceDays
         const balanceDay = await BalanceDay.findOne({
             translator: new ObjectId(translatorId),
             client: new ObjectId(clientId),
-            dateTimeId: dateTimeId,
+            dateTimeId: moment(decodedDateTimeIdString).format(),
         })
         res.send(balanceDay)
     } catch (error) {

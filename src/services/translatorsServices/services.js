@@ -81,8 +81,9 @@ export function getBonusesForChatsRequest(data) {
 
 export function getBalanceDay({ translatorId, clientId, dateTimeId }) {
     return axios.get(
-        balanceDayURL +
-            `?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${dateTimeId}`,
+        `${balanceDayURL}?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${encodeURIComponent(
+            dateTimeId
+        )}`,
         getConfigForAxiosAuthenticatedRequest()
     )
 }
