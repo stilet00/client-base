@@ -10,7 +10,7 @@ const getBalanceDay = async (req, res) => {
         const balanceDay = await BalanceDay.findOne({
             translator: new ObjectId(translatorId),
             client: new ObjectId(clientId),
-            dateTimeId: moment(decodedDateTimeIdString).format(),
+            dateTimeId: moment(decodedDateTimeIdString).startOf('day').format(),
         })
         res.send(balanceDay)
     } catch (error) {

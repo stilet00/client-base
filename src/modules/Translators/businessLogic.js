@@ -455,7 +455,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
     const balanceDayQuery = useQuery(
         [
-            'balanceDayForTranslator',
+            `balanceDayForTranslator${translatorId}`,
             selectedYear,
             selectedMonth,
             selectedDay,

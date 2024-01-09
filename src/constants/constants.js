@@ -81,7 +81,7 @@ export class DEFAULT_MONTH_CHART {
 
 export class EMPTY_BALANCE_DAY {
     constructor(clientId) {
-        this.dateTimeId = moment().format('DD MM YYYY')
+        this.dateTimeId = moment().startOf('day').format()
         this.client = { _id: '' }
         this.translator = { _id: '' }
         this.statistics = {
