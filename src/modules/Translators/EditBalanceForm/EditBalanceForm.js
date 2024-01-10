@@ -48,7 +48,6 @@ export default function EditBalanceForm({
     clients,
     admin,
     translatorId,
-    updateBalanceDayIsLoading,
 }) {
     const {
         handleOpen,
@@ -69,6 +68,7 @@ export default function EditBalanceForm({
         closeAlert,
         currentBalanceDay,
         balanceDaySubmit,
+        balanceDayIsLoading,
     } = useBalanceForm({
         clients,
         translatorId,
@@ -230,7 +230,7 @@ export default function EditBalanceForm({
                                         </Select>
                                     </StyledFormControl>
                                 </div>
-                                {updateBalanceDayIsLoading && (
+                                {balanceDayIsLoading && (
                                     <Loader
                                         style={{
                                             color: 'black',
@@ -239,7 +239,7 @@ export default function EditBalanceForm({
                                         loaderColor={`black`}
                                     />
                                 )}
-                                {!updateBalanceDayIsLoading && (
+                                {!balanceDayIsLoading && (
                                     <>
                                         <p>Finances:</p>
                                         <div className="balance-form__finances">

@@ -461,6 +461,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
             selectedDay,
             translatorId,
             selectedClient,
+            open,
         ],
         () =>
             getBalanceDay({
@@ -574,7 +575,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
         closeAlert,
         openAlert,
         balanceDaySubmit,
-        getBalanceDayIsLoading:
+        balanceDayIsLoading:
             balanceDayQuery.isLoading || balanceDayMutation.isLoading,
     }
 }
