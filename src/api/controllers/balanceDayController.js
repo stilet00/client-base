@@ -10,7 +10,10 @@ const getBalanceDay = async (req, res) => {
         const balanceDay = await BalanceDay.findOne({
             translator: new ObjectId(translatorId),
             client: new ObjectId(clientId),
-            dateTimeId: moment(decodedDateTimeIdString).startOf('day').format(),
+            dateTimeId: moment
+                .utc(decodedDateTimeIdString)
+                .startOf('day')
+                .format(),
         })
         res.send(balanceDay)
     } catch (error) {
@@ -31,7 +34,7 @@ const createBalanceDay = async (req, res) => {
         const newBalanceDay = new BalanceDay({
             translator: translatorId,
             client: clientId,
-            dateTimeId,
+            dateTimeId: moment.utc(dateTimeId).startOf('day').format(),
             statistics,
         })
         await newBalanceDay.save()
@@ -75,10 +78,12 @@ const getBalanceDaysForTranslators = async (req, res) => {
             query.translator = translatorId
         }
         if (dateTimeFilter) {
-            const endOfMonthInFilter = moment(dateTimeFilter)
+            const endOfMonthInFilter = moment
+                .utc(dateTimeFilter)
                 .endOf('month')
                 .toISOString()
-            const startOfPreviousMonthInFilter = moment(dateTimeFilter)
+            const startOfPreviousMonthInFilter = moment
+                .utc(dateTimeFilter)
                 .subtract(1, 'months')
                 .startOf('month')
                 .toISOString()
@@ -101,12 +106,12 @@ const getAllBalanceDays = async (req, res) => {
         const BalanceDay = await getCollections().collectionBalanceDays
         let query = {}
         if (yearFilter) {
-            const momentFromYearFilter = moment(yearFilter, 'YYYY')
+            const momentFromYearFilter = moment.utc(yearFilter, 'YYYY')
             const startOfYearFilter = momentFromYearFilter
                 .startOf('year')
                 .toISOString()
             const endOfYearFilter = momentFromYearFilter
-                .endOf('month')
+                .endOf('year')
                 .toISOString()
             query.dateTimeId = {
                 $gte: startOfYearFilter,

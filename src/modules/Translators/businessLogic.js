@@ -495,6 +495,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
             onError: error => {
                 openAlert(MESSAGES.somethingWrongWithGettingBalanceDay)
             },
+            enabled: open,
         }
     )
 
@@ -597,7 +598,7 @@ export const useSingleTranslator = ({
         }
         return response.data
     }
-    const { isLoading: balanceDaysIsLoading } = useQuery(
+    const { isLoading: balanceDaysAreLoading } = useQuery(
         `balanceDaysForTranslator${translatorId}`,
         fetchBalanceDays,
         {
@@ -717,7 +718,7 @@ export const useSingleTranslator = ({
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
-        balanceDaysIsLoading,
+        balanceDaysAreLoading,
         translatorBalanceDays,
     }
 }

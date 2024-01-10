@@ -78,7 +78,7 @@ function SingleTranslator({
         getLastVirtualGiftDate,
         lastVirtualGiftDate,
         giftRequestLoader,
-        balanceDaysIsLoading,
+        balanceDaysAreLoading,
         translatorBalanceDays,
     } = useSingleTranslator({
         translatorId: _id,
@@ -149,7 +149,7 @@ function SingleTranslator({
             id={_id}
         >
             <CardContent>
-                {!balanceDaysIsLoading && (
+                {!balanceDaysAreLoading && (
                     <Rating
                         name="read-only"
                         value={getTranslatorsRating()}
@@ -192,8 +192,8 @@ function SingleTranslator({
                             </b>
                         </Typography>
                     ) : null}
-                    {balanceDaysIsLoading && <Loader />}
-                    {!balanceDaysIsLoading && (
+                    {balanceDaysAreLoading && <Loader />}
+                    {!balanceDaysAreLoading && (
                         <>
                             {translatorBalanceDays.length > 0 && (
                                 <>
@@ -590,7 +590,7 @@ function SingleTranslator({
             <CardActions>
                 {clients?.length &&
                 !suspended.status &&
-                !balanceDaysIsLoading ? (
+                !balanceDaysAreLoading ? (
                     <EditBalanceForm
                         updateBalanceDayIsLoading={updateBalanceDayIsLoading}
                         translatorId={_id}
