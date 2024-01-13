@@ -79,8 +79,6 @@
 
 .balance-menu_item {
     display: flex;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     animation: opacity-change 1s linear;
 }
