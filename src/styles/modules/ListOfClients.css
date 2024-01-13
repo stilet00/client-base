@@ -1,162 +1,171 @@
 .grid-template-container {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 1fr 30px 1fr;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 30px 1fr;
 }
+
 .grid-template-container__title {
-  grid-column: 1;
-  grid-row: 1;
-  overflow-x: auto;
+    grid-column: 1;
+    grid-row: 1;
+    overflow-x: auto;
 }
+
 .grid-template-container__info {
-  grid-column: 3;
-  justify-self: end;
+    grid-column: 3;
+    justify-self: end;
 }
+
 .grid-template-container__card {
-  grid-column: 2/4;
-  text-align: end;
+    grid-column: 2 / 4;
+    text-align: end;
 }
 
 .list-item__menu-button {
-  position: relative;
-  align-self: flex-start;
-  transition: 1s;
+    position: relative;
+    align-self: flex-start;
+    transition: 1s;
 }
+
 .list-item__menu-button__content-holder {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 30px;
-  right: 5px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    right: 5px;
 }
 
 .search-input {
-  min-width: 100px;
-  max-width: 50%;
-  padding: 0;
-  background: transparent;
-  border: 2px solid white;
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  font-family: inherit;
-  font-size: inherit;
-  margin-left: 1rem;
-  overflow-x: auto;
-  outline: none;
-  color: white;
-  padding: 3px;
-  box-sizing: border-box;
+    min-width: 100px;
+    max-width: 50%;
+    padding: 0;
+    background: transparent;
+    border: 2px solid white;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    font-family: inherit;
+    font-size: inherit;
+    margin-left: 1rem;
+    overflow-x: auto;
+    outline: none;
+    color: white;
+    padding: 3px;
+    box-sizing: border-box;
 }
-.search-input::-moz-placeholder {
-  color: white;
-  opacity: 1;
-}
+
 .search-input::placeholder {
-  color: white;
-  opacity: 1;
+    color: white;
+    opacity: 1;
 }
 
 @keyframes opacity-change {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
+
 @keyframes category-moves {
-  0% {
-    opacity: 0;
-    transform: translate(100%, 100%);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0%, 0%);
-  }
+    0% {
+        opacity: 0;
+        transform: translate(100%, 100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0%);
+    }
 }
+
 .balance-menu_item {
-  display: flex;
-  justify-content: space-between;
-  animation: opacity-change 1s linear;
+    display: flex;
+    justify-content: space-between;
+    animation: opacity-change 1s linear;
 }
 
 .category-chats {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 0ms;
-  top: -55px;
-  right: 30px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 0ms;
+    top: -55px;
+    right: 30px;
 }
+
 .category-letters {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 200ms;
-  top: -40px;
-  right: 70px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 200ms;
+    top: -40px;
+    right: 70px;
 }
+
 .category-dating {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 400ms;
-  top: -40px;
-  right: -10px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 400ms;
+    top: -40px;
+    right: -10px;
 }
+
 .category-phoneCalls {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 600ms;
-  top: 0px;
-  right: 70px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 600ms;
+    top: 0px;
+    right: 70px;
 }
+
 .category-virtualGiftsSvadba {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 800ms;
-  top: 20px;
-  right: 30px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 800ms;
+    top: 20px;
+    right: 30px;
 }
-.category-virtualGiftsDating {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 1000ms;
-  top: 0px;
-  right: -10px;
+
+.category-voiceMessages {
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 1000ms;
+    top: 0px;
+    right: -10px;
 }
+
 .category-all {
-  border: none;
-  background: none;
-  position: absolute;
-  opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 1100ms;
-  top: -20px;
-  right: 30px;
+    border: none;
+    background: none;
+    position: absolute;
+    opacity: 0;
+    animation: category-moves 500ms forwards;
+    animation-delay: 1100ms;
+    top: -20px;
+    right: 30px;
 }
 
 .category-select {
-  width: 20px;
-  height: 20px;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  margin: 0;
-  border: none;
-}/*# sourceMappingURL=ListOfClients.css.map */
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    appearance: none;
+    margin: 0;
+    border: none;
+}
+/*# sourceMappingURL=ListOfClients.css.map */

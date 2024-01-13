@@ -34,7 +34,7 @@ export default function ListOfClients() {
     const [paymentsList, setPaymentsList] = useState([])
     const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
-    const [graphData, setGraphData] = useState(null)
+    const [graphData, setGraphData] = useState([])
     const [loading, setLoading] = useState(true)
     const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
