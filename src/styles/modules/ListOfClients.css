@@ -1,30 +1,49 @@
 .grid-template-container {
+  display: -ms-grid;
   display: grid;
   width: 100%;
-  grid-template-columns: 1fr 30px 1fr;
+  -ms-grid-columns: 1fr 30px 1fr;
+      grid-template-columns: 1fr 30px 1fr;
 }
+
 .grid-template-container__title {
+  -ms-grid-column: 1;
   grid-column: 1;
+  -ms-grid-row: 1;
   grid-row: 1;
   overflow-x: auto;
 }
+
 .grid-template-container__info {
+  -ms-grid-column: 3;
   grid-column: 3;
-  justify-self: end;
+  -ms-grid-column-align: end;
+      justify-self: end;
 }
+
 .grid-template-container__card {
-  grid-column: 2/4;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / 4;
   text-align: end;
 }
 
 .list-item__menu-button {
   position: relative;
-  align-self: flex-start;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  -webkit-transition: 1s;
   transition: 1s;
 }
+
 .list-item__menu-button__content-holder {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   position: absolute;
   top: 30px;
   right: 5px;
@@ -45,15 +64,37 @@
   outline: none;
   color: white;
   padding: 3px;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
-.search-input::-moz-placeholder {
+
+.search-input::-webkit-input-placeholder {
   color: white;
   opacity: 1;
 }
+
+.search-input:-ms-input-placeholder {
+  color: white;
+  opacity: 1;
+}
+
+.search-input::-ms-input-placeholder {
+  color: white;
+  opacity: 1;
+}
+
 .search-input::placeholder {
   color: white;
   opacity: 1;
+}
+
+@-webkit-keyframes opacity-change {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes opacity-change {
@@ -64,20 +105,42 @@
     opacity: 1;
   }
 }
-@keyframes category-moves {
+
+@-webkit-keyframes category-moves {
   0% {
     opacity: 0;
-    transform: translate(100%, 100%);
+    -webkit-transform: translate(100%, 100%);
+            transform: translate(100%, 100%);
   }
   100% {
     opacity: 1;
-    transform: translate(0%, 0%);
+    -webkit-transform: translate(0%, 0%);
+            transform: translate(0%, 0%);
   }
 }
+
+@keyframes category-moves {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(100%, 100%);
+            transform: translate(100%, 100%);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0%, 0%);
+            transform: translate(0%, 0%);
+  }
+}
+
 .balance-menu_item {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
-  animation: opacity-change 1s linear;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-animation: opacity-change 1s linear;
+          animation: opacity-change 1s linear;
 }
 
 .category-chats {
@@ -85,68 +148,88 @@
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 0ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 0ms;
+          animation-delay: 0ms;
   top: -55px;
   right: 30px;
 }
+
 .category-letters {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 200ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 200ms;
+          animation-delay: 200ms;
   top: -40px;
   right: 70px;
 }
+
 .category-dating {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 400ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 400ms;
+          animation-delay: 400ms;
   top: -40px;
   right: -10px;
 }
+
 .category-phoneCalls {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 600ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 600ms;
+          animation-delay: 600ms;
   top: 0px;
   right: 70px;
 }
+
 .category-virtualGiftsSvadba {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 800ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 800ms;
+          animation-delay: 800ms;
   top: 20px;
   right: 30px;
 }
-.category-virtualGiftsDating {
+
+.category-voiceMessages {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 1000ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 1000ms;
+          animation-delay: 1000ms;
   top: 0px;
   right: -10px;
 }
+
 .category-all {
   border: none;
   background: none;
   position: absolute;
   opacity: 0;
-  animation: category-moves 500ms forwards;
-  animation-delay: 1100ms;
+  -webkit-animation: category-moves 500ms forwards;
+          animation: category-moves 500ms forwards;
+  -webkit-animation-delay: 1100ms;
+          animation-delay: 1100ms;
   top: -20px;
   right: 30px;
 }
@@ -154,9 +237,11 @@
 .category-select {
   width: 20px;
   height: 20px;
+  cursor: pointer;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   margin: 0;
   border: none;
-}/*# sourceMappingURL=ListOfClients.css.map */
+}
+/*# sourceMappingURL=ListOfClients.css.map */
