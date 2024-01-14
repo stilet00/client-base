@@ -1,5 +1,8 @@
 const moment = require('moment')
 const { getCollections } = require('../database/collections')
+const {
+    calculateBalanceDaySum,
+} = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const ObjectId = require('mongodb').ObjectID
 
 const getBalanceDay = async (req, res) => {
@@ -126,10 +129,36 @@ const getAllBalanceDays = async (req, res) => {
     }
 }
 
+const getCurrentMonthTotal = async (req, res) => {
+    try {
+        const BalanceDay = await getCollections().collectionBalanceDays
+        const startOfMonth = moment().startOf('month').format()
+        const endOfCurrentDay = moment().endOf('day').format()
+        const balanceDays = await BalanceDay.find({
+            dateTimeId: {
+                $gte: startOfMonth,
+                $lte: endOfCurrentDay,
+            },
+        }).exec()
+        if (balanceDays.length === 0) {
+            res.send('0')
+            return
+        }
+        const currentMonthSumTillNow = balanceDays.reduce((sum, current) => {
+            return sum + calculateBalanceDaySum(current.statistics)
+        }, 0)
+        res.send(`${currentMonthSumTillNow}`)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     getBalanceDay,
     createBalanceDay,
     updateBalanceDay,
     getBalanceDaysForTranslators,
     getAllBalanceDays,
+    getCurrentMonthTotal,
 }

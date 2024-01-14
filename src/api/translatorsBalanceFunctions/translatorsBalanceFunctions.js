@@ -1,12 +1,5 @@
 const moment = require('moment')
 
-class DEFAULT_DAY_BALANCE {
-    constructor(year, month, day) {
-        this.id = moment(year + month + day, 'YYYYMMDD').format('DD MM YYYY')
-        this.clients = []
-    }
-}
-
 class DEFAULT_DAY_CLIENT {
     constructor(clientId) {
         this.id = clientId
@@ -78,39 +71,6 @@ const calculatePercentDifference = (currentSum, previousSum) => {
     }
 }
 
-const fillDaysForStatistics = (month, year) => {
-    const stringMonth = month < 10 ? '0' + month : month
-    let totalDays = []
-    for (
-        let i = 1;
-        i <= moment(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
-        i++
-    ) {
-        let data = new DEFAULT_DAY_BALANCE(year, stringMonth, i)
-        totalDays.push(data)
-    }
-    return totalDays
-}
-
-const fillMonthsForStatistics = year => {
-    let monthArray = []
-    for (let i = 1; i < 13; i++) {
-        let month = fillDaysForStatistics(i, year)
-        monthArray.push(month)
-    }
-    return monthArray
-}
-
-const createYearStatisticsForTranslator = () => {
-    const currentYear = moment().format('YYYY')
-    const yearStatisticsObject = {
-        year: currentYear,
-        months: fillMonthsForStatistics(currentYear),
-    }
-
-    return yearStatisticsObject
-}
-
 const insertClientToTranslatorBalanceDays = (balanceYearToUpdate, clientId) => {
     const clientBalanceDay = new DEFAULT_DAY_CLIENT(clientId)
 
@@ -142,7 +102,6 @@ const calCurMonthTranslatorPenaties = penalties => {
 
 module.exports = {
     calculatePercentDifference,
-    createYearStatisticsForTranslator,
     insertClientToTranslatorBalanceDays,
     calCurMonthTranslatorPenaties,
     calculateBalanceDaySum,

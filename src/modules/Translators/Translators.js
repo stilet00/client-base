@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import TotalButtonWithPopover from './ShowTotal/index'
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
@@ -64,6 +65,7 @@ function Translators() {
         updateBalanceDayIsLoading,
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
+
     return user ? (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
@@ -107,6 +109,9 @@ function Translators() {
                                     </StyledButton>
                                 </>
                             )}
+                            <TotalButtonWithPopover
+                                screenIsSmall={screenIsSmall}
+                            />
                             <div className="gallery-menu__filters">
                                 <div
                                     className={
@@ -155,6 +160,7 @@ function Translators() {
                             </StyledButton>
                         </>
                     )}
+                    <TotalButtonWithPopover screenIsSmall={screenIsSmall} />
                     <div className="gallery-menu__inline-filters">
                         <div className="gallery-menu__filters-label">Menu</div>
                         <div className={'gallery-menu__checkbox-container'}>

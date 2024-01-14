@@ -3,7 +3,7 @@ import moment from 'moment'
 import { useQuery } from 'react-query'
 import { getClientsRequest } from 'services/clientsServices/services'
 import { getTranslators } from 'services/translatorsServices/services'
-import { getBalanceDaysRequest } from 'services/balanceDayServices/index'
+import { getBalanceDaysForOverviewRequest } from 'services/balanceDayServices/index'
 import { getPaymentsRequest } from 'services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
@@ -51,7 +51,7 @@ export const useOverview = user => {
     }
 
     const fetchBalanceDays = async () => {
-        const response = await getBalanceDaysRequest({
+        const response = await getBalanceDaysForOverviewRequest({
             yearFilter: selectedYear,
         })
         if (response.status !== 200) {

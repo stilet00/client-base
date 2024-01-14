@@ -49,6 +49,7 @@ const {
     updateBalanceDay,
     getBalanceDaysForTranslators,
     getAllBalanceDays,
+    getCurrentMonthTotal,
 } = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
@@ -166,6 +167,11 @@ app.get(
 )
 app.get(balanceDayURL + 'all', isAuthenticated, getAllBalanceDays)
 app.get(balanceDayURL, isAuthenticated, getBalanceDay)
+app.get(
+    balanceDayURL + 'current-month-total',
+    isAuthenticated,
+    getCurrentMonthTotal
+)
 
 // DB connection and server starts
 const startServer = async () => {

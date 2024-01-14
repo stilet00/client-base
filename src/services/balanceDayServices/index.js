@@ -4,9 +4,16 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const balanceDayURL = rootURL + 'balance-day/'
 
-export function getBalanceDaysRequest({ yearFilter = '' }) {
+export function getBalanceDaysForOverviewRequest({ yearFilter = '' }) {
     return axios.get(
         `${balanceDayURL}all?yearFilter=${yearFilter}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export const getBalanceTotalForCurrentMonthRequest = async () => {
+    return axios.get(
+        `${balanceDayURL}current-month-total`,
         getConfigForAxiosAuthenticatedRequest()
     )
 }
