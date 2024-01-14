@@ -24,71 +24,26 @@ const getAllTranslators = async (req, res) => {
 
 const getLastVirtualGift = async (req, res) => {
     try {
-        const year = moment().format('YYYY')
-        const { collectionTranslators } = await getCollections()
-        const lastVirtualGift = collectionTranslators.aggregate([
-            {
-                $match: { _id: ObjectId(req.params.id) },
-            },
-            {
-                $match: {
-                    'statistics.year': year,
-                },
-            },
-            { $unwind: '$statistics' },
-            { $unwind: '$statistics.months' },
-            {
-                $project: {
-                    _id: '$_id',
-                    name: '$name',
-                    surname: '$surname',
-                    clientsWithIncome: '$statistics.months',
-                    year: year,
-                },
-            },
-            {
-                $unwind: '$clientsWithIncome',
-            },
-            {
-                $unwind: '$clientsWithIncome.clients',
-            },
-            {
-                $match: {
-                    $or: [
-                        {
-                            'clientsWithIncome.clients.virtualGiftsSvadba': {
-                                $gt: 0,
-                            },
-                        },
-                        {
-                            'clientsWithIncome.clients.virtualGiftsDating': {
-                                $gt: 0,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $project: {
-                    translatorId: '$_id',
-                    date: '$clientsWithIncome.id',
-                    name: '$name',
-                    dateToSort: {
-                        $dateFromString: {
-                            dateString: '$clientsWithIncome.id',
-                            format: '%d %m %Y',
-                        },
-                    },
-                    clients: '$clientsWithIncome.clients',
-                    _id: 0,
-                },
-            },
-            { $sort: { dateToSort: -1 } },
-            { $limit: 1 },
-        ])
-        lastVirtualGift.exec().then(doc => {
-            res.send(doc)
+        if (!req.params.id) {
+            res.send('Отсутствует id переводчика')
+            return
+        }
+        const BalanceDay = await getCollections().collectionBalanceDays
+        const balanceDay = await BalanceDay.findOne({
+            translator: new ObjectId(req.params.id),
+            $or: [
+                { 'statistics.virtualGiftsSvadba': { $gt: 0 } },
+                { 'statistics.virtualGiftsDating': { $gt: 0 } },
+            ],
         })
+
+        console.log(balanceDay)
+
+        if (!balanceDay) {
+            res.send('Не найдено подарков')
+            return
+        }
+        res.send(balanceDay.dateTimeId)
     } catch (err) {
         res.status(500).send(err.message)
     }

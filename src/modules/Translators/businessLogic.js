@@ -585,7 +585,9 @@ export const useSingleTranslator = ({
     personalPenalties,
     translatorId,
 }) => {
-    const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
+    const [lastVirtualGiftLabel, setLastVirtualGiftLabel] = useState(
+        `Last virtual gift was at:`
+    )
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
     const user = useSelector(state => state.auth.user)
@@ -701,7 +703,7 @@ export const useSingleTranslator = ({
         setGiftRequestLoader(true)
         sendLastVirtualGiftDateRequest(translatorId)
             .then(res => {
-                setLastVirtualGiftDate(res.data[0]?.date || 'No gifts found')
+                setLastVirtualGiftLabel(res.data ?? 'No gifts found')
                 setGiftRequestLoader(false)
             })
             .catch(err => {
@@ -717,7 +719,7 @@ export const useSingleTranslator = ({
         calculateMiddleMonthSum,
         calculatePersonalPenalties,
         getLastVirtualGiftDate,
-        lastVirtualGiftDate,
+        lastVirtualGiftLabel,
         giftRequestLoader,
         balanceDaysAreLoading,
         translatorBalanceDays,

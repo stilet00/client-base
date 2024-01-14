@@ -76,7 +76,7 @@ function SingleTranslator({
         calculateMiddleMonthSum,
         calculatePersonalPenalties,
         getLastVirtualGiftDate,
-        lastVirtualGiftDate,
+        lastVirtualGiftLabel,
         giftRequestLoader,
         balanceDaysAreLoading,
         translatorBalanceDays,
@@ -138,6 +138,12 @@ function SingleTranslator({
             moment(dateTimeId).format('DD MMMM YYYY') ===
             selectedDate.format('DD MMMM YYYY')
     )
+    const isValidVirtualGiftDate = moment(
+        lastVirtualGiftLabel,
+        '',
+        true
+    ).isValid()
+    console.log(`isValidVirtualGiftDate: ${isValidVirtualGiftDate}`)
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -565,9 +571,12 @@ function SingleTranslator({
                                         onClick={e =>
                                             getLastVirtualGiftDate(_id)
                                         }
-                                        disabled={lastVirtualGiftDate}
+                                        disabled={
+                                            lastVirtualGiftLabel !==
+                                            `Last virtual gift was at:`
+                                        }
                                         endIcon={
-                                            lastVirtualGiftDate ===
+                                            lastVirtualGiftLabel ===
                                             'No gifts found' ? (
                                                 <SentimentVeryDissatisfiedIcon />
                                             ) : (
@@ -578,8 +587,11 @@ function SingleTranslator({
                                         loadingPosition="end"
                                         variant="outlined"
                                     >
-                                        {lastVirtualGiftDate ??
-                                            'Last virtual gift was at:'}
+                                        {isValidVirtualGiftDate
+                                            ? moment(
+                                                  lastVirtualGiftLabel
+                                              ).format(`MM DD YYYY`)
+                                            : lastVirtualGiftLabel}
                                     </LoadingButton>
                                 </>
                             )}
