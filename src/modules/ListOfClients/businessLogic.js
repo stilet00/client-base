@@ -6,7 +6,7 @@ import {
     getMiddleValueFromArray,
     getSumFromArray,
     getNumberWithHundreds,
-} from '../../sharedFunctions/sharedFunctions'
+} from 'sharedFunctions/sharedFunctions'
 import moment from 'moment'
 
 export const useClientsForm = ({ onFormSubmit, editedClient }) => {
@@ -36,7 +36,7 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
     }
 }
 
-export const useClientsList = translators => {
+export const useClientsList = () => {
     const getTotalProfitPerClient = (clientId, date = moment()) => {
         let totalProfitForAllYears = 0
         let profitForCurrentYear = 0
@@ -72,7 +72,7 @@ export const useClientsList = translators => {
                 })
             })
         }
-        translators.forEach(getProfits)
+        // translators.forEach(getProfits)
         const clientsProfit = {
             currentYearProfit: getNumberWithHundreds(profitForCurrentYear),
             allYearsProfit: getNumberWithHundreds(totalProfitForAllYears),
@@ -83,43 +83,43 @@ export const useClientsList = translators => {
     function clientMonthSum(clientId, date = moment()) {
         let totalClientBalance = 0
 
-        translators.forEach(translator => {
-            const thisYearStat = translator.statistics?.find(
-                year => year.year === date.format('YYYY')
-            )
-            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
+        // translators.forEach(translator => {
+        //     const thisYearStat = translator.statistics?.find(
+        //         year => year.year === date.format('YYYY')
+        //     )
+        //     const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat?.forEach(day => {
-                const clientBalanceDay = day.clients?.find(
-                    client => client.id === clientId
-                )
-                if (clientBalanceDay) {
-                    totalClientBalance =
-                        totalClientBalance +
-                        calculateBalanceDaySum(clientBalanceDay)
-                }
-            })
-        })
+        //     thisMonthStat?.forEach(day => {
+        //         const clientBalanceDay = day.clients?.find(
+        //             client => client.id === clientId
+        //         )
+        //         if (clientBalanceDay) {
+        //             totalClientBalance =
+        //                 totalClientBalance +
+        //                 calculateBalanceDaySum(clientBalanceDay)
+        //         }
+        //     })
+        // })
         return getNumberWithHundreds(totalClientBalance)
     }
 
     function getAllAsignedTranslators(clientId, date = moment()) {
         let arrayOfTranslators = []
 
-        translators.forEach(({ name, surname, clients, suspended }) => {
-            const assignedClient = clients.find(
-                client => client._id === clientId
-            )
-            if (assignedClient && 'suspended' in assignedClient) {
-                if (!assignedClient.suspended && !suspended.status) {
-                    arrayOfTranslators.push(`${name} ${surname}`)
-                }
-            } else if (assignedClient && !('suspended' in assignedClient)) {
-                if (!suspended.status) {
-                    arrayOfTranslators.push(`${name} ${surname}`)
-                }
-            }
-        })
+        // translators.forEach(({ name, surname, clients, suspended }) => {
+        //     const assignedClient = clients.find(
+        //         client => client._id === clientId
+        //     )
+        //     if (assignedClient && 'suspended' in assignedClient) {
+        //         if (!assignedClient.suspended && !suspended.status) {
+        //             arrayOfTranslators.push(`${name} ${surname}`)
+        //         }
+        //     } else if (assignedClient && !('suspended' in assignedClient)) {
+        //         if (!suspended.status) {
+        //             arrayOfTranslators.push(`${name} ${surname}`)
+        //         }
+        //     }
+        // })
         return arrayOfTranslators
     }
 
@@ -128,43 +128,43 @@ export const useClientsList = translators => {
 
         let totalClientBalance = 0
 
-        translators.forEach(translator => {
-            const thisYearStat = translator.statistics?.find(
-                year => year.year === date.format('YYYY')
-            )
+        // translators.forEach(translator => {
+        //     const thisYearStat = translator.statistics?.find(
+        //         year => year.year === date.format('YYYY')
+        //     )
 
-            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
+        //     const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
-            thisMonthStat?.forEach((day, index) => {
-                if (index === 0 || index < moment().format('D')) {
-                    const clientBalanceDay = day.clients.find(
-                        client => client.id === clientId
-                    )
+        //     thisMonthStat?.forEach((day, index) => {
+        //         if (index === 0 || index < moment().format('D')) {
+        //             const clientBalanceDay = day.clients.find(
+        //                 client => client.id === clientId
+        //             )
 
-                    if (clientBalanceDay) {
-                        if (typeof monthSumArray[index] === 'undefined') {
-                            const dayArray = []
-                            monthSumArray[index] = [
-                                ...dayArray,
-                                getNumberWithHundreds(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        } else {
-                            monthSumArray[index] = [
-                                ...monthSumArray[index],
-                                getNumberWithHundreds(
-                                    calculateBalanceDaySum(clientBalanceDay)
-                                ),
-                            ]
-                        }
-                        totalClientBalance =
-                            totalClientBalance +
-                            calculateBalanceDaySum(clientBalanceDay)
-                    }
-                }
-            })
-        })
+        //             if (clientBalanceDay) {
+        //                 if (typeof monthSumArray[index] === 'undefined') {
+        //                     const dayArray = []
+        //                     monthSumArray[index] = [
+        //                         ...dayArray,
+        //                         getNumberWithHundreds(
+        //                             calculateBalanceDaySum(clientBalanceDay)
+        //                         ),
+        //                     ]
+        //                 } else {
+        //                     monthSumArray[index] = [
+        //                         ...monthSumArray[index],
+        //                         getNumberWithHundreds(
+        //                             calculateBalanceDaySum(clientBalanceDay)
+        //                         ),
+        //                     ]
+        //                 }
+        //                 totalClientBalance =
+        //                     totalClientBalance +
+        //                     calculateBalanceDaySum(clientBalanceDay)
+        //             }
+        //         }
+        //     })
+        // })
 
         monthSumArray = monthSumArray.map(day => getSumFromArray(day))
         return Math.round(getMiddleValueFromArray(monthSumArray))
@@ -198,46 +198,46 @@ export const useClientsList = translators => {
             previousMonth: [],
         }
 
-        translators.forEach(translator => {
-            const thisYearStat = translator.statistics?.find(
-                year => year.year === date.format('YYYY')
-            )
+        // translators.forEach(translator => {
+        //     const thisYearStat = translator.statistics?.find(
+        //         year => year.year === date.format('YYYY')
+        //     )
 
-            const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
-            const findPreviousMonthStat = date => {
-                if (date.format('M') === '1') {
-                    const previousYearStat = translator.statistics?.find(
-                        year =>
-                            year.year ===
-                            moment().subtract(1, 'year').format('YYYY')
-                    )
-                    const previousMonth =
-                        previousYearStat.months[
-                            moment().subtract(2, 'month').format('M')
-                        ]
+        //     const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
+        //     const findPreviousMonthStat = date => {
+        //         if (date.format('M') === '1') {
+        //             const previousYearStat = translator.statistics?.find(
+        //                 year =>
+        //                     year.year ===
+        //                     moment().subtract(1, 'year').format('YYYY')
+        //             )
+        //             const previousMonth =
+        //                 previousYearStat.months[
+        //                     moment().subtract(2, 'month').format('M')
+        //                 ]
 
-                    return previousMonth
-                } else {
-                    const previousMonth =
-                        thisYearStat?.months[date.format('M') - 2]
-                    return previousMonth
-                }
-            }
-            const previousMonthStat = findPreviousMonthStat(date)
-            getArrayWithAmountsPerDayForPickedMonth(
-                clientId,
-                thisMonthStat,
-                currentMonthSum,
-                category
-            )
-            getArrayWithAmountsPerDayForPickedMonth(
-                clientId,
-                previousMonthStat,
-                previousMonthSum,
-                category,
-                31
-            )
-        })
+        //             return previousMonth
+        //         } else {
+        //             const previousMonth =
+        //                 thisYearStat?.months[date.format('M') - 2]
+        //             return previousMonth
+        //         }
+        //     }
+        //     const previousMonthStat = findPreviousMonthStat(date)
+        //     getArrayWithAmountsPerDayForPickedMonth(
+        //         clientId,
+        //         thisMonthStat,
+        //         currentMonthSum,
+        //         category
+        //     )
+        //     getArrayWithAmountsPerDayForPickedMonth(
+        //         clientId,
+        //         previousMonthStat,
+        //         previousMonthSum,
+        //         category,
+        //         31
+        //     )
+        // })
         currentMonthSum = currentMonthSum.map(day =>
             Math.round(getSumFromArray(day))
         )

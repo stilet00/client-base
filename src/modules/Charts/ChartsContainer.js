@@ -35,6 +35,7 @@ function ChartsContainer() {
         selectedYear,
         category,
         setCategory,
+        balanceDaysAreLoading,
     } = useChartsContainer(user)
 
     const handleCategoryChange = e => {
@@ -136,26 +137,29 @@ function ChartsContainer() {
                 </FormControl>
             </div>
             <div className={'main-container  scrolled-container animated-box'}>
-                {months.length > 0 ? (
-                    <ul className={'chart-list'}>
-                        {months.map((month, index) => (
-                            <SingleChart
-                                previousMonth={
-                                    month.month === moment().format('MM')
-                                        ? months[index + 1]
-                                        : null
-                                }
-                                graph={month}
-                                index={index}
-                                key={index}
-                                deleteGraph={deleteGraph}
-                            />
-                        ))}
-                    </ul>
-                ) : emptyStatus ? (
-                    <h1> No data available. </h1>
-                ) : (
-                    <Loader />
+                {balanceDaysAreLoading && <Loader />}
+                {!balanceDaysAreLoading && (
+                    <>
+                        {months?.length > 0 && (
+                            <ul className={'chart-list'}>
+                                {months.map((month, index) => (
+                                    <SingleChart
+                                        previousMonth={
+                                            month.month ===
+                                            moment().format('MM')
+                                                ? months[index + 1]
+                                                : null
+                                        }
+                                        graph={month}
+                                        index={index}
+                                        key={index}
+                                        deleteGraph={deleteGraph}
+                                    />
+                                ))}
+                            </ul>
+                        )}
+                        {months?.length === 0 && <h1> No data available. </h1>}
+                    </>
                 )}
             </div>
             <AlertMessage

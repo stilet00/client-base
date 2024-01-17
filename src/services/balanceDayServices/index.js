@@ -17,3 +17,10 @@ export const getBalanceTotalForCurrentMonthRequest = async () => {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function getBalanceDaysForChartsRequest({ yearFilter = '' }) {
+    return axios.get(
+        `${balanceDayURL}all?yearFilter=${yearFilter}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}

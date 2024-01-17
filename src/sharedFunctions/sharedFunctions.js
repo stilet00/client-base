@@ -45,14 +45,6 @@ export function calculateBalanceDaySum(
     }
 }
 
-export function calculateBalanceDayAllClients(day, category = null) {
-    return day?.clients
-        .reduce((sum, balanceDay) => {
-            return sum + calculateBalanceDaySum(balanceDay, false, category)
-        }, 0)
-        .toFixed(2)
-}
-
 export function getTotalDaysOfMonth(year, monthNumber) {
     const stringMonth = monthNumber < 9 ? '0' + monthNumber : monthNumber
     let totalDays = []

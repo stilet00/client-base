@@ -39,7 +39,6 @@ export default function ListOfClients() {
     const [clients, setClients] = useState([])
     const [graphData, setGraphData] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [translators, setTranslators] = useState([])
     const [updatingClient, setUpdatingClient] = useState({})
     const { handleClose, handleOpen, open } = useModal()
     const { queryString, changeSearchParams } = useSearch()
@@ -56,7 +55,7 @@ export default function ListOfClients() {
         getArrayOfBalancePerDay,
         getTotalProfitPerClient,
         currentYear,
-    } = useClientsList(translators)
+    } = useClientsList()
     const { isAdmin } = useAdminStatus(user)
 
     useEffect(() => {
