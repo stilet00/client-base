@@ -4,10 +4,19 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClientsRequest({ noImageParams = false, searchQuery = '' }) {
+export function getClientsRequest({
+    noImageParams = false,
+    searchQuery = '',
+    shouldFillTranslators = false,
+}) {
     let queryParams = ''
     if (noImageParams) {
         queryParams = `?noImageParams=${noImageParams}`
+    }
+    if (shouldFillTranslators) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `shouldFillTranslators=${shouldFillTranslators}`
     }
     if (searchQuery) {
         queryParams +=

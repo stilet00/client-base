@@ -24,6 +24,7 @@ const clientImageConverter = async image => {
 const getAllClients = async (request, response) => {
     try {
         const noImageRequest = !!request.query?.noImageParams
+        const shouldFillTranslators = !!request.query?.shouldFillTranslators
         const searchQuery = request.query?.searchQuery || ''
         let queryCondition = {}
         if (searchQuery) {
@@ -39,6 +40,9 @@ const getAllClients = async (request, response) => {
 
         if (noImageRequest) {
             query = query.select('-image')
+        }
+        if (shouldFillTranslators) {
+            query = query.populate('translators')
         }
 
         const clients = await query.exec()

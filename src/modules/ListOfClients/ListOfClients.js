@@ -1,42 +1,47 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useQuery } from 'react-query'
 import {
     getClientsRequest,
     addClient,
     updateClient,
-} from '../../services/clientsServices/services'
-import { getPaymentsRequest } from '../../services/financesStatement/services'
+} from 'services/clientsServices/services'
+import { getPaymentsRequest } from 'services/financesStatement/services'
+import { getBalanceDaysForClientsRequest } from 'services/balanceDayServices/index'
 import Typography from '@mui/material/Typography'
-import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
-import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import AlertMessage from 'sharedComponents/AlertMessage/AlertMessage'
+import { useAlert } from 'sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
 import ClientsChartsContainer from './ClientsCharts/ClientsChartContainer'
 import Grid from '@mui/material/Grid'
 import '../../styles/modules/ListOfClients.css'
 import ClientsForm from './ClientsForm/ClientsForm'
-import { useClientsList } from './businessLogic'
-import {
-    calculatePercentDifference,
-    getSumFromArray,
-} from '../../sharedFunctions/sharedFunctions'
 import moment from 'moment'
 import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import useModal from '../../sharedHooks/useModal'
 import Button from '@mui/material/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Loader from '../../sharedComponents/Loader/Loader'
+import Loader from 'sharedComponents/Loader/Loader'
 import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import MESSAGE from 'constants/messages'
 import useSearch from 'sharedHooks/useSearchString'
 import useDebounce from 'sharedHooks/useDebounce'
+import {
+    calculateBalanceDaySum,
+    getMiddleValueFromArray,
+    getSumFromArray,
+    getNumberWithHundreds,
+    calculatePercentDifference,
+} from 'sharedFunctions/sharedFunctions'
 
 export default function ListOfClients() {
     const user = useSelector(state => state.auth.user)
     const [paymentsList, setPaymentsList] = useState([])
     const [showGraph, setShowGraph] = useState(false)
     const [clients, setClients] = useState([])
+    const [balanceDays, setBalanceDays] = useState([])
     const [graphData, setGraphData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [updatingClient, setUpdatingClient] = useState({})
@@ -47,51 +52,250 @@ export default function ListOfClients() {
         status: true,
     })
     const { alertOpen, closeAlert, openAlert } = useAlert()
-    const {
-        clientMonthSum,
-        sortBySum,
-        calculateMiddleMonthSum,
-        getAllAsignedTranslators,
-        getArrayOfBalancePerDay,
-        getTotalProfitPerClient,
-        currentYear,
-    } = useClientsList()
+
+    const getTotalProfitPerClient = clientId => {
+        const balanceDaysForCurrentClient = balanceDays.filter(
+            balanceDay => balanceDay.client === clientId
+        )
+        const currentYearBalanceDaysForClient =
+            balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
+                moment(dateTimeId).isSame(moment(), 'year')
+            )
+        const previousYearBalanceDaysForClient =
+            balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
+                moment(dateTimeId).isSame(moment().subtract(1, 'year'), 'year')
+            )
+        const currentYearProfit = currentYearBalanceDaysForClient.reduce(
+            (sum, current) => {
+                return sum + calculateBalanceDaySum(current.statistics)
+            },
+            0
+        )
+        const previousYearProfit = previousYearBalanceDaysForClient.reduce(
+            (sum, current) => {
+                return sum + calculateBalanceDaySum(current.statistics)
+            },
+            0
+        )
+        const allYearsProfit = balanceDaysForCurrentClient.reduce(
+            (sum, current) => {
+                return sum + calculateBalanceDaySum(current.statistics)
+            },
+            0
+        )
+        const clientsProfit = {
+            currentYearProfit,
+            allYearsProfit,
+            previousYearProfit,
+        }
+        return clientsProfit
+    }
+
+    function clientMonthSum(clientId) {
+        const balanceDaysForCurrentClient = balanceDays.filter(
+            balanceDay => balanceDay.client === clientId
+        )
+        const balanceDaysForCurrentMonth = balanceDaysForCurrentClient.filter(
+            ({ dateTimeId }) => moment(dateTimeId).isSame(moment(), 'month')
+        )
+        const currentMonthSum = balanceDaysForCurrentMonth.reduce(
+            (sum, current) => {
+                return sum + calculateBalanceDaySum(current.statistics)
+            },
+            0
+        )
+        return currentMonthSum
+    }
+
+    function calculateMiddleMonthSum(clientId, date = moment()) {
+        const totalClientBalanceForCurrentMonth = clientMonthSum(clientId)
+        const currentDayOfMinusOne = moment().format('D')
+        return Math.round(
+            totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne)
+        )
+    }
+
+    function sortBySum(clientOne, clientTwo) {
+        const clientOneSum = clientMonthSum(clientOne._id)
+        const clientTwoSum = clientMonthSum(clientTwo._id)
+        if (clientOneSum > clientTwoSum) {
+            return -1
+        } else if (clientOneSum < clientTwoSum) {
+            return 1
+        }
+        return 0
+    }
+
+    function getArrayOfBalancePerDay(clientId, category = null) {
+        let currentMonthSum = []
+        let previousMonthSum = []
+        let monthsSum = {
+            currentMonth: [],
+            previousMonth: [],
+        }
+
+        // translators.forEach(translator => {
+        //     const thisYearStat = translator.statistics?.find(
+        //         year => year.year === date.format('YYYY')
+        //     )
+
+        //     const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
+        //     const findPreviousMonthStat = date => {
+        //         if (date.format('M') === '1') {
+        //             const previousYearStat = translator.statistics?.find(
+        //                 year =>
+        //                     year.year ===
+        //                     moment().subtract(1, 'year').format('YYYY')
+        //             )
+        //             const previousMonth =
+        //                 previousYearStat.months[
+        //                     moment().subtract(2, 'month').format('M')
+        //                 ]
+
+        //             return previousMonth
+        //         } else {
+        //             const previousMonth =
+        //                 thisYearStat?.months[date.format('M') - 2]
+        //             return previousMonth
+        //         }
+        //     }
+        //     const previousMonthStat = findPreviousMonthStat(date)
+        //     getArrayWithAmountsPerDayForPickedMonth(
+        //         clientId,
+        //         thisMonthStat,
+        //         currentMonthSum,
+        //         category
+        //     )
+        //     getArrayWithAmountsPerDayForPickedMonth(
+        //         clientId,
+        //         previousMonthStat,
+        //         previousMonthSum,
+        //         category,
+        //         31
+        //     )
+        // })
+        currentMonthSum = currentMonthSum.map(day =>
+            Math.round(getSumFromArray(day))
+        )
+        previousMonthSum = previousMonthSum.map(day =>
+            Math.round(getSumFromArray(day))
+        )
+
+        return (monthsSum = {
+            ...monthsSum,
+            currentMonth: currentMonthSum,
+            previousMonth: previousMonthSum,
+        })
+    }
+
+    const getArrayWithAmountsPerDayForPickedMonth = (
+        clientId,
+        month,
+        sumHolder,
+        category,
+        countUntilThisDateInMonth = moment().subtract(1, 'day').format('D')
+    ) => {
+        month.forEach((day, index) => {
+            if (index === 0 || index < countUntilThisDateInMonth) {
+                const clientBalanceDay = day.clients.find(
+                    client => client.id === clientId
+                )
+                if (clientBalanceDay) {
+                    if (typeof sumHolder[index] === 'undefined') {
+                        sumHolder[index] = [
+                            getNumberWithHundreds(
+                                calculateBalanceDaySum(
+                                    clientBalanceDay,
+                                    false,
+                                    category
+                                )
+                            ),
+                        ]
+                    } else {
+                        sumHolder[index] = [
+                            ...sumHolder[index],
+                            getNumberWithHundreds(
+                                calculateBalanceDaySum(
+                                    clientBalanceDay,
+                                    false,
+                                    category
+                                )
+                            ),
+                        ]
+                    }
+                }
+            }
+        })
+    }
     const { isAdmin } = useAdminStatus(user)
 
-    useEffect(() => {
-        if (user) {
-            ;(async () => {
-                const responseDataWithClients = await getClientsRequest({})
-                if (responseDataWithClients.status === 200) {
-                    setClients(responseDataWithClients.data)
-                } else {
-                    setAlertInfo({
-                        ...alertInfo,
-                        mainTitle: MESSAGE.somethingWrongWithGettingClients,
-                        status: false,
-                    })
-                    openAlert(5000)
-                }
-                setLoading(false)
-            })()
-            getPaymentsRequest({})
-                .then(res => {
-                    if (res.status === 200) {
-                        setPaymentsList(res.data)
-                    }
+    const { isLoading: clientsAreLoading } = useQuery(
+        'clientsData',
+        () => getClientsRequest({ shouldFillTranslators: true }),
+        {
+            onSuccess: response => {
+                setClients(response?.data)
+            },
+            onError: error => {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: MESSAGE.somethingWrongWithGettingClients,
+                    status: false,
                 })
-                .catch(err => {
-                    const message = err.message
-                    setLoading(false)
-                    setAlertInfo({
-                        ...alertInfo,
-                        mainTitle: message,
-                        status: false,
-                    })
-                    openAlert(5000)
-                })
+                openAlert(5000)
+            },
+            enabled: !!user,
         }
-    }, [user])
+    )
+
+    const { isLoading: balanceDaysAreLoading } = useQuery(
+        'balanceDaysForClients',
+        getBalanceDaysForClientsRequest,
+        {
+            onSuccess: response => {
+                setBalanceDays(response?.data)
+            },
+            onError: error => {
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: MESSAGE.somethingWrongWithBalanceDays,
+                    status: false,
+                })
+                openAlert(5000)
+            },
+            enabled: !!user,
+        }
+    )
+
+    const { isLoading: paymentsAreLoading } = useQuery(
+        'paymentsForClients',
+        getPaymentsRequest,
+        {
+            onSuccess: response => {
+                setPaymentsList(response?.data)
+            },
+            onError: error => {
+                const message = error.message
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert(5000)
+            },
+            enabled: !!user,
+        }
+    )
+
+    useEffect(() => {
+        if (
+            !balanceDaysAreLoading &&
+            !paymentsAreLoading &&
+            !clientsAreLoading
+        ) {
+            setLoading(false)
+        }
+    }, [balanceDaysAreLoading, paymentsAreLoading, clientsAreLoading])
 
     useDebounce(
         async () => {
@@ -210,77 +414,6 @@ export default function ListOfClients() {
             openAlert(5000)
         }
     }
-    const getSortedClients = clients => {
-        if (clients.length === 0) {
-            return []
-        }
-        const sortedClientsWithCalculations = clients
-            .sort(sortBySum)
-            .map(client => {
-                const memorizedMiddleMonthSum = calculateMiddleMonthSum(
-                    client._id
-                )
-                const memorizedPreviousMiddleMonthSum = calculateMiddleMonthSum(
-                    client._id,
-                    moment().subtract(1, 'month')
-                )
-                const memorizedMonthSum = clientMonthSum(client._id)
-                const memorizedPreviousMonthSum = clientMonthSum(
-                    client._id,
-                    moment().subtract(1, 'month')
-                )
-                const arrayOfPaymentsMadeToClient = paymentsList.filter(
-                    payment =>
-                        payment.receiverID === client._id &&
-                        payment.date.substring(6, 10) === currentYear
-                )
-                const getArrayOfPaymentsMadeToClientWithAmounts =
-                    arrayOfPaymentsMadeToClient.map(payment => payment.amount)
-                const spendsOnClient = getSumFromArray(
-                    getArrayOfPaymentsMadeToClientWithAmounts
-                )
-
-                const clientProfit = getTotalProfitPerClient(client._id)
-                const clientWithPersonalAndFinancialData = {
-                    _id: client._id,
-                    name: client.name,
-                    surname: client.surname,
-                    currentMonthTotalAmount: memorizedMonthSum,
-                    translators: getAllAsignedTranslators(client._id),
-                    rating: getClientsRating(memorizedMiddleMonthSum),
-                    bankAccount: client.bankAccount || 'PayPal',
-                    svadba: {
-                        login: client.svadba?.login || '',
-                        password: client.svadba?.password || '',
-                    },
-                    dating: {
-                        login: client.dating?.login || '',
-                        password: client.dating?.password || '',
-                    },
-                    instagramLink:
-                        'https://www.instagram.com/' + client.instagramLink ||
-                        'https://www.instagram.com/',
-                    loss: spendsOnClient,
-                    image: client.image ?? null,
-                    suspended: !!client.suspended,
-                    currentYearProfit: clientProfit.currentYearProfit,
-                    absoluteProfit: clientProfit.allYearsProfit,
-                    previousMonthTotalAmount: memorizedPreviousMonthSum,
-                    middleMonthSum: memorizedMiddleMonthSum,
-                    prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
-                    monthProgressPercent: calculatePercentDifference(
-                        memorizedMiddleMonthSum,
-                        memorizedPreviousMiddleMonthSum
-                    ),
-                }
-                return clientWithPersonalAndFinancialData
-            })
-        return sortedClientsWithCalculations
-    }
-
-    const getFilteredClients = client =>
-        `${client.name} ${client.surname}`.toLowerCase()
-
     const closeGraph = () => {
         setShowGraph(false)
     }
@@ -295,7 +428,6 @@ export default function ListOfClients() {
     if (!user) {
         return <LoggedOutPage />
     }
-
     return (
         <>
             <div>
@@ -325,19 +457,98 @@ export default function ListOfClients() {
                                 spacing={2}
                                 id="on-scroll__rotate-animation-list"
                             >
-                                {getSortedClients(clients)
-                                    .filter(getFilteredClients)
-                                    .map(client => (
+                                {clients.sort(sortBySum).map(client => {
+                                    const memorizedMiddleMonthSum =
+                                        calculateMiddleMonthSum(client._id)
+                                    const memorizedPreviousMiddleMonthSum =
+                                        calculateMiddleMonthSum(
+                                            client._id,
+                                            moment().subtract(1, 'month')
+                                        )
+                                    const memorizedMonthSum = clientMonthSum(
+                                        client._id
+                                    )
+                                    const memorizedPreviousMonthSum =
+                                        clientMonthSum(
+                                            client._id,
+                                            moment().subtract(1, 'month')
+                                        )
+                                    const arrayOfPaymentsMadeToClient =
+                                        paymentsList.filter(
+                                            payment =>
+                                                payment.receiverID ===
+                                                    client._id &&
+                                                payment.date.substring(
+                                                    6,
+                                                    10
+                                                ) === moment().format('YYYY')
+                                        )
+                                    const getArrayOfPaymentsMadeToClientWithAmounts =
+                                        arrayOfPaymentsMadeToClient.map(
+                                            payment => payment.amount
+                                        )
+                                    const spendsOnClient = getSumFromArray(
+                                        getArrayOfPaymentsMadeToClientWithAmounts
+                                    )
+
+                                    const clientProfit =
+                                        getTotalProfitPerClient(client._id)
+                                    const clientWithPersonalAndFinancialData = {
+                                        _id: client._id,
+                                        name: client.name,
+                                        surname: client.surname,
+                                        currentMonthTotalAmount:
+                                            memorizedMonthSum,
+                                        translators: client.translators,
+                                        rating: getClientsRating(
+                                            memorizedMiddleMonthSum
+                                        ),
+                                        bankAccount:
+                                            client.bankAccount || 'PayPal',
+                                        svadba: {
+                                            login: client.svadba?.login || '',
+                                            password:
+                                                client.svadba?.password || '',
+                                        },
+                                        dating: {
+                                            login: client.dating?.login || '',
+                                            password:
+                                                client.dating?.password || '',
+                                        },
+                                        instagramLink:
+                                            'https://www.instagram.com/' +
+                                                client.instagramLink ||
+                                            'https://www.instagram.com/',
+                                        loss: spendsOnClient,
+                                        image: client.image ?? null,
+                                        suspended: !!client.suspended,
+                                        currentYearProfit:
+                                            clientProfit.currentYearProfit,
+                                        absoluteProfit:
+                                            clientProfit.allYearsProfit,
+                                        previousMonthTotalAmount:
+                                            memorizedPreviousMonthSum,
+                                        middleMonthSum: memorizedMiddleMonthSum,
+                                        prevousMiddleMonthSum:
+                                            memorizedPreviousMiddleMonthSum,
+                                        monthProgressPercent:
+                                            calculatePercentDifference(
+                                                memorizedMiddleMonthSum,
+                                                memorizedPreviousMiddleMonthSum
+                                            ),
+                                    }
+                                    return (
                                         <Grid
-                                            key={client._id}
+                                            key={
+                                                clientWithPersonalAndFinancialData._id
+                                            }
                                             item
                                             xs={12}
                                             md={4}
                                             sm={6}
                                         >
                                             <SingleClient
-                                                key={client._id}
-                                                {...client}
+                                                {...clientWithPersonalAndFinancialData}
                                                 admin={isAdmin}
                                                 handleUpdatingClientsId={
                                                     getUpdatingClient
@@ -347,7 +558,8 @@ export default function ListOfClients() {
                                                 }
                                             />
                                         </Grid>
-                                    ))}
+                                    )
+                                })}
                             </Grid>
                         )}
                         {!clients?.length && (

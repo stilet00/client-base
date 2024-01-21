@@ -172,6 +172,11 @@ app.get(
     isAuthenticated,
     getCurrentMonthTotal
 )
+app.get(
+    balanceDayURL + 'clients-statistics',
+    isAuthenticated,
+    getAllBalanceDays
+)
 
 // DB connection and server starts
 const startServer = async () => {

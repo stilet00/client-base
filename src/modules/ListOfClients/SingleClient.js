@@ -462,8 +462,11 @@ export default function SingleClient({
                         style={{ display: 'grid' }}
                     >
                         {translators.map(translator => (
-                            <span key={translator} style={{ textAlign: 'end' }}>
-                                {translator}
+                            <span
+                                key={`${translator._id}-${_id}`}
+                                style={{ textAlign: 'end' }}
+                            >
+                                {`${translator.name} ${translator.surname}`}
                             </span>
                         ))}
                     </span>

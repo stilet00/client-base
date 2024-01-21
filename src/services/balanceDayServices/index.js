@@ -24,3 +24,10 @@ export function getBalanceDaysForChartsRequest({ yearFilter = '' }) {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function getBalanceDaysForClientsRequest() {
+    return axios.get(
+        `${balanceDayURL}clients-statistics`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
