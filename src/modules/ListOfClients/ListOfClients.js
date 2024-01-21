@@ -445,12 +445,12 @@ export default function ListOfClients() {
                 {loading && <Loader />}
                 {!loading && (
                     <>
-                        <ClientsChartsContainer
+                        {/* <ClientsChartsContainer
                             user={user}
                             values={graphData}
                             open={showGraph}
                             handleClose={closeGraph}
-                        />
+                        /> */}
                         {clients?.length > 0 && (
                             <Grid
                                 container
