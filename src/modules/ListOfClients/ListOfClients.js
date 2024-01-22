@@ -299,6 +299,7 @@ export default function ListOfClients() {
             setLoading(true)
             const responseDataWithClients = await getClientsRequest({
                 searchQuery: queryString,
+                shouldFillTranslators: true,
             })
             if (responseDataWithClients.status === 200) {
                 setClients(responseDataWithClients.data)
