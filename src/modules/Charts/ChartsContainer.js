@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import SingleChart from './SingleChart/SingleChart'
 import Loader from '../../sharedComponents/Loader/Loader'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment'
@@ -42,16 +41,16 @@ function ChartsContainer() {
         setCategory(e.target.value)
     }
 
-    return user ? (
+    return (
         <>
             {/* <div className={'socials button-add-container top-button'}>
-                <AccessTimeIcon />
-                <YearSelect
-                    arrayOfYears={arrayOfYears}
-                    year={selectedYear}
-                    handleChange={handleChange}
-                />
-            </div> */}
+        <AccessTimeIcon />
+        <YearSelect
+            arrayOfYears={arrayOfYears}
+            year={selectedYear}
+            handleChange={handleChange}
+        />
+    </div> */}
             <div
                 style={{
                     width: '60%',
@@ -185,8 +184,6 @@ function ChartsContainer() {
                 onConfirm={deleteGraphClicked}
             />
         </>
-    ) : (
-        <LoggedOutPage />
     )
 }
 

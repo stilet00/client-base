@@ -1,25 +1,18 @@
 import { useCallback, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setUser } from '../../features/authSlice'
 import firebase from 'firebase'
 
 import { DEFAULT_ERROR } from '../../constants/constants'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
-import { saveUserIdTokenToLocalStorage } from '../../sharedFunctions/sharedFunctions'
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
     const [forgotPasswordToogle, setForgotPassword] = useState(false)
     const [password, setPassword] = useState('')
-    const dispatch = useDispatch()
 
     const [error, setError] = useState({
         email: DEFAULT_ERROR,
         password: DEFAULT_ERROR,
     })
-
-    const navigate = useNavigate()
 
     const buttonElement = useRef(null)
 
@@ -57,26 +50,6 @@ export const useAuthorizationPage = () => {
                 return firebase
                     .auth()
                     .signInWithEmailAndPassword(email, password)
-                    .then(result => {
-                        if (!!result.user) {
-                            const { email, displayName, emailVerified, uid } =
-                                result.user
-                            dispatch(
-                                setUser({
-                                    email,
-                                    displayName,
-                                    emailVerified,
-                                    uid,
-                                })
-                            )
-                            navigate('/overview/')
-                        }
-                        result.user
-                            .getIdToken()
-                            .then(idToken =>
-                                saveUserIdTokenToLocalStorage(idToken)
-                            )
-                    })
                     .catch(error => {
                         console.log(error)
                     })

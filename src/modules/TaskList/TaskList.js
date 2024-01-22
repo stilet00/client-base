@@ -5,7 +5,6 @@ import SingleTask from './SingleTask/SingleTask'
 import Form from './Form/Form'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Loader from '../../sharedComponents/Loader/Loader'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTaskList } from './businessLogic'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
@@ -24,12 +23,10 @@ function TaskList() {
         loading,
     } = useTaskList(user)
 
-    if (!user) {
-        return <LoggedOutPage />
-    }
     if (loading) {
         return <Loader />
     }
+
     return (
         <>
             <div

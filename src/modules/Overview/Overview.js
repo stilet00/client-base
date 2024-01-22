@@ -1,6 +1,5 @@
 import moment from 'moment'
 import '../../styles/modules/Overview.css'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import { useSelector } from 'react-redux'
 import { useOverview } from './businessLogic'
 import {
@@ -197,7 +196,7 @@ function Overview() {
     const totalProfit =
         yearTotalSum - Math.floor(yearTotalSum * 0.45) - totalPayments
 
-    return user ? (
+    return (
         <div className={'main-container  table-container  animated-box'}>
             {!isLoading && (
                 <TableContainer component={Paper}>
@@ -431,8 +430,6 @@ function Overview() {
             )}
             {isLoading && <Loader />}
         </div>
-    ) : (
-        <LoggedOutPage />
     )
 }
 

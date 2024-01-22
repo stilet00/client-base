@@ -12,12 +12,10 @@ import Typography from '@mui/material/Typography'
 import AlertMessage from 'sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from 'sharedComponents/AlertMessage/hooks'
 import SingleClient from './SingleClient'
-import ClientsChartsContainer from './ClientsCharts/ClientsChartContainer'
 import Grid from '@mui/material/Grid'
 import '../../styles/modules/ListOfClients.css'
 import ClientsForm from './ClientsForm/ClientsForm'
 import moment from 'moment'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import useModal from '../../sharedHooks/useModal'
 import Button from '@mui/material/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
@@ -30,7 +28,6 @@ import useSearch from 'sharedHooks/useSearchString'
 import useDebounce from 'sharedHooks/useDebounce'
 import {
     calculateBalanceDaySum,
-    getMiddleValueFromArray,
     getSumFromArray,
     getNumberWithHundreds,
     calculatePercentDifference,
@@ -425,9 +422,6 @@ export default function ListOfClients() {
         setShowGraph(true)
     }
 
-    if (!user) {
-        return <LoggedOutPage />
-    }
     return (
         <>
             <div>

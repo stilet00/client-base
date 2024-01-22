@@ -14,7 +14,6 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 
 export default function FinanceStatementPage() {
     const user = useSelector(state => state.auth.user)
@@ -150,12 +149,9 @@ export default function FinanceStatementPage() {
 
     const arrayOfStatementsGroupedByDate =
         getStatementGroupedByDates(paymentsList)
-    const userIsAuthorizedAndPageIsLoaded = user && !loading
-    const userIsAuthorizedAndPageIsLoading = user && loading
-    const userIsNotAuthorized = !user
     return (
         <>
-            {userIsAuthorizedAndPageIsLoaded && (
+            {!loading && (
                 <>
                     <div
                         className={
@@ -205,8 +201,7 @@ export default function FinanceStatementPage() {
                     />
                 </>
             )}
-            {userIsAuthorizedAndPageIsLoading && <Loader />}
-            {userIsNotAuthorized && <LoggedOutPage />}
+            {loading && <Loader />}
         </>
     )
 }

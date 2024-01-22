@@ -5,6 +5,7 @@ import Overview from '../Overview/Overview'
 import Translators from '../Translators/Translators'
 import ListOfClients from '../ListOfClients/ListOfClients'
 import ChartsContainer from '../Charts/ChartsContainer'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 
 export const privateRoutes = [
     {
@@ -42,6 +43,11 @@ export const publicRoutes = [
     {
         path: '/',
         component: AuthorizationPage,
+        exact: true,
+    },
+    {
+        path: '/logged-out',
+        component: LoggedOutPage,
         exact: true,
     },
 ]

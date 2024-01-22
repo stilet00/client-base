@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import Button from '@mui/material/Button'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -66,7 +65,7 @@ function Translators() {
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
 
-    return user ? (
+    return (
         <div className={'gallery-container'}>
             {screenIsSmall ? (
                 <div className="gallery-menu gallery-menu_no-border">
@@ -252,8 +251,6 @@ function Translators() {
                 loadingStatus={mailoutInProgress}
             />
         </div>
-    ) : (
-        <LoggedOutPage />
     )
 }
 
