@@ -33,11 +33,15 @@ const createBalanceDay = async (req, res) => {
 
         const BalanceDay = await getCollections().collectionBalanceDays
         const Translator = await getCollections().collectionTranslators
+        const formattedDateTimeId = moment(dateTimeId)
+            .utc()
+            .startOf('day')
+            .format()
 
         const newBalanceDay = new BalanceDay({
             translator: translatorId,
             client: clientId,
-            dateTimeId: moment.utc(dateTimeId).startOf('day').format(),
+            dateTimeId: formattedDateTimeId,
             statistics,
         })
         await newBalanceDay.save()

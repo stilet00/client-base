@@ -211,7 +211,6 @@ function Translators() {
                             }
                             suspendTranslator={suspendTranslator}
                             suspendClient={suspendClient}
-                            selectedDate={translatorFilter.date}
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
                             chatBonus={chatsBonus.find(

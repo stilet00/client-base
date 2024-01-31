@@ -24,7 +24,7 @@ const SuspendedStatusSchema = new mongoose.Schema({
 
 const PersonalPenaltiesSchema = new mongoose.Schema({
     translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
-    date: Date,
+    dateTimeId: Date,
     amount: Number,
     description: String,
 })
@@ -59,4 +59,5 @@ const TranslatorSchema = new mongoose.Schema({
 module.exports = {
     TranslatorSchema,
     BalanceDaySchema,
+    PersonalPenaltiesSchema,
 }

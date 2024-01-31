@@ -56,17 +56,12 @@ export const DEFAULT_CLIENT = {
     image: '',
 }
 
-export const DEFAULT_PENALTY = {
-    date: moment().format(),
-    amount: 0,
-    description: '',
-    translator: '',
-}
-
-class DEFAULT_DAY_BALANCE {
-    constructor(year, month, day) {
-        this.id = moment(year + month + day, 'YYYYMMDD').format('DD MM YYYY')
-        this.clients = []
+export class DEFAULT_PENALTY {
+    constructor(translatorId, dateTimeId) {
+        this.dateTimeId = dateTimeId
+        this.amount = 0
+        this.description = ''
+        this.translator = translatorId
     }
 }
 
@@ -80,10 +75,10 @@ export class DEFAULT_MONTH_CHART {
 }
 
 export class EMPTY_BALANCE_DAY {
-    constructor(clientId) {
-        this.dateTimeId = moment().startOf('day').format()
-        this.client = { _id: '' }
-        this.translator = { _id: '' }
+    constructor(translatorId, clientId, dateTimeId) {
+        this.dateTimeId = dateTimeId
+        this.client = { _id: clientId }
+        this.translator = { _id: translatorId }
         this.statistics = {
             chats: 0,
             letters: 0,
@@ -99,12 +94,6 @@ export class EMPTY_BALANCE_DAY {
     }
 }
 
-export const DEFAULT_BALANCE_DATA = [
-    {
-        year: currentYear,
-        months: fillMonths(currentYear),
-    },
-]
 export const DEFAULT_ERROR = {
     status: false,
     text: null,
@@ -141,29 +130,6 @@ function creatArrayOfYears() {
         arrayWithYears.unshift(String(appStartYear + i))
     }
     return arrayWithYears
-}
-
-function fillMonths(year) {
-    let monthArray = []
-    for (let i = 1; i < 13; i++) {
-        let month = fillDays(i, year)
-        monthArray.push(month)
-    }
-    return monthArray
-}
-
-function fillDays(month, year) {
-    const stringMonth = month < 10 ? '0' + month : month
-    let totalDays = []
-    for (
-        let i = 1;
-        i <= moment(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
-        i++
-    ) {
-        let data = new DEFAULT_DAY_BALANCE(year, stringMonth, i)
-        totalDays.push(data)
-    }
-    return totalDays
 }
 
 export const TASKS_BACKGROUNDS = [

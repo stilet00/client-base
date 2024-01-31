@@ -138,3 +138,11 @@ export function getNumberWithHundreds(number) {
 export function saveUserIdTokenToLocalStorage(idToken) {
     window.localStorage.setItem(localStorageTokenKey, idToken)
 }
+
+export function getStartOfPreviousDayInUTC() {
+    return moment().utc().subtract(1, 'day').startOf('day')
+}
+
+export function convertDateToIsoString(selectedDate) {
+    return moment(selectedDate).utc().startOf('day').format()
+}

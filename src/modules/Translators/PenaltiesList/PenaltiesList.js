@@ -12,9 +12,7 @@ import Paper from '@mui/material/Paper'
 
 export default function PenaltiesList({ penaltiesArray }) {
     const [anchorEl, setAnchorEl] = React.useState(null)
-    const sum = getSumFromArray(
-        penaltiesArray.map(penalty => Number(penalty.amount))
-    )
+    const sum = getSumFromArray(penaltiesArray.map(penalty => Number(penalty)))
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget)

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
 import MESSAGES from 'constants/messages'
-import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { useAlert } from 'sharedComponents/AlertMessage/hooks'
 import {
     addTranslator,
     getTranslators,
@@ -12,25 +12,17 @@ import {
     sendLastVirtualGiftDateRequest,
     getBonusesForChatsRequest,
     assignClientToTranslatorRequest,
-    getBalanceDay,
-    createBalanceDay,
-    updateBalanceDay,
     getBalanceDaysForTranslatorRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
-import { EMPTY_BALANCE_DAY } from 'constants/constants'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
 import moment from 'moment'
-import useModal from 'sharedHooks/useModal'
+
 import {
     calculateBalanceDaySum,
     getMiddleValueFromArray,
+    getStartOfPreviousDayInUTC,
 } from 'sharedFunctions/sharedFunctions'
-
-const convertDateToIsoString = ({ selectedDay, selectedMonth, selectedYear }) =>
-    moment(`${selectedDay} ${selectedMonth} ${selectedYear}`, 'DD MM YYYY')
-        .startOf('day')
-        .format()
 
 export const useTranslators = user => {
     const [chatsBonus, setChatsBonus] = useState([])
@@ -437,163 +429,17 @@ export const useTranslators = user => {
     }
 }
 
-export const useBalanceForm = ({ clients, translatorId }) => {
-    const { open, handleOpen, handleClose } = useModal()
-    const [selectedClient, setSelectedClient] = useState(
-        clients.filter(client => !client.suspended)[0]?._id
-    )
-    const [selectedYear, setSelectedYear] = useState(
-        moment().subtract(1, 'day').format('YYYY')
-    )
-    const [selectedMonth, setSelectedMonth] = useState(
-        moment().subtract(1, 'day').format('M')
-    )
-    const [selectedDay, setSelectedDay] = useState(
-        moment().subtract(1, 'day').format('D')
-    )
-    const [currentBalanceDay, setCurrentBalanceDay] = useState(null)
-    const { alertOpen, closeAlert, openAlert, message } = useAlert()
-    const balanceDayQuery = useQuery(
-        [
-            `balanceDayForTranslator${translatorId}`,
-            selectedYear,
-            selectedMonth,
-            selectedDay,
-            translatorId,
-            selectedClient,
-            open,
-        ],
-        () =>
-            getBalanceDay({
-                translatorId,
-                clientId: selectedClient,
-                dateTimeId: convertDateToIsoString({
-                    selectedDay,
-                    selectedMonth,
-                    selectedYear,
-                }),
-            }),
-        {
-            onSuccess: response => {
-                const balanceDayExists = !!response?.data
-                if (balanceDayExists) {
-                    setCurrentBalanceDay(response.data)
-                }
-                if (!balanceDayExists) {
-                    const emptyBalanceDay = new EMPTY_BALANCE_DAY()
-                    setCurrentBalanceDay({
-                        ...emptyBalanceDay,
-                        dateTimeId: convertDateToIsoString({
-                            selectedDay,
-                            selectedMonth,
-                            selectedYear,
-                        }),
-                        client: { _id: selectedClient },
-                        translator: { _id: translatorId },
-                    })
-                }
-            },
-            onError: error => {
-                openAlert(MESSAGES.somethingWrongWithGettingBalanceDay)
-            },
-            enabled: open,
-        }
-    )
-
-    const balanceDayMutation = useMutation(
-        balanceDayToSubmit => {
-            if (!balanceDayToSubmit._id) {
-                return createBalanceDay({ newBalanceDay: balanceDayToSubmit })
-            }
-            if (balanceDayToSubmit._id) {
-                return updateBalanceDay({ balanceDayToSubmit })
-            }
-        },
-        {
-            onSuccess: response => {
-                setCurrentBalanceDay(response.data)
-                openAlert(MESSAGES.balanceDayHaveBeenSaved)
-            },
-            onError: error => {
-                console.log(error)
-                openAlert(MESSAGES.somethingWentWrongWithSavingBalanceDay)
-            },
-        }
-    )
-    const balanceDaySubmit = ({ currentBalanceDay }) => {
-        balanceDayMutation.mutate(currentBalanceDay)
-    }
-
-    const handleYearChange = event => {
-        setSelectedYear(event.target.value)
-    }
-
-    const handleMonthChange = event => {
-        setSelectedMonth(event.target.value)
-    }
-
-    const handleDayChange = event => {
-        setSelectedDay(event.target.value)
-    }
-
-    const handleClientChange = e => {
-        setSelectedClient(e.target.value)
-    }
-
-    const handleChange = useCallback(
-        e => {
-            const editedBalanceDay = {
-                ...currentBalanceDay,
-                statistics: {
-                    ...currentBalanceDay.statistics,
-                    [e.target.name]:
-                        e.target.type === 'textarea'
-                            ? e.target.value
-                            : Number(e.target.value),
-                },
-            }
-            setCurrentBalanceDay(editedBalanceDay)
-        },
-        [selectedClient, currentBalanceDay]
-    )
-    return {
-        handleOpen,
-        open,
-        handleClose,
-        selectedYear,
-        handleYearChange,
-        selectedMonth,
-        handleMonthChange,
-        selectedDay,
-        handleDayChange,
-        selectedClient,
-        handleClientChange,
-        handleChange,
-        currentBalanceDay,
-        messageFromBalanceDayForm: message,
-        alertOpen,
-        closeAlert,
-        openAlert,
-        balanceDaySubmit,
-        balanceDayIsLoading:
-            balanceDayQuery.isLoading || balanceDayMutation.isLoading,
-    }
-}
-
-export const useSingleTranslator = ({
-    selectedDate,
-    personalPenalties,
-    translatorId,
-}) => {
+export const useSingleTranslator = ({ personalPenalties, translatorId }) => {
     const [lastVirtualGiftLabel, setLastVirtualGiftLabel] = useState(
         `Last virtual gift was at:`
     )
+    const previousDayDate = getStartOfPreviousDayInUTC()
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
     const user = useSelector(state => state.auth.user)
     const fetchBalanceDays = async () => {
         const response = await getBalanceDaysForTranslatorRequest({
-            dateTimeFilter: selectedDate?.startOf('day').format(),
+            dateTimeFilter: previousDayDate.format(),
             translatorId,
         })
         if (response.status !== 200) {
@@ -615,12 +461,12 @@ export const useSingleTranslator = ({
     const calculatePersonalPenalties = () => {
         const thisMonthsPenaltiesArray = []
         const selectedDatePenaltiesArray = []
-        personalPenalties?.forEach(penalty => {
-            if (moment().format('MM YYYY') === penalty.date.slice(3)) {
-                thisMonthsPenaltiesArray.push(Number(penalty.amount))
+        personalPenalties?.forEach(({ dateTimeId, amount }) => {
+            if (moment(dateTimeId).isSame(moment(), 'month')) {
+                thisMonthsPenaltiesArray.push(Number(amount))
             }
-            if (selectedDate.format('MM YYYY') === penalty.date.slice(3)) {
-                selectedDatePenaltiesArray.push(Number(penalty.amount))
+            if (moment(dateTimeId).isSame(previousDayDate, 'date')) {
+                selectedDatePenaltiesArray.push(Number(amount))
             }
         })
 

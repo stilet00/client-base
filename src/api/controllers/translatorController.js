@@ -1,10 +1,14 @@
 const moment = require('moment')
+const mongoose = require('mongoose')
 const { getCollections } = require('../database/collections')
 const ObjectId = require('mongodb').ObjectID
 const {
     sendEmailTemplateToAdministrators,
     sendEmailTemplateToTranslators,
 } = require('../email-api/financeEmailAPI')
+const {
+    PersonalPenaltiesSchema,
+} = require('../models/translatorsDatabaseModels')
 
 const getAllTranslators = async (req, res) => {
     try {
@@ -234,16 +238,31 @@ const assignClientToTranslator = async (req, res) => {
     }
 }
 
+const PersonalPenalties = mongoose.model(
+    'PersonalPenalties',
+    PersonalPenaltiesSchema
+)
+
 const addPersonalPenaltyToTranslator = async (req, res) => {
     try {
         const collections = await getCollections()
         const Translator = collections.collectionTranslators
-        const { translator: translatorId, date, amount, description } = req.body
+        const {
+            translator: translatorId,
+            dateTimeId,
+            amount,
+            description,
+        } = req.body
         const translator = await Translator.findById(translatorId)
         if (!translator) {
             return res.status(404).send('Translator not found')
         }
-        const penalty = { translator: translatorId, date, amount, description }
+        const penalty = new PersonalPenalties({
+            translator: translatorId,
+            dateTimeId,
+            amount,
+            description,
+        })
         translator.personalPenalties.push(penalty)
 
         await translator.save()

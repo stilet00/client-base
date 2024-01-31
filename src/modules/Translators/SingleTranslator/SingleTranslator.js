@@ -19,6 +19,7 @@ import {
     calculateTranslatorMonthTotal,
     calculateBalanceDaySum,
     getSumFromArray,
+    getStartOfPreviousDayInUTC,
 } from 'sharedFunctions/sharedFunctions'
 import { currentYear, previousDay } from '../../../constants/constants'
 import { IconButton, Rating } from '@mui/material'
@@ -59,7 +60,6 @@ function SingleTranslator({
     suspendTranslator,
     suspended,
     suspendClient,
-    selectedDate,
     personalPenalties,
     email,
     updateTranslatorEmail,
@@ -82,19 +82,19 @@ function SingleTranslator({
         translatorBalanceDays,
     } = useSingleTranslator({
         translatorId: _id,
-        selectedDate,
         personalPenalties,
     })
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(
         translatorBalanceDays
     )
+    const previousDayDate = getStartOfPreviousDayInUTC()
     const translatorPreviousMonthTotalSum = 0
     const translatorSalaryForPickedMonth = Math.floor(
         (calculateTranslatorMonthTotal(
             translatorBalanceDays,
             true,
-            selectedDate.format('M'),
-            selectedDate.format('YYYY')
+            previousDayDate.format('M'),
+            previousDayDate.format('YYYY')
         ) +
             chatBonus?.bonusCategorySum) *
             TRANSLATORS_SALARY_PERCENT
@@ -131,19 +131,17 @@ function SingleTranslator({
     }
 
     const monthStringFormat =
-        moment(selectedDate).format('MMMM').length > '5' ? 'MMM' : 'MMMM'
-    const currentMonth = moment(selectedDate).format(monthStringFormat)
+        moment(previousDayDate).format('MMMM').length > '5' ? 'MMM' : 'MMMM'
+    const currentMonth = moment(previousDayDate).format(monthStringFormat)
     const balanceDaysForSelectedDate = translatorBalanceDays.filter(
-        ({ dateTimeId }) =>
-            moment(dateTimeId).format('DD MMMM YYYY') ===
-            selectedDate.format('DD MMMM YYYY')
+        ({ dateTimeId }) => moment(dateTimeId).isSame(previousDayDate, 'day')
     )
     const isValidVirtualGiftDate = moment(
         lastVirtualGiftLabel,
         '',
         true
     ).isValid()
-    console.log(`isValidVirtualGiftDate: ${isValidVirtualGiftDate}`)
+    const personalPenaltiesObject = calculatePersonalPenalties()
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -225,7 +223,7 @@ function SingleTranslator({
                                     >
                                         <span>Middle for {currentMonth}:</span>
                                         <b>{`${calculateMiddleMonthSum(
-                                            selectedDate
+                                            previousDayDate
                                         )} $ `}</b>
                                     </Typography>
                                     <Typography
@@ -236,7 +234,7 @@ function SingleTranslator({
                                             justifyContent: 'space-between',
                                         }}
                                     >
-                                        {`For ${selectedDate.format(
+                                        {`For ${previousDayDate.format(
                                             'MM/DD/YYYY'
                                         )}: `}
                                         {!!balanceDaysForSelectedDate.length >
@@ -295,36 +293,33 @@ function SingleTranslator({
                                                     <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
                                                 </Typography>
                                             ) : null}
-                                            {calculatePersonalPenalties()
-                                                ?.selectedDatePenaltiesArray
-                                                .length ? (
-                                                <Typography
-                                                    variant="body2"
-                                                    align={'left'}
-                                                >
-                                                    Penalties for{' '}
-                                                    {`${selectedDate.format(
-                                                        'MMMM'
-                                                    )}: `}
-                                                    <PenaltiesList
-                                                        penaltiesArray={personalPenalties.filter(
-                                                            penalty =>
-                                                                penalty.date.slice(
-                                                                    3
-                                                                ) ===
-                                                                moment(
-                                                                    selectedDate
-                                                                ).format(
-                                                                    'MM YYYY'
-                                                                )
-                                                        )}
-                                                    />
-                                                </Typography>
-                                            ) : null}
                                         </>
                                     )}
-                                    {calculatePersonalPenalties()
-                                        ?.thisMonthsPenaltiesArray.length ? (
+                                    {personalPenaltiesObject
+                                        ?.selectedDatePenaltiesArray?.length >
+                                        0 && (
+                                        <Typography
+                                            variant="body2"
+                                            align={'left'}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                            }}
+                                        >
+                                            Penalties for{' '}
+                                            {`${previousDayDate.format(
+                                                'MMMM'
+                                            )}: `}
+                                            <PenaltiesList
+                                                penaltiesArray={
+                                                    personalPenaltiesObject.selectedDatePenaltiesArray
+                                                }
+                                            />
+                                        </Typography>
+                                    )}
+                                    {personalPenaltiesObject
+                                        ?.thisMonthsPenaltiesArray?.length >
+                                        0 && (
                                         <Typography
                                             variant="body2"
                                             align={'left'}
@@ -336,18 +331,12 @@ function SingleTranslator({
                                             Penalties for{' '}
                                             {`${moment().format('MMMM')}: `}
                                             <PenaltiesList
-                                                penaltiesArray={personalPenalties.filter(
-                                                    penalty =>
-                                                        penalty.date.slice(
-                                                            3
-                                                        ) ===
-                                                        moment().format(
-                                                            'MM YYYY'
-                                                        )
-                                                )}
+                                                penaltiesArray={
+                                                    personalPenaltiesObject.thisMonthsPenaltiesArray
+                                                }
                                             />
                                         </Typography>
-                                    ) : null}
+                                    )}
                                 </>
                             )}
                             {translatorBalanceDays.length === 0 && (

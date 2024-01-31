@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
 import { useMutation } from 'react-query'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
@@ -13,6 +14,7 @@ import {
 import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DEFAULT_PENALTY } from 'constants/constants'
+import { convertDateToIsoString } from 'sharedFunctions/sharedFunctions'
 import GavelIcon from '@mui/icons-material/Gavel'
 import { StyledModal } from 'sharedComponents/StyledMaterial/styledMaterialComponents'
 import { createPersonalPenalty } from 'services/translatorsServices/services'
@@ -21,7 +23,11 @@ import { useAlert } from 'sharedComponents/AlertMessage/hooks'
 import MESSAGES from 'constants/messages'
 
 export default function PersonalPenaltyForm({ id, suspended }) {
-    const [penalty, setPenalty] = useState(DEFAULT_PENALTY)
+    const defaultPenalty = new DEFAULT_PENALTY(
+        id,
+        convertDateToIsoString(moment())
+    )
+    const [penalty, setPenalty] = useState(defaultPenalty)
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
 
     const { open, handleOpen, handleClose } = useModal()
@@ -31,7 +37,7 @@ export default function PersonalPenaltyForm({ id, suspended }) {
     }
 
     function clear() {
-        setPenalty(DEFAULT_PENALTY)
+        setPenalty(defaultPenalty)
     }
 
     const createPersonalPenaltyMutation = useMutation(
