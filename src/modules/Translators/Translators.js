@@ -60,7 +60,6 @@ function Translators() {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        chatsBonus,
         updateBalanceDayIsLoading,
     } = useTranslators(user)
     const { isAdmin } = useAdminStatus(user)
@@ -213,9 +212,6 @@ function Translators() {
                             suspendClient={suspendClient}
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
-                            chatBonus={chatsBonus.find(
-                                bonus => bonus.translatorId === item._id
-                            )}
                         />
                     ))
                 ) : loading ? (

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import useModal from 'sharedHooks/useModal'
 import {
     getStartOfPreviousDayInUTC,
@@ -27,6 +27,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
         setSelectedDate(e)
     }
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
+    const queryClient = useQueryClient()
     const balanceDayQuery = useQuery(
         [
             `balanceDayForTranslatorForm${translatorId}`,
@@ -53,7 +54,6 @@ export const useBalanceForm = ({ clients, translatorId }) => {
                         selectedClient,
                         convertDateToIsoString(selectedDate)
                     )
-                    console.log(emptyBalanceDay)
                     setCurrentBalanceDay(emptyBalanceDay)
                 }
             },
@@ -67,7 +67,6 @@ export const useBalanceForm = ({ clients, translatorId }) => {
     const balanceDayMutation = useMutation(
         balanceDayToSubmit => {
             if (!balanceDayToSubmit._id) {
-                console.log(balanceDayToSubmit)
                 return createBalanceDay({ newBalanceDay: balanceDayToSubmit })
             }
             if (balanceDayToSubmit._id) {
@@ -77,6 +76,9 @@ export const useBalanceForm = ({ clients, translatorId }) => {
         {
             onSuccess: response => {
                 setCurrentBalanceDay(response.data)
+                queryClient.invalidateQueries(
+                    `balanceDaysForTranslator${translatorId}`
+                )
                 openAlert(MESSAGES.balanceDayHaveBeenSaved)
             },
             onError: error => {

@@ -150,8 +150,6 @@ export const useOverview = user => {
                     calculateTranslatorMonthTotal(
                         balanceDaysForFilteredMonth,
                         forFullMonth,
-                        monthNumber,
-                        year,
                         onlySvadba
                     )
             })
@@ -172,9 +170,7 @@ export const useOverview = user => {
                     sum +
                     calculateTranslatorMonthTotal(
                         balanceDaysForFilteredMonth,
-                        forFullMonth,
-                        monthNumber,
-                        year
+                        forFullMonth
                     )
             })
         }

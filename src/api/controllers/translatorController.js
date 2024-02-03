@@ -41,8 +41,6 @@ const getLastVirtualGift = async (req, res) => {
             ],
         })
 
-        console.log(balanceDay)
-
         if (!balanceDay) {
             res.send('Не найдено подарков')
             return
@@ -162,54 +160,6 @@ const sendEmailsToTranslators = async (req, res) => {
     return res.status(200).send(arrayOfTranslatorNames)
 }
 
-const calculateBonuses = async (req, res) => {
-    try {
-        if (!req.body) {
-            return res.status(400).send('Bad Request: No body in the request')
-        }
-
-        const { dateTimeFilter, category } = req.body
-        const BalanceDay = await getCollections().collectionBalanceDays
-        const startOfMonth = moment(dateTimeFilter)
-            .startOf('month')
-            .toISOString()
-        const endOfMonth = moment(dateTimeFilter).endOf('month').toISOString()
-        const pipeline = [
-            {
-                $match: {
-                    $expr: {
-                        $and: [
-                            { $gte: ['$dateTimeId', new Date(startOfMonth)] },
-                            { $lte: ['$dateTimeId', new Date(endOfMonth)] },
-                        ],
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: '$translator',
-                    bonusCategorySum: { $sum: `$statistics.${category}` },
-                },
-            },
-        ]
-        const result = await BalanceDay.aggregate(pipeline).exec()
-        if (result.length === 0) {
-            return res.status(200).send([])
-        }
-        res.send(
-            result.map(chatBonusObject => {
-                return {
-                    translatorId: chatBonusObject._id,
-                    bonusCategorySum: chatBonusObject.bonusCategorySum,
-                }
-            })
-        )
-    } catch (err) {
-        console.error(err)
-        res.status(500).send(err.message)
-    }
-}
-
 const assignClientToTranslator = async (req, res) => {
     try {
         const { clientId, translatorId } = req.body
@@ -282,7 +232,6 @@ module.exports = {
     updateTranslator,
     deleteTranslator,
     sendEmailsToTranslators,
-    calculateBonuses,
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
 }

@@ -66,7 +66,6 @@ function SingleTranslator({
     wantsToReceiveEmails,
     dollarToUahRate,
     admin,
-    chatBonus,
     updateBalanceDayIsLoading,
 }) {
     const {
@@ -88,22 +87,25 @@ function SingleTranslator({
         translatorBalanceDays
     )
     const previousDayDate = getStartOfPreviousDayInUTC()
-    const translatorPreviousMonthTotalSum = 0
-    const translatorSalaryForPickedMonth = Math.floor(
-        (calculateTranslatorMonthTotal(
-            translatorBalanceDays,
-            true,
-            previousDayDate.format('M'),
-            previousDayDate.format('YYYY')
-        ) +
-            chatBonus?.bonusCategorySum) *
-            TRANSLATORS_SALARY_PERCENT
+    const translatorBalanceDaysForPreviousMonth = translatorBalanceDays.filter(
+        ({ dateTimeId }) =>
+            moment(dateTimeId).isSame(
+                moment().utc().subtract(1, 'month'),
+                'month'
+            )
+    )
+    const translatorPreviousMonthTotalSum = calculateTranslatorMonthTotal(
+        translatorBalanceDaysForPreviousMonth,
+        true
+    )
+    const translatorSalaryForPreviousMonth = Math.floor(
+        translatorPreviousMonthTotalSum * TRANSLATORS_SALARY_PERCENT
     )
 
-    const translatorSalaryForPickedMonthInUah = Math.floor(
+    const translatorSalaryForPreviousMonthInUah = Math.floor(
         getTranslatorSalaryInUah(
             dollarToUahRate,
-            translatorSalaryForPickedMonth
+            translatorSalaryForPreviousMonth
         )
     )
 
@@ -133,6 +135,9 @@ function SingleTranslator({
     const monthStringFormat =
         moment(previousDayDate).format('MMMM').length > '5' ? 'MMM' : 'MMMM'
     const currentMonth = moment(previousDayDate).format(monthStringFormat)
+    const previousMonth = moment()
+        .subtract(1, 'month')
+        .format(monthStringFormat)
     const balanceDaysForSelectedDate = translatorBalanceDays.filter(
         ({ dateTimeId }) => moment(dateTimeId).isSame(previousDayDate, 'day')
     )
@@ -264,20 +269,8 @@ function SingleTranslator({
                                                         'space-between',
                                                 }}
                                             >
-                                                {`Chats bonus in ${currentMonth}: `}
-                                                <b>{`${chatBonus?.bonusCategorySum} $`}</b>
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                align="left"
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent:
-                                                        'space-between',
-                                                }}
-                                            >
-                                                {`Salary for ${currentMonth}: `}
-                                                <b>{`${translatorSalaryForPickedMonth} $`}</b>
+                                                {`Salary for ${previousMonth}: `}
+                                                <b>{`${translatorSalaryForPreviousMonth} $`}</b>
                                             </Typography>
                                             {dollarToUahRate ? (
                                                 <Typography
@@ -289,8 +282,8 @@ function SingleTranslator({
                                                             'space-between',
                                                     }}
                                                 >
-                                                    {`Salary: `}
-                                                    <b>{`${translatorSalaryForPickedMonthInUah} ₴`}</b>
+                                                    {`Salary for ${previousMonth} in UAH: `}
+                                                    <b>{`${translatorSalaryForPreviousMonthInUah} ₴`}</b>
                                                 </Typography>
                                             ) : null}
                                         </>

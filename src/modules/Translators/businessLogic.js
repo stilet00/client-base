@@ -10,7 +10,6 @@ import {
     updateTranslator,
     sendNotificationEmailsRequest,
     sendLastVirtualGiftDateRequest,
-    getBonusesForChatsRequest,
     assignClientToTranslatorRequest,
     getBalanceDaysForTranslatorRequest,
 } from 'services/translatorsServices/services'
@@ -25,7 +24,6 @@ import {
 } from 'sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
-    const [chatsBonus, setChatsBonus] = useState([])
     const [translators, setTranslators] = useState([])
     const [currentClient, setCurrentClient] = useState(null)
     const [dollarToUahRate, setDollarToUahRate] = useState(null)
@@ -373,26 +371,6 @@ export const useTranslators = user => {
         )
     }
 
-    const getBonusesForChats = async () => {
-        const response = await getBonusesForChatsRequest({
-            dateTimeFilter: translatorFilter.date.format(),
-            category: 'chats',
-        })
-        if (response.status !== 200)
-            throw new Error(MESSAGES.somethingWrongWithGettingTranslators)
-        return response.data
-    }
-
-    useQuery('chatsBonusForTranslators', getBonusesForChats, {
-        enabled: !!user,
-        onSuccess: data => {
-            setChatsBonus(data)
-        },
-        onError: () => {
-            openAlert(MESSAGES.somethingWrongWithChatBonus, 5000)
-        },
-    })
-
     return {
         translators,
         setTranslators,
@@ -424,8 +402,6 @@ export const useTranslators = user => {
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        chatsBonus,
-        getBonusesForChats,
     }
 }
 

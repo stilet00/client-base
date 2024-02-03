@@ -61,8 +61,6 @@ export function getTotalDaysOfMonth(year, monthNumber) {
 export const calculateTranslatorMonthTotal = (
     balanceDays,
     forFullMonth = true,
-    monthFilter = currentMonth,
-    yearFilter = currentYear,
     onlySvadba = false,
     category = null
 ) => {

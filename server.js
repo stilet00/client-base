@@ -21,7 +21,6 @@ const {
     updateTranslator,
     deleteTranslator,
     sendEmailsToTranslators,
-    calculateBonuses,
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
 } = require('./src/api/controllers/translatorController')
@@ -138,7 +137,6 @@ app.get(
     sendEmailsToTranslators
 )
 app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
-app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
 app.put(
     translatorsURL + 'assign-client',
     isAuthenticated,
