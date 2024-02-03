@@ -27,6 +27,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg'
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt'
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice'
 
 export const currentYear = moment().format('YYYY')
 export const previousYear = moment().subtract(1, 'year').format('YYYY')
@@ -218,9 +219,9 @@ export const CHARTS_CATEGORIES = [
         icon: <CardGiftcardIcon />,
     },
     {
-        name: 'Virtual Gifts Dating',
-        value: 'virtualGiftsDating',
-        icon: <CardGiftcardIcon sx={{ color: 'red' }} />,
+        name: 'Voice Messages',
+        value: 'voiceMessages',
+        icon: <KeyboardVoiceIcon sx={{ color: 'red' }} />,
     },
     {
         name: 'Attachments',
