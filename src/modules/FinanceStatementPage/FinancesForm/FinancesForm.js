@@ -80,7 +80,7 @@ export default function FinancesForm({ handleNewPayment }) {
         setPaymentData({ ...paymentData, date: newDate })
     }
 
-    const getListofRecievers = comment => {
+    const getListOfReceivers = comment => {
         if (comment === 'Payment to bot') {
             return BOT_LIST
         } else if (comment === 'Payment to translator') {
@@ -90,13 +90,13 @@ export default function FinancesForm({ handleNewPayment }) {
         }
     }
 
-    const listOfReceivers = getListofRecievers(paymentData.comment)
+    const listOfReceivers = getListOfReceivers(paymentData.comment)
 
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
         if (name === 'comment') {
             const newState = { ...paymentData, [name]: value }
-            const newListOfRecievers = getListofRecievers(value)
+            const newListOfRecievers = getListOfReceivers(value)
             setPaymentData(newState)
             setFormErrors(handleFormValidation(newState, newListOfRecievers))
         } else {
