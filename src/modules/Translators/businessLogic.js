@@ -437,12 +437,17 @@ export const useSingleTranslator = ({ personalPenalties, translatorId }) => {
     const calculatePersonalPenalties = () => {
         const thisMonthsPenaltiesArray = []
         const selectedDatePenaltiesArray = []
-        personalPenalties?.forEach(({ dateTimeId, amount }) => {
-            if (moment(dateTimeId).isSame(moment(), 'month')) {
-                thisMonthsPenaltiesArray.push(Number(amount))
+        personalPenalties?.forEach(personalPenalty => {
+            if (moment(personalPenalty.dateTimeId).isSame(moment(), 'month')) {
+                thisMonthsPenaltiesArray.push(personalPenalty)
             }
-            if (moment(dateTimeId).isSame(previousDayDate, 'date')) {
-                selectedDatePenaltiesArray.push(Number(amount))
+            if (
+                moment(personalPenalty.dateTimeId).isSame(
+                    previousDayDate,
+                    'date'
+                )
+            ) {
+                selectedDatePenaltiesArray.push(personalPenalty)
             }
         })
 
