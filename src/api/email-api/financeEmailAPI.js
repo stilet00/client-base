@@ -2,7 +2,7 @@ const nodeMailer = require('nodemailer')
 const moment = require('moment')
 const {
     calculatePercentDifference,
-    calCurMonthTranslatorPenaties,
+    getCurrentMonthPenalties,
     calculateBalanceDaySum,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
@@ -180,7 +180,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
                     }
                 }
             )
-            const curMonthPenalties = calCurMonthTranslatorPenaties(
+            const curMonthPenalties = getCurrentMonthPenalties(
                 translator.personalPenalties
             )
             return {

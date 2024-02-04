@@ -83,16 +83,15 @@ const insertClientToTranslatorBalanceDays = (balanceYearToUpdate, clientId) => {
     )
 }
 
-const calCurMonthTranslatorPenaties = penalties => {
+const getCurrentMonthPenalties = penalties => {
     if (!penalties) return '0'
-    const currentDate = moment()
-    const onlyCurMonthPenalties = penalties.filter(penalty => {
-        const penaltyDate = moment(penalty.date, 'DD MM YYYY')
-        return penaltyDate.isSame(currentDate, 'month')
-    })
+    const currentDate = moment().utc()
+    const onlyCurMonthPenalties = penalties.filter(({ dateTimeId }) =>
+        moment(dateTimeId).utc().isSame(currentDate, 'month')
+    )
     const totalPenaltiesForCurMonth = onlyCurMonthPenalties.reduce(
-        (acc, currerentPenalty) => {
-            const amount = parseInt(currerentPenalty.amount, 10) || 0
+        (acc, currentPenalty) => {
+            const amount = parseInt(currentPenalty.amount, 10) || 0
             return acc + amount
         },
         0
@@ -103,6 +102,6 @@ const calCurMonthTranslatorPenaties = penalties => {
 module.exports = {
     calculatePercentDifference,
     insertClientToTranslatorBalanceDays,
-    calCurMonthTranslatorPenaties,
+    getCurrentMonthPenalties,
     calculateBalanceDaySum,
 }

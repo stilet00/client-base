@@ -49,7 +49,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 text-align: center;
                                                 background-color: #ffffff;
                                                 border-collapse: collapse;
-                                                border-radius: 4px 4px 0 0;
+                                                border-radius: 4px;
                                                 box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), 5px 5px 5px #abc6f7;
                                             }
                                             tr, td {
@@ -203,7 +203,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                                     : 'green'
                                                             }">${
         translatorInfoForEmailLetter.curMonthPenalties
-    }</span>
+    }$</span>
                                                         </td>
                                                     </tr>
                                                 </tfoot>
