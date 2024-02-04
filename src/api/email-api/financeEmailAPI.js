@@ -57,10 +57,9 @@ const sendEmailTemplateToAdministrators = async translatorsCollection => {
         .map(({ name, surname, statistics }) => {
             const translatorStatisticsForYesterday = statistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId).isSame(
-                        moment().subtract(1, 'day'),
-                        'day'
-                    )
+                    moment(balanceDay.dateTimeId)
+                        .utc()
+                        .isSame(moment().utc().subtract(1, 'day'), 'day')
             )
             const translatorSum = translatorStatisticsForYesterday.reduce(
                 (sum, current) => {
@@ -117,23 +116,25 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
     arrayOfTranslatorsInfoForEmailLetter =
         arrayOfTranslatorsInfoForEmailLetter.map(translator => {
             const translatorsStatistics = translator.statistics
-
             const balanceDaysForYesterday = translatorsStatistics.filter(
-                balanceDay =>
-                    moment(balanceDay.dateTimeId).isSame(
-                        moment().subtract(1, 'day'),
-                        'day'
-                    )
+                balanceDay => {
+                    return moment(balanceDay.dateTimeId)
+                        .utc()
+                        .isSame(moment().utc().subtract(1, 'day'), 'day')
+                }
             )
             const balanceDaysForCurrentMonth = translatorsStatistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId).format('MM') ===
-                    moment().format('MM')
+                    moment(balanceDay.dateTimeId)
+                        .utc()
+                        .isSame(moment().utc(), 'month')
             )
             const balanceDaysForPreviousMonth = translatorsStatistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId).format('MM') ===
-                    moment().subtract(1, 'month').format('MM')
+                    moment(balanceDay.dateTimeId)
+                        .utc()
+                        .subtract(1, 'month')
+                        .isSame(moment().utc(), 'month')
             )
             const yesterdayTotal = balanceDaysForYesterday.reduce(
                 (sum, current) => {

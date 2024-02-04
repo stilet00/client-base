@@ -119,10 +119,15 @@ const deleteTranslator = (req, res) => {
 const sendEmailsToTranslators = async (req, res) => {
     const Translator = await getCollections().collectionTranslators
     const startOfPreviousMonth = moment()
+        .utc()
         .subtract(1, 'month')
         .startOf('month')
         .format()
-    const endOfYesterday = moment().subtract(1, 'days').endOf('day').format()
+    const endOfYesterday = moment()
+        .utc()
+        .subtract(1, 'days')
+        .endOf('day')
+        .format()
 
     const queryForBalanceDays = {
         dateTimeId: {

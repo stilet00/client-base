@@ -526,6 +526,7 @@ function SingleTranslator({
                                     <LoadingButton
                                         size="small"
                                         sx={{
+                                            height: 48,
                                             borderColor: '#fff',
                                             color: 'rgba(0, 0, 0, 0.87)',
                                             width: '100%',
