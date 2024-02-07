@@ -66,8 +66,9 @@ export default function EditBalanceForm({
         clients,
         translatorId,
     })
-    const voiceMessageCheck = () => currentBalanceDay?.voiceMessages ?? 0
     const currentBalanceDayStatistics = currentBalanceDay?.statistics
+    const voiceMessageCheck = () =>
+        currentBalanceDayStatistics?.voiceMessages ?? 0
     return (
         <>
             <Button
@@ -172,9 +173,9 @@ export default function EditBalanceForm({
                                                                     onChange={
                                                                         handleChange
                                                                     }
-                                                                    onClick={e =>
-                                                                        e.target.select()
-                                                                    }
+                                                                    onClick={e => {
+                                                                        e.target?.select()
+                                                                    }}
                                                                     value={
                                                                         currentBalanceDayStatistics.chats
                                                                     }

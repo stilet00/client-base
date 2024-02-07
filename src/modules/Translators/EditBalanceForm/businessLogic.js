@@ -61,6 +61,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
                 openAlert(MESSAGES.somethingWrongWithGettingBalanceDay)
             },
             enabled: open,
+            refetchOnWindowFocus: false,
         }
     )
 
