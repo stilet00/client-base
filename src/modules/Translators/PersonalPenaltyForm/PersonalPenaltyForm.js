@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -29,7 +29,7 @@ export default function PersonalPenaltyForm({ id, suspended }) {
     )
     const [penalty, setPenalty] = useState(defaultPenalty)
     const { alertOpen, closeAlert, openAlert, message } = useAlert()
-
+    const queryClient = useQueryClient()
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
@@ -47,6 +47,7 @@ export default function PersonalPenaltyForm({ id, suspended }) {
             }),
         {
             onSuccess: () => {
+                queryClient.invalidateQueries(`penaltiesForTranslator${id}`)
                 handleClose()
             },
             onError: () => {

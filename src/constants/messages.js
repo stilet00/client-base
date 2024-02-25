@@ -123,6 +123,10 @@ const MESSAGES = {
         text: 'Something went wrong while calculating chat bonus :(',
         status: false,
     },
+    somethingWentWrongWithPersonalPenalties: {
+        text: 'Something went wrong while getting personal penalties :(',
+        status: false,
+    },
 }
 
 export default MESSAGES

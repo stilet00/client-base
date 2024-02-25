@@ -60,7 +60,6 @@ function SingleTranslator({
     suspendTranslator,
     suspended,
     suspendClient,
-    personalPenalties,
     email,
     updateTranslatorEmail,
     wantsToReceiveEmails,
@@ -77,11 +76,10 @@ function SingleTranslator({
         getLastVirtualGiftDate,
         lastVirtualGiftLabel,
         giftRequestLoader,
-        balanceDaysAreLoading,
+        dataIsLoading,
         translatorBalanceDays,
     } = useSingleTranslator({
         translatorId: _id,
-        personalPenalties,
     })
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(
         translatorBalanceDays
@@ -158,7 +156,7 @@ function SingleTranslator({
             id={_id}
         >
             <CardContent>
-                {!balanceDaysAreLoading && (
+                {!dataIsLoading && (
                     <Rating
                         name="read-only"
                         value={getTranslatorsRating()}
@@ -201,8 +199,8 @@ function SingleTranslator({
                             </b>
                         </Typography>
                     ) : null}
-                    {balanceDaysAreLoading && <Loader />}
-                    {!balanceDaysAreLoading && (
+                    {dataIsLoading && <Loader />}
+                    {!dataIsLoading && (
                         <>
                             {translatorBalanceDays.length > 0 && (
                                 <>
@@ -583,9 +581,7 @@ function SingleTranslator({
                 </div>
             </CardContent>
             <CardActions>
-                {clients?.length &&
-                !suspended.status &&
-                !balanceDaysAreLoading ? (
+                {clients?.length && !suspended.status && !dataIsLoading ? (
                     <EditBalanceForm
                         updateBalanceDayIsLoading={updateBalanceDayIsLoading}
                         translatorId={_id}

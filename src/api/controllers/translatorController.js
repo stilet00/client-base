@@ -229,6 +229,34 @@ const addPersonalPenaltyToTranslator = async (req, res) => {
         res.status(500).send('An error occurred')
     }
 }
+const getPersonalPenalties = async (req, res) => {
+    try {
+        const { translatorId, dateTimeFilter } = req.query
+        const collections = await getCollections()
+        const Translator = collections.collectionTranslators
+        const dateTimeFilterMoment = moment(dateTimeFilter).utc()
+        const startOfMonth = dateTimeFilterMoment.startOf('month').format()
+        const endOfMonth = dateTimeFilterMoment.endOf('month').format()
+        const selectedTranslator = await Translator.findById(
+            translatorId
+        ).populate({
+            path: 'personalPenalties',
+            match: {
+                dateTimeId: {
+                    $gte: startOfMonth,
+                    $lte: endOfMonth,
+                },
+            },
+        })
+        res.send(selectedTranslator?.personalPenalties ?? [])
+    } catch (error) {
+        console.error(
+            'An error occurred while getting personal penalties:',
+            error
+        )
+        res.status(500).send('An error occurred')
+    }
+}
 
 module.exports = {
     getAllTranslators,
@@ -239,4 +267,5 @@ module.exports = {
     sendEmailsToTranslators,
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
+    getPersonalPenalties,
 }

@@ -109,6 +109,16 @@ export function getBalanceDaysForTranslatorRequest({
     )
 }
 
+export function getPenaltiesForTranslatorRequest({
+    dateTimeFilter = '',
+    translatorId = '',
+}) {
+    return axios.get(
+        `${personalPenaltyURL}get?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
 export async function createPersonalPenalty({ personalPenaltyData }) {
     return axios.post(
         `${personalPenaltyURL}create`,

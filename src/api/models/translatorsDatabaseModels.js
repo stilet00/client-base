@@ -14,6 +14,7 @@ const BalanceDaySchema = new mongoose.Schema({
         phoneCalls: Number,
         penalties: Number,
         comments: String,
+        voiceMessages: Number,
     },
 })
 

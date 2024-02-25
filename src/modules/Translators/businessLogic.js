@@ -12,6 +12,7 @@ import {
     sendLastVirtualGiftDateRequest,
     assignClientToTranslatorRequest,
     getBalanceDaysForTranslatorRequest,
+    getPenaltiesForTranslatorRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
@@ -405,17 +406,28 @@ export const useTranslators = user => {
     }
 }
 
-export const useSingleTranslator = ({ personalPenalties, translatorId }) => {
+export const useSingleTranslator = ({ translatorId }) => {
     const [lastVirtualGiftLabel, setLastVirtualGiftLabel] = useState(
         `Last virtual gift was at:`
     )
     const previousDayDate = getStartOfPreviousDayInUTC()
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
+    const [personalPenalties, setPersonalPenalties] = useState([])
     const user = useSelector(state => state.auth.user)
     const fetchBalanceDays = async () => {
         const response = await getBalanceDaysForTranslatorRequest({
             dateTimeFilter: previousDayDate.format(),
+            translatorId,
+        })
+        if (response.status !== 200) {
+            throw new Error(MESSAGES.somethingWrongWithBalanceDays)
+        }
+        return response.data
+    }
+    const fetchPenalties = async () => {
+        const response = await getPenaltiesForTranslatorRequest({
+            dateTimeFilter: moment().format(),
             translatorId,
         })
         if (response.status !== 200) {
@@ -431,6 +443,17 @@ export const useSingleTranslator = ({ personalPenalties, translatorId }) => {
             onSuccess: data => setTranslatorBalanceDays(data),
             onError: () =>
                 console.error(MESSAGES.somethingWrongWithBalanceDays),
+        }
+    )
+
+    const { isLoading: penaltiesAreLoading } = useQuery(
+        `penaltiesForTranslator${translatorId}`,
+        fetchPenalties,
+        {
+            enabled: !!user,
+            onSuccess: data => setPersonalPenalties(data),
+            onError: () =>
+                console.error(MESSAGES.somethingWentWrongWithPersonalPenalties),
         }
     )
 
@@ -548,7 +571,7 @@ export const useSingleTranslator = ({ personalPenalties, translatorId }) => {
         getLastVirtualGiftDate,
         lastVirtualGiftLabel,
         giftRequestLoader,
-        balanceDaysAreLoading,
+        dataIsLoading: balanceDaysAreLoading || penaltiesAreLoading,
         translatorBalanceDays,
     }
 }

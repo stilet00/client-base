@@ -59,7 +59,6 @@ const createBalanceDay = async (req, res) => {
 const updateBalanceDay = async (req, res) => {
     try {
         const { _id: id, statistics } = req.body
-
         const BalanceDay = await getCollections().collectionBalanceDays
         const updatedBalanceDay = await BalanceDay.findByIdAndUpdate(
             id,
@@ -151,7 +150,7 @@ const getCurrentMonthTotal = async (req, res) => {
         const currentMonthSumTillNow = balanceDays.reduce((sum, current) => {
             return sum + calculateBalanceDaySum(current.statistics)
         }, 0)
-        res.send(`${currentMonthSumTillNow}`)
+        res.send(`${currentMonthSumTillNow?.toFixed(2)}`)
     } catch (error) {
         console.error(error)
         res.status(500).json({ error: 'Internal Server Error' })
