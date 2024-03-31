@@ -58,7 +58,7 @@ const connectToDatabase = async () => {
         collections.set('collectionStatements', Statement)
         collections.set('collectionBalanceDays', BalanceDay)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 

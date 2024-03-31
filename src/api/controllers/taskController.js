@@ -19,7 +19,7 @@ const editTask = async (request, response) => {
         )
         response.sendStatus(200)
     } catch (err) {
-        console.log(err)
+        console.error(err)
         response.sendStatus(500)
     }
 }
@@ -30,7 +30,7 @@ const deleteTask = async (request, response) => {
         await Task.deleteOne({ _id: request.params.id })
         response.sendStatus(200)
     } catch (err) {
-        console.log(err)
+        console.error(err)
         response.sendStatus(500)
     }
 }

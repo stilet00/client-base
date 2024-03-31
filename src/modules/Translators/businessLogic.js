@@ -91,16 +91,15 @@ export const useTranslators = user => {
         return response.data
     }
 
-    // const { isLoading: currencyIsLoading } = useQuery(
-    //     'currencyForTranslators',
-    //     fetchCurrency,
-    //     {
-    //         enabled: !!user,
-    //         onSuccess: data => setDollarToUahRate(data),
-    //         onError: () => openAlert(MESSAGES.somethingWrongWithCurrencies),
-    //     }
-    // )
-    const currencyIsLoading = false
+    const { isLoading: currencyIsLoading } = useQuery(
+        'currencyForTranslators',
+        fetchCurrency,
+        {
+            enabled: !!user,
+            onSuccess: data => setDollarToUahRate(data),
+            onError: () => openAlert(MESSAGES.somethingWrongWithCurrencies),
+        }
+    )
     const { isLoading: translatorsAreLoading } = useQuery(
         'translatorsForTranslators',
         fetchTranslators,
