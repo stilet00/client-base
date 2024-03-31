@@ -1,18 +1,20 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { getClients } from '../../services/clientsServices/services'
 import { getTranslators } from '../../services/translatorsServices/services'
+import { getPaymentsRequest } from '../../services/financesStatement/services'
 import {
     calculateTranslatorMonthTotal,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import { currentMonth, currentYear } from '../../constants/constants'
 
 export const useOverview = user => {
     const [clients, setClients] = useState([])
+    const match = useRouteMatch()
+    const [statements, setStatments] = useState([])
 
     const [translators, setTranslators] = useState([])
-
-    const [bestMonth] = useState(null)
 
     const [selectedYear, setSelectedYear] = useState(currentYear)
 
@@ -22,86 +24,79 @@ export const useOverview = user => {
 
     useEffect(() => {
         if (user) {
-            // getBalance().then((res) => {
-            //   if (res.status === 200) {
-            //     let byYearFilteredArray = res.data.filter(
-            //       (item) => item.year === selectedYear
-            //     );
-            //     let sumSortedArray =
-            //       getArrayWithSums(byYearFilteredArray).sort(compareSums);
-            //     setBestMonth(sumSortedArray[sumSortedArray.length - 1]);
-            //   }
-            // });
-
-            getClients().then(res => {
+            getClients(match.url).then(res => {
                 if (res.status === 200) {
                     setClients(res.data)
                 }
             })
 
-            getTranslators().then(res => {
+            getTranslators(selectedYear).then(res => {
                 if (res.status === 200) {
                     setTranslators(res.data)
                 }
             })
+
+            getPaymentsRequest().then(res => {
+                if (res.status === 200) {
+                    setStatments(res.data)
+                }
+            })
         }
-    }, [selectedYear, user])
+    }, [user, selectedYear])
 
-    const calculateMonthTotal = useCallback(
-        (
-            monthNumber = currentMonth,
-            forFullMonth = true,
-            onlySvadba = false
-        ) => {
-            let sum = 0
+    const calculateMonthTotal = (
+        monthNumber = currentMonth,
+        forFullMonth = true,
+        onlySvadba = false,
+        year = selectedYear
+    ) => {
+        let sum = 0
+        if (onlySvadba) {
+            translators.forEach(translator => {
+                let translatorsStatistic = translator.statistics
+                sum =
+                    sum +
+                    calculateTranslatorMonthTotal(
+                        translatorsStatistic,
+                        forFullMonth,
+                        monthNumber,
+                        year,
+                        onlySvadba
+                    )
+            })
+        } else {
+            translators.forEach(translator => {
+                let translatorsStatistic = translator.statistics
+                sum =
+                    sum +
+                    calculateTranslatorMonthTotal(
+                        translatorsStatistic,
+                        forFullMonth,
+                        monthNumber,
+                        year
+                    )
+            })
+        }
+        return getNumberWithHundreds(sum)
+    }
 
-            if (onlySvadba) {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        calculateTranslatorMonthTotal(
-                            translatorsStatistic,
-                            forFullMonth,
-                            monthNumber,
-                            currentYear,
-                            onlySvadba
-                        )
-                })
-            } else {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        calculateTranslatorMonthTotal(
-                            translatorsStatistic,
-                            forFullMonth,
-                            monthNumber
-                        )
-                })
-            }
-            return getNumberWithHundredths(sum)
-        },
-        [translators]
-    )
-
-    const calculateYearTotal = useCallback(() => {
+    const calculateYearTotal = () => {
         let yearSum = 0
 
         for (let monthNumber = 1; monthNumber < 13; monthNumber++) {
             yearSum = yearSum + calculateMonthTotal(monthNumber)
         }
 
-        return yearSum
-    }, [calculateMonthTotal])
+        return Math.round(yearSum)
+    }
 
     return {
         selectedYear,
         handleChange,
         clients,
         translators,
-        bestMonth,
         calculateMonthTotal,
         calculateYearTotal,
+        statements,
     }
 }

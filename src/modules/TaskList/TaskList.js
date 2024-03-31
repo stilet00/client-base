@@ -1,14 +1,22 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import '../../styles/modules/TaskList.css'
 import SingleTask from './SingleTask/SingleTask'
 import Form from './Form/Form'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Loader from '../../sharedComponents/Loader/Loader'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTaskList } from './businessLogic'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
+import Typography from '@mui/material/Typography'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
-function TaskList({ user }) {
+function TaskList() {
+    const user = useSelector(state => state.auth.user)
+    const { isAdmin } = useAdminStatus(user)
     const {
         tasks,
         alertOpen,
@@ -17,30 +25,65 @@ function TaskList({ user }) {
         deleteTask,
         newTask,
         toggleTodo,
-        loading
+        loading,
+        notificationsAreAllowed,
+        onTaskNotificationsSettingsChange,
     } = useTaskList(user)
 
-    const page = tasks.length && !loading ? (
-        <TransitionGroup className="todo-list" component={'ul'}>
-            {tasks.map(item => (
-                <CSSTransition key={item._id} timeout={500} classNames="item">
-                    <SingleTask
-                        {...item}
-                        onDelete={deleteTask}
-                        onToggle={toggleTodo}
-                    />
-                </CSSTransition>
-            ))}
-        </TransitionGroup>
-    ) : loading  ? <Loader /> : <h1>No tasks yet</h1>
+    const page =
+        tasks.length && !loading ? (
+            <TransitionGroup className="todo-list" component={'ul'}>
+                {tasks.map(item => (
+                    <CSSTransition
+                        key={item._id}
+                        timeout={500}
+                        classNames="item"
+                    >
+                        <SingleTask
+                            {...item}
+                            onDelete={deleteTask}
+                            onToggle={toggleTodo}
+                            admin={isAdmin}
+                        />
+                    </CSSTransition>
+                ))}
+            </TransitionGroup>
+        ) : loading ? (
+            <Loader />
+        ) : (
+            <h1>No tasks yet</h1>
+        )
     return user ? (
         <>
+            {isAdmin && (
+                <div className={'taskList-menu'}>
+                    <div className={'taskList-menu__switch-container'}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={notificationsAreAllowed}
+                                        onChange={
+                                            onTaskNotificationsSettingsChange
+                                        }
+                                    />
+                                }
+                                label={
+                                    <Typography style={{ fontWeight: 'bold' }}>
+                                        Email notifications
+                                    </Typography>
+                                }
+                            />
+                        </FormGroup>
+                    </div>
+                </div>
+            )}
             <div
-                className={'taskList-container animated-box scrolled-container'}
+                className={'taskList-container scrolled-container animated-box'}
             >
                 {page}
             </div>
-            <div className="socials button-add-container bottom-button">
+            <div className="socials button-add-container">
                 <Form addTask={newTask} />
             </div>
             <AlertMessage
@@ -52,7 +95,7 @@ function TaskList({ user }) {
             />
         </>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }
 

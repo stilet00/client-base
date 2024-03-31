@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .table-container {
-  overflow-y: initial;
+  overflow-y: auto;
+  max-width: 700px;
+  max-height: 80dvh;
 }
-
 .green-text {
   margin-left: 0.5rem;
   font-weight: bold;
@@ -24,4 +25,35 @@
   letter-spacing: 1px;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
-/*# sourceMappingURL=Overview.css.map */
+
+.selected-area {
+  color: #000000;
+  background: rgb(224, 224, 224);
+  margin-left: 10px;
+}
+@media (max-width: 690px) {
+  .selected-area {
+    margin-left: 0;
+    font-size: 13px !important;
+  }
+}
+
+.year-holder {
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 690px) {
+  .year-holder {
+    justify-content: space-between;
+  }
+}
+
+.td-with-info {
+  text-align: center !important;
+}
+@media (max-width: 690px) {
+  .td-with-info {
+    max-width: 45%;
+    text-align: right !important;
+  }
+}/*# sourceMappingURL=Overview.css.map */

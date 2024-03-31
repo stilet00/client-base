@@ -1,11 +1,8 @@
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
-import Backdrop from '@material-ui/core/Backdrop'
-import Fade from '@material-ui/core/Fade'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
+import Button from '@mui/material/Button'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import InputAdornment from '@mui/material/InputAdornment'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import '../../../styles/modules/ClientsForm.css'
 import { useClientsForm } from '../businessLogic'
@@ -13,32 +10,13 @@ import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useWindowDimensions from '../../../sharedHooks/useWindowDimensions'
 
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-}))
-
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInputBase-root:first-child': {
-            background: 'rgba(210,206,206,0.5)',
-        },
-    },
-})(TextField)
+import {
+    StyledModal,
+    StyledTextField,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function ClientsForm(props) {
     const { screenIsSmall } = useWindowDimensions()
-    const classes = useStyles()
 
     const {
         handleClose,
@@ -55,16 +33,18 @@ export default function ClientsForm(props) {
             <Button
                 type="button"
                 onClick={handleOpen}
+                sx={{
+                    color: 'black',
+                }}
                 fullWidth={screenIsSmall}
                 startIcon={<FontAwesomeIcon icon={faVenus} />}
                 className="translators-container__menu-button"
             >
                 Add client
             </Button>
-            <Modal
+            <StyledModal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -88,7 +68,7 @@ export default function ClientsForm(props) {
                             <h2 id="transition-modal-title">
                                 Enter client's name and surname:
                             </h2>
-                            <CssTextField
+                            <StyledTextField
                                 name={'name'}
                                 onChange={handleChange}
                                 value={client.name}
@@ -104,7 +84,7 @@ export default function ClientsForm(props) {
                                     ),
                                 }}
                             />
-                            <CssTextField
+                            <StyledTextField
                                 name={'surname'}
                                 onChange={handleChange}
                                 value={client.surname}
@@ -120,7 +100,7 @@ export default function ClientsForm(props) {
                                     ),
                                 }}
                             />
-                            {/*<CssTextField*/}
+                            {/*<StyledTextField*/}
                             {/*  name={"instagram"}*/}
                             {/*  onChange={handleChange}*/}
                             {/*  value={client.instagram}*/}
@@ -135,7 +115,7 @@ export default function ClientsForm(props) {
                             {/*    ),*/}
                             {/*  }}*/}
                             {/*/>*/}
-                            {/*<CssTextField*/}
+                            {/*<StyledTextField*/}
                             {/*  name={"onlyFans"}*/}
                             {/*  onChange={handleChange}*/}
                             {/*  value={client.onlyFans}*/}
@@ -164,6 +144,9 @@ export default function ClientsForm(props) {
                             {/*{previewImage}*/}
                             <Button
                                 type={'submit'}
+                                sx={{
+                                    color: 'black',
+                                }}
                                 fullWidth
                                 variant={'outlined'}
                             >
@@ -172,7 +155,7 @@ export default function ClientsForm(props) {
                         </form>
                     </div>
                 </Fade>
-            </Modal>
+            </StyledModal>
         </>
     )
 }

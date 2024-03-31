@@ -1,13 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   margin-top: auto;
+  background: rgba(255, 255, 255, 0.7);
   font-size: 7px;
-  color: #ffffff;
+  color: #000000;
   letter-spacing: 3px;
-}
-/*# sourceMappingURL=Footer.css.map */
+  z-index: 3;
+}/*# sourceMappingURL=Footer.css.map */

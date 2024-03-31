@@ -1,17 +1,25 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
 import SingleChart from './SingleChart/SingleChart'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import Loader from '../../sharedComponents/Loader/Loader'
-import Unauthorized from '../AuthorizationPage/Unauthorized/Unauthorized'
+import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import moment from 'moment'
-import YearSelect from '../../sharedComponents/YearSelect/YearSelect'
 import { useChartsContainer } from './businessLogic'
 import '../../styles/modules/Chart.css'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import {
+    CHARTS_CATEGORIES,
+    arrayOfYearsForSelectFilter,
+} from '../../constants/constants'
 
-function ChartsContainer({ user }) {
+function ChartsContainer() {
+    const user = useSelector(state => state.auth.user)
     const {
-        arrayOfYears,
         closeAlert,
         alertOpen,
         alertStatusConfirmation,
@@ -25,7 +33,13 @@ function ChartsContainer({ user }) {
         months,
         openAlertConfirmation,
         selectedYear,
+        category,
+        setCategory,
     } = useChartsContainer(user)
+
+    const handleCategoryChange = e => {
+        setCategory(e.target.value)
+    }
 
     return user ? (
         <>
@@ -37,9 +51,93 @@ function ChartsContainer({ user }) {
                     handleChange={handleChange}
                 />
             </div> */}
-            <div className={'taskList-container chart-container animated-box'}>
+            <div
+                style={{
+                    width: '60%',
+                    margin: '0 auto',
+                    dislpay: 'flex',
+                    flexDirection: 'row',
+                    zIndex: 3,
+                }}
+            >
+                <FormControl
+                    sx={{
+                        minWidth: '50%',
+                        maxWidth: '70%',
+                        '& .MuiInputLabel-root': {
+                            color: 'white',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: '2px solid',
+                            borderColor: 'white',
+                            borderBottom: 'none',
+                            borderRight: 'none',
+                        },
+                    }}
+                >
+                    <InputLabel id="demo-simple-select-label">
+                        Category
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        variant="outlined"
+                        label="Category"
+                        value={category}
+                        sx={{
+                            borderRadius: '4px 0 0 0',
+                            color: 'white',
+                            '& .MuiSvgIcon-root': {
+                                color: 'white',
+                            },
+                        }}
+                        onChange={handleCategoryChange}
+                    >
+                        {CHARTS_CATEGORIES.map(singleCategory => (
+                            <MenuItem
+                                value={singleCategory.value}
+                                key={singleCategory.value}
+                            >
+                                {singleCategory.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl
+                    sx={{
+                        minWidth: '30%',
+                        maxWidth: '50%',
+                        '& .MuiInputLabel-root': {
+                            color: 'white',
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            border: '2px solid',
+                            borderColor: 'white',
+                            borderBottom: 'none',
+                            borderLeft: 'none',
+                        },
+                    }}
+                >
+                    <Select
+                        value={selectedYear}
+                        sx={{
+                            borderRadius: '0 4px 0 0',
+                            color: 'white',
+                            '& .MuiSvgIcon-root': {
+                                color: 'white',
+                            },
+                        }}
+                        onChange={handleChange}
+                    >
+                        {arrayOfYearsForSelectFilter.map(year => (
+                            <MenuItem value={year}>{year}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
+            <div className={'main-container  scrolled-container animated-box'}>
                 {months.length > 0 ? (
-                    <ul className={'scrolled-container'}>
+                    <ul className={'chart-list'}>
                         {months.map((month, index) => (
                             <SingleChart
                                 previousMonth={
@@ -84,7 +182,7 @@ function ChartsContainer({ user }) {
             />
         </>
     ) : (
-        <Unauthorized />
+        <LoggedOutPage />
     )
 }
 

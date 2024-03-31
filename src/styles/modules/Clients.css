@@ -1,76 +1,50 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 .side-clients-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
   max-width: 40vw;
   background: rgba(192, 222, 229, 0.7);
+  flex-grow: 1;
 }
-
 .side-clients-menu ul {
   padding: 0;
 }
-
 .side-clients-menu ul li {
   margin-left: auto;
   margin-right: auto;
 }
-
 @media (max-width: 500px) {
   .side-clients-menu {
     max-width: 70vw;
   }
 }
-
 .side-clients-menu h3 {
   border-bottom: 2px solid black;
   margin-bottom: 10px;
 }
-
 .side-clients-menu__client {
   width: 90%;
   min-height: 50px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-flow: row wrap;
+  justify-content: space-between;
   border: 2px solid transparent;
   border-radius: 5px;
   padding: 10px;
-  cursor: -webkit-grab;
   cursor: grab;
-  background: white;
+  background: rgb(255, 255, 255);
 }
-
 .side-clients-menu__client:not(:first-child) {
   margin-top: 10px;
 }
-
 .side-clients-menu__client:hover {
-  background: white;
+  background: rgb(255, 255, 255);
 }
-
 .side-clients-menu__client__balance-container {
   width: 100%;
 }
-
 .side-clients-menu__client .css-1lauo1g-MuiRating-root {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-/*# sourceMappingURL=Clients.css.map */
+  align-items: center;
+}/*# sourceMappingURL=Clients.css.map */

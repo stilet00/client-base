@@ -15,6 +15,7 @@
   z-index: 1
   height: 100%
   max-height: 80vh
+  z-index: 3
 
   .bigScreen-translator-menu
     display: flex
@@ -23,6 +24,7 @@
     background: $main_color
     border-top-left-radius: 10px
     border-top-right-radius: 10px
+    z-index: 3
 
   .gallery-menu
     align-self: flex-start
@@ -91,8 +93,8 @@
 
   .inner-gallery-container
     display: flex
-    flex-wrap: wrap
     justify-content: space-evenly
+    flex-wrap: wrap
     gap: 20px 5px
     min-width: 90vw
     padding: 10px
@@ -295,7 +297,8 @@
       justify-content: flex-start
 
 .scrolled-container
-  overflow-y: scroll
+  overflow-y: auto
+  overflow-x: hidden
   scroll-behavior: smooth
 
   &::-webkit-scrollbar-track

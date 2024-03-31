@@ -1,40 +1,19 @@
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
-import Backdrop from '@material-ui/core/Backdrop'
-import Fade from '@material-ui/core/Fade'
-import Button from '@material-ui/core/Button'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
+import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import InputAdornment from '@mui/material/InputAdornment'
 import SumArray from '../../../sharedComponents/SumArray/SumArray'
 import { useChartForm } from '../businessLogic'
-
-const useStyles = makeStyles(theme => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-}))
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInputBase-root:first-child': {
-            background: 'rgba(210,206,206,0.5)',
-        },
-    },
-})(TextField)
+import {
+    StyledModal,
+    StyledTextField,
+    StyledFormControl,
+} from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function ChartForm(props) {
     const {
@@ -51,18 +30,15 @@ export default function ChartForm(props) {
         year,
     } = useChartForm(props)
 
-    const classes = useStyles()
-
     return (
         <div className={'modal-wrapper'}>
             <Button type="button" onClick={handleOpen} fullWidth>
                 Add month
                 <AddIcon />
             </Button>
-            <Modal
+            <StyledModal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -77,7 +53,7 @@ export default function ChartForm(props) {
                             <h2 id="transition-modal-title">
                                 Enter parameters:
                             </h2>
-                            <CssTextField
+                            <StyledTextField
                                 id="filled-basic"
                                 value={year}
                                 variant="outlined"
@@ -92,11 +68,7 @@ export default function ChartForm(props) {
                                     ),
                                 }}
                             />
-                            <FormControl
-                                variant="outlined"
-                                className={classes.formControl}
-                                fullWidth
-                            >
+                            <StyledFormControl variant="outlined" fullWidth>
                                 <InputLabel id="demo-simple-select-outlined-label">
                                     Month
                                 </InputLabel>
@@ -116,7 +88,7 @@ export default function ChartForm(props) {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                            </FormControl>
+                            </StyledFormControl>
                             <SumArray
                                 getTotalDays={getTotalDays}
                                 selectedMonth={selectedMonth}
@@ -134,7 +106,7 @@ export default function ChartForm(props) {
                         </form>
                     </div>
                 </Fade>
-            </Modal>
+            </StyledModal>
         </div>
     )
 }

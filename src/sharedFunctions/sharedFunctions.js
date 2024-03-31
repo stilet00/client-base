@@ -1,5 +1,9 @@
 import moment from 'moment'
-import { currentMonth, currentYear } from '../constants/constants'
+import {
+    currentMonth,
+    currentYear,
+    localStorageTokenKey,
+} from '../constants/constants'
 
 export function calculateBalanceDaySum(
     targetObject,
@@ -41,10 +45,10 @@ export function calculateBalanceDaySum(
     }
 }
 
-export function calculateBalanceDayAllClients(day) {
-    return day.clients
-        .reduce((sum, current) => {
-            return sum + calculateBalanceDaySum(current)
+export function calculateBalanceDayAllClients(day, category = null) {
+    return day?.clients
+        .reduce((sum, balanceDay) => {
+            return sum + calculateBalanceDaySum(balanceDay, false, category)
         }, 0)
         .toFixed(2)
 }
@@ -72,12 +76,12 @@ export const calculateTranslatorMonthTotal = (
 ) => {
     const month = statistics
         .find(year => year.year === yearFilter)
-        .months.find((month, index) => index + 1 === Number(monthFilter))
+        ?.months.find((month, index) => index + 1 === Number(monthFilter))
 
     let total
 
     if (forFullMonth) {
-        total = month.reduce((sum, current) => {
+        total = month?.reduce((sum, current) => {
             return (
                 sum +
                 current.clients.reduce((sum, current) => {
@@ -89,7 +93,7 @@ export const calculateTranslatorMonthTotal = (
             )
         }, 0)
     } else {
-        total = month.reduce((sum, current, index) => {
+        total = month?.reduce((sum, current, index) => {
             return index + 1 < Number(moment().format('D'))
                 ? sum +
                       current.clients.reduce((sum, current) => {
@@ -106,7 +110,7 @@ export const calculateTranslatorMonthTotal = (
         }, 0)
     }
 
-    return getNumberWithHundredths(total)
+    return getNumberWithHundreds(total)
 }
 
 export function getStringMonthNumber(monthNumber) {
@@ -119,8 +123,23 @@ export function getSumFromArray(arrayOfNumbers) {
 
 export function getMiddleValueFromArray(arrayOfNumbers) {
     const sum = getSumFromArray(arrayOfNumbers)
-
+    if (arrayOfNumbers.length === 0) {
+        return 0
+    }
     return Math.round(sum / arrayOfNumbers.length)
+}
+export function getClientsRating(MiddleMonthSum = 0) {
+    return MiddleMonthSum >= 80
+        ? 5
+        : MiddleMonthSum >= 60
+        ? 4
+        : MiddleMonthSum >= 40
+        ? 3
+        : MiddleMonthSum >= 20
+        ? 2
+        : MiddleMonthSum >= 10
+        ? 1
+        : 0
 }
 
 export function calculatePercentDifference(currentSum, previousSum) {
@@ -135,6 +154,10 @@ export function calculatePercentDifference(currentSum, previousSum) {
     return Math.round(result)
 }
 
-export function getNumberWithHundredths(number) {
-    return Number(number.toFixed(2))
+export function getNumberWithHundreds(number) {
+    return Number(number?.toFixed(2))
+}
+
+export function saveUserIdTokenToLocalStorage(idToken) {
+    window.localStorage.setItem(localStorageTokenKey, idToken)
 }

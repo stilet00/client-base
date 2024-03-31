@@ -1,0 +1,94 @@
+@mixin categoryPosition($topProperty, $top-value, $rightProperty, $right-value, $animationDelay)
+  border: none
+  background: none
+  position: absolute
+  opacity: 0
+  animation: category-moves 500ms forwards
+  animation-delay: $animationDelay
+  #{$topProperty}: $top-value
+  #{$rightProperty}: $right-value
+.grid-template-container
+    display: grid
+    width: 100%
+    grid-template-columns: 1fr 30px 1fr 
+    &__title
+        grid-column: 1
+        grid-row: 1
+        overflow-x: auto
+    &__info
+        grid-column: 3
+        justify-self: end
+    &__card
+        grid-column: 2 / 4
+        text-align: end
+.list-item__menu-button
+    position: relative
+    align-self: flex-start
+    transition: 1s
+    &__content-holder
+        display: flex
+        flex-direction: column
+        position: absolute
+        top: 30px
+        right: 5px
+.search-input
+    min-width: 100px
+    max-width: 50%
+    padding: 0
+    background: transparent
+    border: 2px solid white
+    border-bottom: none
+    border-radius: 4px 4px 0 0
+    font-family: inherit
+    font-size: inherit
+    margin-left: 1rem
+    overflow-x: auto
+    outline: none
+    color: white
+    padding: 3px
+    box-sizing: border-box
+    &::placeholder
+        color: white
+        opacity: 1
+@keyframes opacity-change
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+@keyframes category-moves
+  0%
+   opacity: 0
+   transform: translate(100%, 100%)
+  100%
+   opacity: 1
+   transform: translate(0%, 0%)
+
+.balance-menu_item
+    display: flex
+    justify-content: space-between
+    animation: opacity-change 1s linear
+.category
+    &-chats
+        @include categoryPosition(top,-55px,right,30px, 0ms)
+    &-letters
+        @include categoryPosition(top,-40px,right,70px, 200ms)
+    &-dating
+        @include categoryPosition(top,-40px,right,-10px, 400ms)
+    &-phoneCalls
+        @include categoryPosition(top,0px,right,70px, 600ms)
+    &-virtualGiftsSvadba
+        @include categoryPosition(top,20px,right,30px, 800ms)
+    &-voiceMessages
+        @include categoryPosition(top,0px,right, -10px, 1000ms)
+    &-all
+        @include categoryPosition(top,-20px,right, 30px, 1100ms)    
+.category-select
+    width: 20px
+    height: 20px
+    cursor: pointer
+    appearance: none
+    margin: 0
+    border: none
+
+

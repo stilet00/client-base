@@ -10,7 +10,7 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import useModal from '../../sharedHooks/useModal'
 import {
     calculateBalanceDayAllClients,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 import { getTranslators } from '../../services/translatorsServices/services'
 import {
@@ -31,6 +31,7 @@ export const useChartsContainer = user => {
     const [arrayOfYears, setArrayOfYears] = useState([])
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
+    const [category, setCategory] = useState(null)
 
     const {
         alertStatusConfirmation,
@@ -40,21 +41,6 @@ export const useChartsContainer = user => {
 
     useEffect(() => {
         if (user) {
-            // getBalance().then((res) => {
-            //   if (res.status === 200) {
-            //     const yearList = res.data.map((item) => item.year);
-            //     setArrayOfYears([...new Set(yearList.sort((a, b) => a - b))]);
-            //     let filteredArray = res.data
-            //       .filter((item) => item.year === selectedYear)
-            //       .sort(compareNumeric)
-            //       .reverse();
-            //     setMonths(filteredArray);
-            //     setEmptyStatus(filteredArray.length <= 0);
-            //   } else {
-            //     console.log(res.status);
-            //   }
-            // });
-
             getTranslators().then(res => {
                 if (res.status === 200) {
                     const statisticsYearsArray = res.data.map(item =>
@@ -102,7 +88,8 @@ export const useChartsContainer = user => {
                                                         daySum +
                                                         Number(
                                                             calculateBalanceDayAllClients(
-                                                                day
+                                                                day,
+                                                                category
                                                             )
                                                         )
                                                 }
@@ -113,7 +100,7 @@ export const useChartsContainer = user => {
                             )
                             if (daySum) {
                                 defaultMonth.values[dayCount - 1] =
-                                    getNumberWithHundredths(daySum)
+                                    getNumberWithHundreds(daySum)
                             }
                         }
                         if (
@@ -130,7 +117,7 @@ export const useChartsContainer = user => {
                 }
             })
         }
-    }, [selectedYear, user])
+    }, [selectedYear, category, user])
 
     const handleChange = useCallback(e => {
         setSelectedYear(e.target.value)
@@ -209,6 +196,8 @@ export const useChartsContainer = user => {
         openAlertConfirmation,
         cancelDeleteGraphClicked,
         deleteGraphClicked,
+        category,
+        setCategory,
     }
 }
 

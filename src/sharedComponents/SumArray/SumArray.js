@@ -2,20 +2,11 @@ import React, { useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import '../../styles/sharedComponents/SumArray.css'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import { withStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import moment from 'moment'
-const CssTextField = withStyles({
-    root: {
-        '& .MuiInputBase-root:first-child': {
-            background: '#fcfcfc',
-        },
-    },
-})(TextField)
 
 function SumArray({
     getTotalDays,
@@ -80,7 +71,7 @@ function SumArray({
                                             ).format('MMMM-DD')}
                                         </td>
                                         <td>
-                                            <CssTextField
+                                            <StyledTextField
                                                 variant="outlined"
                                                 type={'number'}
                                                 InputProps={{

@@ -1,114 +1,106 @@
+import * as React from 'react'
 import './App.css'
 import './styles/modules/karusell.css'
 import './styles/modules/Gallery.css'
 import './styles/modules/ClientsForm.css'
-import { useState } from 'react'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-} from 'react-router-dom'
-import AuthorizationPage from './modules/AuthorizationPage/AuthorizationPage'
-import TaskList from './modules/TaskList/TaskList'
-import ChartsContainer from './modules/Charts/ChartsContainer'
+import { useState, useEffect } from 'react'
+import { Provider } from 'react-redux'
+import store from './store/store'
+import { BrowserRouter as Router } from 'react-router-dom'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import {
-    FirebaseAuthProvider,
-    FirebaseAuthConsumer,
-} from '@react-firebase/auth'
-import { firebaseConfig } from './fireBaseConfig'
-import Translators from './modules/Translators/Translators'
-import Overview from './modules/Overview/Overview'
 import sun from '../src/images/sun_transparent.png'
-import background from '../src/images/main-background-2.png'
+import lightThemeBackground from '../src/images/main-background-2.png'
+import darkThemeBackground from '../src/images/background-dark-theme.png'
 import Footer from './modules/Footer/Footer'
 import PreloadPage from './modules/PreloadPage/PreloadPage'
 import BackgroundImageOnLoad from 'background-image-on-load'
 import Navigation from './sharedComponents/Navigation/Navigation'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { saveUserIdTokenToLocalStorage } from './sharedFunctions/sharedFunctions'
+import { useActivity } from './services/userActivity'
+import AppRouter from './modules/Routes/AppRouter'
+import useNightTime from './sharedHooks/useNightTime'
+
+const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG)
+firebase.initializeApp(firebaseConfig)
 
 function App() {
-    const [isLoaded, setIsLoaded] = useState(true)
-
+    const [isLoading, setIsLoading] = useState(true)
+    const { loggedIn } = useActivity()
     const stopLoading = () => {
-        setIsLoaded(false)
+        setIsLoading(false)
     }
-
+    const shouldShowDarkTheme = useNightTime()
+    const mainBackgroundImage = shouldShowDarkTheme
+        ? darkThemeBackground
+        : lightThemeBackground
+    useEffect(() => {
+        const timeToRefresh = 1000 * 60 * 40
+        if (loggedIn) {
+            setTimeout(() => {
+                firebase
+                    .auth()
+                    .currentUser.getIdToken(true)
+                    .then(idToken => {
+                        saveUserIdTokenToLocalStorage(idToken)
+                    })
+                    .catch(error => console.log(error))
+            }, timeToRefresh)
+        } else return
+    }, [loggedIn])
     return (
-        <Router>
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-                <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
-                    <PreloadPage isLoaded={isLoaded} />
+        <Provider store={store}>
+            <Router>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <PreloadPage isLoading={isLoading} />
                     <div
-                        className={isLoaded ? 'App invisible' : 'App'}
+                        className={isLoading ? 'App invisible' : 'App'}
                         style={{
-                            background: isLoaded
+                            background: isLoading
                                 ? 'white'
-                                : `url(${background})`,
+                                : `url(${mainBackgroundImage})`,
                         }}
                     >
-                        <div className="sun">
-                            <img
-                                src={sun}
-                                alt="Sun"
-                                width={'150px'}
-                                height={'150px'}
-                            />
-                        </div>
-                        <FirebaseAuthConsumer>
-                            {({ user }) => {
-                                return <Navigation user={user} />
-                            }}
-                        </FirebaseAuthConsumer>
+                        {!shouldShowDarkTheme && (
+                            <div className="sun">
+                                <img
+                                    src={sun}
+                                    alt="Sun"
+                                    width={'150px'}
+                                    height={'150px'}
+                                />
+                            </div>
+                        )}
+                        {shouldShowDarkTheme && (
+                            <>
+                                <div
+                                    className="stars"
+                                    style={{
+                                        background: `black url(${mainBackgroundImage}) repeat`,
+                                    }}
+                                />
+                                <div className="twinkling" />
+                            </>
+                        )}
+
+                        <Navigation />
                         <main>
-                            <FirebaseAuthConsumer>
-                                {({ user }) => {
-                                    return (
-                                        <Switch>
-                                            <Redirect
-                                                from="/overview/*"
-                                                to="/overview"
-                                            />
-                                            <Route path="/overview">
-                                                <Overview user={user} />
-                                            </Route>
-                                            <Route path="/tasks/">
-                                                <TaskList user={user} />
-                                            </Route>
-                                            <Route path="/translators/">
-                                                <Translators user={user} />
-                                            </Route>
-                                            <Redirect
-                                                from="/chart/*"
-                                                to="/chart"
-                                            />
-                                            <Route path="/chart">
-                                                <ChartsContainer user={user} />
-                                            </Route>
-                                            <Route path="/" exact>
-                                                <AuthorizationPage />
-                                            </Route>
-                                            <Redirect from="/*" to="/" />
-                                        </Switch>
-                                    )
-                                }}
-                            </FirebaseAuthConsumer>
+                            <AppRouter />
                         </main>
                         <Footer />
                     </div>
                     <BackgroundImageOnLoad
-                        src={background}
+                        src={mainBackgroundImage}
                         onLoadBg={() => {
                             setTimeout(stopLoading, 1000)
                         }}
                         onError={err => console.log('error', err)}
                     />
-                </FirebaseAuthProvider>
-            </LocalizationProvider>
-        </Router>
+                </LocalizationProvider>
+            </Router>
+        </Provider>
     )
 }
 

@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+.logged-out {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 1;
+  width: 90%;
+  max-width: 600px;
+  height: 60vh;
+  max-height: 300px;
+  margin: auto;
+  padding: 20px;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.logged-out h1 {
+  color: #000000;
+  text-shadow: none;
+}
+.logged-out p {
+  font-size: 1.2rem;
+}
+
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: rgb(255, 255, 255);
+}/*# sourceMappingURL=LoggedOut.css.map */

@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,OAAO,CAAC;EACN,OAAO,EAAE,IAAI;EACb,eAAe,EAAE,MAAM;EACvB,UAAU,EAAE,IAAI;EAChB,SAAS,EAAE,GAAG;EACd,KAAK,EAAE,OAAO;EACd,cAAc,EAAE,GAAG;CAAG",
-    "sources": [
-        "Footer.sass"
-    ],
-    "names": [],
-    "file": "Footer.css"
-}
+{"version":3,"sources":["../../variables.sass","Footer.sass","Footer.css"],"names":[],"mappings":"AAAQ,0FAAA;ACGR;EACE,aAAA;EACA,uBAAA;EACA,gBAAA;EACA,oCDJmB;ECKnB,cAAA;EACA,cAAA;EACA,mBAAA;EACA,UAAA;ACDF","file":"Footer.css"}

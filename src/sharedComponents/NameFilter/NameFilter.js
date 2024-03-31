@@ -1,8 +1,8 @@
 import React from 'react'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@mui/material/TextField'
 import Typography from '@material-ui/core/Typography'
 import '../../styles/sharedComponents/GalleryControls.css'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import InputAdornment from '@mui/material/InputAdornment'
 import TextFieldsIcon from '@mui/icons-material/TextFields'
 
 function NameFilter({ onChange, nameFilter }) {

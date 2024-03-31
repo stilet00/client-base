@@ -1,13 +1,18 @@
 import { useCallback, useRef, useState } from 'react'
-import { DEFAULT_ERROR } from '../../constants'
 import { useHistory } from 'react-router-dom'
-import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../../features/authSlice'
 import firebase from 'firebase'
+
+import { DEFAULT_ERROR } from '../../constants/constants'
+import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { saveUserIdTokenToLocalStorage } from '../../sharedFunctions/sharedFunctions'
 
 export const useAuthorizationPage = () => {
     const [email, setEmail] = useState('')
-
+    const [forgotPasswordToogle, setForgotPassword] = useState(false)
     const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
 
     const [error, setError] = useState({
         email: DEFAULT_ERROR,
@@ -52,6 +57,29 @@ export const useAuthorizationPage = () => {
                 return firebase
                     .auth()
                     .signInWithEmailAndPassword(email, password)
+                    .then(result => {
+                        if (!!result.user) {
+                            const { email, displayName, emailVerified, uid } =
+                                result.user
+                            dispatch(
+                                setUser({
+                                    email,
+                                    displayName,
+                                    emailVerified,
+                                    uid,
+                                })
+                            )
+                            history.push('/overview/')
+                        }
+                        result.user
+                            .getIdToken()
+                            .then(idToken =>
+                                saveUserIdTokenToLocalStorage(idToken)
+                            )
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             })
             .catch(errorFromServer => {
                 const message = errorFromServer.message
@@ -81,16 +109,18 @@ export const useAuthorizationPage = () => {
     }, [email, password, error, openAlert])
 
     const onSubmit = useCallback(
-        e => {
+        async e => {
             e.preventDefault()
             buttonElement.current.focus()
-            signInWithEmailPassword()
+            await signInWithEmailPassword()
         },
         [signInWithEmailPassword]
     )
+    const onToogle = () => {
+        setForgotPassword(!forgotPasswordToogle)
+    }
 
     return {
-        history,
         onSubmit,
         error,
         email,
@@ -101,5 +131,8 @@ export const useAuthorizationPage = () => {
         openAlert,
         closeAlert,
         buttonElement,
+        forgotPasswordToogle,
+        setForgotPassword,
+        onToogle,
     }
 }

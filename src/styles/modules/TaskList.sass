@@ -1,6 +1,19 @@
 @import "../../variables"
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap')
+
+.taskList-menu
+  display: flex
+  justify-content: flex-start
+  width: 90%
+  z-index: 3
+
+  &__switch-container
+    background-color: $main_color_opacity
+    padding: 0 10px
+    border-top-left-radius: 10px
+    border-top-right-radius: 10px
 
 .taskList-container
   width: 90%
@@ -12,31 +25,32 @@
   border-radius: 10px
   backdrop-filter: blur(5px)
   overflow-x: no
+  z-index: 3
 
   ul
-    padding-left: 0
+    padding: 1rem
     display: flex
     flex-flow: row wrap
-    gap: 10px
-    margin: 0
-    width: 100%
+    margin: 0 auto
+    gap: 1rem
+    row-gap: 1rem
+    max-height: 75vh
 
   .task
     display: flex
+    flex: 1 250px
     flex-direction: column
     justify-content: space-between
-    width: 50%
     max-width: 300px
-    min-height: 150px
+    min-height: 250px
     box-sizing: border-box
-    padding: 5px
-    border-radius: 5px
-    font-family: 'Lato', Sans-Serif
+    border-radius: 10px
     list-style: none
     transition: 0.5s
     box-shadow: $material-box-shadow
-    background-color: $main_color
-
+    background-color: rgba(255,250,240,1)
+    @media (min-width: 690px) and (max-width: 890px)
+      max-width: 350px
     @media (max-width: 690px)
       width: 90%
       max-width: none
@@ -44,15 +58,16 @@
     p
       margin: 0
       display: block
+      font-size: 0.7rem
 
     .task-date
-      font-size: 10px
+      font-size: 0.7rem
 
     .button-container
       width: 50%
       display: flex
       justify-content: space-between
-      @media (max-width: 400px)
+      @media (max-width: 500px)
         flex-direction: column
 
     .done-text

@@ -6,17 +6,9 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                 const amountsForStatisticCategories =
                     statisticsInfoForClient.statistics.map(
                         statisticsCategory => {
-                            if (
-                                Object.keys(statisticsCategory).includes(
-                                    'photoAttachments'
-                                )
-                            ) {
-                                return ''
-                            } else {
-                                return `<td class="container__tbody_amount">${Object.values(
-                                    statisticsCategory
-                                ).join('')}</td>`
-                            }
+                            return `<td class="container__tbody_amount">${Object.values(
+                                statisticsCategory
+                            ).join('')}</td>`
                         }
                     )
                 return `<tr class="${
@@ -35,13 +27,17 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                     <meta charset="UTF-8" />
                                     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
                                     <style type="text/css">
                                             h2 {
                                                 margin: 0;
                                             }
+                                            body {
+                                                font-family: 'Roboto', sans-serif;
+                                              }
                                             .wrapper {
                                                 width: 100%;
-                                                background: rgb(209,228,237);
+                                                background: #dddddd;
                                                 margin: 0 auto;
                                                 border-collapse: collapse;
                                             }
@@ -53,28 +49,30 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 text-align: center;
                                                 background-color: #ffffff;
                                                 border-collapse: collapse;
-                                                border-radius: 8px;
-                                                color: #564f4f;
-                                                font-family: 'Kantumruy Pro', sans-serif;
+                                                border-radius: 4px 4px 0 0;
+                                                box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), 5px 5px 5px #abc6f7;
                                             }
                                             tr, td {
                                                 padding: 0.5rem;
+                                                font-family: 'Roboto', sans-serif;
+                                                color: #6a6666;
                                             }
                                             .container__tableheader {
-                                                background: rgb(95,205,181);
+                                                background: #005BBB;
+                                               
                                                 padding: 10px 0 0 0;
-                                                border-radius: 8px 8px 0 0;
+                                                border-radius: 4px 4px 0 0;
                                             }
                                             .container__tableheader-greetingsinfo {
-                                                background: rgb(95,205,181);
-                                                color: white
+                                                background: linear-gradient(to bottom, #005BBB, #FFD100);
+                                                color: #ffffff;
                                             }
                                             .container__tbody-header {
                                                 font-weight: bold;
                                                 vertical-align: bottom;
                                             }
                                             .container__tbody-main {
-                                                background: rgb(95,205,181);
+                                                background: #FFD100;
                                                 font-weight: bold
                                             }
                                             .container__tbody-header-first-td {
@@ -98,14 +96,20 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                             .container__tfoot-td {
                                                 text-align: end;
                                                 font-weight: bold;
-                                                border-top: 4px solid rgb(95,205,181);
+                                                border-top: 3px solid #005BBB;
                                                 vertical-align: bottom;
                                             }
-                                            .icons {
-                                                width: 2rem;
-                                                height: 2rem;
-                                            }    
-        
+                                            .shadow-img {
+                                                width: 32px;
+                                                height: 32px;
+                                                border: solid 1px #c0c0c08f;
+                                                background-color: #eed;
+                                                box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+                                                -moz-box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+                                                -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+                                                -o-box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+                                                border-radius:100px;
+                                            }  
                                     </style>
                                     <title>Email from Sunrise</title>
                                 </head>
@@ -116,12 +120,12 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 <table class="container">
                                                     <thead>
                                                     <tr>
-                                                        <td  class="container__tableheader" colspan="9">
+                                                        <td  class="container__tableheader" colspan="10">
                                                             <img src="cid:email-icon" alt="placeholder"></img>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="container__tableheader-greetingsinfo"  colspan="9">
+                                                        <td class="container__tableheader-greetingsinfo"  colspan="10">
                                                                 <h2>
                                                                     Hello ${
                                                                         translatorInfoForEmailLetter.label.split(
@@ -135,28 +139,34 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 <tbody>
                                                     <tr class="container__tbody-main">
                                                         <td class="container__tbody-header-first-td">
-                                                            <img src="cid:women" alt="Client name"></img>
+                                                            <img src="cid:customer" width="32" height="32" alt="Client name" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:chat" class="icons" alt="Chats"></img>
+                                                            <img src="cid:chat" width="32" height="32" alt="Chats" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:email-letter" class="icons"  alt="Letters"></img>
+                                                            <img src="cid:email-letter" width="32" height="32"  alt="Letters" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:love"class="icons" alt="Dating"></img>
+                                                            <img src="cid:love" width="32" height="32" alt="Dating" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:gift" class="icons" alt="Virtual gifts on Svadba"></img>
+                                                            <img src="cid:gift" width="32" height="32" alt="Virtual gifts on Svadba" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:heart" alt="virtual gifts Dating" class="icons" alt="Virtual gifts on Dating"></img>
+                                                            <img src="cid:heart" alt="virtual gifts Dating" width="32" height="32"  alt="Virtual gifts on Dating" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:telephone" class="icons"  alt="Phone calls"></img>
+                                                            <img src="cid:attachments" width="32" height="32"  alt="Attachments" class="shadow-img"></img>
                                                         </td>
                                                         <td class="container__tbody_amount">
-                                                            <img src="cid:penalties" class="icons"  alt="Penalties"></img>
+                                                            <img src="cid:telephone" width="32" height="32"  alt="Phone calls" class="shadow-img"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:voice" width="32" height="32"  alt="Voice messages" class="shadow-img"></img>
+                                                        </td>
+                                                        <td class="container__tbody_amount">
+                                                            <img src="cid:penalties"  width="32" height="32"   alt="Penalties" class="shadow-img"></img>
                                                         </td>
                                                     </tr>
                                                     ${arrayOfDetailedBalanceFields.join(
@@ -168,25 +178,32 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                         <td class="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
                                                                 translatorInfoForEmailLetter.yesterdaySum
-                                                            } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
+                                                            } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
-                                                        <td class="container__tfoot-td" colspan="5">
+                                                        <td class="container__tfoot-td" colspan="4">
                                                             ${moment().format(
                                                                 'MMMM'
                                                             )}: ${
         translatorInfoForEmailLetter.currentMonthTotal
-    } <img src="cid:dollar-sign" alt="$" style="vertical-align: inherit"></img>
-                                                            <span style="color:${
-                                                                translatorInfoForEmailLetter
-                                                                    .monthProgressPercent
-                                                                    .progressIsPositive
-                                                                    ? 'green'
-                                                                    : 'red'
-                                                            }">${
+    } <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
+        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
+            ? 'green'
+            : 'red'
+    }">${
         translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
             ? '+'
             : '-'
     }${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
+                                                        </td>
+                                                        <td class="container__tfoot-td" colspan="3">
+                                                            Penalties: <span>🛑 </span><span style="color:${
+                                                                translatorInfoForEmailLetter.curMonthPenalties >
+                                                                0
+                                                                    ? 'red'
+                                                                    : 'green'
+                                                            }">${
+        translatorInfoForEmailLetter.curMonthPenalties
+    }</span>
                                                         </td>
                                                     </tr>
                                                 </tfoot>

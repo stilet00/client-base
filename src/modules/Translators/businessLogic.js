@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { MESSAGES } from '../../constants/messages'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -7,7 +8,10 @@ import {
     removeTranslator,
     updateTranslator,
     sendNotificationEmailsRequest,
+    sendLastVirtualGiftDateRequest,
+    requestBonusesForChats,
 } from '../../services/translatorsServices/services'
+import { getCurrency } from '../../services/currencyServices'
 import {
     currentMonth,
     currentYear,
@@ -29,17 +33,19 @@ import {
     calculateBalanceDaySum,
     calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
-    getNumberWithHundredths,
+    getNumberWithHundreds,
 } from '../../sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
     const [message, setMessage] = useState(MESSAGES.addTranslator)
-
+    const match = useRouteMatch()
     const [clients, setClients] = useState([])
+    const [chatsBonus, setChatsBonus] = useState([])
 
     const [translators, setTranslators] = useState([])
 
     const [currentClient, setCurrentClient] = useState(null)
+    const [dollarToUahRate, setDollarToUahRate] = useState(null)
 
     const [state, setState] = useState({
         left: false,
@@ -91,31 +97,46 @@ export const useTranslators = user => {
         }
     }, [translators, translatorFilter])
 
-    useEffect(() => {
-        if (user) {
-            getTranslators().then(res => {
-                if (res.status === 200) {
-                    setLoading(false)
-                    setTranslators(res.data)
-                } else {
-                    console.log('No translators')
-                }
-            })
+    const memoizedFilteredTranslators = useMemo(
+        () => filterTranslators(),
+        [translators, translatorFilter]
+    )
 
-            getClients().then(res => {
-                if (res.status === 200) {
-                    setClients(res.data)
+    useEffect(() => {
+        ;(async () => {
+            if (user) {
+                getCurrency()
+                    .then(res => {
+                        if (res.status === 200) {
+                            const privatBankDollarRate =
+                                res?.data[1]?.buy ?? '36.57'
+                            setDollarToUahRate(privatBankDollarRate)
+                        }
+                    })
+                    .catch(err => {
+                        showAlertMessage(MESSAGES.somethingWrong)
+                    })
+                const responseTranslators = await getTranslators()
+                if (responseTranslators.status === 200) {
+                    setTranslators(responseTranslators.data)
                 } else {
-                    console.log('No clients')
+                    showAlertMessage(MESSAGES.somethingWrong)
                 }
-            })
-        }
+                const responseClients = await getClients(match.url)
+                if (responseClients.status === 200) {
+                    setClients(responseClients.data)
+                } else {
+                    showAlertMessage(MESSAGES.somethingWrong)
+                }
+                setLoading(false)
+            }
+        })()
     }, [user])
 
     const showAlertMessage = useCallback(
-        (alertMessage, duration) => {
+        (alertMessage, duration = 1000) => {
             setMessage(alertMessage)
-            openAlert({ duration })
+            openAlert(duration)
         },
         [openAlert]
     )
@@ -167,21 +188,28 @@ export const useTranslators = user => {
 
     const saveChangedTranslator = useCallback(
         (editedTranslator, message) => {
-            updateTranslator(editedTranslator).then(res => {
-                if (res.status === 200) {
-                    showAlertMessage(message)
-                    setTranslators(
-                        translators.map(item => {
-                            return item._id === editedTranslator._id
-                                ? editedTranslator
-                                : item
-                        })
-                    )
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                    console.log(res.data)
-                }
-            })
+            updateTranslator(editedTranslator)
+                .then(res => {
+                    if (res.status === 200) {
+                        showAlertMessage(message)
+                        setTranslators(
+                            translators.map(item => {
+                                return item._id === editedTranslator._id
+                                    ? editedTranslator
+                                    : item
+                            })
+                        )
+                    }
+                })
+                .catch(error => {
+                    const erroMessageForShowAlertMessage = {
+                        text:
+                            error?.response?.data?.error || 'An error occurred',
+                        status: false,
+                    }
+                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                    console.error('An error occurred:', error) // Log the error for debugging
+                })
         },
         [translators, showAlertMessage]
     )
@@ -302,21 +330,30 @@ export const useTranslators = user => {
 
     const sendNotificationEmails = () => {
         setMailoutInProgress(true)
-        sendNotificationEmailsRequest().then(res => {
-            if (res.status === 200) {
-                closeAlertConfirmationNoReload()
-                const messageAboutEmailsReceived = {
-                    text: `Emails have been sent to: ${res.data.join(', ')}`,
-                    status: true,
+        sendNotificationEmailsRequest()
+            .then(res => {
+                if (res.status === 200) {
+                    closeAlertConfirmationNoReload()
+                    const messageAboutEmailsReceived = {
+                        text: `Emails have been sent to: ${res.data.join(
+                            ', '
+                        )}`,
+                        status: true,
+                    }
+                    showAlertMessage(messageAboutEmailsReceived, 20000)
+                    setMailoutInProgress(false)
                 }
-                showAlertMessage(messageAboutEmailsReceived, 20000)
+            })
+            .catch(error => {
+                closeAlertConfirmationNoReload()
+                const erroMessageForShowAlertMessage = {
+                    text: error?.response?.data?.error || 'An error occurred',
+                    status: false,
+                }
+                showAlertMessage(erroMessageForShowAlertMessage, 5000) // Handle error case
+                console.error('An error occurred:', error) // Log the error for debugging
                 setMailoutInProgress(false)
-            } else {
-                showAlertMessage(MESSAGES.somethingWrong)
-                setMailoutInProgress(false)
-                console.log(res.data)
-            }
-        })
+            })
     }
 
     const translatorsFormSubmit = useCallback(
@@ -334,17 +371,25 @@ export const useTranslators = user => {
             ) {
                 showAlertMessage(MESSAGES.translatorExist)
             } else {
-                showAlertMessage(MESSAGES.addTranslator)
-                addTranslator(newTranslator).then(res => {
-                    if (res.status === 200) {
-                        setTranslators([
-                            ...translators,
-                            { ...newTranslator, _id: res.data },
-                        ])
-                    } else {
-                        console.log(res.status)
-                    }
-                })
+                addTranslator(newTranslator)
+                    .then(res => {
+                        if (res.status === 200) {
+                            setTranslators([
+                                ...translators,
+                                { ...newTranslator, _id: res.data },
+                            ])
+                            showAlertMessage(MESSAGES.addTranslator, 3000)
+                        }
+                    })
+                    .catch(error => {
+                        const erroMessageForShowAlertMessage = {
+                            text:
+                                error?.response?.data?.error ||
+                                'An error occurred',
+                            status: false,
+                        }
+                        showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                    })
             }
         },
         [translators, showAlertMessage]
@@ -354,15 +399,24 @@ export const useTranslators = user => {
         (e, newClient) => {
             e.preventDefault()
 
-            addClient(newClient).then(res => {
-                if (res.status === 200) {
-                    showAlertMessage(MESSAGES.addClient)
-                    setClients([...clients, { ...newClient, _id: res.data }])
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                    console.log(res.data)
-                }
-            })
+            addClient(newClient)
+                .then(res => {
+                    if (res.status === 200) {
+                        showAlertMessage(MESSAGES.addClient)
+                        setClients([
+                            ...clients,
+                            { ...newClient, _id: res.data },
+                        ])
+                    }
+                })
+                .catch(error => {
+                    const erroMessageForShowAlertMessage = {
+                        text:
+                            error?.response?.data?.error || 'An error occurred',
+                        status: false,
+                    }
+                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
+                })
         },
         [clients, showAlertMessage]
     )
@@ -416,7 +470,7 @@ export const useTranslators = user => {
                         )
                 })
             }
-            return getNumberWithHundredths(sum)
+            return getNumberWithHundreds(sum)
         },
         [translators]
     )
@@ -510,9 +564,29 @@ export const useTranslators = user => {
         },
         [translators]
     )
+    const getBonusesForChats = (
+        date = translatorFilter?.date,
+        category = 'chats'
+    ) => {
+        const data = {
+            year: date.format('YYYY'),
+            month: date.format('M'),
+            category,
+        }
+        requestBonusesForChats(data)
+            .then(res => {
+                if (res.status === 200) {
+                    setChatsBonus(res.data)
+                }
+            })
+            .catch(err => {
+                setChatsBonus([])
+            })
+    }
 
     return {
         translators,
+        setTranslators,
         startTranslatorDelete,
         dragOverHandler,
         onBoardDrop,
@@ -540,12 +614,15 @@ export const useTranslators = user => {
         suspendTranslator,
         suspendClient,
         changeFilter,
-        filterTranslators,
+        memoizedFilteredTranslators,
         translatorFilter,
         addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
+        dollarToUahRate,
+        chatsBonus,
+        getBonusesForChats,
     }
 }
 
@@ -553,7 +630,7 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     const { open, handleOpen, handleClose } = useModal()
 
     const [selectedClient, setSelectedClient] = useState(
-        clients.filter(client => !client.suspended)[0]._id
+        clients.filter(client => !client.suspended)[0]?._id
     )
 
     const [selectedYear, setSelectedYear] = useState(
@@ -583,13 +660,13 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 
     function findMonth() {
-        return findYear().months.find(
+        return findYear()?.months.find(
             (item, index) => index + 1 === Number(selectedMonth)
         )
     }
 
     function findTodayBalance() {
-        return findMonth().find(
+        return findMonth()?.find(
             (item, index) => index + 1 === Number(selectedDay)
         )
     }
@@ -599,6 +676,13 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     }
 
     const handleMonth = event => {
+        const searchedMonth = findYear().months.find(
+            (item, index) => index + 1 === Number(event.target.value)
+        )
+        if (Number(selectedDay) > searchedMonth.length) {
+            setSelectedDay(String(searchedMonth.length))
+            setSelectedMonth(event.target.value)
+        }
         setSelectedMonth(event.target.value)
     }
 
@@ -648,7 +732,6 @@ export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
     function onSavePressed() {
         balanceDaySubmit(currentBalanceDay)
     }
-
     return {
         handleOpen,
         open,
@@ -675,12 +758,14 @@ export const useSingleTranslator = (
     selectedDate,
     personalPenalties
 ) => {
+    const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
+    const [giftRequestLoader, setGiftRequestLoader] = useState(false)
     const calculateTranslatorYesterdayTotal = statistics => {
         const day = statistics
             .find(
                 year => year.year === moment().subtract(1, 'day').format('YYYY')
             )
-            .months.find(
+            ?.months.find(
                 (month, index) =>
                     index + 1 ===
                     Number(moment().subtract(1, 'day').format('M'))
@@ -719,7 +804,7 @@ export const useSingleTranslator = (
     const calculateTranslatorDayTotal = statistics => {
         const day = statistics
             .find(year => year.year === selectedDate.format('YYYY'))
-            .months.find(
+            ?.months.find(
                 (month, index) => index + 1 === Number(selectedDate.format('M'))
             )
             .find(day => {
@@ -753,7 +838,7 @@ export const useSingleTranslator = (
     }
 
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayStatisticObject().clients.find(
+        const clientObject = findYesterdayStatisticObject()?.clients.find(
             item => item.id === clientId
         )
         return clientObject
@@ -788,7 +873,7 @@ export const useSingleTranslator = (
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayStatisticObject().clients.find(
+        const clientObject = findYesterdayStatisticObject()?.clients.find(
             item => item.id === clientId
         )
 
@@ -805,6 +890,19 @@ export const useSingleTranslator = (
         }
     }
 
+    function getLastVirtualGiftDate(translatorId) {
+        setGiftRequestLoader(true)
+        sendLastVirtualGiftDateRequest(translatorId)
+            .then(res => {
+                setLastVirtualGiftDate(res.data[0]?.date || 'No gifts found')
+                setGiftRequestLoader(false)
+            })
+            .catch(err => {
+                console.log(err.message)
+                setGiftRequestLoader(false)
+            })
+    }
+
     return {
         calculateSumByClient,
         specialColorNeeded,
@@ -813,5 +911,8 @@ export const useSingleTranslator = (
         calculateTranslatorYesterdayTotal,
         calculateTranslatorDayTotal,
         calculatePersonalPenalties,
+        getLastVirtualGiftDate,
+        lastVirtualGiftDate,
+        giftRequestLoader,
     }
 }

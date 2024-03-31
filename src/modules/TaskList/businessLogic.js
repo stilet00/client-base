@@ -5,6 +5,8 @@ import {
     changeTodoStatus,
     getTasks,
     removeTask,
+    getTaskNotificationsSettings,
+    changeTaskNotificationsSettings,
 } from '../../services/taskListServices/services'
 import moment from 'moment'
 
@@ -13,16 +15,51 @@ export const useTaskList = user => {
 
     const [loading, setLoading] = useState(true)
 
+    const [notificationsAreAllowed, setNotificationsAreAllowed] = useState(true)
+    const [alertInfo, setAlertInfo] = useState({
+        mainTitle: 'no message had been put',
+        status: true,
+    })
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
     useEffect(() => {
-        if (user) {
-            getTasks().then(res => {
-                setTasks(res.data)
+        ;(async () => {
+            if (user) {
+                const responseWithTasks = await getTasks()
+                if (responseWithTasks.status === 200) {
+                    setTasks(responseWithTasks.data)
+                }
+                const responseWithTaskNotificationsSettings =
+                    await getTaskNotificationsSettings()
+                if (responseWithTaskNotificationsSettings.status === 200) {
+                    setNotificationsAreAllowed(
+                        responseWithTaskNotificationsSettings.data[0]?.allowed
+                    )
+                }
                 setLoading(false)
-            })
-        }
+            }
+        })()
     }, [user])
+
+    const onTaskNotificationsSettingsChange = () => {
+        const changedTaskNotificationsSettings = !notificationsAreAllowed
+        changeTaskNotificationsSettings(changedTaskNotificationsSettings)
+            .then(res => {
+                if (res.status === 200) {
+                    setNotificationsAreAllowed(changedTaskNotificationsSettings)
+                }
+            })
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
+    }
 
     const newTask = useCallback(
         text => {
@@ -33,46 +70,75 @@ export const useTaskList = user => {
                     created: moment().format('MMMM Do YYYY, h:mm:ss'),
                 }
 
-                addTask(task).then(res => {
-                    let newTask = { ...task, _id: res.data }
-                    if (res.status === 200) {
-                        setTasks([...tasks, newTask])
-                    } else {
-                        console.log('something went wrong')
-                    }
-                })
+                addTask(task)
+                    .then(res => {
+                        if (res.status === 200) {
+                            setTasks(prevTasks => {
+                                let newTask = { ...task, _id: res.data }
+                                return [...prevTasks, newTask]
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        const message =
+                            err?.response?.data?.error || 'An error occurred'
+                        setAlertInfo({
+                            ...alertInfo,
+                            mainTitle: message,
+                            status: false,
+                        })
+                        openAlert()
+                    })
             } else {
                 openAlert()
             }
         },
-        [tasks, openAlert]
+        [openAlert]
     )
 
-    const deleteTask = useCallback(
-        _id => {
-            removeTask(_id).then(res => {
+    const deleteTask = useCallback(_id => {
+        removeTask(_id)
+            .then(res => {
                 if (res.status === 200) {
-                    setTasks(tasks.filter(item => item._id !== _id))
-                } else {
-                    console.log('something went wrong')
-                }
-            })
-        },
-        [tasks]
-    )
-
-    const toggleTodo = useCallback(
-        task => {
-            changeTodoStatus(task).then(res => {
-                if (res.status === 200) {
-                    setTasks(
-                        tasks.map(item => (item._id === task._id ? task : item))
+                    setTasks(prevTasks =>
+                        prevTasks.filter(item => item._id !== _id)
                     )
                 }
             })
-        },
-        [tasks]
-    )
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
+    }, [])
+
+    const toggleTodo = useCallback(task => {
+        changeTodoStatus(task)
+            .then(res => {
+                if (res.status === 200) {
+                    setTasks(prevTasks =>
+                        prevTasks.map(item =>
+                            item._id === task._id ? task : item
+                        )
+                    )
+                }
+            })
+            .catch(err => {
+                const message =
+                    err?.response?.data?.error || 'An error occurred'
+                setAlertInfo({
+                    ...alertInfo,
+                    mainTitle: message,
+                    status: false,
+                })
+                openAlert()
+            })
+    }, [])
 
     return {
         tasks,
@@ -83,5 +149,7 @@ export const useTaskList = user => {
         openAlert,
         closeAlert,
         loading,
+        notificationsAreAllowed,
+        onTaskNotificationsSettingsChange,
     }
 }

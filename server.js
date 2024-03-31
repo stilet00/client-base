@@ -1,44 +1,73 @@
 let express = require('express')
-const {
-    sendEmailTemplateToAdministrators,
-    sendEmailTemplateToTranslators,
-} = require('./src/api/email-api/emailApi')
-let MongoClient = require('mongodb').MongoClient
-const uri =
-    'mongodb+srv://testApp:72107210@cluster0.vmv4s.mongodb.net/myProject?retryWrites=true&w=majority'
-const client = new MongoClient(uri, { useUnifiedTopology: true })
-let ObjectId = require('mongodb').ObjectID
 let bodyParser = require('body-parser')
-let collectionTasks
-let collectionBalance
-let collectionClients
-let collectionTranslators
-let rootURL = '/'
-let tasksURL = rootURL + 'tasks/'
-let balanceURL = rootURL + 'balance/'
-let clientsURL = rootURL + 'clients/'
-let translatorsURL = rootURL + 'translators/'
+const {
+    isAuthenticated,
+    adminRules,
+} = require('./src/api/firebase/firebaseAdmin')
+const { connectToDatabase } = require('./src/api/database/collections')
+const {
+    rootURL,
+    clientsURL,
+    translatorsURL,
+    financeStatementsURL,
+    tasksURL,
+} = require('./src/api/routes/routes')
+const {
+    getLastVirtualGift,
+    getAllTranslators,
+    addNewTranslator,
+    updateTranslator,
+    deleteTranslator,
+    sendEmailsToTranslators,
+    calculateBonuses,
+} = require('./src/api/controllers/translatorController')
+const {
+    getAllTasks,
+    deleteTask,
+    editTask,
+    createTask,
+    sendNotification,
+    allowNotifications,
+} = require('./src/api/controllers/taskController')
+const {
+    getAllStatments,
+    createStatement,
+    deleteStatement,
+} = require('./src/api/controllers/statementController')
+const {
+    getAllClients,
+    addNewClient,
+    updateClient,
+} = require('./src/api/controllers/clientController')
+const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
+const { getCollections } = require('./src/api/database/collections')
+const rateLimit = require('express-rate-limit')
+
 const PORT = process.env.PORT || 80
-
 let app = express()
-app.use(express.static(__dirname + '/build'))
 
-app.set('view engine', 'ejs')
-
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extented: true }))
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'origin, content-type, accept'
-    )
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    next()
+const limiter = rateLimit({
+    windowMs: 2000,
+    max: 10,
+    message: 'Too many requests from this IP, please try again later.',
 })
 
-//routes
+app.use(express.static(__dirname + '/build'))
+app.set('view engine', 'ejs')
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+app.use(function (request, response, next) {
+    response.setHeader('Access-Control-Allow-Origin', '*')
+    response.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-type, Accept, Authorization'
+    )
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+    next()
+})
+app.use(limiter)
 
+//routes
 app.get(rootURL + 'chart/', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
@@ -60,248 +89,66 @@ app.get(rootURL + 'tasks/?', function (request, response, next) {
 app.get(rootURL + 'translators/?', function (request, response, next) {
     response.sendFile(__dirname + '/build/index.html')
 })
+app.get(rootURL + 'finances/?', function (request, response, next) {
+    response.sendFile(__dirname + '/build/index.html')
+})
 
-//email api
-async function balanceMailout() {
-    try {
-        const translatorsCollection = await collectionTranslators
-            .find()
-            .toArray()
-        if (translatorsCollection.length) {
-            const listOfTranslatorsWhoReceivedEmails =
-                await sendEmailTemplateToTranslators(translatorsCollection)
-            sendEmailTemplateToAdministrators(translatorsCollection)
-            return listOfTranslatorsWhoReceivedEmails
-        } else {
-            return []
-        }
-    } catch (error) {
-        return false
-    }
-}
+// password change
+app.post(rootURL + 'reset-password', (req, res) => {
+    changeUserPassword(req, res)
+})
+
+// permision check
+app.post(rootURL + 'isAdmin', async (req, res) => {
+    const userEmail = req.body.email
+    const admin = await getCollections().collectionAdmins.findOne({
+        registeredEmail: userEmail,
+    })
+
+    res.send(!!admin) // Send true if admin exists, false otherwise
+})
 
 // task list api
+app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
+app.delete(tasksURL + ':id', [...adminRules], deleteTask)
+app.post(tasksURL + 'add', isAuthenticated, createTask)
+app.put(tasksURL + 'edit/:id', isAuthenticated, editTask)
+app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
+app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
-app.get(tasksURL + 'get', (req, res) => {
-    collectionTasks.find().toArray((err, docs) => {
-        if (err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-        res.send(docs)
-    })
-})
-
-app.delete(tasksURL + ':id', (req, res) => {
-    collectionTasks.deleteOne({ _id: ObjectId(req.params.id) }, (err, docs) => {
-        if (err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-        res.sendStatus(200)
-    })
-})
-
-app.post(tasksURL + 'add', (req, res) => {
-    if (req.body.taskName) {
-        let task = { ...req.body }
-
-        collectionTasks.insertOne(task, (err, result) => {
-            if (err) {
-                return res.sendStatus(500)
-            } else {
-                res.send(result.ops[0]._id)
-            }
-        })
-    }
-})
-
-app.put(tasksURL + ':id', (req, res) => {
-    collectionTasks.updateOne(
-        { _id: ObjectId(req.params.id) },
-        {
-            $set: {
-                completed: req.body.completed,
-                doneAt: req.body.doneAt,
-            },
-        },
-        err => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
-
-// balance api
-
-app.get(balanceURL + 'get', (req, res) => {
-    collectionBalance.find().toArray((err, docs) => {
-        if (err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-        res.send(docs)
-    })
-})
-
-app.post(balanceURL + 'add', (req, res) => {
-    if (req.body) {
-        let month = { ...req.body }
-
-        collectionBalance.insertOne(month, (err, result) => {
-            if (err) {
-                return res.sendStatus(500)
-            } else {
-                res.send(result.ops[0]._id)
-            }
-        })
-    }
-})
-
-app.delete(balanceURL + ':id', (req, res) => {
-    collectionBalance.deleteOne(
-        { _id: ObjectId(req.params.id) },
-        (err, docs) => {
-            if (err) {
-                console.log(err)
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
-
-app.put(balanceURL + ':id', (req, res) => {
-    collectionBalance.updateOne(
-        { _id: ObjectId(req.params.id) },
-        {
-            $set: { values: req.body.values },
-        },
-        err => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
-
-//clients api
-
-app.get(clientsURL + 'get', (req, res) => {
-    collectionClients.find().toArray((err, docs) => {
-        if (err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-        res.send(docs)
-    })
-})
-app.post(clientsURL + 'add', function (req, res, next) {
-    if (!req.body) {
-        res.send('Ошибка при загрузке клиентки')
-    } else {
-        collectionClients.insertOne(req.body, (err, result) => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.send(result?.insertedId)
-        })
-    }
-})
-app.delete(clientsURL + ':id', (req, res) => {
-    collectionClients.deleteOne(
-        { _id: ObjectId(req.params.id) },
-        (err, docs) => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
+// clients api
+app.get(clientsURL + 'get', isAuthenticated, getAllClients)
+app.post(clientsURL + 'add', [...adminRules], addNewClient)
+app.put(clientsURL + ':id', [...adminRules], updateClient)
 
 // translators api
+app.get(translatorsURL + 'get', isAuthenticated, getAllTranslators)
+app.get(translatorsURL + 'last-gift/:id', isAuthenticated, getLastVirtualGift)
+app.get(
+    translatorsURL + 'send-emails',
+    [...adminRules],
+    sendEmailsToTranslators
+)
+app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
+app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
+app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
+app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
 
-app.get(translatorsURL + 'get', (req, res) => {
-    collectionTranslators.find().toArray((err, docs) => {
-        if (err) {
-            return res.sendStatus(500)
-        }
-        res.send(docs)
-    })
-})
+// statements api
+app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatments)
+app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
+app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
 
-app.get(translatorsURL + 'send-emails', (req, res) => {
-    balanceMailout().then(emailsWereSentSuccessfully => {
-        if (emailsWereSentSuccessfully.length) {
-            return res.send(emailsWereSentSuccessfully)
-        } else {
-            return res.sendStatus(500)
-        }
-    })
-})
-
-app.post(translatorsURL + 'add', function (req, res, next) {
-    if (!req.body) {
-        res.send('Ошибка при загрузке переводчика')
-    } else {
-        collectionTranslators.insertOne(req.body, (err, result) => {
-            if (err) {
-                return res.sendStatus(500)
-            } else {
-                res.send(result?.insertedId)
-            }
+// DB connection and server starts
+const startServer = async () => {
+    try {
+        await connectToDatabase()
+        app.listen(PORT, () => {
+            console.log('API started at port', PORT)
         })
+    } catch (err) {
+        console.error('Failed to connect to MongoDB database', err)
+        process.exit(1)
     }
-})
-
-app.put(translatorsURL + ':id', (req, res) => {
-    collectionTranslators.updateOne(
-        { _id: ObjectId(req.params.id) },
-        {
-            $set: {
-                name: req.body.name,
-                surname: req.body.surname,
-                clients: req.body.clients,
-                statistics: req.body.statistics,
-                suspended: req.body.suspended,
-                personalPenalties: req.body.personalPenalties,
-                email: req.body.email,
-                wantsToReceiveEmails: req.body.wantsToReceiveEmails,
-            },
-        },
-        err => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            const message = 'Переводчик сохранен'
-            console.log(message)
-            res.send(message)
-        }
-    )
-})
-app.delete(translatorsURL + ':id', (req, res) => {
-    collectionTranslators.deleteOne(
-        { _id: ObjectId(req.params.id) },
-        (err, docs) => {
-            if (err) {
-                return res.sendStatus(500)
-            }
-            res.sendStatus(200)
-        }
-    )
-})
-
-client.connect(function (err) {
-    collectionTasks = client.db('taskListDB').collection('tasks')
-    collectionBalance = client.db('taskListDB').collection('totalBalance')
-    collectionClients = client.db('clientsDB').collection('clients')
-    collectionTranslators = client.db('translatorsDB').collection('translators')
-    console.log('Connected successfully to server...')
-    app.listen(PORT, () => {
-        console.log('API started at port', PORT)
-    })
-})
+}
+startServer()

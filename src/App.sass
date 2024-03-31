@@ -1,6 +1,7 @@
 @import "variables"
 
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap")
+@import url('https://fonts.googleapis.com/css2?family=BhuTuka+Expanded+One&display=swap')
 
 body
   font-family: $text-font-family
@@ -11,12 +12,27 @@ body
   font-family: inherit
   text-align: center
   background-size: cover!important
-  min-height: 100vh
-  height: 100%
+  height: 100vh
+  width: 100vw
+  max-heigth: 100dvh
+  max-width: 100dvw
+  overflow: hidden
   box-sizing: border-box
   display: flex
   flex-direction: column
   animation: movingBackground infinite 300s linear
+
+.main-container
+  width: 90%
+  z-index: 1
+  max-height: 80dvh
+  margin: 0 auto
+  padding: 10px
+  border: 2px solid $main_color
+  border-radius: 10px
+  backdrop-filter: blur(5px)
+  overflow-x: no
+  z-index: 3
 
 .invisible
   display: none!important
@@ -31,7 +47,7 @@ ul
 
 .gradient-box
   background: linear-gradient(0deg, rgba(2,0,36,0.2) 0%, rgba(255,255,255,0.2) 0%, rgba(0,212,255,0.2) 100%)
-  
+
   &--intense
     background: linear-gradient(180deg, rgba(2,0,36,0.5) 0%, rgba(255,255,255,0.5) 0%, rgba(0,212,255,0.5) 100%)
 
@@ -143,8 +159,8 @@ main
   display: flex
   flex-direction: column
   margin-top: auto
+  margin-bottom: auto
   align-items: center
-  margin-bottom: 50px
 
 .App-link
   color: #61dafb
@@ -157,3 +173,77 @@ main
     transform: scale(0.5)
   100%
     transform: scale(1)
+
+@keyframes animate-in-view-rotate
+  0%
+    transform: translateY(100%) rotate(45deg)
+
+  100%
+    transform: translateY(0) rotate(0)
+
+@keyframes animate-out-view-rotate
+  0%
+    transform: translateY(0) rotate(0)
+
+  100%
+    transform: translateY(-100%) rotate(-45deg)
+
+@keyframes animate-in-view-slide-medium
+  0%
+    transform: translateY(100%)
+
+  100%
+    transform: translateY(0)
+
+@keyframes animate-out-view-slide-medium
+  0%
+    transform: translateY(0)
+
+  100%
+    transform: translateY(-100%)
+
+@keyframes animate-in-view-slide-big
+  0%
+    transform: translateY(150%)
+
+  100%
+    transform: translateY(0)
+
+@keyframes animate-out-view-slide-big
+  0%
+    transform: translateY(0)
+
+  100%
+    transform: translateY(-150%)
+
+@keyframes animate-in-view-slide-small
+  0%
+    transform: translateY(50%)
+
+  100%
+    transform: translateY(0)
+
+@keyframes animate-out-view-slide-small
+  0%
+    transform: translateY(0)
+
+  100%
+    transform: translateY(-50%)
+
+@supports  (animation-timeline: view())
+  #on-scroll__slide-animation-list > li
+    view-timeline-name: --slide-animation
+    view-timeline-axis: block
+    animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
+    animation-range: entry, exit
+    animation-duration: 1ms
+    animation-timeline: --slide-animation
+
+  @media (max-width: 650px)
+    #on-scroll__rotate-animation-list > div
+      view-timeline-name: --rotate-animation
+      view-timeline-axis: block
+      animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards
+      animation-range: entry, exit
+      animation-duration: 1ms
+      animation-timeline: --rotate-animation
