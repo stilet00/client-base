@@ -49,7 +49,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                 text-align: center;
                                                 background-color: #ffffff;
                                                 border-collapse: collapse;
-                                                border-radius: 4px 4px 0 0;
+                                                border-radius: 4px;
                                                 box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), 5px 5px 5px #abc6f7;
                                             }
                                             tr, td {
@@ -177,7 +177,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                     <tr>
                                                         <td class="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
-                                                                translatorInfoForEmailLetter.yesterdaySum
+                                                                translatorInfoForEmailLetter.yesterdayTotal
                                                             } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="4">
@@ -203,7 +203,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                                     : 'green'
                                                             }">${
         translatorInfoForEmailLetter.curMonthPenalties
-    }</span>
+    }$</span>
                                                         </td>
                                                     </tr>
                                                 </tfoot>

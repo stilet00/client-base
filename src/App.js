@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import './App.css'
 import './styles/modules/karusell.css'
 import './styles/modules/Gallery.css'
 import './styles/modules/ClientsForm.css'
 import { useState, useEffect } from 'react'
-import { Provider } from 'react-redux'
+import { Provider as ReduxStorProvider } from 'react-redux'
 import store from './store/store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import firebase from 'firebase/app'
@@ -22,9 +23,11 @@ import { saveUserIdTokenToLocalStorage } from './sharedFunctions/sharedFunctions
 import { useActivity } from './services/userActivity'
 import AppRouter from './modules/Routes/AppRouter'
 import useNightTime from './sharedHooks/useNightTime'
+import AuthProvider from './modules/Providers/AuthProvider'
 
 const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG)
 firebase.initializeApp(firebaseConfig)
+const queryClient = new QueryClient()
 
 function App() {
     const [isLoading, setIsLoading] = useState(true)
@@ -50,57 +53,62 @@ function App() {
             }, timeToRefresh)
         } else return
     }, [loggedIn])
-    return (
-        <Provider store={store}>
-            <Router>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <PreloadPage isLoading={isLoading} />
-                    <div
-                        className={isLoading ? 'App invisible' : 'App'}
-                        style={{
-                            background: isLoading
-                                ? 'white'
-                                : `url(${mainBackgroundImage})`,
-                        }}
-                    >
-                        {!shouldShowDarkTheme && (
-                            <div className="sun">
-                                <img
-                                    src={sun}
-                                    alt="Sun"
-                                    width={'150px'}
-                                    height={'150px'}
-                                />
-                            </div>
-                        )}
-                        {shouldShowDarkTheme && (
-                            <>
-                                <div
-                                    className="stars"
-                                    style={{
-                                        background: `black url(${mainBackgroundImage}) repeat`,
-                                    }}
-                                />
-                                <div className="twinkling" />
-                            </>
-                        )}
 
-                        <Navigation />
-                        <main>
-                            <AppRouter />
-                        </main>
-                        <Footer />
-                    </div>
-                    <BackgroundImageOnLoad
-                        src={mainBackgroundImage}
-                        onLoadBg={() => {
-                            setTimeout(stopLoading, 1000)
-                        }}
-                        onError={err => console.log('error', err)}
-                    />
-                </LocalizationProvider>
-            </Router>
-        </Provider>
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ReduxStorProvider store={store}>
+                <Router>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <AuthProvider>
+                            <PreloadPage isLoading={isLoading} />
+                            <div
+                                className={isLoading ? 'App invisible' : 'App'}
+                                style={{
+                                    background: isLoading
+                                        ? 'white'
+                                        : `url(${mainBackgroundImage})`,
+                                }}
+                            >
+                                {!shouldShowDarkTheme && (
+                                    <div className="sun">
+                                        <img
+                                            src={sun}
+                                            alt="Sun"
+                                            width={'150px'}
+                                            height={'150px'}
+                                        />
+                                    </div>
+                                )}
+                                {shouldShowDarkTheme && (
+                                    <>
+                                        <div
+                                            className="stars"
+                                            style={{
+                                                background: `black url(${mainBackgroundImage}) repeat`,
+                                            }}
+                                        />
+                                        <div className="twinkling" />
+                                    </>
+                                )}
+
+                                <Navigation />
+                                <main>
+                                    <AppRouter />
+                                </main>
+                                <Footer />
+                            </div>
+                            <BackgroundImageOnLoad
+                                src={mainBackgroundImage}
+                                onLoadBg={() => {
+                                    setTimeout(stopLoading, 1000)
+                                }}
+                                onError={err => console.log('error', err)}
+                            />
+                        </AuthProvider>
+                    </LocalizationProvider>
+                </Router>
+            </ReduxStorProvider>
+        </QueryClientProvider>
     )
 }
 

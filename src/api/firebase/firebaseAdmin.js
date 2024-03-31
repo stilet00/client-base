@@ -34,7 +34,7 @@ const changeUserPassword = async (request, response) => {
         }
         return response.status(404).json({ error: 'User not found.' })
     } catch (err) {
-        console.log(err.message)
+        console.error(err.message)
         return response.status(500).json({ error: 'Internal server error.' })
     }
 }
@@ -52,11 +52,15 @@ const isAuthenticated = (request, response, next) => {
                 }
             })
             .catch(error => {
-                console.log(error)
+                if (!!error.message) {
+                    console.error(error.message)
+                } else {
+                    console.error(error)
+                }
                 response.sendStatus(401)
             })
     } catch (error) {
-        console.log(
+        console.error(
             "Error: Something went wrong with checking user's authentication"
         )
         response.sendStatus(401)

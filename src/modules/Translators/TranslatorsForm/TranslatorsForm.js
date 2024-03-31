@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
@@ -38,6 +38,8 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
         setTranslator(DEFAULT_TRANSLATOR)
     }
 
+    useEffect(() => () => clearTranslator(), [])
+
     return (
         <>
             <Button
@@ -65,13 +67,7 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
             >
                 <Fade in={open}>
                     <div className={'form-container clients-form'}>
-                        <form
-                            onSubmit={e => {
-                                onFormSubmit(e, translator)
-                                clearTranslator()
-                                setTimeout(handleClose, 1100)
-                            }}
-                        >
+                        <form>
                             <h2 id="transition-modal-title">
                                 Enter translator's name and surname:
                             </h2>
@@ -108,14 +104,18 @@ export default function TranslatorsForm({ onFormSubmit, editedTranslator }) {
                                 }}
                             />
                             <Button
-                                type={'submit'}
+                                type={'button'}
+                                onClick={async () => {
+                                    await onFormSubmit(translator)
+                                    handleClose()
+                                }}
                                 sx={{
                                     color: 'black',
                                 }}
                                 fullWidth
                                 variant={'outlined'}
                             >
-                                Add translator
+                                Create
                             </Button>
                         </form>
                     </div>

@@ -1,4 +1,4 @@
-export const MESSAGES = {
+const MESSAGES = {
     addTranslator: {
         text: 'Translator has been added!',
         status: true,
@@ -63,6 +63,11 @@ export const MESSAGES = {
         status: false,
     },
 
+    somethingWrongWithCurrencies: {
+        text: 'Something went wrong while getting currencies :(',
+        status: false,
+    },
+
     changesSaved: {
         text: 'Changes have been saved',
         status: true,
@@ -77,4 +82,51 @@ export const MESSAGES = {
         text: 'Emails to the administrators and translators have been sent',
         status: true,
     },
+
+    somethingWrongWithAddingClient: {
+        text: 'Something went wrong while adding client :(',
+        status: false,
+    },
+    somethingWrongWithGettingClients: {
+        text: 'Something went wrong while getting clients :(',
+        status: false,
+    },
+    somethingWrongWithGettingTranslators: {
+        text: 'Something went wrong while getting translators :(',
+        status: false,
+    },
+    somethingWrongWithAssigningClient: {
+        text: 'Something went wrong while assigning client :(',
+        status: false,
+    },
+    somethingWrongWithGettingBalanceDay: {
+        text: 'Something went wrong while getting balance day :(',
+        status: false,
+    },
+    somethingWentWrongWithSavingBalanceDay: {
+        text: 'Something went wrong while saving balance day :(',
+        status: false,
+    },
+    balanceDayHaveBeenSaved: {
+        text: 'Balance day have been saved!',
+        status: true,
+    },
+    somethingWrongWithBalanceDays: {
+        text: 'Something went wrong while getting balance days :(',
+        status: false,
+    },
+    somethingWentWrongWithPersonalPenalty: {
+        text: 'Something went wrong while saving personal penalty :(',
+        status: false,
+    },
+    somethingWrongWithChatBonus: {
+        text: 'Something went wrong while calculating chat bonus :(',
+        status: false,
+    },
+    somethingWentWrongWithPersonalPenalties: {
+        text: 'Something went wrong while getting personal penalties :(',
+        status: false,
+    },
 }
+
+export default MESSAGES

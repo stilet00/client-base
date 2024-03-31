@@ -29,6 +29,10 @@ import {
     StyledTextField,
 } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
+const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
+const regExpForCard = /[^0-9\s]/g
+const regExpForEmail = /\S+@\S+\.\S+/
+
 export default function ClientsForm({
     editedClient,
     onAddNewClient,
@@ -43,15 +47,6 @@ export default function ClientsForm({
     const [formErrors, setFormErrors] = useState({})
     const arrayWithErrors = Object.keys(formErrors)
     const arrayOfEditedClientsFields = Object.keys(editedClient)
-    const regExpForInstagram = /[^a-zа-яё0-9_.]/gi
-    const regExpForCard = /[^0-9\s]/g
-    const regExpForEmail = /\S+@\S+\.\S+/
-
-    useEffect(() => {
-        if (arrayOfEditedClientsFields.length > 0) {
-            setClient(editedClient)
-        }
-    }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)])
 
     const site = {
         login:
@@ -155,16 +150,13 @@ export default function ClientsForm({
         setClient(newState)
     }
 
-    function onFormSubmit(e, client) {
-        e.preventDefault()
+    async function onFormSubmit(client) {
         if (arrayOfEditedClientsFields.length > 0) {
-            onEditClientData(client)
+            await onEditClientData(client)
             clearEditedClient()
         } else {
-            onAddNewClient(client)
+            await onAddNewClient(client)
         }
-        clearClient()
-        handleClose()
         setSiteFilter('svadba')
     }
 
@@ -212,9 +204,8 @@ export default function ClientsForm({
     const fieldsAreEmpty =
         client.name === '' ||
         client.surname === '' ||
-        client.instagramLink === ''
-            ? true
-            : false
+        !client.instagramLink ||
+        !client.bancAccount
 
     const handleFileInputChange = e => {
         const file = e.target.files[0]
@@ -224,6 +215,19 @@ export default function ClientsForm({
         }
         reader.readAsDataURL(file)
     }
+
+    useEffect(() => {
+        if (arrayOfEditedClientsFields.length > 0) {
+            setClient(editedClient)
+        }
+    }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)])
+
+    useEffect(
+        () => () => {
+            clearClient()
+        },
+        []
+    )
 
     return (
         <>
@@ -247,13 +251,7 @@ export default function ClientsForm({
             >
                 <Fade in={open}>
                     <div className={'form-container clients-form'}>
-                        <form
-                            onSubmit={e => {
-                                onFormSubmit(e, client)
-                                clearClient()
-                                setTimeout(handleClose, 1100)
-                            }}
-                        >
+                        <form>
                             <h2
                                 id="transition-modal-title"
                                 className="clients-from__header"
@@ -264,37 +262,7 @@ export default function ClientsForm({
                                 <FormLabel className="clients-form__body--label">
                                     Primarly information
                                 </FormLabel>
-                                <StyledTextField
-                                    name={'name'}
-                                    onChange={handleChange}
-                                    value={client.name}
-                                    variant="outlined"
-                                    label={'Name'}
-                                    required
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <AccountCircleIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <StyledTextField
-                                    name={'surname'}
-                                    onChange={handleChange}
-                                    value={client.surname}
-                                    variant="outlined"
-                                    label={'Surname'}
-                                    required
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <AssignmentIndIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <div className="clients-form__body--big-field media-container">
+                                <div style={{ gridColumn: '1 / 3' }}>
                                     {client.image === '' ? (
                                         <IconButton
                                             aria-label="upload picture"
@@ -350,9 +318,40 @@ export default function ClientsForm({
                                             />
                                         </Badge>
                                     )}
+                                </div>
+                                <StyledTextField
+                                    name={'name'}
+                                    onChange={handleChange}
+                                    value={client.name}
+                                    variant="outlined"
+                                    label={'Name'}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AccountCircleIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <StyledTextField
+                                    name={'surname'}
+                                    onChange={handleChange}
+                                    value={client.surname}
+                                    variant="outlined"
+                                    label={'Surname'}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AssignmentIndIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <div className="clients-form__body--big-field media-container">
                                     <StyledTextField
                                         name={'instagramLink'}
-                                        className="media-container__link"
                                         error={formErrors.instagramLink}
                                         helperText={formErrors.instagramLink}
                                         onChange={handleChange}
@@ -559,7 +558,11 @@ export default function ClientsForm({
                                 )}
                             </div>
                             <Button
-                                type={'submit'}
+                                type={'button'}
+                                onClick={async () => {
+                                    await onFormSubmit(client)
+                                    handleClose()
+                                }}
                                 fullWidth
                                 disabled={
                                     fieldsAreEmpty ||

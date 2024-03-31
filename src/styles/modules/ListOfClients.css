@@ -3,20 +3,17 @@
     width: 100%;
     grid-template-columns: 1fr 30px 1fr;
 }
-
 .grid-template-container__title {
     grid-column: 1;
     grid-row: 1;
     overflow-x: auto;
 }
-
 .grid-template-container__info {
     grid-column: 3;
     justify-self: end;
 }
-
 .grid-template-container__card {
-    grid-column: 2 / 4;
+    grid-column: 2/4;
     text-align: end;
 }
 
@@ -25,7 +22,6 @@
     align-self: flex-start;
     transition: 1s;
 }
-
 .list-item__menu-button__content-holder {
     display: flex;
     flex-direction: column;
@@ -35,6 +31,7 @@
 }
 
 .search-input {
+    position: relative;
     min-width: 100px;
     max-width: 50%;
     padding: 0;
@@ -50,8 +47,8 @@
     color: white;
     padding: 3px;
     box-sizing: border-box;
+    z-index: 2;
 }
-
 .search-input::placeholder {
     color: white;
     opacity: 1;
@@ -65,7 +62,6 @@
         opacity: 1;
     }
 }
-
 @keyframes category-moves {
     0% {
         opacity: 0;
@@ -76,7 +72,6 @@
         transform: translate(0%, 0%);
     }
 }
-
 .balance-menu_item {
     display: flex;
     justify-content: space-between;
@@ -93,7 +88,6 @@
     top: -55px;
     right: 30px;
 }
-
 .category-letters {
     border: none;
     background: none;
@@ -104,7 +98,6 @@
     top: -40px;
     right: 70px;
 }
-
 .category-dating {
     border: none;
     background: none;
@@ -115,7 +108,6 @@
     top: -40px;
     right: -10px;
 }
-
 .category-phoneCalls {
     border: none;
     background: none;
@@ -126,7 +118,6 @@
     top: 0px;
     right: 70px;
 }
-
 .category-virtualGiftsSvadba {
     border: none;
     background: none;
@@ -137,8 +128,7 @@
     top: 20px;
     right: 30px;
 }
-
-.category-voiceMessages {
+.category-virtualGiftsDating {
     border: none;
     background: none;
     position: absolute;
@@ -148,7 +138,6 @@
     top: 0px;
     right: -10px;
 }
-
 .category-all {
     border: none;
     background: none;
@@ -163,9 +152,9 @@
 .category-select {
     width: 20px;
     height: 20px;
-    cursor: pointer;
     appearance: none;
     margin: 0;
     border: none;
 }
+
 /*# sourceMappingURL=ListOfClients.css.map */

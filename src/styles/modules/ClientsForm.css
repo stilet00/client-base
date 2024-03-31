@@ -18,7 +18,7 @@
 .clients-form__body {
   display: grid;
   grid-template-columns: 50%;
-  gap: 10px;
+  gap: 20px 10px;
 }
 .clients-form__body--label {
   grid-column: 1/3;
@@ -33,9 +33,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-}
-.media-container__link {
-  max-width: 80%;
 }
 
 .upload-container {

@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
+import { useMutation, useQueryClient } from 'react-query'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import '../../../styles/modules/Form.css'
-import useModal from '../../../sharedHooks/useModal'
+import useModal from 'sharedHooks/useModal'
 import {
     faCommentsDollar,
     faDollarSign,
 } from '@fortawesome/free-solid-svg-icons'
 import { IconButton, InputAdornment } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { DEFAULT_PENALTY } from '../../../constants/constants'
-import { v4 as uuidv4 } from 'uuid'
+import { DEFAULT_PENALTY } from 'constants/constants'
+import { convertDateToIsoString } from 'sharedFunctions/sharedFunctions'
 import GavelIcon from '@mui/icons-material/Gavel'
-import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
-export default function PersonalPenaltyForm({
-    id,
-    addPersonalPenaltyToTranslator,
-    suspended,
-}) {
-    const [penalty, setPenalty] = useState(DEFAULT_PENALTY)
+import { StyledModal } from 'sharedComponents/StyledMaterial/styledMaterialComponents'
+import { createPersonalPenalty } from 'services/translatorsServices/services'
+import AlertMessage from 'sharedComponents/AlertMessage/AlertMessage'
+import { useAlert } from 'sharedComponents/AlertMessage/hooks'
+import MESSAGES from 'constants/messages'
 
+export default function PersonalPenaltyForm({ id, suspended }) {
+    const defaultPenalty = new DEFAULT_PENALTY(
+        id,
+        convertDateToIsoString(moment())
+    )
+    const [penalty, setPenalty] = useState(defaultPenalty)
+    const { alertOpen, closeAlert, openAlert, message } = useAlert()
+    const queryClient = useQueryClient()
     const { open, handleOpen, handleClose } = useModal()
 
     function onInputChange(e) {
@@ -29,8 +37,24 @@ export default function PersonalPenaltyForm({
     }
 
     function clear() {
-        setPenalty(DEFAULT_PENALTY)
+        setPenalty(defaultPenalty)
     }
+
+    const createPersonalPenaltyMutation = useMutation(
+        () =>
+            createPersonalPenalty({
+                personalPenaltyData: { ...penalty, translator: id },
+            }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(`penaltiesForTranslator${id}`)
+                handleClose()
+            },
+            onError: () => {
+                openAlert(MESSAGES.somethingWentWrongWithPersonalPenalty)
+            },
+        }
+    )
 
     useEffect(() => () => clear(), [])
     return (
@@ -41,6 +65,7 @@ export default function PersonalPenaltyForm({
                     onClick={handleOpen}
                     size={'small'}
                     color="error"
+                    sx={{ ml: `0px !important` }}
                 >
                     <GavelIcon />
                 </IconButton>
@@ -61,16 +86,7 @@ export default function PersonalPenaltyForm({
                     <div
                         className={'form-container form-container_penalty-form'}
                     >
-                        <form
-                            onSubmit={e => {
-                                e.preventDefault()
-                                addPersonalPenaltyToTranslator(id, {
-                                    ...penalty,
-                                    _id: uuidv4(),
-                                })
-                                handleClose()
-                            }}
-                        >
+                        <form>
                             <h2 id="transition-modal-title">Penalty:</h2>
                             <TextField
                                 id="filled-basic-2"
@@ -110,9 +126,12 @@ export default function PersonalPenaltyForm({
                                 }}
                             />
                             <Button
-                                type={'submit'}
+                                type={'button'}
                                 variant={'contained'}
                                 color="primary"
+                                onClick={async () => {
+                                    await createPersonalPenaltyMutation.mutate()
+                                }}
                             >
                                 Add penalty
                             </Button>
@@ -120,6 +139,13 @@ export default function PersonalPenaltyForm({
                     </div>
                 </Fade>
             </StyledModal>
+            <AlertMessage
+                mainText={message.text}
+                open={alertOpen}
+                handleOpen={openAlert}
+                handleClose={closeAlert}
+                status={false}
+            />
         </>
     )
 }

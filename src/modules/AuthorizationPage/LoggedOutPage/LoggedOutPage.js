@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../../../styles/modules/LoggedOut.css'
-import { useHistory } from 'react-router-dom'
+
+import { useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import { fadeOut } from 'react-animations'
 import styled, { keyframes } from 'styled-components'
@@ -16,20 +17,19 @@ const Animate = styled.div`
 function LoggedOutPage() {
     const [time, setTime] = useState(3)
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
     function reduceTime() {
         if (time > 1) {
             setTime(time - 1)
         } else {
-            history.push('/')
+            navigate('/')
         }
     }
 
     useEffect(() => {
         const timeCount = setTimeout(reduceTime, 1000)
         return () => {
-            // cancel the subscription
             clearTimeout(timeCount)
         }
     })
@@ -40,7 +40,7 @@ function LoggedOutPage() {
                 <h1>You have been logged out...</h1>
                 <p>You will be redirected in ...{time}</p>
                 <Button
-                    onClick={() => history.push('/')}
+                    onClick={() => navigate('/')}
                     variant={'outlined'}
                     startIcon={<HomeIcon />}
                 >

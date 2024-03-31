@@ -45,14 +45,6 @@ export function calculateBalanceDaySum(
     }
 }
 
-export function calculateBalanceDayAllClients(day, category = null) {
-    return day?.clients
-        .reduce((sum, balanceDay) => {
-            return sum + calculateBalanceDaySum(balanceDay, false, category)
-        }, 0)
-        .toFixed(2)
-}
-
 export function getTotalDaysOfMonth(year, monthNumber) {
     const stringMonth = monthNumber < 9 ? '0' + monthNumber : monthNumber
     let totalDays = []
@@ -67,46 +59,29 @@ export function getTotalDaysOfMonth(year, monthNumber) {
 }
 
 export const calculateTranslatorMonthTotal = (
-    statistics,
+    balanceDays,
     forFullMonth = true,
-    monthFilter = currentMonth,
-    yearFilter = currentYear,
     onlySvadba = false,
     category = null
 ) => {
-    const month = statistics
-        .find(year => year.year === yearFilter)
-        ?.months.find((month, index) => index + 1 === Number(monthFilter))
-
     let total
-
     if (forFullMonth) {
-        total = month?.reduce((sum, current) => {
+        total = balanceDays?.reduce((sum, current) => {
             return (
                 sum +
-                current.clients.reduce((sum, current) => {
-                    return (
-                        sum +
-                        calculateBalanceDaySum(current, onlySvadba, category)
-                    )
-                }, 0)
+                calculateBalanceDaySum(current.statistics, onlySvadba, category)
             )
         }, 0)
     } else {
-        total = month?.reduce((sum, current, index) => {
-            return index + 1 < Number(moment().format('D'))
-                ? sum +
-                      current.clients.reduce((sum, current) => {
-                          return (
-                              sum +
-                              calculateBalanceDaySum(
-                                  current,
-                                  onlySvadba,
-                                  category
-                              )
-                          )
-                      }, 0)
-                : sum
+        const balanceDaysForCurrentPartOFMonth = balanceDays?.filter(
+            ({ dateTimeId }) =>
+                moment(dateTimeId).isSameOrBefore(moment(), 'day')
+        )
+        total = balanceDaysForCurrentPartOFMonth?.reduce((sum, current) => {
+            return (
+                sum +
+                calculateBalanceDaySum(current.statistics, onlySvadba, category)
+            )
         }, 0)
     }
 
@@ -160,4 +135,12 @@ export function getNumberWithHundreds(number) {
 
 export function saveUserIdTokenToLocalStorage(idToken) {
     window.localStorage.setItem(localStorageTokenKey, idToken)
+}
+
+export function getStartOfPreviousDayInUTC() {
+    return moment().utc().subtract(1, 'day').startOf('day')
+}
+
+export function convertDateToIsoString(selectedDate) {
+    return moment(selectedDate).utc().startOf('day').format()
 }

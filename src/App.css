@@ -30,8 +30,7 @@ body {
   padding: 10px;
   border: 2px solid rgb(255, 255, 255);
   border-radius: 10px;
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   overflow-x: no;
   z-index: 3;
 }
@@ -181,15 +180,15 @@ main {
 }
 
 .animated-box {
-  animation: appear 0.5s linear;
+  animation: appear 0.5s ease-in-out;
 }
 
 @keyframes appear {
   0% {
-    transform: scale(0.5);
+    opacity: 0;
   }
   100% {
-    transform: scale(1);
+    opacity: 1;
   }
 }
 @keyframes animate-in-view-rotate {
@@ -275,4 +274,6 @@ main {
       animation-timeline: --rotate-animation;
     }
   }
-}/*# sourceMappingURL=App.css.map */
+}
+
+/*# sourceMappingURL=App.css.map */

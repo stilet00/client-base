@@ -1,4 +1,5 @@
 import * as React from 'react'
+import moment from 'moment'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
 import { getSumFromArray } from '../../../sharedFunctions/sharedFunctions'
@@ -13,7 +14,7 @@ import Paper from '@mui/material/Paper'
 export default function PenaltiesList({ penaltiesArray }) {
     const [anchorEl, setAnchorEl] = React.useState(null)
     const sum = getSumFromArray(
-        penaltiesArray.map(penalty => Number(penalty.amount))
+        penaltiesArray.map(({ amount }) => Number(amount))
     )
 
     const handleClick = event => {
@@ -83,7 +84,9 @@ export default function PenaltiesList({ penaltiesArray }) {
                                         component="th"
                                         scope="row"
                                     >
-                                        {penalty.date}
+                                        {moment(penalty.dateTimeId).format(
+                                            'DD/MM/YYYY'
+                                        )}
                                     </TableCell>
                                     <TableCell key={penalty.id}>
                                         {penalty.description}

@@ -87,7 +87,7 @@ export default function SingleClient({
         <div className="grid-template-container__info">
             {!suspended && (
                 <>
-                    <IconButton
+                    {/* <IconButton
                         color="primary"
                         variant="contained"
                         size="small"
@@ -148,7 +148,7 @@ export default function SingleClient({
                         ) : (
                             <QueryStatsIcon fontSize="small" />
                         )}
-                    </IconButton>
+                    </IconButton> */}
                     <span
                         className={
                             middleMonthSum >= prevousMiddleMonthSum
@@ -462,8 +462,11 @@ export default function SingleClient({
                         style={{ display: 'grid' }}
                     >
                         {translators.map(translator => (
-                            <span key={translator} style={{ textAlign: 'end' }}>
-                                {translator}
+                            <span
+                                key={`${translator._id}-${_id}`}
+                                style={{ textAlign: 'end' }}
+                            >
+                                {`${translator.name} ${translator.surname}`}
                             </span>
                         ))}
                     </span>

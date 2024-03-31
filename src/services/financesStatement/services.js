@@ -4,14 +4,15 @@ import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const financeStatementsURL = rootURL + 'statements/'
 
-export function getPaymentsRequest() {
-    return axios.get(
-        financeStatementsURL + 'get/',
-        getConfigForAxiosAuthenticatedRequest()
-    )
+export function getPaymentsRequest({ yearFilter = '' }) {
+    let requestURL = financeStatementsURL + 'get/'
+    if (yearFilter) {
+        requestURL += '?year=' + yearFilter
+    }
+    return axios.get(requestURL, getConfigForAxiosAuthenticatedRequest())
 }
 
-export function addPaymentRequest(payment) {
+export async function addPaymentRequest(payment) {
     return axios.post(
         financeStatementsURL + 'add/',
         payment,

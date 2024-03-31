@@ -1,109 +1,86 @@
-const DB = process.env.DATABASE.replace(
+const DBConnectionCredentials = process.env.DATABASE.replace(
     '<PASSWORD>',
     process.env.DATABASE_PASSWORD
 )
-let MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
+const { changeDatabaseInConnectionString } = require('./utils')
+const { TaskSchema } = require('../models/taskListDatabaseModels')
+const { ClientSchema } = require('../models/clientsDatabase')
 const {
-    createCurrentYearStatisticsForEveryTranslator,
-} = require('../database-api/createCurrentYearStatisticsForEveryTranslator')
-const {
-    sendTaskNotificationEmailTemplatesToAdministrators,
-} = require('../email-api/taskNotificationEmailAPI')
-const { twentyHoursInMiliseconds } = require('../constants')
-const client = new MongoClient(DB, { useUnifiedTopology: true })
+    TranslatorSchema,
+    BalanceDaySchema,
+} = require('../models/translatorsDatabaseModels')
+const { PaymentSchema } = require('../models/statementsDatabaseModels')
+const { AdminSchema } = require('../models/adminDatabaseModels')
+
 const collections = new Map()
-let outdatedTaskNotificationsInterval
 
-async function taskNotificationsMailout() {
-    const taskCollection = await collections
-        .get('collectionTasks')
-        .find()
-        .toArray()
-    sendTaskNotificationEmailTemplatesToAdministrators(taskCollection)
-}
-
-const connectToDatabase = async err => {
-    await client.connect()
-    console.log('Connected to MongoDB database')
-    collections.set(
-        'collectionTasks',
-        client.db('taskListDB').collection('tasks')
-    )
-    collections.set(
-        'collectionBalance',
-        client.db('taskListDB').collection('totalBalance')
-    )
-    collections.set(
-        'collectionTaskNotifications',
-        client.db('taskListDB').collection('notificationSwitch')
-    )
-    collections.set(
-        'collectionClients',
-        client.db('clientsDB').collection('clients')
-    )
-    collections.set(
-        'collectionTranslators',
-        client.db('translatorsDB').collection('translators')
-    )
-    collections.set(
-        'collectionAdmins',
-        client.db('adminDB').collection('adminCollection')
-    )
-    // collections.set(
-    //     'collectionClients',
-    //     client.db('testDB').collection('testClientCollection')
-    // )
-    // collections.set(
-    //     'collectionTranslators',
-    //     client.db('testDB').collection('testTranslatorCollection')
-    // )
-    collections.set(
-        'collectionStatements',
-        client.db('statementsDB').collection('statements')
-    )
-    createCurrentYearStatisticsForEveryTranslator(
-        collections.get('collectionTranslators')
-    )
+const connectToDatabase = async () => {
     try {
-        collections
-            .get('collectionTaskNotifications')
-            .find()
-            .toArray((err, docs) => {
-                if (err) {
-                    throw new Error(err)
-                }
-                const taskNotificationsAreAllowed = docs[0]?.allowed
-                if (taskNotificationsAreAllowed) {
-                    console.log(
-                        'Task notifications are allowed, running mailout interval.'
-                    )
-                    outdatedTaskNotificationsInterval = setInterval(
-                        taskNotificationsMailout,
-                        twentyHoursInMiliseconds
-                    )
-                }
+        const clientBaseDB = mongoose.createConnection(
+            changeDatabaseInConnectionString(
+                DBConnectionCredentials,
+                'clientBase'
+            )
+        )
+        const Task = clientBaseDB.model('Task', TaskSchema, 'tasksCollection')
+        const Client = clientBaseDB.model(
+            'Client',
+            ClientSchema,
+            'clientsCollection'
+        )
+        const Translator = clientBaseDB.model(
+            'Translator',
+            TranslatorSchema,
+            'translatorCollection'
+        )
+        const Admin = clientBaseDB.model(
+            'Admin',
+            AdminSchema,
+            'adminCollection'
+        )
+        const Statement = clientBaseDB.model(
+            'Statement',
+            new mongoose.Schema(PaymentSchema, {
+                collection: 'statementsCollection',
             })
+        )
+        const BalanceDay = clientBaseDB.model(
+            'BalanceDay',
+            BalanceDaySchema,
+            'balanceDayCollection'
+        )
+        collections.set('collectionTasks', Task)
+        collections.set('collectionClients', Client)
+        collections.set('collectionClientsOnTranslators', Client)
+        collections.set('collectionTranslators', Translator)
+        collections.set('collectionAdmins', Admin)
+        collections.set('collectionStatements', Statement)
+        collections.set('collectionBalanceDays', BalanceDay)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
+
+const COLLECTION_NAMES = [
+    'collectionTasks',
+    'collectionBalance',
+    'collectionTaskNotifications',
+    'collectionClients',
+    'collectionTranslators',
+    'collectionStatements',
+    'collectionAdmins',
+    'collectionBalanceDays',
+]
 
 const getCollections = () => {
-    return {
-        collectionTasks: collections.get('collectionTasks'),
-        collectionBalance: collections.get('collectionBalance'),
-        collectionTaskNotifications: collections.get(
-            'collectionTaskNotifications'
-        ),
-        collectionClients: collections.get('collectionClients'),
-        collectionTranslators: collections.get('collectionTranslators'),
-        collectionStatements: collections.get('collectionStatements'),
-        collectionAdmins: collections.get('collectionAdmins'),
-    }
+    return COLLECTION_NAMES.reduce((collectionsObject, collectionName) => {
+        collectionsObject[collectionName] = collections.get(collectionName)
+        return collectionsObject
+    }, {})
 }
 
 module.exports = {
     connectToDatabase,
     getCollections,
-    outdatedTaskNotificationsInterval,
 }

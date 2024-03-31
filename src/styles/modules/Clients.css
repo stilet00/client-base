@@ -9,6 +9,7 @@
   flex-grow: 1;
 }
 .side-clients-menu ul {
+  width: 100%;
   padding: 0;
 }
 .side-clients-menu ul li {
@@ -35,16 +36,20 @@
   padding: 10px;
   cursor: grab;
   background: rgb(255, 255, 255);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  transition: box-shadow 0.3s ease-in-out;
 }
 .side-clients-menu__client:not(:first-child) {
   margin-top: 10px;
 }
 .side-clients-menu__client:hover {
-  background: rgb(255, 255, 255);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 .side-clients-menu__client__balance-container {
   width: 100%;
 }
 .side-clients-menu__client .css-1lauo1g-MuiRating-root {
   align-items: center;
-}/*# sourceMappingURL=Clients.css.map */
+}
+
+/*# sourceMappingURL=Clients.css.map */

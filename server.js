@@ -11,6 +11,8 @@ const {
     translatorsURL,
     financeStatementsURL,
     tasksURL,
+    balanceDayURL,
+    personalPenaltiesURL,
 } = require('./src/api/routes/routes')
 const {
     getLastVirtualGift,
@@ -19,18 +21,18 @@ const {
     updateTranslator,
     deleteTranslator,
     sendEmailsToTranslators,
-    calculateBonuses,
+    assignClientToTranslator,
+    addPersonalPenaltyToTranslator,
+    getPersonalPenalties,
 } = require('./src/api/controllers/translatorController')
 const {
     getAllTasks,
     deleteTask,
     editTask,
     createTask,
-    sendNotification,
-    allowNotifications,
 } = require('./src/api/controllers/taskController')
 const {
-    getAllStatments,
+    getAllStatements,
     createStatement,
     deleteStatement,
 } = require('./src/api/controllers/statementController')
@@ -41,6 +43,14 @@ const {
 } = require('./src/api/controllers/clientController')
 const { changeUserPassword } = require('./src/api/firebase/firebaseAdmin')
 const { getCollections } = require('./src/api/database/collections')
+const {
+    getBalanceDay,
+    createBalanceDay,
+    updateBalanceDay,
+    getBalanceDaysForTranslators,
+    getAllBalanceDays,
+    getCurrentMonthTotal,
+} = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
 const PORT = process.env.PORT || 80
@@ -48,7 +58,7 @@ let app = express()
 
 const limiter = rateLimit({
     windowMs: 2000,
-    max: 10,
+    max: 100,
     message: 'Too many requests from this IP, please try again later.',
 })
 
@@ -113,8 +123,6 @@ app.get(tasksURL + 'get', isAuthenticated, getAllTasks)
 app.delete(tasksURL + ':id', [...adminRules], deleteTask)
 app.post(tasksURL + 'add', isAuthenticated, createTask)
 app.put(tasksURL + 'edit/:id', isAuthenticated, editTask)
-app.get(tasksURL + 'notifications/', isAuthenticated, sendNotification)
-app.put(tasksURL + 'notifications/', isAuthenticated, allowNotifications)
 
 // clients api
 app.get(clientsURL + 'get', isAuthenticated, getAllClients)
@@ -130,14 +138,45 @@ app.get(
     sendEmailsToTranslators
 )
 app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
-app.post(translatorsURL + 'chat-bonus', isAuthenticated, calculateBonuses)
+app.put(
+    translatorsURL + 'assign-client',
+    isAuthenticated,
+    assignClientToTranslator
+)
 app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
 app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
+app.post(
+    personalPenaltiesURL + 'create',
+    [...adminRules],
+    addPersonalPenaltyToTranslator
+)
+app.get(personalPenaltiesURL + 'get', [...adminRules], getPersonalPenalties)
 
 // statements api
-app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatments)
+app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)
 app.post(financeStatementsURL + 'add', [...adminRules], createStatement)
 app.delete(financeStatementsURL + ':id', [...adminRules], deleteStatement)
+
+// balance day api
+app.post(balanceDayURL + 'create', isAuthenticated, createBalanceDay)
+app.put(balanceDayURL + 'update', isAuthenticated, updateBalanceDay)
+app.get(
+    balanceDayURL + 'translators',
+    isAuthenticated,
+    getBalanceDaysForTranslators
+)
+app.get(balanceDayURL + 'all', isAuthenticated, getAllBalanceDays)
+app.get(balanceDayURL, isAuthenticated, getBalanceDay)
+app.get(
+    balanceDayURL + 'current-month-total',
+    isAuthenticated,
+    getCurrentMonthTotal
+)
+app.get(
+    balanceDayURL + 'clients-statistics',
+    isAuthenticated,
+    getAllBalanceDays
+)
 
 // DB connection and server starts
 const startServer = async () => {

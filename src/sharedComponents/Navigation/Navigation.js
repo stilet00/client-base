@@ -9,7 +9,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
 import BarChartIcon from '@mui/icons-material/BarChart'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import '../../styles/sharedComponents/Navigation.css'
 import firebase from 'firebase'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
@@ -23,7 +23,7 @@ import styled, { keyframes } from 'styled-components'
 import { fadeInRight } from 'react-animations'
 import Typography from '@mui/material/Typography'
 import BottomNavigation from '@mui/material/BottomNavigation'
-import { useLocation } from 'react-router-dom/cjs/react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { localStorageTokenKey } from '../../constants/constants'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import { clearUser } from '../../features/authSlice'
@@ -37,7 +37,7 @@ const Animation = styled.div`
 export default function Navigation() {
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.user)
-    const history = useHistory()
+    const navigate = useNavigate()
     let { pathname } = useLocation()
     const [state, setState] = useState({
         top: false,
@@ -90,37 +90,37 @@ export default function Navigation() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List className={'fallDown-menu'}>
-                <ListItem button onClick={() => history.push('/overview')}>
+                <ListItem button onClick={() => navigate('/overview')}>
                     <ListItemIcon>
                         <PageViewIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Overview'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/finances')}>
+                <ListItem button onClick={() => navigate('/finances')}>
                     <ListItemIcon>
                         <PriceChangeOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Finance Statement'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/clients')}>
+                <ListItem button onClick={() => navigate('/clients')}>
                     <ListItemIcon>
                         <GroupIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Clients'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/translators')}>
+                <ListItem button onClick={() => navigate('/translators')}>
                     <ListItemIcon>
                         <WorkIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Translators & Balance'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/chart')}>
+                <ListItem button onClick={() => navigate('/chart')}>
                     <ListItemIcon>
                         <BarChartIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Charts'} />
                 </ListItem>
-                <ListItem button onClick={() => history.push('/tasks')}>
+                <ListItem button onClick={() => navigate('/tasks')}>
                     <ListItemIcon>
                         <FormatListNumberedIcon />
                     </ListItemIcon>
@@ -152,7 +152,7 @@ export default function Navigation() {
                             showLabels
                             value={page}
                             onChange={(event, newValue) => {
-                                history.push(newValue)
+                                navigate(newValue)
                                 setPage(newValue)
                             }}
                             className={'header_nav gradient-box'}
