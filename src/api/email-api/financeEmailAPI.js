@@ -208,13 +208,8 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         )
         let mailOptions = {
             from: '"Sunrise agency" <sunrise-agency@gmail.com>',
-            // to: translatorInfoForEmailLetter.email,
-            to: [
-                'antonstilet@gmail.com',
-                'vasiliybabchenkov@gmail.com',
-                'tigerstylest00@gmail.com',
-            ],
-            subject: `TEST EMAIL!!! Date: ${moment()
+            to: translatorInfoForEmailLetter.email,
+            subject: `Date: ${moment()
                 .subtract(1, 'day')
                 .format('MMMM DD, YYYY')}`,
             text: `Balance: ${translatorInfoForEmailLetter.yesterdayTotal}$`,
