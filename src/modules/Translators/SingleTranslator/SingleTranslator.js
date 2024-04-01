@@ -59,7 +59,7 @@ function SingleTranslator({
     dragLeaveHandler,
     suspendTranslator,
     suspended,
-    suspendClient,
+    toggleClientSuspended,
     email,
     updateTranslatorEmail,
     wantsToReceiveEmails,
@@ -145,6 +145,12 @@ function SingleTranslator({
         true
     ).isValid()
     const personalPenaltiesObject = calculatePersonalPenalties()
+    const isClientSuspended = suspendedTranslatorId =>
+        suspendedTranslatorId === _id
+    const filterNonSuspendedClients = client =>
+        !client?.suspendedTranslators?.some(isClientSuspended)
+    const filterSuspendedClients = client =>
+        client?.suspendedTranslators?.some(isClientSuspended)
     return (
         <Card
             sx={{ minWidth: 275 }}
@@ -250,7 +256,7 @@ function SingleTranslator({
                                                                 balanceDay.statistics
                                                             )
                                                     )
-                                                )} $`}
+                                                )?.toFixed(2)} $`}
                                             </b>
                                         ) : (
                                             <b>{`No data`}</b>
@@ -358,12 +364,11 @@ function SingleTranslator({
                                                 }
                                             >
                                                 {clients.filter(
-                                                    client => !client.suspended
+                                                    filterNonSuspendedClients
                                                 ).length ? (
                                                     clients
                                                         .filter(
-                                                            client =>
-                                                                !client.suspended
+                                                            filterNonSuspendedClients
                                                         )
                                                         .sort((a, b) => {
                                                             return (
@@ -414,7 +419,7 @@ function SingleTranslator({
                                                                                 'small'
                                                                             }
                                                                             onClick={() =>
-                                                                                suspendClient(
+                                                                                toggleClientSuspended(
                                                                                     _id,
                                                                                     client._id
                                                                                 )
@@ -462,7 +467,7 @@ function SingleTranslator({
                                             </ul>
                                         </AccordionDetails>
                                     </Accordion>
-                                    {clients.filter(client => client.suspended)
+                                    {clients.filter(filterSuspendedClients)
                                         .length ? (
                                         <Accordion>
                                             <AccordionSummary
@@ -481,8 +486,7 @@ function SingleTranslator({
                                                 >
                                                     {clients
                                                         .filter(
-                                                            client =>
-                                                                client.suspended
+                                                            filterSuspendedClients
                                                         )
                                                         .map(client => (
                                                             <li
@@ -505,7 +509,7 @@ function SingleTranslator({
                                                                             'small'
                                                                         }
                                                                         onClick={() =>
-                                                                            suspendClient(
+                                                                            toggleClientSuspended(
                                                                                 _id,
                                                                                 client._id
                                                                             )

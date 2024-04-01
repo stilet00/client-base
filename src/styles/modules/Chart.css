@@ -4,8 +4,7 @@
   justify-content: flex-start;
   align-items: center;
   max-height: 80vh;
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   padding-left: 0;
   gap: 10px;
   margin: 0;
@@ -19,8 +18,7 @@
   min-width: 70%;
   max-width: 90%;
   max-height: 90vh;
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   border: 2px solid white;
   border-radius: 8px;
   box-shadow: 24;
@@ -40,8 +38,7 @@
 
 .rotate-on-mobile-portrait {
   display: none;
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 @media (max-width: 500px) {
   .rotate-on-mobile-portrait {
@@ -53,4 +50,6 @@
     color: white;
     margin: 0 auto;
   }
-}/*# sourceMappingURL=Chart.css.map */
+}
+
+/*# sourceMappingURL=Chart.css.map */

@@ -28,8 +28,6 @@ export const useChartsContainer = user => {
 
     const [deletedMonth, setDeletedMonth] = useState(null)
 
-    const [emptyStatus] = useState(false)
-
     const [arrayOfYears, setArrayOfYears] = useState([])
 
     const { alertOpen, closeAlert, openAlert } = useAlert()
@@ -58,6 +56,7 @@ export const useChartsContainer = user => {
     } = useQuery('balanceDaysForCharts', fetchBalanceDays, {
         enabled: !!user,
         onSuccess: data => {
+            console.log(data)
             let yearChartsArray = []
             for (let monthCount = 1; monthCount < 13; monthCount++) {
                 let defaultMonth = new DEFAULT_MONTH_CHART(
@@ -70,22 +69,22 @@ export const useChartsContainer = user => {
                 for (
                     let dayCount = 1;
                     dayCount <=
-                    moment(
-                        selectedYear + '-' + stringMonth,
-                        'YYYY-MM'
-                    ).daysInMonth();
+                    moment(selectedYear + '-' + stringMonth, 'YYYY-MM')
+                        .utc()
+                        .daysInMonth();
                     dayCount++
                 ) {
                     const currentDayDate = moment(
                         `${dayCount}-${monthCount}-${selectedYear}`,
                         'D-M-YYYY'
-                    ).format()
+                    )
+                        .utc()
+                        .format()
                     const arrayOfBalanceDayForCurrentDate = data.filter(
                         balanceDay =>
-                            moment(balanceDay.dateTimeId).isSame(
-                                currentDayDate,
-                                'day'
-                            )
+                            moment(balanceDay.dateTimeId)
+                                .utc()
+                                .isSame(currentDayDate, 'day')
                     )
                     let daySum = arrayOfBalanceDayForCurrentDate.reduce(
                         (sum, current) => {
@@ -185,7 +184,6 @@ export const useChartsContainer = user => {
         onValueSubmit,
         onMonthSubmit,
         deleteGraph,
-        emptyStatus,
         alertOpen,
         closeAlert,
         deletedMonth,
@@ -214,14 +212,14 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         for (let i = 1; i < 13; i++) {
             i < 10
                 ? monthsArray.push(
-                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
+                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY')
+                          .utc()
+                          .format('MMMM')
                   )
                 : monthsArray.push(
-                      moment('01-' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
+                      moment('01-' + i + '-' + year, 'DD-MM-YYYY')
+                          .utc()
+                          .format('MMMM')
                   )
         }
         setMonths(monthsArray)
@@ -237,7 +235,10 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         let totalDays = []
         for (
             let i = 1;
-            i <= moment(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
+            i <=
+            moment(year + '-' + stringMonth, 'YYYY-MM')
+                .utc()
+                .daysInMonth();
             i++
         ) {
             totalDays.push(i)
@@ -251,14 +252,14 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         for (let i = 1; i < 13; i++) {
             i < 10
                 ? monthsArray.push(
-                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
+                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY')
+                          .utc()
+                          .format('MMMM')
                   )
                 : monthsArray.push(
-                      moment('01-' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
+                      moment('01-' + i + '-' + year, 'DD-MM-YYYY')
+                          .utc()
+                          .format('MMMM')
                   )
         }
         setMonths(monthsArray)

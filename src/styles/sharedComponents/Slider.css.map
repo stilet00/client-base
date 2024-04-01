@@ -1,1 +1,1 @@
-{"version":3,"sources":["Slider.sass","../../variables.sass","Slider.css"],"names":[],"mappings":"AAAQ,oFAAA;ACAA,0FAAA;ADIR;EACE,kDAAA;EACA,4BAAA;EACA,gBAAA;EACA,2BAAA;EACA,YAAA;EACA,8BAAA;AEDF;;AFGA;EACE,2BAAA;AEAF;;AFEA;EACE,yBCdW;ACeb","file":"Slider.css"}
+{"version":3,"sourceRoot":"","sources":["Slider.sass","../../variables.sass"],"names":[],"mappings":"AAAQ;ACAA;ADIR;EACE;EACA;EACA;EACA;EACA;EACA;;;AAEF;EACE;;;AAEF;EACE,OCdW","file":"Slider.css"}

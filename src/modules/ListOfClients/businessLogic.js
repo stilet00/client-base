@@ -1,13 +1,6 @@
 import { useCallback, useState } from 'react'
-import { DEFAULT_CLIENT, currentYear } from '../../constants/constants'
+import { DEFAULT_CLIENT } from '../../constants/constants'
 import useModal from '../../sharedHooks/useModal'
-import {
-    calculateBalanceDaySum,
-    getMiddleValueFromArray,
-    getSumFromArray,
-    getNumberWithHundreds,
-} from 'sharedFunctions/sharedFunctions'
-import moment from 'moment'
 
 export const useClientsForm = ({ onFormSubmit, editedClient }) => {
     const [client, setClient] = useState(editedClient || DEFAULT_CLIENT)
@@ -35,16 +28,3 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
         handleChange,
     }
 }
-
-// export const useClientsList = () => {
-
-//     return {
-//         clientMonthSum,
-//         sortBySum,
-//         calculateMiddleMonthSum,
-//         getAllAsignedTranslators,
-//         getArrayOfBalancePerDay,
-//         getTotalProfitPerClient,
-//         currentYear,
-//     }
-// }

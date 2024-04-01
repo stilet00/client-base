@@ -62,7 +62,7 @@ export const useClientsList = translators => {
         return getNumberWithHundreds(totalClientBalance)
     }
 
-    function getAllAsignedTranslators(clientId, date = moment()) {
+    function getAllAssignedTranslators(clientId, date = moment()) {
         let arrayOfTranslators = []
 
         translators.forEach(({ name, surname, clients, suspended }) => {
@@ -140,6 +140,6 @@ export const useClientsList = translators => {
         clientMonthSum,
         sortBySum,
         calculateMiddleMonthSum,
-        getAllAsignedTranslators,
+        getAllAssignedTranslators,
     }
 }

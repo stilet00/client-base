@@ -27,7 +27,6 @@ function ChartsContainer() {
         deletedMonth,
         deleteGraph,
         deleteGraphClicked,
-        emptyStatus,
         handleChange,
         months,
         openAlertConfirmation,
