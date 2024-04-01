@@ -99,8 +99,7 @@
   height: 200px;
   background: url(../../images/background-27.png);
   border-radius: 10px 10px 0 0;
-  -webkit-clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
-          clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
+  clip-path: polygon(0 0, 100% 0%, 100% 69%, 0 100%);
 }
 .payment-form__header_picture {
   height: 100%;
@@ -122,4 +121,6 @@
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
-}/*# sourceMappingURL=FinanceStatementPage.css.map */
+}
+
+/*# sourceMappingURL=FinanceStatementPage.css.map */

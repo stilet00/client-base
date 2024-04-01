@@ -156,13 +156,14 @@ const sendEmailsToTranslators = async (req, res) => {
         })
         .exec()
     if (translators.length === 0) {
-        return res.status(200).send('No translators found')
+        res.status(200).send('No translators found')
+        return
     }
     const arrayOfTranslatorNames = await sendEmailTemplateToTranslators(
         translators
     )
     await sendEmailTemplateToAdministrators(translators)
-    return res.status(200).send(arrayOfTranslatorNames)
+    res.status(200).send(arrayOfTranslatorNames)
 }
 
 const assignClientToTranslator = async (req, res) => {
@@ -258,6 +259,25 @@ const getPersonalPenalties = async (req, res) => {
     }
 }
 
+const suspendClientOnTranslatorResolver = async (req, res) => {
+    try {
+        const { translatorId, clientId } = req.body
+        if (!translatorId || !clientId) {
+            return res.status(400).send('Translator or client id is missing')
+        }
+        const Client = await getCollections().collectionClients
+        await Client.updateOne(
+            { _id: clientId },
+            { $push: { suspendedTranslators: translatorId } }
+        )
+        res.status(200).send('Client suspended successfully')
+    } catch (error) {
+        const errorMessage = 'An error occurred while suspending client'
+        console.error(errorMessage, error)
+        res.status(500).send(errorMessage)
+    }
+}
+
 module.exports = {
     getAllTranslators,
     getLastVirtualGift,
@@ -268,4 +288,5 @@ module.exports = {
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
     getPersonalPenalties,
+    suspendClientOnTranslatorResolver,
 }

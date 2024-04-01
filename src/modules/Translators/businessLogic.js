@@ -13,6 +13,7 @@ import {
     assignClientToTranslatorRequest,
     getBalanceDaysForTranslatorRequest,
     getPenaltiesForTranslatorRequest,
+    suspendClientOnTranslatorRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
@@ -335,28 +336,33 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const suspendClient = useCallback(
-        (translatorId, clientId) => {
-            const editedTranslator = translators.find(
-                item => item._id === translatorId
-            )
-            let message
+    const suspendClient = async (translatorId, clientId) => {
+        await suspendClientOnTranslatorRequest({ translatorId, clientId })
 
-            editedTranslator.clients = editedTranslator.clients.map(client => {
-                if (client._id === clientId) {
-                    message = client.suspended
-                        ? MESSAGES.clientActivated
-                        : MESSAGES.clientSuspended
-                    return { ...client, suspended: !client.suspended }
-                } else {
-                    return client
+        const editedTranslator = translators.find(
+            item => item._id === translatorId
+        )
+        let message
+
+        editedTranslator.clients = editedTranslator.clients.map(client => {
+            if (client._id === clientId) {
+                message = client.suspended
+                    ? MESSAGES.clientActivated
+                    : MESSAGES.clientSuspended
+                return {
+                    ...client,
+                    suspendedTranslators: [
+                        ...client.suspendedTranslators,
+                        translatorId,
+                    ],
                 }
-            })
+            } else {
+                return client
+            }
+        })
 
-            saveChangedTranslator(editedTranslator, message)
-        },
-        [translators]
-    )
+        saveChangedTranslator(editedTranslator, message)
+    }
 
     const updateTranslatorEmail = async (email, id, wantsToReceiveEmails) => {
         let editedTranslator = translators.find(item => item._id === id)

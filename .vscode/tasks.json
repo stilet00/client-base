@@ -6,9 +6,9 @@
             "type": "shell",
             "command": "npm",
             "args": ["run", "dev"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         },
         {
@@ -16,9 +16,9 @@
             "type": "shell",
             "command": "npm",
             "args": ["run", "serve"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         },
         {
@@ -35,20 +35,16 @@
                     "endsPattern": "Compiled successfully."
                 }
             },
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         },
         {
             "label": "Run Both WebClient & Server",
             "command": "echo",
             "dependsOrder": "parallel",
-            "dependsOn": ["Run Front End", "Run Back End", "Run Sass Watcher"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "dependsOn": ["Run Front End", "Run Back End", "Run Sass Watcher"]
         }
     ]
 }
