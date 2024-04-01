@@ -205,7 +205,7 @@ export default function ClientsForm({
         client.name === '' ||
         client.surname === '' ||
         !client.instagramLink ||
-        !client.bancAccount
+        !client.bankAccount
 
     const handleFileInputChange = e => {
         const file = e.target.files[0]
@@ -260,7 +260,7 @@ export default function ClientsForm({
                             </h2>
                             <div className="clients-form__body">
                                 <FormLabel className="clients-form__body--label">
-                                    Primarly information
+                                    Primary information
                                 </FormLabel>
                                 <div style={{ gridColumn: '1 / 3' }}>
                                     {client.image === '' ? (
