@@ -13,7 +13,7 @@ import {
     assignClientToTranslatorRequest,
     getBalanceDaysForTranslatorRequest,
     getPenaltiesForTranslatorRequest,
-    suspendClientOnTranslatorRequest,
+    toggleClientSuspendedRequest,
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
@@ -336,8 +336,8 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const suspendClient = async (translatorId, clientId) => {
-        await suspendClientOnTranslatorRequest({ translatorId, clientId })
+    const toggleClientSuspended = async (translatorId, clientId) => {
+        await toggleClientSuspendedRequest({ translatorId, clientId })
 
         const editedTranslator = translators.find(
             item => item._id === translatorId
@@ -346,15 +346,19 @@ export const useTranslators = user => {
 
         editedTranslator.clients = editedTranslator.clients.map(client => {
             if (client._id === clientId) {
-                message = client.suspended
+                const isSuspended =
+                    client.suspendedTranslators.includes(translatorId)
+                message = isSuspended
                     ? MESSAGES.clientActivated
                     : MESSAGES.clientSuspended
+
                 return {
                     ...client,
-                    suspendedTranslators: [
-                        ...client.suspendedTranslators,
-                        translatorId,
-                    ],
+                    suspendedTranslators: isSuspended
+                        ? client.suspendedTranslators.filter(
+                              id => id !== translatorId
+                          )
+                        : [...client.suspendedTranslators, translatorId],
                 }
             } else {
                 return client
@@ -400,7 +404,7 @@ export const useTranslators = user => {
         closeAlertConfirmationNoReload,
         finishTranslatorDelete,
         suspendTranslator,
-        suspendClient,
+        toggleClientSuspended,
         changeFilter,
         memoizedFilteredTranslators,
         translatorFilter,

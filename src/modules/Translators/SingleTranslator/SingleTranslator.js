@@ -59,7 +59,7 @@ function SingleTranslator({
     dragLeaveHandler,
     suspendTranslator,
     suspended,
-    suspendClient,
+    toggleClientSuspended,
     email,
     updateTranslatorEmail,
     wantsToReceiveEmails,
@@ -419,7 +419,7 @@ function SingleTranslator({
                                                                                 'small'
                                                                             }
                                                                             onClick={() =>
-                                                                                suspendClient(
+                                                                                toggleClientSuspended(
                                                                                     _id,
                                                                                     client._id
                                                                                 )
@@ -509,7 +509,7 @@ function SingleTranslator({
                                                                             'small'
                                                                         }
                                                                         onClick={() =>
-                                                                            suspendClient(
+                                                                            toggleClientSuspended(
                                                                                 _id,
                                                                                 client._id
                                                                             )

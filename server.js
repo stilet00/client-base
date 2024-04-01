@@ -24,7 +24,7 @@ const {
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
     getPersonalPenalties,
-    suspendClientOnTranslatorResolver,
+    toggleSuspendClientResolver,
 } = require('./src/api/controllers/translatorController')
 const {
     getAllTasks,
@@ -155,7 +155,7 @@ app.get(personalPenaltiesURL + 'get', [...adminRules], getPersonalPenalties)
 app.post(
     translatorsURL + 'suspend-client',
     [...adminRules],
-    suspendClientOnTranslatorResolver
+    toggleSuspendClientResolver
 )
 
 // statements api

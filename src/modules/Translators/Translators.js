@@ -52,7 +52,7 @@ function Translators() {
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
         suspendTranslator,
-        suspendClient,
+        toggleClientSuspended,
         changeFilter,
         memoizedFilteredTranslators,
         translatorFilter,
@@ -209,7 +209,7 @@ function Translators() {
                                 closeAlertConfirmationNoReload
                             }
                             suspendTranslator={suspendTranslator}
-                            suspendClient={suspendClient}
+                            toggleClientSuspended={toggleClientSuspended}
                             updateTranslatorEmail={updateTranslatorEmail}
                             admin={isAdmin}
                         />

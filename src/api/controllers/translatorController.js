@@ -259,20 +259,30 @@ const getPersonalPenalties = async (req, res) => {
     }
 }
 
-const suspendClientOnTranslatorResolver = async (req, res) => {
+const toggleSuspendClientResolver = async (req, res) => {
     try {
         const { translatorId, clientId } = req.body
         if (!translatorId || !clientId) {
             return res.status(400).send('Translator or client id is missing')
         }
         const Client = await getCollections().collectionClients
-        await Client.updateOne(
-            { _id: clientId },
-            { $push: { suspendedTranslators: translatorId } }
-        )
-        res.status(200).send('Client suspended successfully')
+        const client = await Client.findOne({ _id: clientId })
+        if (client.suspendedTranslators.includes(translatorId)) {
+            await Client.updateOne(
+                { _id: clientId },
+                { $pull: { suspendedTranslators: translatorId } }
+            )
+            res.status(200).send('Client unsuspended successfully')
+        } else {
+            await Client.updateOne(
+                { _id: clientId },
+                { $addToSet: { suspendedTranslators: translatorId } }
+            )
+            res.status(200).send('Client suspended successfully')
+        }
     } catch (error) {
-        const errorMessage = 'An error occurred while suspending client'
+        const errorMessage =
+            'An error occurred while toggling client suspension'
         console.error(errorMessage, error)
         res.status(500).send(errorMessage)
     }
@@ -288,5 +298,5 @@ module.exports = {
     assignClientToTranslator,
     addPersonalPenaltyToTranslator,
     getPersonalPenalties,
-    suspendClientOnTranslatorResolver,
+    toggleSuspendClientResolver,
 }

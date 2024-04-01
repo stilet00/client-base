@@ -127,10 +127,7 @@ export async function createPersonalPenalty({ personalPenaltyData }) {
     )
 }
 
-export async function suspendClientOnTranslatorRequest({
-    clientId,
-    translatorId,
-}) {
+export async function toggleClientSuspendedRequest({ clientId, translatorId }) {
     return axios.post(
         `${translatorsURL}suspend-client`,
         {
