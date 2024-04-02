@@ -424,6 +424,7 @@ function SingleTranslator({
                                                                                     client._id
                                                                                 )
                                                                             }
+                                                                            type="button"
                                                                             component="span"
                                                                         >
                                                                             <HighlightOffIcon />
