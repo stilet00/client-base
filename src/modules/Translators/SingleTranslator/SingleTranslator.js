@@ -82,7 +82,9 @@ function SingleTranslator({
         translatorId: _id,
     })
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(
-        translatorBalanceDays
+        translatorBalanceDays.filter(({ dateTimeId }) =>
+            moment(dateTimeId).utc().isSame(moment().utc(), 'month')
+        )
     )
     const previousDayDate = getStartOfPreviousDayInUTC()
     const translatorBalanceDaysForPreviousMonth = translatorBalanceDays.filter(

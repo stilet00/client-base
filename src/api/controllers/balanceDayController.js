@@ -135,8 +135,8 @@ const getAllBalanceDays = async (req, res) => {
 const getCurrentMonthTotal = async (req, res) => {
     try {
         const BalanceDay = await getCollections().collectionBalanceDays
-        const startOfMonth = moment().startOf('month').format()
-        const endOfCurrentDay = moment().endOf('day').format()
+        const startOfMonth = moment().utc().startOf('month').format()
+        const endOfCurrentDay = moment().utc().endOf('day').format()
         const balanceDays = await BalanceDay.find({
             dateTimeId: {
                 $gte: startOfMonth,
