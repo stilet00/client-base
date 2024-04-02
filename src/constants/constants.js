@@ -2,7 +2,7 @@ import {
     getStringMonthNumber,
     getTotalDaysOfMonth,
     getMomentUTC,
-} from 'sharedFunctions/sharedFunctions'
+} from '../sharedFunctions/sharedFunctions'
 import background1 from '../images/tasks_backgrounds/background1.png'
 import background2 from '../images/tasks_backgrounds/background2.png'
 import background3 from '../images/tasks_backgrounds/background3.png'
