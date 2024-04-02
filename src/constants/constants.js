@@ -1,8 +1,8 @@
 import {
     getStringMonthNumber,
     getTotalDaysOfMonth,
-    getMomentUTC,
 } from '../sharedFunctions/sharedFunctions'
+import moment from 'moment'
 import background1 from '../images/tasks_backgrounds/background1.png'
 import background2 from '../images/tasks_backgrounds/background2.png'
 import background3 from '../images/tasks_backgrounds/background3.png'
@@ -29,11 +29,11 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt'
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice'
 
-export const currentYear = getMomentUTC().format('YYYY')
-export const previousYear = getMomentUTC().subtract(1, 'year').format('YYYY')
-export const currentMonth = getMomentUTC().format('M')
-export const previousMonth = getMomentUTC().subtract(1, 'month').format('M')
-export const previousDay = getMomentUTC().subtract(1, 'day').format('D')
+export const currentYear = moment().utc().format('YYYY')
+export const previousYear = moment().utc().subtract(1, 'year').format('YYYY')
+export const currentMonth = moment().utc().format('M')
+export const previousMonth = moment().utc().subtract(1, 'month').format('M')
+export const previousDay = moment().utc().subtract(1, 'day').format('D')
 export const appStartYear = 2022
 export const arrayOfYearsForSelectFilter = creatArrayOfYears()
 export const inactivityPeriod = 1000 * 60 * 20
