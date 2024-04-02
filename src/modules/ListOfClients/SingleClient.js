@@ -152,8 +152,8 @@ export default function SingleClient({
                     <span
                         className={
                             middleMonthSum >= prevousMiddleMonthSum
-                                ? ' green-text styled-text-numbers'
-                                : ' red-text styled-text-numbers'
+                                ? ' green-text styled-text-numbers percents-margin'
+                                : ' red-text styled-text-numbers percents-margin'
                         }
                     >
                         {middleMonthSum >= prevousMiddleMonthSum ? (
@@ -362,6 +362,7 @@ export default function SingleClient({
                                             color: 'black',
                                             textShadow:
                                                 '1px 1px 1px rgb(0 0 0 / 20%)',
+                                            justifyContent: 'space-between',
                                         }}
                                         startIcon={
                                             <AccountBalanceIcon
@@ -461,7 +462,7 @@ export default function SingleClient({
                         className="grid-template-container__card"
                         style={{ display: 'grid' }}
                     >
-                        {translators.map(translator => (
+                        {translators?.map(translator => (
                             <span
                                 key={`${translator._id}-${_id}`}
                                 style={{ textAlign: 'end' }}
