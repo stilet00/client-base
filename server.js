@@ -139,6 +139,11 @@ app.get(
     sendEmailsToTranslators
 )
 app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
+app.post(
+    translatorsURL + 'suspend-client',
+    [...adminRules],
+    toggleSuspendClientResolver
+)
 app.put(
     translatorsURL + 'assign-client',
     isAuthenticated,
@@ -146,17 +151,14 @@ app.put(
 )
 app.put(translatorsURL + ':id', [...adminRules], updateTranslator)
 app.delete(translatorsURL + ':id', [...adminRules], deleteTranslator)
+
+// personal penalties api
 app.post(
     personalPenaltiesURL + 'create',
     [...adminRules],
     addPersonalPenaltyToTranslator
 )
 app.get(personalPenaltiesURL + 'get', [...adminRules], getPersonalPenalties)
-app.post(
-    translatorsURL + 'suspend-client',
-    [...adminRules],
-    toggleSuspendClientResolver
-)
 
 // statements api
 app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)
