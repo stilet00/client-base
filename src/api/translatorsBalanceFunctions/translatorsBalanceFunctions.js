@@ -1,4 +1,4 @@
-const moment = require('moment')
+const { getMomentUTC } = require('../utils/utils')
 
 class DEFAULT_DAY_CLIENT {
     constructor(clientId) {
@@ -85,9 +85,9 @@ const insertClientToTranslatorBalanceDays = (balanceYearToUpdate, clientId) => {
 
 const getCurrentMonthPenalties = penalties => {
     if (!penalties) return '0'
-    const currentDate = moment().utc()
+    const currentDate = getMomentUTC()
     const onlyCurMonthPenalties = penalties.filter(({ dateTimeId }) =>
-        moment(dateTimeId).utc().isSame(currentDate, 'month')
+        getMomentUTC(dateTimeId).isSame(currentDate, 'month')
     )
     const totalPenaltiesForCurMonth = onlyCurMonthPenalties.reduce(
         (acc, currentPenalty) => {

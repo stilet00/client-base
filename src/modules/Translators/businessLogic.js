@@ -17,12 +17,12 @@ import {
 } from 'services/translatorsServices/services'
 import { getCurrency } from 'services/currencyServices'
 import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
-import moment from 'moment'
 
 import {
     calculateBalanceDaySum,
     getMiddleValueFromArray,
     getStartOfPreviousDayInUTC,
+    getMomentUTC,
 } from 'sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
@@ -38,7 +38,7 @@ export const useTranslators = user => {
     const [deletedTranslator, setDeletedTranslator] = useState(null)
     const [translatorFilter, setTranslatorFilter] = useState({
         suspended: true,
-        date: moment().subtract(1, 'day'),
+        date: getMomentUTC().subtract(1, 'day'),
     })
     const {
         alertStatusConfirmation,
@@ -323,7 +323,7 @@ export const useTranslators = user => {
                 ...editedTranslator,
                 suspended: {
                     status: !editedTranslator.suspended.status,
-                    time: moment().format(),
+                    time: getMomentUTC().format(),
                 },
             }
 
@@ -436,7 +436,7 @@ export const useSingleTranslator = ({ translatorId }) => {
     }
     const fetchPenalties = async () => {
         const response = await getPenaltiesForTranslatorRequest({
-            dateTimeFilter: moment().format(),
+            dateTimeFilter: getMomentUTC().format(),
             translatorId,
         })
         if (response.status !== 200) {
@@ -470,11 +470,16 @@ export const useSingleTranslator = ({ translatorId }) => {
         const thisMonthsPenaltiesArray = []
         const selectedDatePenaltiesArray = []
         personalPenalties?.forEach(personalPenalty => {
-            if (moment(personalPenalty.dateTimeId).isSame(moment(), 'month')) {
+            if (
+                getMomentUTC(personalPenalty.dateTimeId).isSame(
+                    getMomentUTC(),
+                    'month'
+                )
+            ) {
                 thisMonthsPenaltiesArray.push(personalPenalty)
             }
             if (
-                moment(personalPenalty.dateTimeId).isSame(
+                getMomentUTC(personalPenalty.dateTimeId).isSame(
                     previousDayDate,
                     'date'
                 )
@@ -496,8 +501,8 @@ export const useSingleTranslator = ({ translatorId }) => {
         return translatorBalanceDays.find(balanceDay => {
             return (
                 balanceDay.client === clientId &&
-                moment(balanceDay.dateTimeId).isSame(
-                    moment().subtract(1, 'day').startOf('day'),
+                getMomentUTC(balanceDay.dateTimeId).isSame(
+                    getMomentUTC().subtract(1, 'day').startOf('day'),
                     'day'
                 )
             )
@@ -519,12 +524,12 @@ export const useSingleTranslator = ({ translatorId }) => {
     function calculateMiddleMonthSum(selectedDate) {
         let sum = []
         const balanceDaysOfSelectedMonth = translatorBalanceDays.filter(
-            ({ dateTimeId }) => moment(dateTimeId).isSame(selectedDate, 'month')
+            ({ dateTimeId }) =>
+                getMomentUTC(dateTimeId).isSame(selectedDate, 'month')
         )
         balanceDaysOfSelectedMonth.forEach(balanceDay => {
             sum.push(calculateBalanceDaySum(balanceDay.statistics))
         })
-
         return getMiddleValueFromArray(sum)
     }
 

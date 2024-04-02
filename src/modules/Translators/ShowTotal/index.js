@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import { useQuery } from 'react-query'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
@@ -56,7 +56,7 @@ const TotalButtonWithPopover = ({ screenIsSmall }) => {
                 {isLoading && <Loader />}
                 {!isLoading && (
                     <Typography sx={{ p: 2 }} align={'left'}>
-                        {`Total by ${moment().format('D MMMM')}: `}{' '}
+                        {`Total by ${getMomentUTC().format('D MMMM')}: `}{' '}
                         <b>
                             <b>{`${data?.data} $`}</b>
                         </b>

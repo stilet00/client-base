@@ -1,4 +1,5 @@
-const moment = require('moment')
+const { getMomentUTC } = require('../../utils/utils')
+
 const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
     const arrayOfDetailedBalanceFields =
         translatorInfoForEmailLetter.detailedStatistic.map(
@@ -181,7 +182,7 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                             } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="4">
-                                                            ${moment().format(
+                                                            ${getMomentUTC().format(
                                                                 'MMMM'
                                                             )}: ${
         translatorInfoForEmailLetter.currentMonthTotal

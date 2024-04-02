@@ -7,7 +7,7 @@ import {
     getTasks,
     removeTask,
 } from '../../services/taskListServices/services'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export const useTaskList = user => {
     const [tasks, setTasks] = useState([])
@@ -43,7 +43,7 @@ export const useTaskList = user => {
                 let task = {
                     taskName: text,
                     completed: false,
-                    created: moment().format('MMMM Do YYYY, h:mm:ss'),
+                    created: getMomentUTC().format('MMMM Do YYYY, h:mm:ss'),
                 }
 
                 addTask(task)

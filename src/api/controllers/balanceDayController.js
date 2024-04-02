@@ -1,4 +1,5 @@
 const moment = require('moment')
+const { getMomentUTC } = require('../utils/utils')
 const { getCollections } = require('../database/collections')
 const {
     calculateBalanceDaySum,
@@ -33,8 +34,7 @@ const createBalanceDay = async (req, res) => {
 
         const BalanceDay = await getCollections().collectionBalanceDays
         const Translator = await getCollections().collectionTranslators
-        const formattedDateTimeId = moment(dateTimeId)
-            .utc()
+        const formattedDateTimeId = getMomentUTC(dateTimeId)
             .startOf('day')
             .format()
 
@@ -135,8 +135,8 @@ const getAllBalanceDays = async (req, res) => {
 const getCurrentMonthTotal = async (req, res) => {
     try {
         const BalanceDay = await getCollections().collectionBalanceDays
-        const startOfMonth = moment().utc().startOf('month').format()
-        const endOfCurrentDay = moment().utc().endOf('day').format()
+        const startOfMonth = getMomentUTC().startOf('month').format()
+        const endOfCurrentDay = getMomentUTC().endOf('day').format()
         const balanceDays = await BalanceDay.find({
             dateTimeId: {
                 $gte: startOfMonth,

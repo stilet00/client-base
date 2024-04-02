@@ -1,11 +1,11 @@
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import SinglePayment from './SinglePayment'
 
 export default function PaymentsGroup({ date, dateGroup, deleteOneStatement }) {
     return (
         <>
             <div className={'finances-inner-wrapper__header'}>
-                {moment(date).format(`YYYY MM DD`)}
+                {getMomentUTC(date).format(`YYYY MM DD`)}
             </div>
             {dateGroup.map(data => (
                 <SinglePayment

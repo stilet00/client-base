@@ -2,12 +2,12 @@ import React from 'react'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import DoneAllIcon from '@mui/icons-material/DoneAll'
-import moment from 'moment'
 import ColoredButton from '../../../sharedComponents/ColoredButton/ColoredButton'
 import CardActions from '@mui/material/CardActions'
 import Typography from '@mui/material/Typography'
 import { TASKS_BACKGROUNDS } from '../../../constants/constants'
 import styled from 'styled-components'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 const taskTextDefaultColor = 'rgb(30,32,33)'
 const taskTextCompletedColor = 'rgb(224,224,224)'
@@ -42,7 +42,7 @@ function SingleTask({
             taskName: taskName,
             completed: !completed,
             created: created,
-            doneAt: moment().format('MMMM Do YYYY, h:mm:ss'),
+            doneAt: getMomentUTC().format('MMMM Do YYYY, h:mm:ss'),
         }
         onToggle(item)
     }

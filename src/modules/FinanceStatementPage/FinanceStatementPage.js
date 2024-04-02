@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import moment from 'moment'
 import { useSelector } from 'react-redux'
 import '../../styles/modules/FinanceStatementPage.css'
 import PaymentsGroup from './PaymentsGroup/PaymentsGroup'
@@ -14,6 +13,7 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export default function FinanceStatementPage() {
     const user = useSelector(state => state.auth.user)
@@ -126,7 +126,7 @@ export default function FinanceStatementPage() {
         const arrayWithUniqueDates = [
             ...new Set(
                 statements.map(item => {
-                    return moment(item.date).format('YYYY-MM-DD')
+                    return getMomentUTC(item.date).format('YYYY-MM-DD')
                 })
             ),
         ]
@@ -134,7 +134,9 @@ export default function FinanceStatementPage() {
         const arrayWithGroupedDates = sortedArrayWithUniqueDates.map(data => {
             let groupedByDatesArray = []
             statements.forEach(statement => {
-                if (moment(statement.date).format('YYYY-MM-DD') === data) {
+                if (
+                    getMomentUTC(statement.date).format('YYYY-MM-DD') === data
+                ) {
                     groupedByDatesArray.unshift(statement)
                 }
             })

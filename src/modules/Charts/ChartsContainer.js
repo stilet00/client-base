@@ -15,6 +15,7 @@ import {
     CHARTS_CATEGORIES,
     arrayOfYearsForSelectFilter,
 } from '../../constants/constants'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 function ChartsContainer() {
     const user = useSelector(state => state.auth.user)
@@ -144,7 +145,7 @@ function ChartsContainer() {
                                     <SingleChart
                                         previousMonth={
                                             month.month ===
-                                            moment().format('MM')
+                                            getMomentUTC().format('MM')
                                                 ? months[index + 1]
                                                 : null
                                         }
@@ -170,7 +171,7 @@ function ChartsContainer() {
                 mainText={'Please confirm that you want to delete chart?'}
                 additionalText={
                     deletedMonth
-                        ? `Deleting month: ${moment(
+                        ? `Deleting month: ${getMomentUTC(
                               `${deletedMonth.year}-${deletedMonth.month}`
                           ).format('MMMM-YYYY')}`
                         : null

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import moment from 'moment'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
     addMonth,
@@ -11,6 +10,7 @@ import useModal from '../../sharedHooks/useModal'
 import {
     getNumberWithHundreds,
     calculateBalanceDaySum,
+    getMomentUTC,
 } from 'sharedFunctions/sharedFunctions'
 import { useQuery } from 'react-query'
 import { getBalanceDaysForChartsRequest } from 'services/balanceDayServices/index'
@@ -69,22 +69,22 @@ export const useChartsContainer = user => {
                 for (
                     let dayCount = 1;
                     dayCount <=
-                    moment(selectedYear + '-' + stringMonth, 'YYYY-MM')
-                        .utc()
-                        .daysInMonth();
+                    getMomentUTC(
+                        selectedYear + '-' + stringMonth,
+                        'YYYY-MM'
+                    ).daysInMonth();
                     dayCount++
                 ) {
-                    const currentDayDate = moment(
+                    const currentDayDate = getMomentUTC(
                         `${dayCount}-${monthCount}-${selectedYear}`,
                         'D-M-YYYY'
-                    )
-                        .utc()
-                        .format()
+                    ).format()
                     const arrayOfBalanceDayForCurrentDate = data.filter(
                         balanceDay =>
-                            moment(balanceDay.dateTimeId)
-                                .utc()
-                                .isSame(currentDayDate, 'day')
+                            getMomentUTC(balanceDay.dateTimeId).isSame(
+                                currentDayDate,
+                                'day'
+                            )
                     )
                     let daySum = arrayOfBalanceDayForCurrentDate.reduce(
                         (sum, current) => {
@@ -212,14 +212,15 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         for (let i = 1; i < 13; i++) {
             i < 10
                 ? monthsArray.push(
-                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY')
-                          .utc()
-                          .format('MMMM')
+                      getMomentUTC(
+                          '01-0' + i + '-' + year,
+                          'DD-MM-YYYY'
+                      ).format('MMMM')
                   )
                 : monthsArray.push(
-                      moment('01-' + i + '-' + year, 'DD-MM-YYYY')
-                          .utc()
-                          .format('MMMM')
+                      getMomentUTC('01-' + i + '-' + year, 'DD-MM-YYYY').format(
+                          'MMMM'
+                      )
                   )
         }
         setMonths(monthsArray)
@@ -236,9 +237,7 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         for (
             let i = 1;
             i <=
-            moment(year + '-' + stringMonth, 'YYYY-MM')
-                .utc()
-                .daysInMonth();
+            getMomentUTC(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
             i++
         ) {
             totalDays.push(i)
@@ -252,14 +251,15 @@ export const useChartForm = ({ onMonthSubmit, year }) => {
         for (let i = 1; i < 13; i++) {
             i < 10
                 ? monthsArray.push(
-                      moment('01-0' + i + '-' + year, 'DD-MM-YYYY')
-                          .utc()
-                          .format('MMMM')
+                      getMomentUTC(
+                          '01-0' + i + '-' + year,
+                          'DD-MM-YYYY'
+                      ).format('MMMM')
                   )
                 : monthsArray.push(
-                      moment('01-' + i + '-' + year, 'DD-MM-YYYY')
-                          .utc()
-                          .format('MMMM')
+                      getMomentUTC('01-' + i + '-' + year, 'DD-MM-YYYY').format(
+                          'MMMM'
+                      )
                   )
         }
         setMonths(monthsArray)

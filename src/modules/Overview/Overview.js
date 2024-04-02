@@ -1,11 +1,11 @@
-import moment from 'moment'
 import '../../styles/modules/Overview.css'
 import { useSelector } from 'react-redux'
 import { useOverview } from './businessLogic'
 import {
     calculatePercentDifference,
     getSumFromArray,
-} from '../../sharedFunctions/sharedFunctions'
+    getMomentUTC,
+} from 'sharedFunctions/sharedFunctions'
 import {
     currentMonth,
     previousYear,
@@ -238,14 +238,14 @@ function Overview() {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {selectedYear === moment().format('YYYY') ? (
+                            {selectedYear === getMomentUTC().format('YYYY') ? (
                                 <>
                                     <StyledTableRow>
                                         <StyledTableCell>
                                             Current month
                                         </StyledTableCell>
                                         <StyledTableCell className="td-with-info">
-                                            {moment().format('MMMM')}
+                                            {getMomentUTC().format('MMMM')}
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     <StyledTableRow>
@@ -255,7 +255,7 @@ function Overview() {
                                         <StyledTableCell className="td-with-info">
                                             <span
                                                 className={
-                                                    'blue-text styled-text-numbers'
+                                                    'blue-text styled-text-numbers percents-margin'
                                                 }
                                             >
                                                 <CountUp
@@ -275,7 +275,7 @@ function Overview() {
                                         <StyledTableCell className="td-with-info">
                                             <span
                                                 className={
-                                                    'blue-text styled-text-numbers'
+                                                    'blue-text styled-text-numbers percents-margin'
                                                 }
                                             >
                                                 <CountUp
@@ -295,7 +295,7 @@ function Overview() {
                                         <StyledTableCell className="td-with-info">
                                             <span
                                                 className={
-                                                    'blue-text styled-text-numbers'
+                                                    'blue-text styled-text-numbers percents-margin'
                                                 }
                                             >
                                                 <CountUp

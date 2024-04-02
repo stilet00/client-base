@@ -9,6 +9,7 @@ const {
 const {
     PersonalPenaltiesSchema,
 } = require('../models/translatorsDatabaseModels')
+const { getMomentUTC } = require('../utils/utils')
 
 const getAllTranslators = async (req, res) => {
     try {
@@ -118,13 +119,11 @@ const deleteTranslator = (req, res) => {
 
 const sendEmailsToTranslators = async (req, res) => {
     const Translator = await getCollections().collectionTranslators
-    const startOfPreviousMonth = moment()
-        .utc()
+    const startOfPreviousMonth = getMomentUTC()
         .subtract(1, 'month')
         .startOf('month')
         .format()
-    const endOfYesterday = moment()
-        .utc()
+    const endOfYesterday = getMomentUTC()
         .subtract(1, 'days')
         .endOf('day')
         .format()
@@ -235,7 +234,7 @@ const getPersonalPenalties = async (req, res) => {
         const { translatorId, dateTimeFilter } = req.query
         const collections = await getCollections()
         const Translator = collections.collectionTranslators
-        const dateTimeFilterMoment = moment(dateTimeFilter).utc()
+        const dateTimeFilterMoment = getMomentUTC(dateTimeFilter)
         const startOfMonth = dateTimeFilterMoment.startOf('month').format()
         const endOfMonth = dateTimeFilterMoment.endOf('month').format()
         const selectedTranslator = await Translator.findById(

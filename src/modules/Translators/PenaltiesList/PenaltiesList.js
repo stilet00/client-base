@@ -1,5 +1,5 @@
 import * as React from 'react'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
 import { getSumFromArray } from '../../../sharedFunctions/sharedFunctions'
@@ -84,9 +84,9 @@ export default function PenaltiesList({ penaltiesArray }) {
                                         component="th"
                                         scope="row"
                                     >
-                                        {moment(penalty.dateTimeId).format(
-                                            'DD/MM/YYYY'
-                                        )}
+                                        {getMomentUTC(
+                                            penalty.dateTimeId
+                                        ).format('DD/MM/YYYY')}
                                     </TableCell>
                                     <TableCell key={penalty.id}>
                                         {penalty.description}

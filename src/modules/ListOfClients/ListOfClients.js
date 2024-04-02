@@ -21,17 +21,18 @@ import Button from '@mui/material/Button'
 import { faVenus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loader from 'sharedComponents/Loader/Loader'
-import { getClientsRating } from '../../sharedFunctions/sharedFunctions'
-import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
-import MESSAGE from 'constants/messages'
-import useSearch from 'sharedHooks/useSearchString'
-import useDebounce from 'sharedHooks/useDebounce'
 import {
+    getClientsRating,
+    getMomentUTC,
     calculateBalanceDaySum,
     getSumFromArray,
     getNumberWithHundreds,
     calculatePercentDifference,
 } from 'sharedFunctions/sharedFunctions'
+import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import MESSAGE from 'constants/messages'
+import useSearch from 'sharedHooks/useSearchString'
+import useDebounce from 'sharedHooks/useDebounce'
 
 export default function ListOfClients() {
     const user = useSelector(state => state.auth.user)
@@ -56,11 +57,14 @@ export default function ListOfClients() {
         )
         const currentYearBalanceDaysForClient =
             balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
-                moment(dateTimeId).isSame(moment(), 'year')
+                getMomentUTC(dateTimeId).isSame(getMomentUTC(), 'year')
             )
         const previousYearBalanceDaysForClient =
             balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
-                moment(dateTimeId).isSame(moment().subtract(1, 'year'), 'year')
+                getMomentUTC(dateTimeId).isSame(
+                    getMomentUTC().subtract(1, 'year'),
+                    'year'
+                )
             )
         const currentYearProfit = currentYearBalanceDaysForClient.reduce(
             (sum, current) => {
@@ -93,7 +97,8 @@ export default function ListOfClients() {
             balanceDay => balanceDay.client === clientId
         )
         const balanceDaysForCurrentMonth = balanceDaysForCurrentClient.filter(
-            ({ dateTimeId }) => moment(dateTimeId).isSame(moment(), 'month')
+            ({ dateTimeId }) =>
+                getMomentUTC(dateTimeId).isSame(getMomentUTC(), 'month')
         )
         const currentMonthSum = balanceDaysForCurrentMonth.reduce(
             (sum, current) => {
@@ -104,9 +109,9 @@ export default function ListOfClients() {
         return currentMonthSum
     }
 
-    function calculateMiddleMonthSum(clientId, date = moment()) {
+    function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
         const totalClientBalanceForCurrentMonth = clientMonthSum(clientId)
-        const currentDayOfMinusOne = moment().format('D')
+        const currentDayOfMinusOne = getMomentUTC().format('D')
         return Math.round(
             totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne)
         )
@@ -130,47 +135,6 @@ export default function ListOfClients() {
             currentMonth: [],
             previousMonth: [],
         }
-
-        // translators.forEach(translator => {
-        //     const thisYearStat = translator.statistics?.find(
-        //         year => year.year === date.format('YYYY')
-        //     )
-
-        //     const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
-        //     const findPreviousMonthStat = date => {
-        //         if (date.format('M') === '1') {
-        //             const previousYearStat = translator.statistics?.find(
-        //                 year =>
-        //                     year.year ===
-        //                     moment().subtract(1, 'year').format('YYYY')
-        //             )
-        //             const previousMonth =
-        //                 previousYearStat.months[
-        //                     moment().subtract(2, 'month').format('M')
-        //                 ]
-
-        //             return previousMonth
-        //         } else {
-        //             const previousMonth =
-        //                 thisYearStat?.months[date.format('M') - 2]
-        //             return previousMonth
-        //         }
-        //     }
-        //     const previousMonthStat = findPreviousMonthStat(date)
-        //     getArrayWithAmountsPerDayForPickedMonth(
-        //         clientId,
-        //         thisMonthStat,
-        //         currentMonthSum,
-        //         category
-        //     )
-        //     getArrayWithAmountsPerDayForPickedMonth(
-        //         clientId,
-        //         previousMonthStat,
-        //         previousMonthSum,
-        //         category,
-        //         31
-        //     )
-        // })
         currentMonthSum = currentMonthSum.map(day =>
             Math.round(getSumFromArray(day))
         )
@@ -190,7 +154,9 @@ export default function ListOfClients() {
         month,
         sumHolder,
         category,
-        countUntilThisDateInMonth = moment().subtract(1, 'day').format('D')
+        countUntilThisDateInMonth = getMomentUTC()
+            .subtract(1, 'day')
+            .format('D')
     ) => {
         month.forEach((day, index) => {
             if (index === 0 || index < countUntilThisDateInMonth) {
@@ -458,7 +424,7 @@ export default function ListOfClients() {
                                     const memorizedPreviousMiddleMonthSum =
                                         calculateMiddleMonthSum(
                                             client._id,
-                                            moment().subtract(1, 'month')
+                                            getMomentUTC().subtract(1, 'month')
                                         )
                                     const memorizedMonthSum = clientMonthSum(
                                         client._id
@@ -466,7 +432,7 @@ export default function ListOfClients() {
                                     const memorizedPreviousMonthSum =
                                         clientMonthSum(
                                             client._id,
-                                            moment().subtract(1, 'month')
+                                            getMomentUTC().subtract(1, 'month')
                                         )
                                     const arrayOfPaymentsMadeToClient =
                                         paymentsList.filter(
@@ -476,7 +442,10 @@ export default function ListOfClients() {
                                                 payment.date.substring(
                                                     6,
                                                     10
-                                                ) === moment().format('YYYY')
+                                                ) ===
+                                                    getMomentUTC().format(
+                                                        'YYYY'
+                                                    )
                                         )
                                     const getArrayOfPaymentsMadeToClientWithAmounts =
                                         arrayOfPaymentsMadeToClient.map(

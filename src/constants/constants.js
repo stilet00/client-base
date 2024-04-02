@@ -1,8 +1,8 @@
-import moment from 'moment'
 import {
     getStringMonthNumber,
     getTotalDaysOfMonth,
-} from '../sharedFunctions/sharedFunctions'
+    getMomentUTC,
+} from 'sharedFunctions/sharedFunctions'
 import background1 from '../images/tasks_backgrounds/background1.png'
 import background2 from '../images/tasks_backgrounds/background2.png'
 import background3 from '../images/tasks_backgrounds/background3.png'
@@ -29,11 +29,11 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcard'
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt'
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice'
 
-export const currentYear = moment().format('YYYY')
-export const previousYear = moment().subtract(1, 'year').format('YYYY')
-export const currentMonth = moment().format('M')
-export const previousMonth = moment().subtract(1, 'month').format('M')
-export const previousDay = moment().subtract(1, 'day').format('D')
+export const currentYear = getMomentUTC().format('YYYY')
+export const previousYear = getMomentUTC().subtract(1, 'year').format('YYYY')
+export const currentMonth = getMomentUTC().format('M')
+export const previousMonth = getMomentUTC().subtract(1, 'month').format('M')
+export const previousDay = getMomentUTC().subtract(1, 'day').format('D')
 export const appStartYear = 2022
 export const arrayOfYearsForSelectFilter = creatArrayOfYears()
 export const inactivityPeriod = 1000 * 60 * 20
@@ -179,7 +179,7 @@ export const DEFAULT_STATEMENT = {
     amount: 0,
     sender: FINANCE_SENDERS.agency,
     comment: FINANCE_COMMENTS.salary,
-    date: moment(),
+    date: getMomentUTC(),
 }
 
 export const BOT_LIST = [

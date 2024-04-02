@@ -20,6 +20,7 @@ import {
     calculateBalanceDaySum,
     getSumFromArray,
     getStartOfPreviousDayInUTC,
+    getMomentUTC,
 } from 'sharedFunctions/sharedFunctions'
 import { currentYear, previousDay } from '../../../constants/constants'
 import { IconButton, Rating } from '@mui/material'
@@ -83,14 +84,14 @@ function SingleTranslator({
     })
     const translatorMonthTotalSum = calculateTranslatorMonthTotal(
         translatorBalanceDays.filter(({ dateTimeId }) =>
-            moment(dateTimeId).utc().isSame(moment().utc(), 'month')
+            getMomentUTC(dateTimeId).isSame(getMomentUTC(), 'month')
         )
     )
     const previousDayDate = getStartOfPreviousDayInUTC()
     const translatorBalanceDaysForPreviousMonth = translatorBalanceDays.filter(
         ({ dateTimeId }) =>
-            moment(dateTimeId).isSame(
-                moment().utc().subtract(1, 'month'),
+            getMomentUTC(dateTimeId).isSame(
+                getMomentUTC().subtract(1, 'month'),
                 'month'
             )
     )
@@ -133,15 +134,18 @@ function SingleTranslator({
     }
 
     const monthStringFormat =
-        moment(previousDayDate).format('MMMM').length > '5' ? 'MMM' : 'MMMM'
-    const currentMonth = moment(previousDayDate).format(monthStringFormat)
-    const previousMonth = moment()
+        getMomentUTC(previousDayDate).format('MMMM').length > '5'
+            ? 'MMM'
+            : 'MMMM'
+    const currentMonth = getMomentUTC(previousDayDate).format(monthStringFormat)
+    const previousMonth = getMomentUTC()
         .subtract(1, 'month')
         .format(monthStringFormat)
     const balanceDaysForSelectedDate = translatorBalanceDays.filter(
-        ({ dateTimeId }) => moment(dateTimeId).isSame(previousDayDate, 'day')
+        ({ dateTimeId }) =>
+            getMomentUTC(dateTimeId).isSame(previousDayDate, 'day')
     )
-    const isValidVirtualGiftDate = moment(
+    const isValidVirtualGiftDate = getMomentUTC(
         lastVirtualGiftLabel,
         '',
         true
@@ -201,7 +205,7 @@ function SingleTranslator({
                                 ? `Suspended since: `
                                 : `Activated since: `}
                             <b>
-                                {moment(suspended.time).format(
+                                {getMomentUTC(suspended.time).format(
                                     'YYYY/MM/DD HH:mm [UTC]'
                                 )}
                             </b>
@@ -328,7 +332,9 @@ function SingleTranslator({
                                             }}
                                         >
                                             Penalties for{' '}
-                                            {`${moment().format('MMMM')}: `}
+                                            {`${getMomentUTC().format(
+                                                'MMMM'
+                                            )}: `}
                                             <PenaltiesList
                                                 penaltiesArray={
                                                     personalPenaltiesObject.thisMonthsPenaltiesArray
@@ -391,7 +397,7 @@ function SingleTranslator({
                                                                 key={client._id}
                                                             >
                                                                 <Typography variant="caption">
-                                                                    {`Balance for ${moment(
+                                                                    {`Balance for ${getMomentUTC(
                                                                         `${previousDay}/${currentMonth}/${currentYear}`,
                                                                         `D/${monthStringFormat}/YYYY`
                                                                     ).format(
@@ -576,7 +582,7 @@ function SingleTranslator({
                                         variant="outlined"
                                     >
                                         {isValidVirtualGiftDate
-                                            ? moment(
+                                            ? getMomentUTC(
                                                   lastVirtualGiftLabel
                                               ).format(`MM DD YYYY`)
                                             : lastVirtualGiftLabel}

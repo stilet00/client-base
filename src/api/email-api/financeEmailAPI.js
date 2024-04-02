@@ -5,6 +5,7 @@ const {
     getCurrentMonthPenalties,
     calculateBalanceDaySum,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
+const { getMomentUTC } = require('../utils/utils')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
 const { getCollections } = require('../database/collections')
@@ -57,9 +58,10 @@ const sendEmailTemplateToAdministrators = async translatorsCollection => {
         .map(({ name, surname, statistics }) => {
             const translatorStatisticsForYesterday = statistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId)
-                        .utc()
-                        .isSame(moment().utc().subtract(1, 'day'), 'day')
+                    getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC().subtract(1, 'day'),
+                        'day'
+                    )
             )
             const translatorSum = translatorStatisticsForYesterday.reduce(
                 (sum, current) => {
@@ -87,7 +89,9 @@ const sendEmailTemplateToAdministrators = async translatorsCollection => {
     let mailOptions = {
         from: '"Sunrise agency" <sunrise-agency@gmail.com>',
         to: adminEmailList,
-        subject: `Date: ${moment().subtract(1, 'day').format('MMMM DD, YYYY')}`,
+        subject: `Date: ${getMomentUTC()
+            .subtract(1, 'day')
+            .format('MMMM DD, YYYY')}`,
         text: `Balance: ${yesterdayTotalSum}$`,
         html: emailHtmlTemplateForAdministrators,
     }
@@ -118,23 +122,24 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
             const translatorsStatistics = translator.statistics
             const balanceDaysForYesterday = translatorsStatistics.filter(
                 balanceDay => {
-                    return moment(balanceDay.dateTimeId)
-                        .utc()
-                        .isSame(moment().utc().subtract(1, 'day'), 'day')
+                    return getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC().subtract(1, 'day'),
+                        'day'
+                    )
                 }
             )
             const balanceDaysForCurrentMonth = translatorsStatistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId)
-                        .utc()
-                        .isSame(moment().utc(), 'month')
+                    getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC(),
+                        'month'
+                    )
             )
             const balanceDaysForPreviousMonth = translatorsStatistics.filter(
                 balanceDay =>
-                    moment(balanceDay.dateTimeId)
-                        .utc()
+                    getMomentUTC(balanceDay.dateTimeId)
                         .subtract(1, 'month')
-                        .isSame(moment().utc(), 'month')
+                        .isSame(getMomentUTC(), 'month')
             )
             const yesterdayTotal = balanceDaysForYesterday.reduce(
                 (sum, current) => {
@@ -209,7 +214,7 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         let mailOptions = {
             from: '"Sunrise agency" <sunrise-agency@gmail.com>',
             to: translatorInfoForEmailLetter.email,
-            subject: `Date: ${moment()
+            subject: `Date: ${getMomentUTC()
                 .subtract(1, 'day')
                 .format('MMMM DD, YYYY')}`,
             text: `Balance: ${translatorInfoForEmailLetter.yesterdayTotal}$`,

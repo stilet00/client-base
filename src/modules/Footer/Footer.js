@@ -1,13 +1,14 @@
 import React from 'react'
 import '../../styles/modules/Footer.css'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
+
 function Footer() {
     return (
         <div className={'footer'}>
             <p>
-                {`Made by Stilet 2021 - ${moment().format('YYYY')}. Version ${
-                    process.env.REACT_APP_SUNRISE_AGENCY_VERSION
-                }`}
+                {`Made by Stilet 2021 - ${getMomentUTC().format(
+                    'YYYY'
+                )}. Version ${process.env.REACT_APP_SUNRISE_AGENCY_VERSION}`}
             </p>
         </div>
     )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import { useMutation, useQueryClient } from 'react-query'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
@@ -25,7 +25,7 @@ import MESSAGES from 'constants/messages'
 export default function PersonalPenaltyForm({ id, suspended }) {
     const defaultPenalty = new DEFAULT_PENALTY(
         id,
-        convertDateToIsoString(moment())
+        convertDateToIsoString(getMomentUTC())
     )
     const [penalty, setPenalty] = useState(defaultPenalty)
     const { alertOpen, closeAlert, openAlert, message } = useAlert()

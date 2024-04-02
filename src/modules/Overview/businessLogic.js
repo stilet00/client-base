@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import moment from 'moment'
 import { useQuery } from 'react-query'
 import { getClientsRequest } from 'services/clientsServices/services'
 import { getTranslators } from 'services/translatorsServices/services'
@@ -9,6 +8,7 @@ import {
     calculateTranslatorMonthTotal,
     getNumberWithHundreds,
     calculateBalanceDaySum,
+    getMomentUTC,
 } from 'sharedFunctions/sharedFunctions'
 import { currentMonth, currentYear } from 'constants/constants'
 import MESSAGES from 'constants/messages'
@@ -138,7 +138,7 @@ export const useOverview = user => {
                 )
                 const balanceDaysForFilteredMonth = translatorStatistics.filter(
                     balanceDay =>
-                        moment(balanceDay.dateTimeId).format('M') ===
+                        getMomentUTC(balanceDay.dateTimeId).format('M') ===
                         monthNumber
                 )
                 if (!balanceDaysForFilteredMonth) {
@@ -160,7 +160,7 @@ export const useOverview = user => {
                 )
                 const balanceDaysForFilteredMonth = translatorStatistics.filter(
                     balanceDay =>
-                        moment(balanceDay.dateTimeId).format('M') ===
+                        getMomentUTC(balanceDay.dateTimeId).format('M') ===
                         monthNumber
                 )
                 if (!balanceDaysForFilteredMonth) {

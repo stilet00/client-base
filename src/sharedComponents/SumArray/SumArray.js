@@ -6,7 +6,8 @@ import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 import InputAdornment from '@mui/material/InputAdornment'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
+import { StyledTextField } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 function SumArray({
     getTotalDays,
@@ -66,7 +67,7 @@ function SumArray({
                                 <>
                                     <tr>
                                         <td>
-                                            {moment(
+                                            {getMomentUTC(
                                                 `${currentYear}/${selectedMonth}/${singleDay}`
                                             ).format('MMMM-DD')}
                                         </td>

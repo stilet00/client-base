@@ -1,7 +1,7 @@
 import { Bar, Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
-import moment from 'moment'
 import { Chart, registerables } from 'chart.js'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 Chart.register(...registerables)
 
 function SingleChart({ graph, index, previousMonth }) {
@@ -37,7 +37,7 @@ function SingleChart({ graph, index, previousMonth }) {
     const data = {
         _id: graph._id,
         labels: graph.days || [],
-        title: moment(`${graph.year}-${graph.month}`).format('MMMM-YYYY'),
+        title: getMomentUTC(`${graph.year}-${graph.month}`).format('MMMM-YYYY'),
         datasets: dataSets,
     }
 
@@ -93,7 +93,7 @@ function SingleChart({ graph, index, previousMonth }) {
             title: {
                 color: 'white',
                 display: true,
-                text: moment(`${graph.year}-${graph.month}`).format(
+                text: getMomentUTC(`${graph.year}-${graph.month}`).format(
                     'MMMM-YYYY'
                 ),
             },
