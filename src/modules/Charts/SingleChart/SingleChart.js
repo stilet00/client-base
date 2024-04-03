@@ -1,10 +1,12 @@
 import { Bar, Line } from 'react-chartjs-2'
 import '../../../styles/modules/SingleChart.css'
 import { Chart, registerables } from 'chart.js'
-import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
+import moment from 'moment'
+
 Chart.register(...registerables)
 
 function SingleChart({ graph, index, previousMonth }) {
+    console.log(graph)
     let dataSets = [
         {
             label: 'Current month',
@@ -37,7 +39,10 @@ function SingleChart({ graph, index, previousMonth }) {
     const data = {
         _id: graph._id,
         labels: graph.days || [],
-        title: getMomentUTC(`${graph.year}-${graph.month}`).format('MMMM-YYYY'),
+        title: moment(`${graph.year}-${graph.month}`, 'YYYY-MM')
+            .hours(12)
+            .utc()
+            .format('MMMM, YYYY'),
         datasets: dataSets,
     }
 
@@ -93,9 +98,10 @@ function SingleChart({ graph, index, previousMonth }) {
             title: {
                 color: 'white',
                 display: true,
-                text: getMomentUTC(`${graph.year}-${graph.month}`).format(
-                    'MMMM-YYYY'
-                ),
+                text: moment(`${graph.year}-${graph.month}`, 'YYYY-MM')
+                    .hours(12)
+                    .utc()
+                    .format('MMMM-YYYY'),
             },
             labels: {
                 color: 'red',
@@ -130,16 +136,6 @@ function SingleChart({ graph, index, previousMonth }) {
                         : '0'
                 } $`}</p>
             </div>
-
-            {/*<div className="button-chart-edit">*/}
-            {/*  <ColoredButton*/}
-            {/*    onClick={() => deleteGraph(data._id)}*/}
-            {/*    variant={"outlined"}*/}
-            {/*  >*/}
-            {/*    <DeleteIcon />*/}
-            {/*  </ColoredButton>*/}
-            {/*  <ChartDateForm monthData={data} onValueSubmit={onChartChange} />*/}
-            {/*</div>*/}
         </div>
     )
 }

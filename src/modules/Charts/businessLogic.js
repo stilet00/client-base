@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
@@ -56,7 +57,6 @@ export const useChartsContainer = user => {
     } = useQuery('balanceDaysForCharts', fetchBalanceDays, {
         enabled: !!user,
         onSuccess: data => {
-            console.log(data)
             let yearChartsArray = []
             for (let monthCount = 1; monthCount < 13; monthCount++) {
                 let defaultMonth = new DEFAULT_MONTH_CHART(
@@ -65,20 +65,21 @@ export const useChartsContainer = user => {
                 )
 
                 const stringMonth = defaultMonth.month
-
-                for (
-                    let dayCount = 1;
-                    dayCount <=
-                    getMomentUTC(
-                        selectedYear + '-' + stringMonth,
-                        'YYYY-MM'
-                    ).daysInMonth();
-                    dayCount++
-                ) {
-                    const currentDayDate = getMomentUTC(
+                const daysInMonth = moment(
+                    selectedYear + '-' + stringMonth,
+                    'YYYY-MM'
+                )
+                    .hours(12)
+                    .utc()
+                    .daysInMonth()
+                for (let dayCount = 1; dayCount <= daysInMonth; dayCount++) {
+                    const currentDayDate = moment(
                         `${dayCount}-${monthCount}-${selectedYear}`,
                         'D-M-YYYY'
-                    ).format()
+                    )
+                        .hours(12)
+                        .utc()
+                        .format()
                     const arrayOfBalanceDayForCurrentDate = data.filter(
                         balanceDay =>
                             getMomentUTC(balanceDay.dateTimeId).isSame(
@@ -107,6 +108,7 @@ export const useChartsContainer = user => {
                     yearChartsArray.unshift(defaultMonth)
                 }
             }
+            console.log(yearChartsArray)
             setMonths(yearChartsArray)
         },
         onError: () => console.error(MESSAGES.somethingWrongWithBalanceDays),
@@ -195,119 +197,6 @@ export const useChartsContainer = user => {
         category,
         setCategory,
         balanceDaysAreLoading,
-    }
-}
-
-export const useChartForm = ({ onMonthSubmit, year }) => {
-    const [months, setMonths] = useState([])
-
-    const [selectedMonth, setSelectedMonth] = useState(1)
-
-    const [valuesArray, setValuesArray] = useState([])
-
-    const { handleClose, handleOpen, open } = useModal()
-
-    useEffect(() => {
-        let monthsArray = []
-        for (let i = 1; i < 13; i++) {
-            i < 10
-                ? monthsArray.push(
-                      getMomentUTC(
-                          '01-0' + i + '-' + year,
-                          'DD-MM-YYYY'
-                      ).format('MMMM')
-                  )
-                : monthsArray.push(
-                      getMomentUTC('01-' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
-                  )
-        }
-        setMonths(monthsArray)
-    }, [year])
-
-    const handleChange = useCallback(event => {
-        setSelectedMonth(event.target.value)
-    }, [])
-
-    const getTotalDays = useCallback(() => {
-        const stringMonth =
-            selectedMonth < 9 ? '0' + selectedMonth : selectedMonth
-        let totalDays = []
-        for (
-            let i = 1;
-            i <=
-            getMomentUTC(year + '-' + stringMonth, 'YYYY-MM').daysInMonth();
-            i++
-        ) {
-            totalDays.push(i)
-        }
-        return totalDays
-    }, [selectedMonth, year])
-
-    const setDefault = useCallback(() => {
-        handleClose()
-        let monthsArray = []
-        for (let i = 1; i < 13; i++) {
-            i < 10
-                ? monthsArray.push(
-                      getMomentUTC(
-                          '01-0' + i + '-' + year,
-                          'DD-MM-YYYY'
-                      ).format('MMMM')
-                  )
-                : monthsArray.push(
-                      getMomentUTC('01-' + i + '-' + year, 'DD-MM-YYYY').format(
-                          'MMMM'
-                      )
-                  )
-        }
-        setMonths(monthsArray)
-        setSelectedMonth(1)
-        setValuesArray([])
-    }, [year, handleClose])
-
-    const onFormSubmit = useCallback(
-        e => {
-            e.preventDefault()
-            let submittedMonth = {
-                year: year,
-                month:
-                    selectedMonth < 10
-                        ? '0' + selectedMonth
-                        : String(selectedMonth),
-                days: getTotalDays(),
-                values: valuesArray,
-            }
-            onMonthSubmit(submittedMonth)
-            setDefault()
-        },
-        [
-            year,
-            selectedMonth,
-            valuesArray,
-            getTotalDays,
-            onMonthSubmit,
-            setDefault,
-        ]
-    )
-
-    const onValuesSubmit = useCallback(newValuesArray => {
-        setValuesArray(newValuesArray)
-    }, [])
-
-    return {
-        handleOpen,
-        open,
-        handleClose,
-        onFormSubmit,
-        year,
-        selectedMonth,
-        handleChange,
-        months,
-        getTotalDays,
-        onValuesSubmit,
-        valuesArray,
     }
 }
 
