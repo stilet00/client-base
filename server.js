@@ -139,7 +139,7 @@ app.get(
     sendEmailsToTranslators
 )
 app.post(translatorsURL + 'add', [...adminRules], addNewTranslator)
-app.post(
+app.put(
     translatorsURL + 'suspend-client',
     [...adminRules],
     toggleSuspendClientResolver
