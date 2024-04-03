@@ -179,7 +179,7 @@ export const DEFAULT_STATEMENT = {
     amount: 0,
     sender: FINANCE_SENDERS.agency,
     comment: FINANCE_COMMENTS.salary,
-    date: getMomentUTC(),
+    date: moment().utc(),
 }
 
 export const BOT_LIST = [
