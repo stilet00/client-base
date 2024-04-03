@@ -538,7 +538,7 @@ export default function ClientsForm({
                                         label="Password"
                                     />
                                 </FormControl>
-                                {arrayOfEditedClientsFields.length > 0 && (
+                                {/* {arrayOfEditedClientsFields.length > 0 && (
                                     <FormControl className="clients-form__body--big-field">
                                         <FormControlLabel
                                             control={
@@ -555,7 +555,7 @@ export default function ClientsForm({
                                             }
                                         />
                                     </FormControl>
-                                )}
+                                )} */}
                             </div>
                             <Button
                                 type={'button'}

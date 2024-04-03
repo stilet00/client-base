@@ -134,7 +134,10 @@ export default function EditBalanceForm({
                                         >
                                             {clients
                                                 .filter(
-                                                    client => !client.suspended
+                                                    client =>
+                                                        !client.suspendedTranslators.includes(
+                                                            translatorId
+                                                        )
                                                 )
                                                 ?.map(item => (
                                                     <MenuItem
@@ -159,7 +162,7 @@ export default function EditBalanceForm({
                                 {!balanceDayIsLoading &&
                                     !!currentBalanceDayStatistics && (
                                         <>
-                                            <p>Finances:</p>
+                                            <p>Revenue by Category:</p>
                                             <div className="balance-form__finances">
                                                 {translatorId !==
                                                 SUNRISE_AGENCY_ID ? (

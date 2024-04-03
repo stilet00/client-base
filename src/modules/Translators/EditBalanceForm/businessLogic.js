@@ -17,7 +17,9 @@ import MESSAGES from 'constants/messages'
 export const useBalanceForm = ({ clients, translatorId }) => {
     const { open, handleOpen, handleClose } = useModal()
     const [selectedClient, setSelectedClient] = useState(
-        clients.filter(client => !client.suspended)[0]?._id
+        clients.filter(
+            client => !client.suspendedTranslators.includes(translatorId)
+        )[0]?._id
     )
     const [currentBalanceDay, setCurrentBalanceDay] = useState(null)
     const [selectedDate, setSelectedDate] = useState(
