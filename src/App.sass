@@ -235,11 +235,11 @@ main
     animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
     animation-range: entry, exit
     animation-duration: 1ms
-    animation-timeline: view()
+    animation-timeline: view() !important
 
   @media (max-width: 650px)
     #on-scroll__rotate-animation-list > div
       animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards
       animation-range: entry, exit
       animation-duration: 1ms
-      animation-timeline: view()
+      animation-timeline: view() !important
