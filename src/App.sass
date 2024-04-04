@@ -3,10 +3,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap")
 @import url('https://fonts.googleapis.com/css2?family=BhuTuka+Expanded+One&display=swap')
 
-:root
-  --slide-animation: yourValue
-  --rotate-animation: yourValue
-
 body
   font-family: $text-font-family
   margin: 0
@@ -236,18 +232,14 @@ main
 
 @supports  (animation-timeline: view())
   #on-scroll__slide-animation-list > li
-    view-timeline-name: --slide-animation
-    view-timeline-axis: block
     animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
     animation-range: entry, exit
     animation-duration: 1ms
-    animation-timeline: --slide-animation
+    animation-timeline: view()
 
   @media (max-width: 650px)
     #on-scroll__rotate-animation-list > div
-      view-timeline-name: --rotate-animation
-      view-timeline-axis: block
       animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards
       animation-range: entry, exit
       animation-duration: 1ms
-      animation-timeline: --rotate-animation
+      animation-timeline: view()

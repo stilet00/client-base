@@ -203,7 +203,6 @@ function Translators() {
                             updateBalanceDayIsLoading={
                                 updateBalanceDayIsLoading
                             }
-                            alertStatusConfirmation={alertStatusConfirmation}
                             openAlertConfirmation={openAlertConfirmation}
                             closeAlertConfirmationNoReload={
                                 closeAlertConfirmationNoReload
@@ -232,19 +231,21 @@ function Translators() {
                 handleClose={closeAlert}
                 status={message.status}
             />
-            <AlertMessageConfirmation
-                mainText={'Please confirm mailout'}
-                additionalText={
-                    "Continue, if you've finished all work in translator's statistics"
-                }
-                open={alertStatusConfirmation}
-                handleClose={closeAlertConfirmationNoReload}
-                handleOpen={openAlertConfirmation}
-                status={false}
-                onCancel={closeAlertConfirmationNoReload}
-                onConfirm={sendNotificationEmails}
-                loadingStatus={mailoutInProgress}
-            />
+            {alertStatusConfirmation && (
+                <AlertMessageConfirmation
+                    mainText={'Please confirm mailout'}
+                    additionalText={
+                        "Continue, if you've finished all work in translator's statistics"
+                    }
+                    open={alertStatusConfirmation}
+                    handleClose={closeAlertConfirmationNoReload}
+                    handleOpen={openAlertConfirmation}
+                    status={false}
+                    onCancel={closeAlertConfirmationNoReload}
+                    onConfirm={sendNotificationEmails}
+                    loadingStatus={mailoutInProgress}
+                />
+            )}
         </div>
     )
 }
