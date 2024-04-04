@@ -106,7 +106,7 @@ export default function ListOfClients() {
             },
             0
         )
-        return currentMonthSum
+        return currentMonthSum.toFixed(2)
     }
 
     function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
