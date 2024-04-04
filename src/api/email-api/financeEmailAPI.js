@@ -73,7 +73,7 @@ const sendEmailTemplateToAdministrators = async translatorsCollection => {
                 yesterdayTotalSum += translatorSum
             }
             return translatorSum
-                ? `${name} ${surname}: <b>${translatorSum} $</b>`
+                ? `${name} ${surname}: <b>${translatorSum.toFixed(2)} $</b>`
                 : null
         })
         .filter(notEmptyString => notEmptyString)
