@@ -1,5 +1,16 @@
 @import "../../variables"
 
+
+$top-color: #f5f5f5
+$bottom-color: #ccc
+@mixin skeletonLoader($width, $height)
+  border-radius: 4px
+  background: $top-color
+  animation: skeleton 1.5s linear infinite 
+  width: $width
+  height: $height 
+
+
 .top-button
   border-radius: 0
   border-top-left-radius: 5px
@@ -20,6 +31,37 @@
   .MuiPaper-root
     padding: 0.8rem
     width: 15rem
+
+
+.skeleton
+  display: flex 
+  flex-direction: column
+  align-items: center
+  gap:10px
+  min-height: 300px
+  padding: 20px
+  &-rating 
+    @include skeletonLoader(90px, 16px)
+  &-name
+    @include skeletonLoader(130px, 20px)
+  &-email
+    @include skeletonLoader(20px, 20px)
+  &-row
+    @include skeletonLoader(100%, 16px)
+  &-bigRow
+    @include skeletonLoader(100%, 30px)   
+
+
+  
+@keyframes skeleton 
+  0% 
+    background-color: $top-color
+  
+  50% 
+    background-color: $bottom-color
+  
+  100% 
+    background-color: $top-color
 
 @media (min-width: 1000px) and (max-width: 1064px)
   .translators-container
