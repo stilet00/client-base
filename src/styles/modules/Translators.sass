@@ -1,11 +1,11 @@
 @import "../../variables"
 
 
-$top-color: #f5f5f5
-$bottom-color: #ccc
+$sceleton-loader-color: #f5f5f5
+$sceleton-loader-color-second: #ccc
 @mixin skeletonLoader($width, $height)
   border-radius: 4px
-  background: $top-color
+  background: $sceleton-loader-color
   animation: skeleton 1.5s linear infinite 
   width: $width
   height: $height 
@@ -41,9 +41,9 @@ $bottom-color: #ccc
   min-height: 300px
   padding: 20px
   &-rating 
-    @include skeletonLoader(90px, 16px)
+    @include skeletonLoader(40%, 16px)
   &-name
-    @include skeletonLoader(130px, 20px)
+    @include skeletonLoader(70%, 20px)
   &-email
     @include skeletonLoader(20px, 20px)
   &-row
@@ -55,13 +55,13 @@ $bottom-color: #ccc
   
 @keyframes skeleton 
   0% 
-    background-color: $top-color
+    background-color: $sceleton-loader-color
   
   50% 
-    background-color: $bottom-color
+    background-color: $sceleton-loader-color-second
   
   100% 
-    background-color: $top-color
+    background-color: $sceleton-loader-color
 
 @media (min-width: 1000px) and (max-width: 1064px)
   .translators-container

@@ -39,7 +39,6 @@ import EditTranslatorEmailForm from '../EditTranslatorEmailForm/EditTranslatorEm
 import LoadingButton from '@mui/lab/LoadingButton'
 import RedeemIcon from '@mui/icons-material/Redeem'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
-import Loader from 'sharedComponents/Loader/Loader'
 
 const getTranslatorSalaryInUah = (dollarToUahRate, salary = 100) => {
     const currentCurrencyRate = dollarToUahRate
