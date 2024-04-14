@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from 'express'
+
 let express = require('express')
 let bodyParser = require('body-parser')
 const {
@@ -67,7 +69,7 @@ app.use(express.static(__dirname + '/build'))
 app.set('view engine', 'ejs')
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-app.use(function (request, response, next) {
+app.use(function (request: Request, response: Response, next: NextFunction) {
     response.setHeader('Access-Control-Allow-Origin', '*')
     response.setHeader(
         'Access-Control-Allow-Headers',
@@ -79,44 +81,68 @@ app.use(function (request, response, next) {
 app.use(limiter)
 
 //routes
-app.get(rootURL + 'chart/', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'chart?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'overview/?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'clients/true?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'clients/?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'tasks/?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'translators/?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
-app.get(rootURL + 'finances/?', function (request, response, next) {
-    response.sendFile(__dirname + '/build/index.html')
-})
+app.get(
+    rootURL + 'chart/',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'chart?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'overview/?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'clients/true?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'clients/?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'tasks/?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'translators/?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
+app.get(
+    rootURL + 'finances/?',
+    function (request: Request, response: Response, next: NextFunction) {
+        response.sendFile(__dirname + '/build/index.html')
+    }
+)
 
 // password change
-app.post(rootURL + 'reset-password', (req, res) => {
-    changeUserPassword(req, res)
+app.post(rootURL + 'reset-password', (request: Request, response: Response) => {
+    changeUserPassword(request, response)
 })
 
 // permision check
-app.post(rootURL + 'isAdmin', async (req, res) => {
-    const userEmail = req.body.email
+app.post(rootURL + 'isAdmin', async (request: Request, response: Response) => {
+    const userEmail = request.body.email
     const admin = await getCollections().collectionAdmins.findOne({
         registeredEmail: userEmail,
     })
 
-    res.send(!!admin) // Send true if admin exists, false otherwise
+    response.send(!!admin) // Send true if admin exists, false otherwise
 })
 
 // task list api

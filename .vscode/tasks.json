@@ -41,10 +41,38 @@
             }
         },
         {
+            "label": "TypeScript Watcher",
+            "type": "shell",
+            "command": "npx",
+            "args": ["tsc", "--watch"],
+            "isBackground": true,
+            "problemMatcher": {
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling...",
+                    "endsPattern": "Compiled successfully."
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
             "label": "Run Both WebClient & Server",
             "command": "echo",
             "dependsOrder": "parallel",
-            "dependsOn": ["Run Front End", "Run Back End", "Run Sass Watcher"]
+            "dependsOn": [
+                "Run Front End",
+                "Run Back End",
+                "Run Sass Watcher",
+                "TypeScript Watcher"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
         }
     ]
 }

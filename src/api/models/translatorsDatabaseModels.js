@@ -1,9 +1,13 @@
-const mongoose = require('mongoose')
-
-const BalanceDaySchema = new mongoose.Schema({
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = __importDefault(require("mongoose"));
+var BalanceDaySchema = new mongoose_1.default.Schema({
     dateTimeId: Date,
-    translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
-    client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' },
+    translator: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Translator' },
+    client: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Client' },
     statistics: {
         chats: Number,
         letters: Number,
@@ -16,21 +20,18 @@ const BalanceDaySchema = new mongoose.Schema({
         comments: String,
         voiceMessages: Number,
     },
-})
-
-const SuspendedStatusSchema = new mongoose.Schema({
+});
+var SuspendedStatusSchema = new mongoose_1.default.Schema({
     status: Boolean,
     time: Date,
-})
-
-const PersonalPenaltiesSchema = new mongoose.Schema({
-    translator: { type: mongoose.Schema.Types.ObjectId, ref: 'Translator' },
+});
+var PersonalPenaltiesSchema = new mongoose_1.default.Schema({
+    translator: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Translator' },
     dateTimeId: Date,
     amount: Number,
     description: String,
-})
-
-const TranslatorSchema = new mongoose.Schema({
+});
+var TranslatorSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         required: [true, 'Please tell us your name!'],
@@ -39,8 +40,8 @@ const TranslatorSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please tell us your name!'],
     },
-    clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }],
-    statistics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BalanceDay' }],
+    clients: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Client' }],
+    statistics: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'BalanceDay' }],
     edited: Boolean,
     suspended: SuspendedStatusSchema,
     personalPenalties: [PersonalPenaltiesSchema],
@@ -55,10 +56,9 @@ const TranslatorSchema = new mongoose.Schema({
         required: false,
     },
     wantsToReceiveEmails: Boolean,
-})
-
+});
 module.exports = {
-    TranslatorSchema,
-    BalanceDaySchema,
-    PersonalPenaltiesSchema,
-}
+    TranslatorSchema: TranslatorSchema,
+    BalanceDaySchema: BalanceDaySchema,
+    PersonalPenaltiesSchema: PersonalPenaltiesSchema,
+};
