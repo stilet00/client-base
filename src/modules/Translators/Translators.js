@@ -188,7 +188,7 @@ function Translators() {
             <div
                 id="on-scroll__rotate-animation-list"
                 className={
-                    'inner-gallery-container translators-container animated-box scrolled-container'
+                    'inner-gallery-container translators-container scrolled-container'
                 }
             >
                 {translators.length && !loading ? (

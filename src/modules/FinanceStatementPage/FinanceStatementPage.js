@@ -155,11 +155,7 @@ export default function FinanceStatementPage() {
         <>
             {!loading && (
                 <>
-                    <div
-                        className={
-                            'main-container scrolled-container  animated-box'
-                        }
-                    >
+                    <div className={'main-container scrolled-container'}>
                         {arrayOfStatementsGroupedByDate.length > 0 && (
                             <div className={'finances-inner-wrapper'}>
                                 {arrayOfStatementsGroupedByDate.map(

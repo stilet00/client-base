@@ -402,7 +402,7 @@ export default function ListOfClients() {
                     }}
                 ></input>
             </div>
-            <div className={'main-container scrolled-container animated-box'}>
+            <div className={'main-container scrolled-container'}>
                 {loading && <Loader />}
                 {!loading && (
                     <>
