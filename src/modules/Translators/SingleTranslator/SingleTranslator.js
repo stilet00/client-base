@@ -12,7 +12,6 @@ import {
     TRANSLATORS_SALARY_PERCENT,
     PAYONEER_COMISSION,
 } from '../../../constants/constants'
-import moment from 'moment'
 import { useSingleTranslator } from '../businessLogic'
 import {
     calculatePercentDifference,
@@ -329,7 +328,7 @@ function SingleTranslator({
                                             >
                                                 Penalties for{' '}
                                                 {`${previousDayDate.format(
-                                                    'MMMM'
+                                                    'DD.MM'
                                                 )}: `}
                                                 <PenaltiesList
                                                     penaltiesArray={
