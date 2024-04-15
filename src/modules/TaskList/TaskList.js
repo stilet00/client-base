@@ -29,9 +29,7 @@ function TaskList() {
 
     return (
         <>
-            <div
-                className={'taskList-container scrolled-container animated-box'}
-            >
+            <div className={'taskList-container scrolled-container'}>
                 {tasks.length > 0 ? (
                     <TransitionGroup className="todo-list" component={'ul'}>
                         {tasks.map(item => (

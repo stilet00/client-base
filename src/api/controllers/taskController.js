@@ -6,8 +6,8 @@ const getAllTasks = async (request, response) => {
 }
 
 const editTask = async (request, response) => {
-    const Task = await getCollections().collectionTasks
     try {
+        const Task = await getCollections().collectionTasks
         await Task.updateOne(
             { _id: request.params.id },
             {
@@ -25,8 +25,8 @@ const editTask = async (request, response) => {
 }
 
 const deleteTask = async (request, response) => {
-    const Task = await getCollections().collectionTasks
     try {
+        const Task = await getCollections().collectionTasks
         await Task.deleteOne({ _id: request.params.id })
         response.sendStatus(200)
     } catch (err) {
@@ -36,17 +36,18 @@ const deleteTask = async (request, response) => {
 }
 
 const createTask = async (request, response) => {
-    if (request.body?.taskName) {
-        const Task = await getCollections().collectionTasks
-        const taskCreateInput = { ...request.body }
-        try {
+    try {
+        if (request.body?.taskName) {
+            const Task = await getCollections().collectionTasks
+            const taskCreateInput = { ...request.body }
             const result = await Task.create(taskCreateInput)
             response.send(result._id)
-        } catch (err) {
-            response.sendStatus(500)
+        } else {
+            response.send('No task task name')
         }
-    } else {
-        response.send('No task task name')
+    } catch (err) {
+        console.error(err)
+        response.sendStatus(500)
     }
 }
 

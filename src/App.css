@@ -179,10 +179,6 @@ main {
   color: #61dafb;
 }
 
-.animated-box {
-  animation: appear 0.5s ease-in-out;
-}
-
 @keyframes appear {
   0% {
     opacity: 0;

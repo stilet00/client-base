@@ -134,7 +134,7 @@ function ChartsContainer() {
                     </Select>
                 </FormControl>
             </div>
-            <div className={'main-container  scrolled-container animated-box'}>
+            <div className={'main-container  scrolled-container'}>
                 {balanceDaysAreLoading && <Loader />}
                 {!balanceDaysAreLoading && (
                     <>

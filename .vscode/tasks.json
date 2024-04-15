@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run Front End",
+            "label": "Front End",
             "type": "shell",
             "command": "npm",
             "args": ["run", "dev"],
@@ -12,7 +12,7 @@
             }
         },
         {
-            "label": "Run Back End",
+            "label": "Back End",
             "type": "shell",
             "command": "npm",
             "args": ["run", "serve"],
@@ -22,7 +22,7 @@
             }
         },
         {
-            "label": "Run Sass Watcher",
+            "label": "Sass Watcher",
             "type": "shell",
             "command": "npm",
             "args": ["run", "sass:watch"],
@@ -41,10 +41,38 @@
             }
         },
         {
+            "label": "TypeScript Watcher",
+            "type": "shell",
+            "command": "npx",
+            "args": ["tsc", "--watch"],
+            "isBackground": true,
+            "problemMatcher": {
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling...",
+                    "endsPattern": "Compiled successfully."
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
             "label": "Run Both WebClient & Server",
             "command": "echo",
             "dependsOrder": "parallel",
-            "dependsOn": ["Run Front End", "Run Back End", "Run Sass Watcher"]
+            "dependsOn": [
+                "Front End",
+                "Back End",
+                "Sass Watcher",
+                "TypeScript Watcher"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
         }
     ]
 }

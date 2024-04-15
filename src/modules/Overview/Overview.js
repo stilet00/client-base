@@ -197,7 +197,7 @@ function Overview() {
         yearTotalSum - Math.floor(yearTotalSum * 0.45) - totalPayments
 
     return (
-        <div className={'main-container  table-container  animated-box'}>
+        <div className={'main-container  table-container'}>
             {!isLoading && (
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
