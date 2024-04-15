@@ -71,7 +71,7 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start": "node -r dotenv/config dist/server.js",
+        "start": "node -r dotenv/config server.js",
         "build": "react-scripts build && tsc && REACT_APP_VERSION=$(node -p \"require('./package.json').version\")",
         "serve": "nodemon -r dotenv/config server.ts",
         "sass:watch": "npx sass --watch src:src",
