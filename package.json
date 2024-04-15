@@ -72,7 +72,7 @@
     },
     "scripts": {
         "start": "node -r dotenv/config server.js",
-        "build": "react-scripts build && tsc && REACT_APP_VERSION=$(node -p \"require('./package.json').version\")",
+        "build": "react-scripts build && tsc && REACT_APP_SUNRISE_AGENCY_VERSION=$(node -p \"require('./package.json').version\")",
         "serve": "nodemon -r dotenv/config server.ts",
         "sass:watch": "npx sass --watch src:src",
         "dev": "react-scripts start",
