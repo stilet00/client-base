@@ -48,7 +48,7 @@ const deleteStatement = async (request, response) => {
     try {
         const Statement = await getCollections().collectionStatements
         const result = await Statement.deleteOne({
-            _id: ObjectId(request.params.id),
+            _id: new ObjectId(request.params.id),
         })
         if (result.deletedCount > 0) {
             response.sendStatus(200)

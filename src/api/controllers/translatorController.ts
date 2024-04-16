@@ -43,9 +43,8 @@ async function getLastVirtualGift(req: Request, res: Response): Promise<void> {
             return
         }
         const BalanceDay = await getCollections().collectionBalanceDays
-        const translatorObjectId = (ObjectId as any)(req.params.id)
         const balanceDay = await BalanceDay.findOne({
-            translator: translatorObjectId,
+            translator: new ObjectId(req.params.id),
             $or: [
                 { 'statistics.virtualGiftsSvadba': { $gt: 0 } },
                 { 'statistics.virtualGiftsDating': { $gt: 0 } },
@@ -98,9 +97,8 @@ const updateTranslator = async (req: Request, res: Response) => {
         const translator = new Translator(newTranslatorData)
         try {
             await translator.validate()
-            const translatorObjectId = (ObjectId as any)(req.params.id)
             await Translator.updateOne(
-                { _id: translatorObjectId },
+                { _id: new ObjectId(req.params.id) },
                 { $set: newTranslatorData }
             )
             const message = 'Translator has been saved'
@@ -120,9 +118,8 @@ const updateTranslator = async (req: Request, res: Response) => {
 }
 
 const deleteTranslator = (req: Request, res: Response) => {
-    const translatorObjectId = (ObjectId as any)(req.params.id)
     getCollections().collectionTranslators.deleteOne(
-        { _id: translatorObjectId },
+        { _id: new ObjectId(req.params.id) },
         (err: MongoError, docs: DeleteResult) => {
             if (err) {
                 return res.sendStatus(500)
@@ -186,16 +183,14 @@ const assignClientToTranslator = async (req: Request, res: Response) => {
         const collections = await getCollections()
         const Translators = collections.collectionTranslators
         const Clients = collections.collectionClients
-        const translatorObjectId = (ObjectId as any)(translatorId)
-        const clientObjectId = (ObjectId as any)(clientId)
         const translatorResult = await Translators.updateOne(
-            { _id: translatorObjectId },
-            { $addToSet: { clients: clientObjectId } }
+            { _id: new ObjectId(translatorId) },
+            { $addToSet: { clients: new ObjectId(clientId) } }
         )
 
         const clientResult = await Clients.updateOne(
-            { _id: clientObjectId },
-            { $addToSet: { translators: translatorObjectId } }
+            { _id: new ObjectId(clientId) },
+            { $addToSet: { translators: new ObjectId(translatorId) } }
         )
 
         if (translatorResult.nModified === 0 && clientResult.nModified === 0) {
