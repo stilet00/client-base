@@ -12,8 +12,8 @@ const getBalanceDay = async (req, res) => {
         const decodedDateTimeIdString = decodeURIComponent(dateTimeId)
         const BalanceDay = await getCollections().collectionBalanceDays
         const balanceDay = await BalanceDay.findOne({
-            translator: new ObjectId(translatorId),
-            client: new ObjectId(clientId),
+            translator: ObjectId(translatorId),
+            client: ObjectId(clientId),
             dateTimeId: moment
                 .utc(decodedDateTimeIdString)
                 .startOf('day')
@@ -29,8 +29,8 @@ const getBalanceDay = async (req, res) => {
 const createBalanceDay = async (req, res) => {
     try {
         const { translator, client, dateTimeId, statistics } = req.body
-        const translatorId = new ObjectId(translator._id)
-        const clientId = new ObjectId(client._id)
+        const translatorId = ObjectId(translator._id)
+        const clientId = ObjectId(client._id)
 
         const BalanceDay = await getCollections().collectionBalanceDays
         const Translator = await getCollections().collectionTranslators

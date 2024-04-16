@@ -76,7 +76,7 @@ var getAllTranslators = function (req, res) { return __awaiter(void 0, void 0, v
 }); };
 function getLastVirtualGift(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var BalanceDay, balanceDay, error_2;
+        var BalanceDay, translatorObjectId, balanceDay, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -88,8 +88,9 @@ function getLastVirtualGift(req, res) {
                     return [4 /*yield*/, getCollections().collectionBalanceDays];
                 case 1:
                     BalanceDay = _a.sent();
+                    translatorObjectId = mongodb_1.ObjectId(req.params.id);
                     return [4 /*yield*/, BalanceDay.findOne({
-                            translator: new mongodb_1.ObjectId(req.params.id),
+                            translator: translatorObjectId,
                             $or: [
                                 { 'statistics.virtualGiftsSvadba': { $gt: 0 } },
                                 { 'statistics.virtualGiftsDating': { $gt: 0 } },
@@ -146,7 +147,7 @@ var addNewTranslator = function (req, res) { return __awaiter(void 0, void 0, vo
     });
 }); };
 var updateTranslator = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Translator, newTranslatorData, translator, message, err_1, error_4;
+    var Translator, newTranslatorData, translator, translatorObjectId, message, err_1, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -171,7 +172,8 @@ var updateTranslator = function (req, res) { return __awaiter(void 0, void 0, vo
                 return [4 /*yield*/, translator.validate()];
             case 3:
                 _a.sent();
-                return [4 /*yield*/, Translator.updateOne({ _id: new mongodb_1.ObjectId(req.params.id) }, { $set: newTranslatorData })];
+                translatorObjectId = mongodb_1.ObjectId(req.params.id);
+                return [4 /*yield*/, Translator.updateOne({ _id: translatorObjectId }, { $set: newTranslatorData })];
             case 4:
                 _a.sent();
                 message = 'Translator has been saved';
@@ -198,7 +200,8 @@ var updateTranslator = function (req, res) { return __awaiter(void 0, void 0, vo
     });
 }); };
 var deleteTranslator = function (req, res) {
-    getCollections().collectionTranslators.deleteOne({ _id: new mongodb_1.ObjectId(req.params.id) }, function (err, docs) {
+    var translatorObjectId = mongodb_1.ObjectId(req.params.id);
+    getCollections().collectionTranslators.deleteOne({ _id: translatorObjectId }, function (err, docs) {
         if (err) {
             return res.sendStatus(500);
         }
@@ -264,7 +267,7 @@ var sendEmailsToTranslators = function (req, res) { return __awaiter(void 0, voi
     });
 }); };
 var assignClientToTranslator = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, clientId, translatorId, collections, Translators, Clients, translatorResult, clientResult, error_5;
+    var _a, clientId, translatorId, collections, Translators, Clients, translatorObjectId, clientObjectId, translatorResult, clientResult, error_5;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -275,10 +278,12 @@ var assignClientToTranslator = function (req, res) { return __awaiter(void 0, vo
                 collections = _b.sent();
                 Translators = collections.collectionTranslators;
                 Clients = collections.collectionClients;
-                return [4 /*yield*/, Translators.updateOne({ _id: new mongodb_1.ObjectId(translatorId) }, { $addToSet: { clients: new mongodb_1.ObjectId(clientId) } })];
+                translatorObjectId = mongodb_1.ObjectId(translatorId);
+                clientObjectId = mongodb_1.ObjectId(clientId);
+                return [4 /*yield*/, Translators.updateOne({ _id: translatorObjectId }, { $addToSet: { clients: clientObjectId } })];
             case 2:
                 translatorResult = _b.sent();
-                return [4 /*yield*/, Clients.updateOne({ _id: new mongodb_1.ObjectId(clientId) }, { $addToSet: { translators: new mongodb_1.ObjectId(translatorId) } })];
+                return [4 /*yield*/, Clients.updateOne({ _id: clientObjectId }, { $addToSet: { translators: translatorObjectId } })];
             case 3:
                 clientResult = _b.sent();
                 if (translatorResult.nModified === 0 && clientResult.nModified === 0) {
