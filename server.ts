@@ -53,6 +53,7 @@ const {
     getBalanceDaysForTranslators,
     getAllBalanceDays,
     getCurrentMonthTotal,
+    getBalanceDayForSelectedDate,
 } = require('./src/api/controllers/balanceDayController')
 const rateLimit = require('express-rate-limit')
 
@@ -184,7 +185,7 @@ app.post(
     [...adminRules],
     addPersonalPenaltyToTranslator
 )
-app.get(personalPenaltiesURL + 'get', [...adminRules], getPersonalPenalties)
+app.get(personalPenaltiesURL + 'get', getPersonalPenalties)
 
 // statements api
 app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements)
@@ -211,7 +212,11 @@ app.get(
     isAuthenticated,
     getAllBalanceDays
 )
-
+app.get(
+    balanceDayURL + 'selected-date',
+    isAuthenticated,
+    getBalanceDayForSelectedDate
+)
 // DB connection and server starts
 const startServer = async () => {
     try {

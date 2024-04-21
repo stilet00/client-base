@@ -653,12 +653,10 @@ function SingleTranslator({
                                 <FontAwesomeIcon icon={faPersonCircleXmark} />
                             )}
                         </IconButton>
-                        {admin && (
-                            <PersonalPenaltyForm
-                                suspended={suspended.status}
-                                id={_id}
-                            />
-                        )}
+                        <PersonalPenaltyForm
+                            suspended={suspended.status}
+                            id={_id}
+                        />
                     </CardActions>
                 </>
             )}

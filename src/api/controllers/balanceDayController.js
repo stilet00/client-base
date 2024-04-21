@@ -132,6 +132,30 @@ const getAllBalanceDays = async (req, res) => {
     }
 }
 
+const getBalanceDayForSelectedDate = async (req, res) => {
+    const selectedDateStr = req?.query['selected-date']
+    if (selectedDateStr) {
+        try {
+            const BalanceDay = await getCollections().collectionBalanceDays
+            const selectedBalanceDays = await BalanceDay.find({
+                dateTimeId: new Date(selectedDateStr),
+            })
+            if (selectedBalanceDays.length > 0) {
+                res.send(selectedBalanceDays)
+            } else {
+                res.status(404).json({
+                    error: 'BalanceDay not found for the selected date',
+                })
+            }
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: 'Internal server error' })
+        }
+    } else {
+        res.status(400).json({ error: 'Selected date is missing' })
+    }
+}
+
 const getCurrentMonthTotal = async (req, res) => {
     try {
         const BalanceDay = await getCollections().collectionBalanceDays
@@ -164,4 +188,5 @@ module.exports = {
     getBalanceDaysForTranslators,
     getAllBalanceDays,
     getCurrentMonthTotal,
+    getBalanceDayForSelectedDate,
 }

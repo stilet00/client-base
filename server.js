@@ -56,7 +56,7 @@ var _e = require('./src/api/controllers/statementController'), getAllStatements 
 var _f = require('./src/api/controllers/clientController'), getAllClients = _f.getAllClients, addNewClient = _f.addNewClient, updateClient = _f.updateClient;
 var changeUserPassword = require('./src/api/firebase/firebaseAdmin').changeUserPassword;
 var getCollections = require('./src/api/database/collections').getCollections;
-var _g = require('./src/api/controllers/balanceDayController'), getBalanceDay = _g.getBalanceDay, createBalanceDay = _g.createBalanceDay, updateBalanceDay = _g.updateBalanceDay, getBalanceDaysForTranslators = _g.getBalanceDaysForTranslators, getAllBalanceDays = _g.getAllBalanceDays, getCurrentMonthTotal = _g.getCurrentMonthTotal;
+var _g = require('./src/api/controllers/balanceDayController'), getBalanceDay = _g.getBalanceDay, createBalanceDay = _g.createBalanceDay, updateBalanceDay = _g.updateBalanceDay, getBalanceDaysForTranslators = _g.getBalanceDaysForTranslators, getAllBalanceDays = _g.getAllBalanceDays, getCurrentMonthTotal = _g.getCurrentMonthTotal, getBalanceDayForSelectedDate = _g.getBalanceDayForSelectedDate;
 var rateLimit = require('express-rate-limit');
 var PORT = process.env.PORT || 80;
 var app = express();
@@ -142,7 +142,7 @@ app.put(translatorsURL + ':id', __spreadArray([], adminRules, true), updateTrans
 app.delete(translatorsURL + ':id', __spreadArray([], adminRules, true), deleteTranslator);
 // personal penalties api
 app.post(personalPenaltiesURL + 'create', __spreadArray([], adminRules, true), addPersonalPenaltyToTranslator);
-app.get(personalPenaltiesURL + 'get', __spreadArray([], adminRules, true), getPersonalPenalties);
+app.get(personalPenaltiesURL + 'get', getPersonalPenalties);
 // statements api
 app.get(financeStatementsURL + 'get', isAuthenticated, getAllStatements);
 app.post(financeStatementsURL + 'add', __spreadArray([], adminRules, true), createStatement);
@@ -155,6 +155,7 @@ app.get(balanceDayURL + 'all', isAuthenticated, getAllBalanceDays);
 app.get(balanceDayURL, isAuthenticated, getBalanceDay);
 app.get(balanceDayURL + 'current-month-total', isAuthenticated, getCurrentMonthTotal);
 app.get(balanceDayURL + 'clients-statistics', isAuthenticated, getAllBalanceDays);
+app.get(balanceDayURL + 'selected-date', isAuthenticated, getBalanceDayForSelectedDate);
 // DB connection and server starts
 var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var err_1;
