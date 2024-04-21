@@ -133,7 +133,7 @@ const getAllBalanceDays = async (req, res) => {
 }
 
 const getBalanceDayForSelectedDate = async (req, res) => {
-    const selectedDateStr = req.query['selected-date']
+    const selectedDateStr = req?.query['selected-date']
     if (selectedDateStr) {
         try {
             const BalanceDay = await getCollections().collectionBalanceDays

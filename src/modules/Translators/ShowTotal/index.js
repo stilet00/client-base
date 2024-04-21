@@ -19,12 +19,13 @@ const StyledButton = styled(Button)`
         color: black;
     }
 `
+
 const TotalButtonWithPopover = ({
     screenIsSmall,
     selectedDate = moment().subtract(1, 'day').format('YYYY-MM-DD'),
 }) => {
     const [anchorEl, setAnchorEl] = useState(null)
-    const [sumForDay, setSumForDay] = useState([])
+    const [sumForDay, setSumForDay] = useState(0)
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
     }
@@ -41,6 +42,17 @@ const TotalButtonWithPopover = ({
         }
     )
 
+    const { data: balanceDayData } = useQuery(
+        ['balanceDay', selectedDate],
+        () => getBalanceDayForSelectedDate(selectedDate.format('YYYY-MM-DD')),
+        {
+            enabled: !!selectedDate,
+            onSuccess: res => {
+                setSumForDay(calculateStatisticsForDay(res.data))
+            },
+        }
+    )
+
     const calculateStatisticsForDay = data => {
         const totalSum = data.reduce((total, item) => {
             const sum = Object.values(item.statistics).reduce(
@@ -51,17 +63,6 @@ const TotalButtonWithPopover = ({
         }, 0)
         return totalSum.toFixed(2)
     }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await getBalanceDayForSelectedDate(selectedDate)
-            setSumForDay(calculateStatisticsForDay(res.data))
-        }
-        if (!selectedDate) {
-            return
-        }
-        fetchData()
-    }, [selectedDate])
 
     return (
         <>
