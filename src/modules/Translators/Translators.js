@@ -109,6 +109,7 @@ function Translators() {
                             )}
                             <TotalButtonWithPopover
                                 screenIsSmall={screenIsSmall}
+                                selectedDate={translatorFilter?.date}
                             />
                             <div className="gallery-menu__filters">
                                 <div
@@ -158,7 +159,10 @@ function Translators() {
                             </StyledButton>
                         </>
                     )}
-                    <TotalButtonWithPopover screenIsSmall={screenIsSmall} />
+                    <TotalButtonWithPopover
+                        screenIsSmall={screenIsSmall}
+                        selectedDate={translatorFilter?.date}
+                    />
                     <div className="gallery-menu__inline-filters">
                         <div className="gallery-menu__filters-label">Menu</div>
                         <div className={'gallery-menu__checkbox-container'}>

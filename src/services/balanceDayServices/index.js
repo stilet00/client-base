@@ -31,3 +31,13 @@ export function getBalanceDaysForClientsRequest() {
         getConfigForAxiosAuthenticatedRequest()
     )
 }
+
+export function getBalanceDayForSelectedDate(date) {
+    if (date) {
+        const convertedDate = date.format('YYYY-MM-DD')
+        return axios.get(
+            `${balanceDayURL}selected-date?selected-date=${convertedDate}`,
+            getConfigForAxiosAuthenticatedRequest()
+        )
+    }
+}

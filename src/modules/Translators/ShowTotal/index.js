@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import { useQuery } from 'react-query'
@@ -9,14 +9,20 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { getBalanceTotalForCurrentMonthRequest } from 'services/balanceDayServices/index'
 import Loader from 'sharedComponents/Loader/Loader'
+import { getBalanceDayForSelectedDate } from '../../../services/balanceDayServices'
+import moment from 'moment'
 
 const StyledButton = styled(Button)`
     && {
         color: black;
     }
 `
-const TotalButtonWithPopover = ({ screenIsSmall }) => {
+const TotalButtonWithPopover = ({
+    screenIsSmall,
+    selectedDate = moment().subtract(1, 'day').format('YYYY-MM-DD'),
+}) => {
     const [anchorEl, setAnchorEl] = useState(null)
+    const [sumForDay, setSumForDay] = useState([])
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
     }
@@ -32,6 +38,34 @@ const TotalButtonWithPopover = ({ screenIsSmall }) => {
             enabled: !!anchorEl,
         }
     )
+
+    function calculateStatisticsForDay(data) {
+        const sumsPerObject = []
+        data.forEach(item => {
+            const sum = Object.values(item.statistics).reduce((acc, value) => {
+                return acc + (typeof value === 'number' ? value : 0)
+            }, 0)
+
+            sumsPerObject.push(sum)
+        })
+
+        const totalSum = sumsPerObject
+            .reduce((acc, sum) => acc + sum, 0)
+            .toFixed(2)
+        return totalSum
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await getBalanceDayForSelectedDate(selectedDate)
+            setSumForDay(calculateStatisticsForDay(res.data))
+        }
+        if (!selectedDate) {
+            return
+        }
+        fetchData()
+    }, [selectedDate])
+
     return (
         <>
             <StyledButton
@@ -55,12 +89,18 @@ const TotalButtonWithPopover = ({ screenIsSmall }) => {
             >
                 {isLoading && <Loader />}
                 {!isLoading && (
-                    <Typography sx={{ p: 2 }} align={'left'}>
-                        {`Total by ${getMomentUTC().format('D MMMM')}: `}{' '}
-                        <b>
-                            <b>{`${data?.data} $`}</b>
-                        </b>
-                    </Typography>
+                    <>
+                        <Typography sx={{ p: 1 }} align={'left'}>
+                            {`Total by ${selectedDate.format('D MMMM')}: `}{' '}
+                            <b>{sumForDay}</b>
+                        </Typography>
+                        <Typography sx={{ p: 1 }} align={'left'}>
+                            {`Total by ${getMomentUTC().format('D MMMM')}: `}{' '}
+                            <b>
+                                <b>{`${data?.data} $`}</b>
+                            </b>
+                        </Typography>
+                    </>
                 )}
             </Popover>
         </>

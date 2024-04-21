@@ -110,6 +110,14 @@ export default function EditBalanceForm({
                                 </h2>
                                 <div className={'balance-form__date'}>
                                     <MobileDatePicker
+                                        sx={{
+                                            '& .MuiPaper-root-MuiDialog-paper':
+                                                {
+                                                    // Your styles for the inner component here
+                                                    maxHeight: '200px',
+                                                    borderRadius: 0,
+                                                },
+                                        }}
                                         label="Balance date"
                                         value={selectedDate}
                                         name={'date'}
