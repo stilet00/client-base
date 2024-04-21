@@ -7,9 +7,11 @@ import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { getBalanceTotalForCurrentMonthRequest } from 'services/balanceDayServices/index'
+import {
+    getBalanceTotalForCurrentMonthRequest,
+    getBalanceDayForSelectedDate,
+} from 'services/balanceDayServices/index'
 import Loader from 'sharedComponents/Loader/Loader'
-import { getBalanceDayForSelectedDate } from '../../../services/balanceDayServices'
 import moment from 'moment'
 
 const StyledButton = styled(Button)`
@@ -39,20 +41,15 @@ const TotalButtonWithPopover = ({
         }
     )
 
-    function calculateStatisticsForDay(data) {
-        const sumsPerObject = []
-        data.forEach(item => {
-            const sum = Object.values(item.statistics).reduce((acc, value) => {
-                return acc + (typeof value === 'number' ? value : 0)
-            }, 0)
-
-            sumsPerObject.push(sum)
-        })
-
-        const totalSum = sumsPerObject
-            .reduce((acc, sum) => acc + sum, 0)
-            .toFixed(2)
-        return totalSum
+    const calculateStatisticsForDay = data => {
+        const totalSum = data.reduce((total, item) => {
+            const sum = Object.values(item.statistics).reduce(
+                (acc, value) => acc + (typeof value === 'number' ? value : 0),
+                0
+            )
+            return total + sum
+        }, 0)
+        return totalSum.toFixed(2)
     }
 
     useEffect(() => {
