@@ -108,7 +108,6 @@ export const useChartsContainer = user => {
                     yearChartsArray.unshift(defaultMonth)
                 }
             }
-            console.log(yearChartsArray)
             setMonths(yearChartsArray)
         },
         onError: () => console.error(MESSAGES.somethingWrongWithBalanceDays),

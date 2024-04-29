@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ThemeProvider } from 'styled-components'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import './App.css'
 import './styles/modules/karusell.css'
@@ -31,6 +32,14 @@ const queryClient = new QueryClient()
 
 function App() {
     const [isLoading, setIsLoading] = useState(true)
+    const [theme, setTheme] = useState({
+        colors: {
+            backgroundMode: 'rgba(255, 255, 255, 0.5)',
+        },
+        fonts: {
+            main: 'Arial, sans-serif',
+        },
+    })
     const { loggedIn } = useActivity()
     const stopLoading = () => {
         setIsLoading(false)
@@ -39,6 +48,17 @@ function App() {
     const mainBackgroundImage = shouldShowDarkTheme
         ? darkThemeBackground
         : lightThemeBackground
+    useEffect(() => {
+        if (shouldShowDarkTheme) {
+            setTheme(prevTheme => ({
+                ...prevTheme,
+                colors: {
+                    ...prevTheme.colors,
+                    backgroundMode: 'rgba(255, 255, 255, 1)',
+                },
+            }))
+        }
+    }, [shouldShowDarkTheme])
     useEffect(() => {
         const timeToRefresh = 1000 * 60 * 40
         if (loggedIn) {
@@ -58,54 +78,58 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <ReduxStorProvider store={store}>
                 <Router>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <AuthProvider>
-                            <PreloadPage isLoading={isLoading} />
-                            <div
-                                className={isLoading ? 'App invisible' : 'App'}
-                                style={{
-                                    background: isLoading
-                                        ? 'white'
-                                        : `url(${mainBackgroundImage})`,
-                                }}
-                            >
-                                {!shouldShowDarkTheme && (
-                                    <div className="sun">
-                                        <img
-                                            src={sun}
-                                            alt="Sun"
-                                            width={'150px'}
-                                            height={'150px'}
-                                        />
-                                    </div>
-                                )}
-                                {shouldShowDarkTheme && (
-                                    <>
-                                        <div
-                                            className="stars"
-                                            style={{
-                                                background: `black url(${mainBackgroundImage}) repeat`,
-                                            }}
-                                        />
-                                        <div className="twinkling" />
-                                    </>
-                                )}
+                    <ThemeProvider theme={theme}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <AuthProvider>
+                                <PreloadPage isLoading={isLoading} />
+                                <div
+                                    className={
+                                        isLoading ? 'App invisible' : 'App'
+                                    }
+                                    style={{
+                                        background: isLoading
+                                            ? 'white'
+                                            : `url(${mainBackgroundImage})`,
+                                    }}
+                                >
+                                    {!shouldShowDarkTheme && (
+                                        <div className="sun">
+                                            <img
+                                                src={sun}
+                                                alt="Sun"
+                                                width={'150px'}
+                                                height={'150px'}
+                                            />
+                                        </div>
+                                    )}
+                                    {shouldShowDarkTheme && (
+                                        <>
+                                            <div
+                                                className="stars"
+                                                style={{
+                                                    background: `black url(${mainBackgroundImage}) repeat`,
+                                                }}
+                                            />
+                                            <div className="twinkling" />
+                                        </>
+                                    )}
 
-                                <Navigation />
-                                <main>
-                                    <AppRouter />
-                                </main>
-                                <Footer />
-                            </div>
-                            <BackgroundImageOnLoad
-                                src={mainBackgroundImage}
-                                onLoadBg={() => {
-                                    setTimeout(stopLoading, 1000)
-                                }}
-                                onError={err => console.log('error', err)}
-                            />
-                        </AuthProvider>
-                    </LocalizationProvider>
+                                    <Navigation />
+                                    <main>
+                                        <AppRouter />
+                                    </main>
+                                    <Footer />
+                                </div>
+                                <BackgroundImageOnLoad
+                                    src={mainBackgroundImage}
+                                    onLoadBg={() => {
+                                        setTimeout(stopLoading, 1000)
+                                    }}
+                                    onError={err => console.log('error', err)}
+                                />
+                            </AuthProvider>
+                        </LocalizationProvider>
+                    </ThemeProvider>
                 </Router>
             </ReduxStorProvider>
         </QueryClientProvider>

@@ -14,13 +14,12 @@ import { useTranslators } from './businessLogic'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'
-import { Checkbox, TextField } from '@mui/material'
-import { MobileDatePicker } from '@mui/x-date-pickers'
+import { Checkbox } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
-import TotalButtonWithPopover from './ShowTotal/index'
+import TotalButtonWithDialog from './ShowTotal/index'
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
@@ -107,7 +106,7 @@ function Translators() {
                                     </StyledButton>
                                 </>
                             )}
-                            <TotalButtonWithPopover
+                            <TotalButtonWithDialog
                                 screenIsSmall={screenIsSmall}
                                 selectedDate={translatorFilter?.date}
                             />
@@ -159,7 +158,7 @@ function Translators() {
                             </StyledButton>
                         </>
                     )}
-                    <TotalButtonWithPopover
+                    <TotalButtonWithDialog
                         screenIsSmall={screenIsSmall}
                         selectedDate={translatorFilter?.date}
                     />
@@ -173,18 +172,6 @@ function Translators() {
                                 onChange={changeFilter}
                             />
                             Hide suspended
-                        </div>
-                        <div className="gallery-menu__date-container">
-                            <MobileDatePicker
-                                label="Balance date"
-                                value={translatorFilter.date}
-                                name={'date'}
-                                onChange={changeFilter}
-                                disabled={!isAdmin}
-                                renderInput={params => (
-                                    <TextField {...params} />
-                                )}
-                            />
                         </div>
                     </div>
                 </div>

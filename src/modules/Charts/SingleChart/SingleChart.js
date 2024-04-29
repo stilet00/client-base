@@ -6,7 +6,6 @@ import moment from 'moment'
 Chart.register(...registerables)
 
 function SingleChart({ graph, index, previousMonth }) {
-    console.log(graph)
     let dataSets = [
         {
             label: 'Current month',

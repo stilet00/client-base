@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 import { useQuery } from 'react-query'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
-import Popover from '@mui/material/Popover'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import { MobileDatePicker } from '@mui/x-date-pickers'
+import { TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import {
@@ -12,7 +16,7 @@ import {
     getBalanceDayForSelectedDate,
 } from 'services/balanceDayServices/index'
 import Loader from 'sharedComponents/Loader/Loader'
-import moment from 'moment'
+import { useAdminStatus } from 'sharedHooks/useAdminStatus'
 
 const StyledButton = styled(Button)`
     && {
@@ -20,12 +24,14 @@ const StyledButton = styled(Button)`
     }
 `
 
-const TotalButtonWithPopover = ({
-    screenIsSmall,
-    selectedDate = moment().subtract(1, 'day').format('YYYY-MM-DD'),
-}) => {
+const TotalButtonWithDialog = ({ screenIsSmall }) => {
+    const user = useSelector(state => state.auth.user)
+    const { isAdmin } = useAdminStatus(user)
     const [anchorEl, setAnchorEl] = useState(null)
     const [sumForDay, setSumForDay] = useState(0)
+    const [selectedDate, setSelectedDate] = useState(
+        getMomentUTC().subtract(1, 'day')
+    )
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
     }
@@ -74,35 +80,42 @@ const TotalButtonWithPopover = ({
             >
                 Show total
             </StyledButton>
-            <Popover
-                id={popoverId}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                className={'sum-popover'}
-            >
-                {isLoading && <Loader />}
-                {!isLoading && (
-                    <>
-                        <Typography sx={{ p: 1 }} align={'left'}>
-                            {`Total by ${selectedDate.format('D MMMM')}: `}{' '}
-                            <b>{sumForDay}</b>
-                        </Typography>
-                        <Typography sx={{ p: 1 }} align={'left'}>
-                            {`Total by ${getMomentUTC().format('D MMMM')}: `}{' '}
-                            <b>
-                                <b>{`${data?.data} $`}</b>
-                            </b>
-                        </Typography>
-                    </>
-                )}
-            </Popover>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogContent>
+                    {isLoading && <Loader />}
+                    {!isLoading && (
+                        <>
+                            <div className="date-container">
+                                <MobileDatePicker
+                                    closeOnSelect
+                                    label="Balance date"
+                                    value={selectedDate}
+                                    name={'date'}
+                                    onChange={date => setSelectedDate(date)}
+                                    disabled={!isAdmin}
+                                    renderInput={params => (
+                                        <TextField {...params} />
+                                    )}
+                                />
+                            </div>
+                            <Typography align={'left'}>
+                                {`Total by ${selectedDate.format('D MMMM')}: `}{' '}
+                                <b>{sumForDay}</b>
+                            </Typography>
+                            <Typography align={'left'}>
+                                {`Total by ${getMomentUTC().format(
+                                    'D MMMM'
+                                )}: `}{' '}
+                                <b>
+                                    <b>{`${data?.data} $`}</b>
+                                </b>
+                            </Typography>
+                        </>
+                    )}
+                </DialogContent>
+            </Dialog>
         </>
     )
 }
 
-export default TotalButtonWithPopover
+export default TotalButtonWithDialog
