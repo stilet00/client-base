@@ -87,6 +87,7 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
                         <>
                             <div className="date-container">
                                 <MobileDatePicker
+                                    closeOnSelect
                                     label="Balance date"
                                     value={selectedDate}
                                     name={'date'}
