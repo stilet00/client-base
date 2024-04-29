@@ -67,6 +67,10 @@
   height: 30px;
 }
 
+.date-container {
+  margin-bottom: 20px;
+}
+
 @keyframes skeleton {
   0% {
     background-color: #f5f5f5;

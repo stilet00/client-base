@@ -49,23 +49,21 @@
     &__filters-label
       position: relative
       transform: rotate(90deg)
-      margin-left: -40px
+      margin: 0 10px 0 -20px
 
     &__filters
       display: flex
       align-items: center
       justify-content: space-evenly
       padding: 5px
-
-    &__date-container
-      width: 40%
+      box-sizing: border-box
 
     &__checkbox-container
+      min-width: max-content
       display: flex
       align-items: center
       text-align: left
-      padding: 2px
-      width: 40%
+      padding: 5px 10px 5px 0
       font-family: "Roboto", "Helvetica", "Arial", sans-serif
       font-weight: 500
       line-height: 1.75
@@ -87,8 +85,6 @@
       border-bottom-right-radius: 0
     @media (min-width: 1000px) and (max-width: 1064px)
       &__checkbox-container
-        align-self: end
-      &__date-container
         align-self: end
 
   .inner-gallery-container

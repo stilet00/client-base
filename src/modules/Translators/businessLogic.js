@@ -48,16 +48,12 @@ export const useTranslators = user => {
 
     const changeFilter = useCallback(
         e => {
-            if (e.target) {
-                const newFilter = {
-                    ...translatorFilter,
-                    [e.target.name]: !translatorFilter[e.target.name],
-                }
-
-                setTranslatorFilter(newFilter)
-            } else {
-                setTranslatorFilter({ ...translatorFilter, date: e })
+            const newFilter = {
+                ...translatorFilter,
+                [e.target.name]: !translatorFilter[e.target.name],
             }
+
+            setTranslatorFilter(newFilter)
         },
         [translatorFilter]
     )

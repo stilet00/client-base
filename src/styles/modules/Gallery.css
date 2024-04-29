@@ -41,23 +41,21 @@
 .gallery-container .gallery-menu__filters-label {
   position: relative;
   transform: rotate(90deg);
-  margin-left: -40px;
+  margin: 0 10px 0 -20px;
 }
 .gallery-container .gallery-menu__filters {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   padding: 5px;
-}
-.gallery-container .gallery-menu__date-container {
-  width: 40%;
+  box-sizing: border-box;
 }
 .gallery-container .gallery-menu__checkbox-container {
+  min-width: max-content;
   display: flex;
   align-items: center;
   text-align: left;
-  padding: 2px;
-  width: 40%;
+  padding: 5px 10px 5px 0;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 500;
   line-height: 1.75;
@@ -79,9 +77,6 @@
 }
 @media (min-width: 1000px) and (max-width: 1064px) {
   .gallery-container .gallery-menu__checkbox-container {
-    align-self: end;
-  }
-  .gallery-container .gallery-menu__date-container {
     align-self: end;
   }
 }
