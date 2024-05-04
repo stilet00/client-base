@@ -1,65 +1,41 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
 import {
     addTask,
     changeTodoStatus,
     getTasks,
     removeTask,
-    getTaskNotificationsSettings,
-    changeTaskNotificationsSettings,
 } from '../../services/taskListServices/services'
-import moment from 'moment'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export const useTaskList = user => {
     const [tasks, setTasks] = useState([])
-
-    const [loading, setLoading] = useState(true)
-
-    const [notificationsAreAllowed, setNotificationsAreAllowed] = useState(true)
     const [alertInfo, setAlertInfo] = useState({
         mainTitle: 'no message had been put',
         status: true,
     })
     const { alertOpen, closeAlert, openAlert } = useAlert()
 
-    useEffect(() => {
-        ;(async () => {
-            if (user) {
-                const responseWithTasks = await getTasks()
-                if (responseWithTasks.status === 200) {
-                    setTasks(responseWithTasks.data)
-                }
-                const responseWithTaskNotificationsSettings =
-                    await getTaskNotificationsSettings()
-                if (responseWithTaskNotificationsSettings.status === 200) {
-                    setNotificationsAreAllowed(
-                        responseWithTaskNotificationsSettings.data[0]?.allowed
-                    )
-                }
-                setLoading(false)
-            }
-        })()
-    }, [user])
-
-    const onTaskNotificationsSettingsChange = () => {
-        const changedTaskNotificationsSettings = !notificationsAreAllowed
-        changeTaskNotificationsSettings(changedTaskNotificationsSettings)
-            .then(res => {
-                if (res.status === 200) {
-                    setNotificationsAreAllowed(changedTaskNotificationsSettings)
-                }
-            })
-            .catch(err => {
-                const message =
-                    err?.response?.data?.error || 'An error occurred'
-                setAlertInfo({
-                    ...alertInfo,
-                    mainTitle: message,
-                    status: false,
-                })
-                openAlert()
-            })
+    const fetchTasks = async () => {
+        const response = await getTasks()
+        if (response.status !== 200) {
+            throw new Error('Something went wrong with tasks')
+        }
+        return response.data
     }
+
+    const { isLoading: tasksAreLoading } = useQuery(
+        'tasksForTasklist',
+        fetchTasks,
+        {
+            enabled: !!user,
+            onSuccess: data => {
+                setTasks(data)
+            },
+            onError: () => console.error('Something went wrong with tasks'),
+        }
+    )
 
     const newTask = useCallback(
         text => {
@@ -67,7 +43,7 @@ export const useTaskList = user => {
                 let task = {
                     taskName: text,
                     completed: false,
-                    created: moment().format('MMMM Do YYYY, h:mm:ss'),
+                    created: getMomentUTC().format('MMMM Do YYYY, h:mm:ss'),
                 }
 
                 addTask(task)
@@ -148,8 +124,6 @@ export const useTaskList = user => {
         alertOpen,
         openAlert,
         closeAlert,
-        loading,
-        notificationsAreAllowed,
-        onTaskNotificationsSettingsChange,
+        loading: tasksAreLoading,
     }
 }

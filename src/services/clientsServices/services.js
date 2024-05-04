@@ -1,17 +1,28 @@
 import axios from 'axios'
 import { rootURL } from '../rootURL'
-import {
-    getConfigForAxiosAuthenticatedRequest,
-    getURLStringWithoutFirstSlash,
-} from '../utils'
+import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const clientsURL = rootURL + 'clients/'
 
-export function getClients(params = null) {
-    const queryParams = params
-        ? `?params=${encodeURIComponent(getURLStringWithoutFirstSlash(params))}`
-        : ''
-
+export function getClientsRequest({
+    noImageParams = false,
+    searchQuery = '',
+    shouldFillTranslators = false,
+}) {
+    let queryParams = ''
+    if (noImageParams) {
+        queryParams = `?noImageParams=${noImageParams}`
+    }
+    if (shouldFillTranslators) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `shouldFillTranslators=${shouldFillTranslators}`
+    }
+    if (searchQuery) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `searchQuery=${encodeURIComponent(searchQuery)}`
+    }
     return axios.get(
         clientsURL + 'get/' + queryParams,
         getConfigForAxiosAuthenticatedRequest()

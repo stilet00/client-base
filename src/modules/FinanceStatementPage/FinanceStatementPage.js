@@ -13,7 +13,7 @@ import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirm
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export default function FinanceStatementPage() {
     const user = useSelector(state => state.auth.user)
@@ -33,7 +33,7 @@ export default function FinanceStatementPage() {
 
     useEffect(() => {
         if (user) {
-            getPaymentsRequest()
+            getPaymentsRequest({})
                 .then(res => {
                     if (res.status === 200) {
                         setLoading(false)
@@ -63,38 +63,38 @@ export default function FinanceStatementPage() {
             status: true,
         })
     }
-    function createNewPayment(payment) {
+    async function createNewPayment(payment) {
         setDeletedPayment(null)
         const newPayment = {
             ...payment,
-            date: payment.date.format('DD.MM.YYYY'),
+            date: payment.date.format(),
             receiverID: payment.receiver.id,
             receiver: payment.receiver.label,
         }
-        addPaymentRequest(newPayment)
-            .then(res => {
-                if (res.status === 200) {
-                    const newPaymentWithId = { ...newPayment, _id: res.data }
-                    setPaymentsList([...paymentsList, newPaymentWithId])
-                    setAlertInfo({
-                        ...alertInfo,
-                        mainTitle: 'new payment has been added',
-                        status: true,
-                    })
-                    openAlert()
-                }
-            })
-            .catch(err => {
-                const message =
-                    err?.response?.data?.error || 'An error occurred'
-                setLoading(false)
+        try {
+            const res = await addPaymentRequest(newPayment)
+            if (res.status === 200) {
+                const newPaymentWithId = { ...newPayment, _id: res.data }
+                setPaymentsList([...paymentsList, newPaymentWithId])
                 setAlertInfo({
                     ...alertInfo,
-                    mainTitle: message,
-                    status: false,
+                    mainTitle: 'new payment has been added',
+                    status: true,
                 })
-                openAlert(5000)
+                openAlert()
+                return true
+            }
+        } catch (err) {
+            const message = err?.response?.data?.error || 'An error occurred'
+            setLoading(false)
+            setAlertInfo({
+                ...alertInfo,
+                mainTitle: message,
+                status: false,
             })
+            openAlert(5000)
+            return false
+        }
     }
 
     const deletePayment = () => {
@@ -126,23 +126,17 @@ export default function FinanceStatementPage() {
         const arrayWithUniqueDates = [
             ...new Set(
                 statements.map(item => {
-                    return item.date
+                    return getMomentUTC(item.date).format('YYYY-MM-DD')
                 })
             ),
         ]
-        function compareDates(item1, item2) {
-            return (
-                item1.split('.').reverse().join('') -
-                item2.split('.').reverse().join('')
-            )
-        }
-        let sortedArrayWithUniqueDates = arrayWithUniqueDates
-            .sort(compareDates)
-            .reverse()
+        let sortedArrayWithUniqueDates = arrayWithUniqueDates.sort().reverse()
         const arrayWithGroupedDates = sortedArrayWithUniqueDates.map(data => {
             let groupedByDatesArray = []
             statements.forEach(statement => {
-                if (statement.date === data) {
+                if (
+                    getMomentUTC(statement.date).format('YYYY-MM-DD') === data
+                ) {
                     groupedByDatesArray.unshift(statement)
                 }
             })
@@ -157,30 +151,29 @@ export default function FinanceStatementPage() {
 
     const arrayOfStatementsGroupedByDate =
         getStatementGroupedByDates(paymentsList)
-    const page = arrayOfStatementsGroupedByDate.length ? (
-        arrayOfStatementsGroupedByDate.map((item, index) => (
-            <PaymentsGroup
-                key={index}
-                {...item}
-                deleteOneStatement={pressDeleteButton}
-            />
-        ))
-    ) : (
-        <h1>No payments yet</h1>
-    )
-    const userIsAuthorizedAndPageIsLoaded = user && !loading
-    const userIsAuthorizedAndPageIsLoading = user && loading
-    const userIsNotAuthorized = !user
     return (
         <>
-            {userIsAuthorizedAndPageIsLoaded && (
+            {!loading && (
                 <>
-                    <div
-                        className={
-                            'main-container scrolled-container  animated-box'
-                        }
-                    >
-                        <div className={'finances-inner-wrapper'}>{page}</div>
+                    <div className={'main-container scrolled-container'}>
+                        {arrayOfStatementsGroupedByDate.length > 0 && (
+                            <div className={'finances-inner-wrapper'}>
+                                {arrayOfStatementsGroupedByDate.map(
+                                    (item, index) => (
+                                        <PaymentsGroup
+                                            key={index}
+                                            {...item}
+                                            deleteOneStatement={
+                                                pressDeleteButton
+                                            }
+                                        />
+                                    )
+                                )}
+                            </div>
+                        )}
+                        {arrayOfStatementsGroupedByDate.length === 0 && (
+                            <h1>No payments yet</h1>
+                        )}
                     </div>
                     <div className="socials button-add-container">
                         <FinancesForm handleNewPayment={createNewPayment} />
@@ -206,8 +199,7 @@ export default function FinanceStatementPage() {
                     />
                 </>
             )}
-            {userIsAuthorizedAndPageIsLoading && <Loader />}
-            {userIsNotAuthorized && <LoggedOutPage />}
+            {loading && <Loader />}
         </>
     )
 }

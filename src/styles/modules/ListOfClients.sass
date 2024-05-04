@@ -1,16 +1,16 @@
 @mixin categoryPosition($topProperty, $top-value, $rightProperty, $right-value, $animationDelay)
-  border: none
-  background: none
-  position: absolute
-  opacity: 0
-  animation: category-moves 500ms forwards
-  animation-delay: $animationDelay
-  #{$topProperty}: $top-value
-  #{$rightProperty}: $right-value
+    border: none
+    background: none
+    position: absolute
+    opacity: 0
+    animation: category-moves 500ms forwards
+    animation-delay: $animationDelay
+    #{$topProperty}: $top-value
+    #{$rightProperty}: $right-value
 .grid-template-container
     display: grid
     width: 100%
-    grid-template-columns: 1fr 30px 1fr 
+    grid-template-columns: 1fr 30px 1fr
     &__title
         grid-column: 1
         grid-row: 1
@@ -32,6 +32,7 @@
         top: 30px
         right: 5px
 .search-input
+    position: relative
     min-width: 100px
     max-width: 50%
     padding: 0
@@ -47,22 +48,24 @@
     color: white
     padding: 3px
     box-sizing: border-box
+    z-index: 2
+
     &::placeholder
         color: white
         opacity: 1
 @keyframes opacity-change
-  0%
-    opacity: 0
-  100%
-    opacity: 1
+    0%
+        opacity: 0
+    100%
+        opacity: 1
 
 @keyframes category-moves
-  0%
-   opacity: 0
-   transform: translate(100%, 100%)
-  100%
-   opacity: 1
-   transform: translate(0%, 0%)
+    0%
+        opacity: 0
+        transform: translate(100%, 100%)
+    100%
+        opacity: 1
+        transform: translate(0%, 0%)
 
 .balance-menu_item
     display: flex
@@ -79,15 +82,14 @@
         @include categoryPosition(top,0px,right,70px, 600ms)
     &-virtualGiftsSvadba
         @include categoryPosition(top,20px,right,30px, 800ms)
-    &-virtualGiftsDating
-        @include categoryPosition(top,0px,right,-10px, 1000ms)
+    &-voiceMessages
+        @include categoryPosition(top,0px,right, -10px, 1000ms)
     &-all
-        @include categoryPosition(top,-20px,right, 30px, 1100ms)    
+        @include categoryPosition(top,-20px,right, 30px, 1100ms)
 .category-select
     width: 20px
     height: 20px
+    cursor: pointer
     appearance: none
     margin: 0
     border: none
-
-

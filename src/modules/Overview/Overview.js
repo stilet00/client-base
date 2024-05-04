@@ -1,13 +1,11 @@
-import moment from 'moment'
 import '../../styles/modules/Overview.css'
-import SmallLoader from '../../sharedComponents/SmallLoader/SmallLoader'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import { useSelector } from 'react-redux'
 import { useOverview } from './businessLogic'
 import {
     calculatePercentDifference,
     getSumFromArray,
-} from '../../sharedFunctions/sharedFunctions'
+    getMomentUTC,
+} from 'sharedFunctions/sharedFunctions'
 import {
     currentMonth,
     previousYear,
@@ -33,6 +31,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
+import Loader from 'sharedComponents/Loader/Loader'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -64,6 +63,7 @@ function Overview() {
         calculateYearTotal,
         statements,
         handleChange,
+        isLoading,
     } = useOverview(user)
     const { isAdmin } = useAdminStatus(user)
 
@@ -196,189 +196,161 @@ function Overview() {
     const totalProfit =
         yearTotalSum - Math.floor(yearTotalSum * 0.45) - totalPayments
 
-    return user ? (
-        <div className={'main-container  table-container  animated-box'}>
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell
-                                style={{
-                                    fontWeight: 'bold',
-                                    maxWidth: '50%',
-                                }}
-                            >
-                                <div className="year-holder">
-                                    <span>Statistic's type</span>
-                                    <FormControl size="small">
-                                        <Select
-                                            id="demo-simple-select"
-                                            value={selectedYear}
-                                            onChange={handleChange}
-                                            className="selected-area"
-                                        >
-                                            {arrayOfYearsForSelectFilter.map(
-                                                year => (
-                                                    <MenuItem
-                                                        key={year}
-                                                        value={year}
-                                                    >
-                                                        {year}
-                                                    </MenuItem>
-                                                )
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </StyledTableCell>
-                            <StyledTableCell className="td-with-info">
-                                Data
-                            </StyledTableCell>
-                        </StyledTableRow>
-                    </TableHead>
-                    <TableBody>
-                        {selectedYear === moment().format('YYYY') ? (
-                            <>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Current month
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {moment().format('MMMM')}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Month balance
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
-                                            <>
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
+    return (
+        <div className={'main-container  table-container'}>
+            {!isLoading && (
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell
+                                    style={{
+                                        fontWeight: 'bold',
+                                        maxWidth: '50%',
+                                    }}
+                                >
+                                    <div className="year-holder">
+                                        <span>Statistic's type</span>
+                                        <FormControl size="small">
+                                            <Select
+                                                id="demo-simple-select"
+                                                value={selectedYear}
+                                                onChange={handleChange}
+                                                className="selected-area"
+                                            >
+                                                {arrayOfYearsForSelectFilter.map(
+                                                    year => (
+                                                        <MenuItem
+                                                            key={year}
+                                                            value={year}
+                                                        >
+                                                            {year}
+                                                        </MenuItem>
+                                                    )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                </StyledTableCell>
+                                <StyledTableCell className="td-with-info">
+                                    Data
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                            {selectedYear === getMomentUTC().format('YYYY') ? (
+                                <>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Current month
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            {getMomentUTC().format('MMMM')}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Month balance
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            <span
+                                                className={
+                                                    'blue-text styled-text-numbers percents-margin'
+                                                }
+                                            >
+                                                <CountUp
+                                                    duration={0.75}
+                                                    end={monthTotalSum}
+                                                    separator=" "
+                                                    prefix="$"
+                                                />
+                                            </span>
+                                            {monthProgress}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Svadba balance
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            <span
+                                                className={
+                                                    'blue-text styled-text-numbers percents-margin'
+                                                }
+                                            >
+                                                <CountUp
+                                                    duration={0.75}
+                                                    end={svadbaMonthTotal}
+                                                    separator=" "
+                                                    prefix="$"
+                                                />
+                                            </span>
+                                            {svadbaMonthProgress}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Dating balance
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            <span
+                                                className={
+                                                    'blue-text styled-text-numbers percents-margin'
+                                                }
+                                            >
+                                                <CountUp
+                                                    duration={0.75}
+                                                    end={
+                                                        monthTotalSum -
+                                                        svadbaMonthTotal
                                                     }
-                                                >
-                                                    <CountUp
-                                                        duration={0.75}
-                                                        end={monthTotalSum}
-                                                        separator=" "
-                                                        prefix="$"
-                                                    />
-                                                </span>
-                                                {monthProgress}
-                                            </>
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Svadba balance
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
-                                            <>
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    <CountUp
-                                                        duration={0.75}
-                                                        end={svadbaMonthTotal}
-                                                        separator=" "
-                                                        prefix="$"
-                                                    />
-                                                </span>
-                                                {svadbaMonthProgress}
-                                            </>
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Dating balance
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
-                                            <>
-                                                <span
-                                                    className={
-                                                        'blue-text styled-text-numbers'
-                                                    }
-                                                >
-                                                    <CountUp
-                                                        duration={0.75}
-                                                        end={
-                                                            monthTotalSum -
-                                                            svadbaMonthTotal
-                                                        }
-                                                        separator=" "
-                                                        prefix="$"
-                                                    />
-                                                </span>
+                                                    separator=" "
+                                                    prefix="$"
+                                                />
+                                            </span>
+                                            {datingMonthProgress}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Total clients
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            {clients.length}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Active translators
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            {
+                                                translators.filter(
+                                                    translator =>
+                                                        !translator.suspended
+                                                            .status
+                                                ).length
+                                            }
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                </>
+                            ) : null}
 
-                                                {datingMonthProgress}
-                                            </>
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Total clients
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {clients.length ? (
-                                            clients.length
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Active translators
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {translators.length ? (
-                                            translators.filter(
-                                                translator =>
-                                                    !translator.suspended.status
-                                            ).length
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            </>
-                        ) : null}
-
-                        {isAdmin && (
-                            <>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Year's balance
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
-                                            yearTotalSum + ' $'
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Salary payed
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
+                            {isAdmin && (
+                                <>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Year's balance
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
+                                            {`${yearTotalSum} $`}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Salary payed
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             <span
                                                 className={
                                                     'blue-text styled-text-numbers'
@@ -393,58 +365,46 @@ function Overview() {
                                                     prefix="$"
                                                 />
                                             </span>
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                {statementsGroupedByComment.length > 0
-                                    ? statementsGroupedByComment.map(
-                                          statement => (
-                                              <StyledTableRow
-                                                  key={
-                                                      statement.amount +
-                                                      statement.comment
-                                                  }
-                                              >
-                                                  <StyledTableCell>
-                                                      {statement.comment ===
-                                                      'salary'
-                                                          ? 'Clients Salary'
-                                                          : statement.comment}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell className="td-with-info">
-                                                      {yearTotalSum ? (
-                                                          <span
-                                                              className={
-                                                                  'blue-text styled-text-numbers'
-                                                              }
-                                                          >
-                                                              <CountUp
-                                                                  duration={
-                                                                      0.75
-                                                                  }
-                                                                  end={
-                                                                      statement.amount
-                                                                  }
-                                                                  separator=" "
-                                                                  prefix="$"
-                                                              />
-                                                          </span>
-                                                      ) : (
-                                                          <SmallLoader />
-                                                      )}
-                                                  </StyledTableCell>
-                                              </StyledTableRow>
-                                          )
-                                      )
-                                    : null}
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        Total profit
-                                    </StyledTableCell>
-                                    <StyledTableCell className="td-with-info">
-                                        {yearTotalSum ? (
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                    {statementsGroupedByComment.map(
+                                        statement => (
+                                            <StyledTableRow
+                                                key={
+                                                    statement.amount +
+                                                    statement.comment
+                                                }
+                                            >
+                                                <StyledTableCell>
+                                                    {statement.comment ===
+                                                    'salary'
+                                                        ? 'Clients Salary'
+                                                        : statement.comment}
+                                                </StyledTableCell>
+                                                <StyledTableCell className="td-with-info">
+                                                    <span
+                                                        className={
+                                                            'blue-text styled-text-numbers'
+                                                        }
+                                                    >
+                                                        <CountUp
+                                                            duration={0.75}
+                                                            end={
+                                                                statement.amount
+                                                            }
+                                                            separator=" "
+                                                            prefix="$"
+                                                        />
+                                                    </span>
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        )
+                                    )}
+                                    <StyledTableRow>
+                                        <StyledTableCell>
+                                            Total profit
+                                        </StyledTableCell>
+                                        <StyledTableCell className="td-with-info">
                                             <span
                                                 className={
                                                     'green-text styled-text-numbers'
@@ -460,19 +420,16 @@ function Overview() {
                                                 />{' '}
                                                 $
                                             </span>
-                                        ) : (
-                                            <SmallLoader />
-                                        )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            </>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                </>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
+            {isLoading && <Loader />}
         </div>
-    ) : (
-        <LoggedOutPage />
     )
 }
 

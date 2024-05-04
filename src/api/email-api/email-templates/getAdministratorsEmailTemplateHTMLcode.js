@@ -125,7 +125,9 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                             <table>
                                                 <thead>
                                                     <tr class="titlesInfo">
-                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum} $</td>
+                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum.toFixed(
+                                                            2
+                                                        )} $</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

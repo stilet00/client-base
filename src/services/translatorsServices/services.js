@@ -3,11 +3,19 @@ import { rootURL } from '../rootURL'
 import { getConfigForAxiosAuthenticatedRequest } from '../utils'
 
 const translatorsURL = rootURL + 'translators/'
+const balanceDayURL = rootURL + 'balance-day/'
+const personalPenaltyURL = rootURL + 'personal-penalty/'
 
-export function getTranslators(statisticsYear = null) {
-    const queryParams = statisticsYear
-        ? `?params=${encodeURIComponent(statisticsYear)}`
-        : ''
+export function getTranslators({ searchQuery = '', shouldGetClients = false }) {
+    let queryParams = ''
+    if (searchQuery) {
+        queryParams +=
+            (queryParams ? '&' : '?') +
+            `searchQuery=${encodeURIComponent(searchQuery)}`
+    }
+    if (shouldGetClients) {
+        queryParams += (queryParams ? '&' : '?') + 'shouldGetClients=true'
+    }
     return axios.get(
         translatorsURL + 'get/' + queryParams,
         getConfigForAxiosAuthenticatedRequest()
@@ -37,6 +45,17 @@ export function updateTranslator(translator) {
     )
 }
 
+export function assignClientToTranslatorRequest({ clientId, translatorId }) {
+    return axios.put(
+        translatorsURL + 'assign-client',
+        {
+            clientId,
+            translatorId,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
 export function sendNotificationEmailsRequest() {
     return axios.get(
         translatorsURL + 'send-emails',
@@ -51,10 +70,70 @@ export function sendLastVirtualGiftDateRequest(id) {
     )
 }
 
-export function requestBonusesForChats(data) {
+export function getBalanceDay({ translatorId, clientId, dateTimeId }) {
+    return axios.get(
+        `${balanceDayURL}?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${encodeURIComponent(
+            dateTimeId
+        )}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function createBalanceDay({ newBalanceDay }) {
     return axios.post(
-        translatorsURL + 'chat-bonus',
-        data,
+        balanceDayURL + `create`,
+        {
+            ...newBalanceDay,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function updateBalanceDay({ balanceDayToSubmit }) {
+    return axios.put(
+        balanceDayURL + `update`,
+        {
+            ...balanceDayToSubmit,
+        },
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function getBalanceDaysForTranslatorRequest({
+    dateTimeFilter = '',
+    translatorId = '',
+}) {
+    return axios.get(
+        `${balanceDayURL}translators?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export function getPenaltiesForTranslatorRequest({
+    dateTimeFilter = '',
+    translatorId = '',
+}) {
+    return axios.get(
+        `${personalPenaltyURL}get?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export async function createPersonalPenalty({ personalPenaltyData }) {
+    return axios.post(
+        `${personalPenaltyURL}create`,
+        personalPenaltyData,
+        getConfigForAxiosAuthenticatedRequest()
+    )
+}
+
+export async function toggleClientSuspendedRequest({ clientId, translatorId }) {
+    return axios.put(
+        `${translatorsURL}suspend-client`,
+        {
+            clientId,
+            translatorId,
+        },
         getConfigForAxiosAuthenticatedRequest()
     )
 }

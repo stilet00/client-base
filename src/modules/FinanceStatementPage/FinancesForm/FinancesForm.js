@@ -1,7 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useRouteMatch } from 'react-router-dom'
-import { styled } from '@mui/system'
-import Modal from '@mui/material/Modal'
 import MenuItem from '@mui/material/MenuItem'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
@@ -10,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add'
 import TextField from '@mui/material/TextField'
 import '../../../styles/modules/Form.css'
 import useModal from '../../../sharedHooks/useModal'
-import { getClients } from '../../../services/clientsServices/services'
+import { getClientsRequest } from '../../../services/clientsServices/services'
 import { getTranslators } from '../../../services/translatorsServices/services'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
@@ -27,7 +24,6 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 
 export default function FinancesForm({ handleNewPayment }) {
-    const match = useRouteMatch()
     const [paymentData, setPaymentData] = useState(DEFAULT_STATEMENT)
     const [receivers, setReceivers] = useState([])
     const [fromErrors, setFormErrors] = useState({})
@@ -35,7 +31,7 @@ export default function FinancesForm({ handleNewPayment }) {
     const arrayWithErrors = Object.keys(fromErrors)
 
     useEffect(() => {
-        getClients(match.url).then(res => {
+        getClientsRequest({ noImageParams: true }).then(res => {
             if (res.status === 200) {
                 setReceivers(
                     res.data.map(client => {
@@ -47,7 +43,7 @@ export default function FinancesForm({ handleNewPayment }) {
                 )
             }
         })
-        getTranslators().then(res => {
+        getTranslators({}).then(res => {
             if (res.status === 200) {
                 const notSuspendedTranslators = res.data.filter(
                     translator => !translator.suspended.status
@@ -73,16 +69,18 @@ export default function FinancesForm({ handleNewPayment }) {
         setFormErrors(handleFormValidation(newState))
     }
 
-    function submitNewPayment(e) {
-        handleNewPayment(paymentData)
-        clearPaymentsData()
-        handleClose()
+    async function submitNewPayment(e) {
+        const paymentHasBeenSUbmitted = await handleNewPayment(paymentData)
+        if (paymentHasBeenSUbmitted) {
+            clearPaymentsData()
+            handleClose()
+        }
     }
     const handleDateChange = newDate => {
         setPaymentData({ ...paymentData, date: newDate })
     }
 
-    const getListofRecievers = comment => {
+    const getListOfReceivers = comment => {
         if (comment === 'Payment to bot') {
             return BOT_LIST
         } else if (comment === 'Payment to translator') {
@@ -92,13 +90,13 @@ export default function FinancesForm({ handleNewPayment }) {
         }
     }
 
-    const listOfReceivers = getListofRecievers(paymentData.comment)
+    const listOfReceivers = getListOfReceivers(paymentData.comment)
 
     const handleSelectedFieldsChange = e => {
         const { name, value } = e.target
         if (name === 'comment') {
             const newState = { ...paymentData, [name]: value }
-            const newListOfRecievers = getListofRecievers(value)
+            const newListOfRecievers = getListOfReceivers(value)
             setPaymentData(newState)
             setFormErrors(handleFormValidation(newState, newListOfRecievers))
         } else {
@@ -156,13 +154,7 @@ export default function FinancesForm({ handleNewPayment }) {
                                 Compose bill
                             </div>
                         </div>
-                        <form
-                            className="payment-form__main"
-                            onSubmit={e => {
-                                e.preventDefault()
-                                submitNewPayment()
-                            }}
-                        >
+                        <form className="payment-form__main">
                             <MobileDatePicker
                                 disableFuture
                                 label="Date of Payment"
@@ -264,7 +256,8 @@ export default function FinancesForm({ handleNewPayment }) {
                                     paymentData.amount === 0 ||
                                     arrayWithErrors.length !== 0
                                 }
-                                type={'submit'}
+                                type={'button'}
+                                onClick={submitNewPayment}
                                 fullWidth
                                 variant={'outlined'}
                             >

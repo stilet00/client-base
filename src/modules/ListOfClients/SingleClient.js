@@ -6,7 +6,6 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { red } from '@mui/material/colors'
-import moment from 'moment'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import { Rating } from '@mui/material'
 import Link from '@mui/material/Link'
@@ -32,6 +31,7 @@ import {
     faArrowAltCircleUp,
     faArrowAltCircleDown,
 } from '@fortawesome/free-solid-svg-icons'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export default function SingleClient({
     _id,
@@ -76,18 +76,18 @@ export default function SingleClient({
         currentYearProfit - payedToTranslators - loss
     )
     const currentMonth =
-        moment().format('MMMM').length > '5'
-            ? moment().format('MMM')
-            : moment().format('MMMM')
+        getMomentUTC().format('MMMM').length > '5'
+            ? getMomentUTC().format('MMM')
+            : getMomentUTC().format('MMMM')
     const previousMonth =
-        moment().subtract(1, 'month').format('MMMM').length > '5'
-            ? moment().subtract(1, 'month').format('MMM')
-            : moment().subtract(1, 'month').format('MMMM')
+        getMomentUTC().subtract(1, 'month').format('MMMM').length > '5'
+            ? getMomentUTC().subtract(1, 'month').format('MMM')
+            : getMomentUTC().subtract(1, 'month').format('MMMM')
     const progressPage = (
         <div className="grid-template-container__info">
             {!suspended && (
                 <>
-                    <IconButton
+                    {/* <IconButton
                         color="primary"
                         variant="contained"
                         size="small"
@@ -148,12 +148,12 @@ export default function SingleClient({
                         ) : (
                             <QueryStatsIcon fontSize="small" />
                         )}
-                    </IconButton>
+                    </IconButton> */}
                     <span
                         className={
                             middleMonthSum >= prevousMiddleMonthSum
-                                ? ' green-text styled-text-numbers'
-                                : ' red-text styled-text-numbers'
+                                ? ' green-text styled-text-numbers percents-margin'
+                                : ' red-text styled-text-numbers percents-margin'
                         }
                     >
                         {middleMonthSum >= prevousMiddleMonthSum ? (
@@ -452,9 +452,12 @@ export default function SingleClient({
                         className="grid-template-container__card"
                         style={{ display: 'grid' }}
                     >
-                        {translators.map(translator => (
-                            <span key={translator} style={{ textAlign: 'end' }}>
-                                {translator}
+                        {translators?.map(translator => (
+                            <span
+                                key={`${translator._id}-${_id}`}
+                                style={{ textAlign: 'end' }}
+                            >
+                                {`${translator.name} ${translator.surname}`}
                             </span>
                         ))}
                     </span>

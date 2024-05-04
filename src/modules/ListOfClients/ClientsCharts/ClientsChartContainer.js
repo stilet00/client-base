@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import SingleChart from './SingleChart'
-import moment from 'moment'
 import { useChartsContainer } from '../../Charts/businessLogic'
 import '../../../styles/modules/Chart.css'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 export default function ClientsChartsContainer({
     user,
@@ -14,7 +14,7 @@ export default function ClientsChartsContainer({
 }) {
     const { months } = useChartsContainer(user)
     const [monthsSums, setMonthsSums] = useState(null)
-    const prevMonth = moment().subtract(1, 'month').format('MM')
+    const prevMonth = getMomentUTC().subtract(1, 'month').format('MM')
 
     useEffect(() => {
         setMonthsSums(values)
@@ -43,7 +43,7 @@ export default function ClientsChartsContainer({
                         month => month.month === prevMonth
                     )}
                     graph={months.find(
-                        month => month.month === moment().format('MM')
+                        month => month.month === getMomentUTC().format('MM')
                     )}
                 />
             </Box>

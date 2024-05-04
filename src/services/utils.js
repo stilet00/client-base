@@ -11,7 +11,3 @@ export const getConfigForAxiosAuthenticatedRequest = () => {
     }
     return axiosConfig
 }
-
-export const getURLStringWithoutFirstSlash = URLString => {
-    return URLString.slice(1)
-}

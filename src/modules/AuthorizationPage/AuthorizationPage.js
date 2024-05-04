@@ -27,7 +27,8 @@ const StyledButton = styled(Button)`
         color: black;
         height: 48px;
         padding: 0 30px;
-        background-color: rgba(255, 255, 255, 0.5) !important;
+        background-color: ${props =>
+            props.theme.colors.backgroundMode} !important;
         backdrop-filter: blur(10px);
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
             0 10px 10px rgba(0, 0, 0, 0.22);
@@ -35,45 +36,46 @@ const StyledButton = styled(Button)`
     }
 `
 
-const StyledInput = styled(TextField)({
-    '& label.Mui-focused': {
-        color: 'black',
-    },
-    '& label': {
-        top: '-5px',
-        left: '-5px',
-        boxSizing: 'border box',
-        padding: '5px 9px',
-        color: 'black',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: 'black',
-    },
-    '& .MuiInputLabel-shrink': {
-        border: '1px solid black',
-        borderRadius: '5px',
-        backgroundColor: 'rgba(255, 255, 255, 1)',
-    },
-    '& .MuiOutlinedInput-root': {
-        background: 'rgba(255, 255, 255, 0.5)',
-        boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-        '& fieldset': {
-            borderColor: 'black',
-            borderWidth: 1,
-        },
-        '&:hover fieldset': {
-            borderColor: 'black',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: 'black',
-        },
-    },
-    '& label.Mui-error': {
-        border: '1px solid red',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(5px)',
-    },
-})
+const StyledInput = styled(TextField)`
+    & label.Mui-focused {
+        color: black;
+    }
+    & label {
+        top: -5px;
+        left: -5px;
+        box-sizing: border-box;
+        padding: 5px 9px;
+        color: black;
+    }
+    & .MuiInput-underline:after {
+        border-bottom-color: black;
+    }
+    & .MuiInputLabel-shrink {
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 1);
+    }
+    & .MuiOutlinedInput-root {
+        background: ${props => props.theme.colors.backgroundMode};
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.22);
+        & fieldset {
+            border-color: black;
+            border-width: 1;
+        }
+        &:hover fieldset {
+            border-color: black;
+        }
+        &.Mui-focused fieldset {
+            border-color: black;
+        }
+    }
+    & label.Mui-error {
+        border: 1px solid red;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(5px);
+    }
+`
 
 function AuthorizationPage() {
     const {

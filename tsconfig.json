@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "jsx": "preserve",
+        "baseUrl": "src",
+        "paths": {
+            "*": [
+                "src/*",
+                "src/sharedHooksFolder/*",
+                "src/sharedComponents/*",
+                "src/sharedFunctions/*",
+                "src/services/*",
+                "src/modules/*",
+                "src/styles/*"
+            ]
+        }
+    },
+    "include": ["src", "server.ts"],
+    "exclude": ["node_modules", "**/node_modules/*"]
+}

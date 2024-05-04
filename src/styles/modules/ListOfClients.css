@@ -31,6 +31,7 @@
 }
 
 .search-input {
+  position: relative;
   min-width: 100px;
   max-width: 50%;
   padding: 0;
@@ -46,10 +47,7 @@
   color: white;
   padding: 3px;
   box-sizing: border-box;
-}
-.search-input::-moz-placeholder {
-  color: white;
-  opacity: 1;
+  z-index: 2;
 }
 .search-input::placeholder {
   color: white;
@@ -130,7 +128,7 @@
   top: 20px;
   right: 30px;
 }
-.category-virtualGiftsDating {
+.category-voiceMessages {
   border: none;
   background: none;
   position: absolute;
@@ -154,9 +152,10 @@
 .category-select {
   width: 20px;
   height: 20px;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  cursor: pointer;
+  appearance: none;
   margin: 0;
   border: none;
-}/*# sourceMappingURL=ListOfClients.css.map */
+}
+
+/*# sourceMappingURL=ListOfClients.css.map */

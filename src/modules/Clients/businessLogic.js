@@ -6,8 +6,8 @@ import {
     getMiddleValueFromArray,
     getSumFromArray,
     getNumberWithHundreds,
-} from '../../sharedFunctions/sharedFunctions'
-import moment from 'moment'
+    getMomentUTC,
+} from 'sharedFunctions/sharedFunctions'
 
 export const useClientsForm = ({ onFormSubmit, editedClient }) => {
     const [client, setClient] = useState(editedClient || DEFAULT_CLIENT)
@@ -37,11 +37,11 @@ export const useClientsForm = ({ onFormSubmit, editedClient }) => {
 }
 
 export const useClientsList = translators => {
-    function clientMonthSum(clientId, date = moment()) {
+    function clientMonthSum(clientId, date = getMomentUTC()) {
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator?.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 
@@ -62,7 +62,7 @@ export const useClientsList = translators => {
         return getNumberWithHundreds(totalClientBalance)
     }
 
-    function getAllAsignedTranslators(clientId, date = moment()) {
+    function getAllAssignedTranslators(clientId, date = getMomentUTC()) {
         let arrayOfTranslators = []
 
         translators.forEach(({ name, surname, clients, suspended }) => {
@@ -82,20 +82,20 @@ export const useClientsList = translators => {
         return arrayOfTranslators
     }
 
-    function calculateMiddleMonthSum(clientId, date = moment()) {
+    function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
         let monthSumArray = []
 
         let totalClientBalance = 0
 
         translators.forEach(translator => {
-            const thisYearStat = translator.statistics.find(
+            const thisYearStat = translator?.statistics?.find(
                 year => year.year === date.format('YYYY')
             )
 
             const thisMonthStat = thisYearStat?.months[date.format('M') - 1]
 
             thisMonthStat?.forEach((day, index) => {
-                if (index === 0 || index < moment().format('D')) {
+                if (index === 0 || index < getMomentUTC().format('D')) {
                     const clientBalanceDay = day.clients.find(
                         client => client.id === clientId
                     )
@@ -140,6 +140,6 @@ export const useClientsList = translators => {
         clientMonthSum,
         sortBySum,
         calculateMiddleMonthSum,
-        getAllAsignedTranslators,
+        getAllAssignedTranslators,
     }
 }

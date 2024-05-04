@@ -2,10 +2,8 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import SingleChart from './SingleChart/SingleChart'
 import Loader from '../../sharedComponents/Loader/Loader'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
-import moment from 'moment'
 import { useChartsContainer } from './businessLogic'
 import '../../styles/modules/Chart.css'
 import InputLabel from '@mui/material/InputLabel'
@@ -16,6 +14,7 @@ import {
     CHARTS_CATEGORIES,
     arrayOfYearsForSelectFilter,
 } from '../../constants/constants'
+import { getMomentUTC } from 'sharedFunctions/sharedFunctions'
 
 function ChartsContainer() {
     const user = useSelector(state => state.auth.user)
@@ -28,29 +27,29 @@ function ChartsContainer() {
         deletedMonth,
         deleteGraph,
         deleteGraphClicked,
-        emptyStatus,
         handleChange,
         months,
         openAlertConfirmation,
         selectedYear,
         category,
         setCategory,
+        balanceDaysAreLoading,
     } = useChartsContainer(user)
 
     const handleCategoryChange = e => {
         setCategory(e.target.value)
     }
 
-    return user ? (
+    return (
         <>
             {/* <div className={'socials button-add-container top-button'}>
-                <AccessTimeIcon />
-                <YearSelect
-                    arrayOfYears={arrayOfYears}
-                    year={selectedYear}
-                    handleChange={handleChange}
-                />
-            </div> */}
+        <AccessTimeIcon />
+        <YearSelect
+            arrayOfYears={arrayOfYears}
+            year={selectedYear}
+            handleChange={handleChange}
+        />
+    </div> */}
             <div
                 style={{
                     width: '60%',
@@ -135,27 +134,30 @@ function ChartsContainer() {
                     </Select>
                 </FormControl>
             </div>
-            <div className={'main-container  scrolled-container animated-box'}>
-                {months.length > 0 ? (
-                    <ul className={'chart-list'}>
-                        {months.map((month, index) => (
-                            <SingleChart
-                                previousMonth={
-                                    month.month === moment().format('MM')
-                                        ? months[index + 1]
-                                        : null
-                                }
-                                graph={month}
-                                index={index}
-                                key={index}
-                                deleteGraph={deleteGraph}
-                            />
-                        ))}
-                    </ul>
-                ) : emptyStatus ? (
-                    <h1> No data available. </h1>
-                ) : (
-                    <Loader />
+            <div className={'main-container  scrolled-container'}>
+                {balanceDaysAreLoading && <Loader />}
+                {!balanceDaysAreLoading && (
+                    <>
+                        {months?.length > 0 && (
+                            <ul className={'chart-list'}>
+                                {months.map((month, index) => (
+                                    <SingleChart
+                                        previousMonth={
+                                            month.month ===
+                                            getMomentUTC().format('MM')
+                                                ? months[index + 1]
+                                                : null
+                                        }
+                                        graph={month}
+                                        index={index}
+                                        key={index}
+                                        deleteGraph={deleteGraph}
+                                    />
+                                ))}
+                            </ul>
+                        )}
+                        {months?.length === 0 && <h1> No data available. </h1>}
+                    </>
                 )}
             </div>
             <AlertMessage
@@ -168,7 +170,7 @@ function ChartsContainer() {
                 mainText={'Please confirm that you want to delete chart?'}
                 additionalText={
                     deletedMonth
-                        ? `Deleting month: ${moment(
+                        ? `Deleting month: ${getMomentUTC(
                               `${deletedMonth.year}-${deletedMonth.month}`
                           ).format('MMMM-YYYY')}`
                         : null
@@ -181,8 +183,6 @@ function ChartsContainer() {
                 onConfirm={deleteGraphClicked}
             />
         </>
-    ) : (
-        <LoggedOutPage />
     )
 }
 

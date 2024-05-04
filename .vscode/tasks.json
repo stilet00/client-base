@@ -2,31 +2,76 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm run dev",
+            "label": "Front End",
             "type": "shell",
             "command": "npm",
             "args": ["run", "dev"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         },
         {
-            "label": "npm run serve",
+            "label": "Back End",
             "type": "shell",
             "command": "npm",
             "args": ["run", "serve"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Sass Watcher",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "sass:watch"],
+            "isBackground": true,
+            "problemMatcher": {
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling...",
+                    "endsPattern": "Compiled successfully."
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "TypeScript Watcher",
+            "type": "shell",
+            "command": "npx",
+            "args": ["tsc", "--watch"],
+            "isBackground": true,
+            "problemMatcher": {
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling...",
+                    "endsPattern": "Compiled successfully."
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         },
         {
             "label": "Run Both WebClient & Server",
-            "dependsOn": ["npm run dev", "npm run serve"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "command": "echo",
+            "dependsOrder": "parallel",
+            "dependsOn": [
+                "Front End",
+                "Back End",
+                "Sass Watcher",
+                "TypeScript Watcher"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always"
             }
         }
     ]

@@ -21,6 +21,7 @@
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
+  gap: 20px;
   width: 100%;
 }
 .balance-form__date__accordion {
@@ -74,4 +75,6 @@
   .balance-form__date__accordion .MuiAccordionDetails-root {
     flex-wrap: wrap;
   }
-}/*# sourceMappingURL=EditBalanceForm.css.map */
+}
+
+/*# sourceMappingURL=EditBalanceForm.css.map */

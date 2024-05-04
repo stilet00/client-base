@@ -1,14 +1,15 @@
 const nodeMailer = require('nodemailer')
 const moment = require('moment')
 const {
-    calculateTranslatorYesterdayTotal,
-    calculateTranslatorMonthTotal,
     calculatePercentDifference,
-    calCurMonthTranslatorPenaties,
+    getCurrentMonthPenalties,
+    calculateBalanceDaySum,
 } = require('../translatorsBalanceFunctions/translatorsBalanceFunctions')
+const { getMomentUTC } = require('../utils/utils')
 const getAdministratorsEmailTemplateHTMLCode = require('./email-templates/getAdministratorsEmailTemplateHTMLcode')
 const getTranslatorsEmailTemplateHTMLCode = require('./email-templates/getTranslatorsEmailTemplate')
-const { DEFAULT_FINANCE_DAY, administratorsEmailList } = require('../constants')
+const { getCollections } = require('../database/collections')
+const { DEFAULT_FINANCE_DAY } = require('../constants')
 var path = require('path')
 class imageAttachmentInformation {
     constructor(imageName) {
@@ -49,34 +50,48 @@ const createTransport = () => {
 
     return transporter
 }
+let transporter = createTransport()
 
-const sendEmailTemplateToAdministrators = translatorsCollection => {
+const sendEmailTemplateToAdministrators = async translatorsCollection => {
+    let yesterdayTotalSum = 0
     const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
         .map(({ name, surname, statistics }) => {
-            const translatorSum = calculateTranslatorYesterdayTotal(statistics)
+            const translatorStatisticsForYesterday = statistics.filter(
+                balanceDay =>
+                    getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC().subtract(1, 'day'),
+                        'day'
+                    )
+            )
+            const translatorSum = translatorStatisticsForYesterday.reduce(
+                (sum, current) => {
+                    return sum + calculateBalanceDaySum(current.statistics)
+                },
+                0
+            )
+            if (translatorSum) {
+                yesterdayTotalSum += translatorSum
+            }
             return translatorSum
-                ? `${name} ${surname}: <b>${translatorSum} $</b>`
+                ? `${name} ${surname}: <b>${translatorSum.toFixed(2)} $</b>`
                 : null
         })
         .filter(notEmptyString => notEmptyString)
-
-    const yesterdayTotalSum = translatorsCollection
-        .map(({ statistics }) => {
-            return Number(calculateTranslatorYesterdayTotal(statistics))
-        })
-        .reduce((sum, current) => sum + current, 0)
-        .toFixed(2)
 
     const emailHtmlTemplateForAdministrators =
         getAdministratorsEmailTemplateHTMLCode({
             arrayOfTranslatorsNamesAndMonthSums,
             yesterdayTotalSum,
         })
+    const Admin = await getCollections().collectionAdmins.find().exec()
+    const adminEmailList = Admin.map(admin => admin.registeredEmail)
     let transporter = createTransport()
     let mailOptions = {
         from: '"Sunrise agency" <sunrise-agency@gmail.com>',
-        to: administratorsEmailList,
-        subject: `Date: ${moment().subtract(1, 'day').format('MMMM DD, YYYY')}`,
+        to: adminEmailList,
+        subject: `Date: ${getMomentUTC()
+            .subtract(1, 'day')
+            .format('MMMM DD, YYYY')}`,
         text: `Balance: ${yesterdayTotalSum}$`,
         html: emailHtmlTemplateForAdministrators,
     }
@@ -95,66 +110,87 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
             label: `${translator.name} ${translator.surname}`,
             id: translator._id,
             suspended: translator.suspended,
-            activeClients: translator.clients.filter(
-                client => !client.suspended
-            ),
+            activeClients: translator.clients,
             wantsToReceiveEmails: translator.wantsToReceiveEmails,
             personalPenalties: translator.personalPenalties,
+            statistics: translator.statistics,
         })
     )
-    arrayOfTranslatorsInfoForEmailLetter =
-        arrayOfTranslatorsInfoForEmailLetter.filter(
-            item =>
-                item.email &&
-                !item.suspended.status &&
-                item.wantsToReceiveEmails
-        )
 
     arrayOfTranslatorsInfoForEmailLetter =
         arrayOfTranslatorsInfoForEmailLetter.map(translator => {
-            const translatorsStatistics = translatorsCollection.find(
-                item => item._id === translator.id
-            ).statistics
-            const yesterdaySum = calculateTranslatorYesterdayTotal(
-                translatorsStatistics
+            const translatorsStatistics = translator.statistics
+            const balanceDaysForYesterday = translatorsStatistics.filter(
+                balanceDay => {
+                    return getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC().subtract(1, 'day'),
+                        'day'
+                    )
+                }
             )
-            const currentMonthTotal = calculateTranslatorMonthTotal(
-                translatorsStatistics
+            const balanceDaysForCurrentMonth = translatorsStatistics.filter(
+                balanceDay =>
+                    getMomentUTC(balanceDay.dateTimeId).isSame(
+                        getMomentUTC(),
+                        'month'
+                    )
             )
-            const previousMonthTotal = calculateTranslatorMonthTotal(
-                translatorsStatistics,
-                false,
-                moment().subtract(1, 'month').format('MM')
+            const balanceDaysForPreviousMonth = translatorsStatistics.filter(
+                balanceDay =>
+                    getMomentUTC(balanceDay.dateTimeId)
+                        .subtract(1, 'month')
+                        .isSame(getMomentUTC(), 'month')
+            )
+            const yesterdayTotal = balanceDaysForYesterday.reduce(
+                (sum, current) => {
+                    return sum + calculateBalanceDaySum(current.statistics)
+                },
+                0
+            )
+            const currentMonthTotal = balanceDaysForCurrentMonth.reduce(
+                (sum, current) => {
+                    return sum + calculateBalanceDaySum(current.statistics)
+                },
+                0
+            )
+            const previousMonthTotal = balanceDaysForPreviousMonth.reduce(
+                (sum, current) => {
+                    return sum + calculateBalanceDaySum(current.statistics)
+                },
+                0
             )
             const monthProgressPercent = calculatePercentDifference(
                 currentMonthTotal,
                 previousMonthTotal
             )
             const financeFieldList = new DEFAULT_FINANCE_DAY()
-            const detailedStatistic = translator.activeClients.map(client => {
-                const statisticByClient = Object.keys(financeFieldList).map(
-                    fieldName => {
-                        return {
-                            [fieldName]: calculateTranslatorYesterdayTotal(
-                                translatorsStatistics,
-                                false,
-                                fieldName,
-                                client._id
-                            ),
+            const detailedStatistic = balanceDaysForYesterday.map(
+                balanceDay => {
+                    const clientOnBalanceDay = balanceDay.client
+                    const clientFullName = `${clientOnBalanceDay.name} ${clientOnBalanceDay.surname}`
+                    const statisticByClient = Object.keys(financeFieldList).map(
+                        categoryName => {
+                            return {
+                                [categoryName]: calculateBalanceDaySum(
+                                    balanceDay.statistics,
+                                    false,
+                                    categoryName
+                                ),
+                            }
                         }
+                    )
+                    return {
+                        name: clientFullName,
+                        statistics: statisticByClient,
                     }
-                )
-                return {
-                    name: `${client.name} ${client.surname}`,
-                    statistics: statisticByClient,
                 }
-            })
-            const curMonthPenalties = calCurMonthTranslatorPenaties(
+            )
+            const curMonthPenalties = getCurrentMonthPenalties(
                 translator.personalPenalties
             )
             return {
                 ...translator,
-                yesterdaySum,
+                yesterdayTotal,
                 currentMonthTotal,
                 monthProgressPercent,
                 detailedStatistic,
@@ -162,47 +198,41 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
             }
         })
 
-    let transporter = createTransport()
+    const delay = ms => new Promise(res => setTimeout(res, ms))
 
-    const arrayOfTranslatorsWhoReceivedLetter = await Promise.all(
-        arrayOfTranslatorsInfoForEmailLetter.map(
-            async (translatorInfoForEmailLetter, index) => {
-                const emailHtmlTemplateForTranslators =
-                    getTranslatorsEmailTemplateHTMLCode(
-                        translatorInfoForEmailLetter
-                    )
-                const imagesPathArrayForEmail = imageNamesArrayForEmail.map(
-                    imageName => {
-                        const imageInfoObject = new imageAttachmentInformation(
-                            imageName
-                        )
-                        return imageInfoObject
-                    }
-                )
-                let mailOptions = {
-                    from: '"Sunrise agency" <sunrise-agency@gmail.com>',
-                    to: translatorInfoForEmailLetter.email,
-                    subject: `Date: ${moment()
-                        .subtract(1, 'day')
-                        .format('MMMM DD, YYYY')}`,
-                    text: `Balance: ${translatorInfoForEmailLetter.yesterdaySum}$`,
-                    html: emailHtmlTemplateForTranslators,
-                    attachments: imagesPathArrayForEmail,
-                }
-                setTimeout(() => {
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            throw new Error(error)
-                        }
-                        console.log(
-                            `Message sent to: ${info.accepted.join(', ')}`
-                        )
-                    })
-                }, index * 5000)
-                return translatorInfoForEmailLetter.label
-            }
+    const arrayOfTranslatorsWhoReceivedLetter = []
+
+    for (const [
+        index,
+        translatorInfoForEmailLetter,
+    ] of arrayOfTranslatorsInfoForEmailLetter.entries()) {
+        const emailHtmlTemplateForTranslators =
+            getTranslatorsEmailTemplateHTMLCode(translatorInfoForEmailLetter)
+        const imagesPathArrayForEmail = imageNamesArrayForEmail.map(
+            imageName => new imageAttachmentInformation(imageName)
         )
-    )
+        let mailOptions = {
+            from: '"Sunrise agency" <sunrise-agency@gmail.com>',
+            to: translatorInfoForEmailLetter.email,
+            subject: `Date: ${getMomentUTC()
+                .subtract(1, 'day')
+                .format('MMMM DD, YYYY')}`,
+            text: `Balance: ${translatorInfoForEmailLetter.yesterdayTotal}$`,
+            html: emailHtmlTemplateForTranslators,
+            attachments: imagesPathArrayForEmail,
+        }
+        await delay(index * 5000)
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                throw new Error(error)
+            }
+            console.log(`Message sent to: ${info.accepted.join(', ')}`)
+        })
+        arrayOfTranslatorsWhoReceivedLetter.push(
+            translatorInfoForEmailLetter.label
+        )
+    }
+
     return arrayOfTranslatorsWhoReceivedLetter
 }
 module.exports = {

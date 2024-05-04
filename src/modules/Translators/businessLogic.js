@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useRouteMatch } from 'react-router-dom'
-import { MESSAGES } from '../../constants/messages'
-import { useAlert } from '../../sharedComponents/AlertMessage/hooks'
+import { useQuery } from 'react-query'
+import { useSelector } from 'react-redux'
+import MESSAGES from 'constants/messages'
+import { useAlert } from 'sharedComponents/AlertMessage/hooks'
 import {
     addTranslator,
     getTranslators,
@@ -9,61 +10,36 @@ import {
     updateTranslator,
     sendNotificationEmailsRequest,
     sendLastVirtualGiftDateRequest,
-    requestBonusesForChats,
-} from '../../services/translatorsServices/services'
-import { getCurrency } from '../../services/currencyServices'
-import {
-    currentMonth,
-    currentYear,
-    DEFAULT_DAY_CLIENT,
-    previousMonth,
-    previousYear,
-} from '../../constants/constants'
+    assignClientToTranslatorRequest,
+    getBalanceDaysForTranslatorRequest,
+    getPenaltiesForTranslatorRequest,
+    toggleClientSuspendedRequest,
+} from 'services/translatorsServices/services'
+import { getCurrency } from 'services/currencyServices'
+import { useAlertConfirmation } from 'sharedComponents/AlertMessageConfirmation/hooks'
 
 import {
-    addClient,
-    getClients,
-    removeClient,
-} from '../../services/clientsServices/services'
-import { useAlertConfirmation } from '../../sharedComponents/AlertMessageConfirmation/hooks'
-import moment from 'moment'
-import useModal from '../../sharedHooks/useModal'
-import {
-    calculateBalanceDayAllClients,
     calculateBalanceDaySum,
-    calculateTranslatorMonthTotal,
     getMiddleValueFromArray,
-    getNumberWithHundreds,
-} from '../../sharedFunctions/sharedFunctions'
+    getStartOfPreviousDayInUTC,
+    getMomentUTC,
+} from 'sharedFunctions/sharedFunctions'
 
 export const useTranslators = user => {
-    const [message, setMessage] = useState(MESSAGES.addTranslator)
-    const match = useRouteMatch()
-    const [clients, setClients] = useState([])
-    const [chatsBonus, setChatsBonus] = useState([])
-
     const [translators, setTranslators] = useState([])
-
     const [currentClient, setCurrentClient] = useState(null)
     const [dollarToUahRate, setDollarToUahRate] = useState(null)
-
     const [state, setState] = useState({
         left: false,
     })
-
     const [loading, setLoading] = useState(true)
-
     const [mailoutInProgress, setMailoutInProgress] = useState(false)
-
-    const { alertOpen, closeAlert, openAlert } = useAlert()
-
+    const { alertOpen, closeAlert, openAlert, message, setMessage } = useAlert()
     const [deletedTranslator, setDeletedTranslator] = useState(null)
-
     const [translatorFilter, setTranslatorFilter] = useState({
         suspended: true,
-        date: moment().subtract(1, 'month'),
+        date: getMomentUTC().subtract(1, 'day'),
     })
-
     const {
         alertStatusConfirmation,
         openAlertConfirmation,
@@ -72,16 +48,12 @@ export const useTranslators = user => {
 
     const changeFilter = useCallback(
         e => {
-            if (e.target) {
-                const newFilter = {
-                    ...translatorFilter,
-                    [e.target.name]: !translatorFilter[e.target.name],
-                }
-
-                setTranslatorFilter(newFilter)
-            } else {
-                setTranslatorFilter({ ...translatorFilter, date: e })
+            const newFilter = {
+                ...translatorFilter,
+                [e.target.name]: !translatorFilter[e.target.name],
             }
+
+            setTranslatorFilter(newFilter)
         },
         [translatorFilter]
     )
@@ -102,44 +74,45 @@ export const useTranslators = user => {
         [translators, translatorFilter]
     )
 
-    useEffect(() => {
-        ;(async () => {
-            if (user) {
-                getCurrency()
-                    .then(res => {
-                        if (res.status === 200) {
-                            const privatBankDollarRate =
-                                res?.data[1]?.buy ?? '36.57'
-                            setDollarToUahRate(privatBankDollarRate)
-                        }
-                    })
-                    .catch(err => {
-                        showAlertMessage(MESSAGES.somethingWrong)
-                    })
-                const responseTranslators = await getTranslators()
-                if (responseTranslators.status === 200) {
-                    setTranslators(responseTranslators.data)
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                }
-                const responseClients = await getClients(match.url)
-                if (responseClients.status === 200) {
-                    setClients(responseClients.data)
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                }
-                setLoading(false)
-            }
-        })()
-    }, [user])
+    const fetchCurrency = async () => {
+        const response = await getCurrency()
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithCurrencies)
+        return response.data[1]?.buy ?? '36.57'
+    }
 
-    const showAlertMessage = useCallback(
-        (alertMessage, duration = 1000) => {
-            setMessage(alertMessage)
-            openAlert(duration)
-        },
-        [openAlert]
+    const fetchTranslators = async () => {
+        const response = await getTranslators({ shouldGetClients: true })
+        if (response.status !== 200)
+            throw new Error(MESSAGES.somethingWrongWithGettingTranslators)
+        return response.data
+    }
+
+    const { isLoading: currencyIsLoading } = useQuery(
+        'currencyForTranslators',
+        fetchCurrency,
+        {
+            enabled: !!user,
+            onSuccess: data => setDollarToUahRate(data),
+            onError: () => openAlert(MESSAGES.somethingWrongWithCurrencies),
+        }
     )
+    const { isLoading: translatorsAreLoading } = useQuery(
+        'translatorsForTranslators',
+        fetchTranslators,
+        {
+            enabled: !!user,
+            onSuccess: data => setTranslators(data),
+            onError: () =>
+                openAlert(MESSAGES.somethingWrongWithGettingTranslators),
+        }
+    )
+
+    useEffect(() => {
+        if (!currencyIsLoading && !translatorsAreLoading) {
+            setLoading(false)
+        }
+    }, [currencyIsLoading, translatorsAreLoading])
 
     const toggleDrawer = useCallback(
         (anchor, open) => event => {
@@ -187,107 +160,79 @@ export const useTranslators = user => {
     }, [])
 
     const saveChangedTranslator = useCallback(
-        (editedTranslator, message) => {
-            updateTranslator(editedTranslator)
-                .then(res => {
-                    if (res.status === 200) {
-                        showAlertMessage(message)
-                        setTranslators(
-                            translators.map(item => {
-                                return item._id === editedTranslator._id
-                                    ? editedTranslator
-                                    : item
-                            })
+        async (editedTranslator, message) => {
+            try {
+                const res = await updateTranslator(editedTranslator)
+                if (res.status === 200) {
+                    openAlert(message)
+                    setTranslators(
+                        translators.map(item =>
+                            item._id === editedTranslator._id
+                                ? editedTranslator
+                                : item
                         )
-                    }
-                })
-                .catch(error => {
-                    const erroMessageForShowAlertMessage = {
-                        text:
-                            error?.response?.data?.error || 'An error occurred',
-                        status: false,
-                    }
-                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                    console.error('An error occurred:', error) // Log the error for debugging
-                })
+                    )
+                }
+                return true
+            } catch (error) {
+                const erroMessageForShowAlertMessage = {
+                    text: error?.response?.data?.error || 'An error occurred',
+                    status: false,
+                }
+                openAlert(erroMessageForShowAlertMessage, 5000)
+                console.error('An error occurred:', error)
+                return false
+            }
         },
-        [translators, showAlertMessage]
+        [translators, openAlert]
     )
 
+    const assignClientToTranslator = async ({ translatorId, clientId }) => {
+        let editedTranslator = translators.find(
+            item => item._id === translatorId
+        )
+        if (
+            editedTranslator.clients.some(
+                item => item._id === currentClient._id
+            )
+        ) {
+            openAlert(MESSAGES.clientExist)
+            return
+        }
+        const responseFromAssignClientToTranslator =
+            await assignClientToTranslatorRequest({ translatorId, clientId })
+        if (responseFromAssignClientToTranslator.status === 200) {
+            const editedTranslator = translators.find(
+                item => item._id === translatorId
+            )
+            editedTranslator.clients.push({
+                ...currentClient,
+            })
+            setTranslators(
+                translators.map(item =>
+                    item._id === editedTranslator._id ? editedTranslator : item
+                )
+            )
+        }
+        if (responseFromAssignClientToTranslator.status !== 200) {
+            openAlert(MESSAGES.somethingWrongWithAssigningClient)
+        }
+    }
+
     const onBoardDrop = useCallback(
-        (e, translatorID) => {
+        async (e, translatorID) => {
             e.preventDefault()
             if (e.target.tagName === 'UL') {
                 e.target.style.background = 'none'
             } else if (e.target.tagName === 'LI') {
                 e.target.parentNode.style.background = 'none'
             }
-
-            let editedTranslator = translators.find(
-                item => item._id === translatorID
-            )
-
-            if (
-                editedTranslator.clients.filter(
-                    item => item._id === currentClient._id
-                ).length > 0
-            ) {
-                showAlertMessage(MESSAGES.clientExist)
-            } else {
-                editedTranslator = insertClient(editedTranslator, currentClient)
-                saveChangedTranslator(
-                    editedTranslator,
-                    MESSAGES.translatorFilled
-                )
-            }
-        },
-        [translators, currentClient, showAlertMessage, showAlertMessage]
-    )
-
-    const insertClient = useCallback((translator, client) => {
-        const clientBalanceDay = new DEFAULT_DAY_CLIENT(client._id)
-        const updatedStatistics = translator.statistics.map(item => {
-            if (item.year === currentYear) {
-                const updatedMonths = item.months.map((month, index) => {
-                    if (index + 1 >= Number(currentMonth)) {
-                        return month.map(day => {
-                            return {
-                                ...day,
-                                clients: [...day.clients, clientBalanceDay],
-                            }
-                        })
-                    } else {
-                        return month
-                    }
-                })
-                return { ...item, months: updatedMonths }
-            } else {
-                return item
-            }
-        })
-
-        translator = {
-            ...translator,
-            statistics: updatedStatistics,
-            clients: [...translator.clients, client],
-        }
-
-        return translator
-    }, [])
-
-    const deleteClient = useCallback(
-        id => {
-            removeClient(id).then(res => {
-                if (res.status === 200) {
-                    showAlertMessage(MESSAGES.clientDeleted)
-                    setClients(clients.filter(item => item._id !== id))
-                } else {
-                    showAlertMessage(MESSAGES.somethingWrong)
-                    console.log(res.data)
-                }
+            await assignClientToTranslator({
+                translatorId: translatorID,
+                clientId: currentClient._id,
             })
         },
-        [clients, showAlertMessage]
+        [translators, currentClient, openAlert, openAlert]
     )
 
     const startTranslatorDelete = useCallback(
@@ -317,163 +262,52 @@ export const useTranslators = user => {
                 )
                 setMessage(MESSAGES.addTranslator)
             } else {
-                showAlertMessage(MESSAGES.somethingWrong)
-                console.log(res.data)
+                openAlert(MESSAGES.somethingWrong)
             }
         })
     }, [
         translators,
-        showAlertMessage,
+        openAlert,
         closeAlertConfirmationNoReload,
         deletedTranslator,
     ])
 
-    const sendNotificationEmails = () => {
+    const sendNotificationEmails = async () => {
         setMailoutInProgress(true)
-        sendNotificationEmailsRequest()
-            .then(res => {
-                if (res.status === 200) {
-                    closeAlertConfirmationNoReload()
-                    const messageAboutEmailsReceived = {
-                        text: `Emails have been sent to: ${res.data.join(
-                            ', '
-                        )}`,
-                        status: true,
-                    }
-                    showAlertMessage(messageAboutEmailsReceived, 20000)
-                    setMailoutInProgress(false)
-                }
-            })
-            .catch(error => {
+        try {
+            const res = await sendNotificationEmailsRequest()
+            if (res.status === 200) {
                 closeAlertConfirmationNoReload()
-                const erroMessageForShowAlertMessage = {
-                    text: error?.response?.data?.error || 'An error occurred',
-                    status: false,
+                const messageAboutEmailsReceived = {
+                    text: `Emails have been sent to: ${res.data.join(', ')}`,
+                    status: true,
                 }
-                showAlertMessage(erroMessageForShowAlertMessage, 5000) // Handle error case
-                console.error('An error occurred:', error) // Log the error for debugging
-                setMailoutInProgress(false)
-            })
+                openAlert(messageAboutEmailsReceived, 20000)
+            }
+        } catch (error) {
+            closeAlertConfirmationNoReload()
+            const erroMessageForShowAlertMessage = {
+                text: error?.response?.data?.error || 'An error occurred',
+                status: false,
+            }
+            openAlert(erroMessageForShowAlertMessage, 5000)
+        } finally {
+            setMailoutInProgress(false)
+        }
     }
 
-    const translatorsFormSubmit = useCallback(
-        (e, newTranslator) => {
-            e.preventDefault()
-            if (
-                translators.filter(existingTranslator => {
-                    return (
-                        existingTranslator.name.toLowerCase() ===
-                            newTranslator.name.toLowerCase() &&
-                        existingTranslator.surname.toLowerCase() ===
-                            newTranslator.surname.toLowerCase()
-                    )
-                }).length
-            ) {
-                showAlertMessage(MESSAGES.translatorExist)
-            } else {
-                addTranslator(newTranslator)
-                    .then(res => {
-                        if (res.status === 200) {
-                            setTranslators([
-                                ...translators,
-                                { ...newTranslator, _id: res.data },
-                            ])
-                            showAlertMessage(MESSAGES.addTranslator, 3000)
-                        }
-                    })
-                    .catch(error => {
-                        const erroMessageForShowAlertMessage = {
-                            text:
-                                error?.response?.data?.error ||
-                                'An error occurred',
-                            status: false,
-                        }
-                        showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                    })
-            }
-        },
-        [translators, showAlertMessage]
-    )
-
-    const clientsFormSubmit = useCallback(
-        (e, newClient) => {
-            e.preventDefault()
-
-            addClient(newClient)
-                .then(res => {
-                    if (res.status === 200) {
-                        showAlertMessage(MESSAGES.addClient)
-                        setClients([
-                            ...clients,
-                            { ...newClient, _id: res.data },
-                        ])
-                    }
-                })
-                .catch(error => {
-                    const erroMessageForShowAlertMessage = {
-                        text:
-                            error?.response?.data?.error || 'An error occurred',
-                        status: false,
-                    }
-                    showAlertMessage(erroMessageForShowAlertMessage, 5000)
-                })
-        },
-        [clients, showAlertMessage]
-    )
-
-    const balanceDaySubmit = useCallback(
-        (translatorId, balanceDay) => {
-            let editedTranslator = translators.find(
-                item => item._id === translatorId
-            )
-            const newStatistics = editedTranslator.statistics.map(year => {
-                const newMonths = year.months.map(month => {
-                    return month.map(day => {
-                        return day.id === balanceDay.id ? balanceDay : day
-                    })
-                })
-                return { ...year, months: newMonths }
-            })
-
-            editedTranslator.statistics = newStatistics
-            saveChangedTranslator(editedTranslator, MESSAGES.changesSaved)
-        },
-        [translators]
-    )
-
-    const calculateMonthTotal = useCallback(
-        (categoryName = null) => {
-            let sum = 0
-            if (categoryName) {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        Number(
-                            calculateTranslatorMonthTotal(
-                                translatorsStatistic,
-                                true,
-                                currentMonth,
-                                currentYear,
-                                false,
-                                categoryName
-                            )
-                        )
-                })
-            } else {
-                translators.forEach(translator => {
-                    let translatorsStatistic = translator.statistics
-                    sum =
-                        sum +
-                        Number(
-                            calculateTranslatorMonthTotal(translatorsStatistic)
-                        )
-                })
-            }
-            return getNumberWithHundreds(sum)
-        },
-        [translators]
-    )
+    const translatorsFormSubmit = async newTranslator => {
+        const { data, status } = await addTranslator(newTranslator)
+        if (status === 200) {
+            openAlert(MESSAGES.addTranslator)
+            setTranslators([
+                ...translators,
+                { ...newTranslator, clients: [], _id: data },
+            ])
+        } else {
+            openAlert(MESSAGES.somethingWrong, 5000)
+        }
+    }
 
     const suspendTranslator = useCallback(
         translatorId => {
@@ -485,7 +319,7 @@ export const useTranslators = user => {
                 ...editedTranslator,
                 suspended: {
                     status: !editedTranslator.suspended.status,
-                    time: moment().format('DD MMMM YYYY'),
+                    time: getMomentUTC().format(),
                 },
             }
 
@@ -498,90 +332,49 @@ export const useTranslators = user => {
         [translators]
     )
 
-    const addPersonalPenaltyToTranslator = useCallback(
-        (id, penalty) => {
-            let editedTranslator = translators.find(
-                translator => translator._id === id
-            )
-            if (editedTranslator.personalPenalties) {
-                editedTranslator = {
-                    ...editedTranslator,
-                    personalPenalties: [
-                        ...editedTranslator.personalPenalties,
-                        penalty,
-                    ],
+    const toggleClientSuspended = async (translatorId, clientId) => {
+        await toggleClientSuspendedRequest({ translatorId, clientId })
+
+        const editedTranslator = translators.find(
+            item => item._id === translatorId
+        )
+        let message
+
+        editedTranslator.clients = editedTranslator.clients.map(client => {
+            if (client._id === clientId) {
+                const isSuspended =
+                    client.suspendedTranslators.includes(translatorId)
+                message = isSuspended
+                    ? MESSAGES.clientActivated
+                    : MESSAGES.clientSuspended
+
+                return {
+                    ...client,
+                    suspendedTranslators: isSuspended
+                        ? client.suspendedTranslators.filter(
+                              id => id !== translatorId
+                          )
+                        : [...client.suspendedTranslators, translatorId],
                 }
             } else {
-                editedTranslator = {
-                    ...editedTranslator,
-                    personalPenalties: [penalty],
-                }
+                return client
             }
-            saveChangedTranslator(
-                editedTranslator,
-                MESSAGES.personalPenaltyApplied
-            )
-        },
-        [translators]
-    )
+        })
 
-    const suspendClient = useCallback(
-        (translatorId, clientId) => {
-            const editedTranslator = translators.find(
-                item => item._id === translatorId
-            )
+        saveChangedTranslator(editedTranslator, message)
+    }
 
-            let message
-
-            editedTranslator.clients = editedTranslator.clients.map(client => {
-                if (client._id === clientId) {
-                    message = client.suspended
-                        ? MESSAGES.clientActivated
-                        : MESSAGES.clientSuspended
-                    return { ...client, suspended: !client.suspended }
-                } else {
-                    return client
-                }
-            })
-
-            saveChangedTranslator(editedTranslator, message)
-        },
-        [translators]
-    )
-
-    const updateTranslatorEmail = useCallback(
-        (email, id, wantsToReceiveEmails) => {
-            let editedTranslator = translators.find(item => item._id === id)
-            editedTranslator = {
-                ...editedTranslator,
-                email,
-                wantsToReceiveEmails,
-            }
-            saveChangedTranslator(
-                editedTranslator,
-                MESSAGES.translatorEmailUpdated
-            )
-        },
-        [translators]
-    )
-    const getBonusesForChats = (
-        date = translatorFilter?.date,
-        category = 'chats'
-    ) => {
-        const data = {
-            year: date.format('YYYY'),
-            month: date.format('M'),
-            category,
+    const updateTranslatorEmail = async (email, id, wantsToReceiveEmails) => {
+        let editedTranslator = translators.find(item => item._id === id)
+        editedTranslator = {
+            ...editedTranslator,
+            email,
+            wantsToReceiveEmails,
         }
-        requestBonusesForChats(data)
-            .then(res => {
-                if (res.status === 200) {
-                    setChatsBonus(res.data)
-                }
-            })
-            .catch(err => {
-                setChatsBonus([])
-            })
+        return saveChangedTranslator(
+            editedTranslator,
+            MESSAGES.translatorEmailUpdated
+        )
     }
 
     return {
@@ -594,201 +387,100 @@ export const useTranslators = user => {
         loading,
         toggleDrawer,
         state,
-        clients,
         dragEndHandler,
         dragStartHandler,
         dragDropHandler,
-        deleteClient,
-        clientsFormSubmit,
         translatorsFormSubmit,
         message,
         alertOpen,
         openAlert,
         closeAlert,
-        balanceDaySubmit,
         alertStatusConfirmation,
         openAlertConfirmation,
         closeAlertConfirmationNoReload,
         finishTranslatorDelete,
-        calculateMonthTotal,
         suspendTranslator,
-        suspendClient,
+        toggleClientSuspended,
         changeFilter,
         memoizedFilteredTranslators,
         translatorFilter,
-        addPersonalPenaltyToTranslator,
         updateTranslatorEmail,
         sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
-        chatsBonus,
-        getBonusesForChats,
     }
 }
 
-export const useBalanceForm = ({ balanceDaySubmit, statistics, clients }) => {
-    const { open, handleOpen, handleClose } = useModal()
-
-    const [selectedClient, setSelectedClient] = useState(
-        clients.filter(client => !client.suspended)[0]?._id
+export const useSingleTranslator = ({ translatorId }) => {
+    const [lastVirtualGiftLabel, setLastVirtualGiftLabel] = useState(
+        `Last virtual gift was at:`
     )
-
-    const [selectedYear, setSelectedYear] = useState(
-        currentMonth === '1' && moment().format('D') === '1'
-            ? previousYear
-            : currentYear
-    )
-
-    const [selectedMonth, setSelectedMonth] = useState(
-        moment().format('D') === '1' ? previousMonth : currentMonth
-    )
-
-    const [selectedDay, setSelectedDay] = useState(
-        moment().subtract(1, 'day').format('D')
-    )
-
-    const [currentBalanceDay, setCurrentBalanceDay] = useState(
-        findTodayBalance()
-    )
-
-    useEffect(() => {
-        setCurrentBalanceDay(findTodayBalance())
-    }, [selectedYear, selectedMonth, selectedDay, statistics])
-
-    function findYear() {
-        return statistics.find(item => item.year === selectedYear)
-    }
-
-    function findMonth() {
-        return findYear()?.months.find(
-            (item, index) => index + 1 === Number(selectedMonth)
-        )
-    }
-
-    function findTodayBalance() {
-        return findMonth()?.find(
-            (item, index) => index + 1 === Number(selectedDay)
-        )
-    }
-
-    const handleYear = event => {
-        setSelectedYear(event.target.value)
-    }
-
-    const handleMonth = event => {
-        const searchedMonth = findYear().months.find(
-            (item, index) => index + 1 === Number(event.target.value)
-        )
-        if (Number(selectedDay) > searchedMonth.length) {
-            setSelectedDay(String(searchedMonth.length))
-            setSelectedMonth(event.target.value)
-        }
-        setSelectedMonth(event.target.value)
-    }
-
-    const handleDay = event => {
-        setSelectedDay(event.target.value)
-    }
-
-    const handleClient = e => {
-        setSelectedClient(e.target.value)
-    }
-
-    const handleChange = useCallback(
-        e => {
-            const editedClientsBalance = currentBalanceDay.clients.map(
-                client => {
-                    if (client.id === selectedClient) {
-                        return e.target.type === 'textarea'
-                            ? { ...client, [e.target.name]: e.target.value }
-                            : {
-                                  ...client,
-                                  [e.target.name]: Number(e.target.value),
-                              }
-                    } else {
-                        return client
-                    }
-                }
-            )
-
-            setCurrentBalanceDay({
-                ...currentBalanceDay,
-                clients: editedClientsBalance,
-            })
-        },
-        [selectedClient, currentBalanceDay]
-    )
-
-    function findClientById(id) {
-        if (id) {
-            return currentBalanceDay.clients.find(item => item.id === id)
-        } else {
-            return currentBalanceDay.clients.find(
-                item => item.id === selectedClient
-            )
-        }
-    }
-
-    function onSavePressed() {
-        balanceDaySubmit(currentBalanceDay)
-    }
-    return {
-        handleOpen,
-        open,
-        handleClose,
-        selectedYear,
-        handleYear,
-        selectedMonth,
-        handleMonth,
-        findYear,
-        selectedDay,
-        handleDay,
-        findMonth,
-        selectedClient,
-        handleClient,
-        handleChange,
-        findClientById,
-        onSavePressed,
-        currentBalanceDay,
-    }
-}
-
-export const useSingleTranslator = (
-    statistics,
-    selectedDate,
-    personalPenalties
-) => {
-    const [lastVirtualGiftDate, setLastVirtualGiftDate] = useState(null)
+    const previousDayDate = getStartOfPreviousDayInUTC()
     const [giftRequestLoader, setGiftRequestLoader] = useState(false)
-    const calculateTranslatorYesterdayTotal = statistics => {
-        const day = statistics
-            .find(
-                year => year.year === moment().subtract(1, 'day').format('YYYY')
-            )
-            ?.months.find(
-                (month, index) =>
-                    index + 1 ===
-                    Number(moment().subtract(1, 'day').format('M'))
-            )
-            .find(day => {
-                return (
-                    day.id ===
-                        moment().subtract(1, 'day').format('DD MM YYYY') ||
-                    day.id === moment().format('DD MM YYYY')
-                )
-            })
-        return calculateBalanceDayAllClients(day)
+    const [translatorBalanceDays, setTranslatorBalanceDays] = useState([])
+    const [personalPenalties, setPersonalPenalties] = useState([])
+    const user = useSelector(state => state.auth.user)
+    const fetchBalanceDays = async () => {
+        const response = await getBalanceDaysForTranslatorRequest({
+            dateTimeFilter: previousDayDate.format(),
+            translatorId,
+        })
+        if (response.status !== 200) {
+            throw new Error(MESSAGES.somethingWrongWithBalanceDays)
+        }
+        return response.data
     }
+    const fetchPenalties = async () => {
+        const response = await getPenaltiesForTranslatorRequest({
+            dateTimeFilter: getMomentUTC().format(),
+            translatorId,
+        })
+        if (response.status !== 200) {
+            throw new Error(MESSAGES.somethingWrongWithBalanceDays)
+        }
+        return response.data
+    }
+    const { isLoading: balanceDaysAreLoading } = useQuery(
+        `balanceDaysForTranslator${translatorId}`,
+        fetchBalanceDays,
+        {
+            enabled: !!user,
+            onSuccess: data => setTranslatorBalanceDays(data),
+            onError: () =>
+                console.error(MESSAGES.somethingWrongWithBalanceDays),
+        }
+    )
+
+    const { isLoading: penaltiesAreLoading } = useQuery(
+        `penaltiesForTranslator${translatorId}`,
+        fetchPenalties,
+        {
+            enabled: !!user,
+            onSuccess: data => setPersonalPenalties(data),
+            onError: () =>
+                console.error(MESSAGES.somethingWentWrongWithPersonalPenalties),
+        }
+    )
 
     const calculatePersonalPenalties = () => {
         const thisMonthsPenaltiesArray = []
         const selectedDatePenaltiesArray = []
-        personalPenalties?.forEach(penalty => {
-            if (moment().format('MM YYYY') === penalty.date.slice(3)) {
-                thisMonthsPenaltiesArray.push(Number(penalty.amount))
+        personalPenalties?.forEach(personalPenalty => {
+            if (
+                getMomentUTC(personalPenalty.dateTimeId).isSame(
+                    getMomentUTC(),
+                    'month'
+                )
+            ) {
+                thisMonthsPenaltiesArray.push(personalPenalty)
             }
-            if (selectedDate.format('MM YYYY') === penalty.date.slice(3)) {
-                selectedDatePenaltiesArray.push(Number(penalty.amount))
+            if (
+                getMomentUTC(personalPenalty.dateTimeId).isSame(
+                    previousDayDate,
+                    'date'
+                )
+            ) {
+                selectedDatePenaltiesArray.push(personalPenalty)
             }
         })
 
@@ -801,60 +493,39 @@ export const useSingleTranslator = (
             : null
     }
 
-    const calculateTranslatorDayTotal = statistics => {
-        const day = statistics
-            .find(year => year.year === selectedDate.format('YYYY'))
-            ?.months.find(
-                (month, index) => index + 1 === Number(selectedDate.format('M'))
+    function findYesterdayStatisticObjectForClient(clientId) {
+        return translatorBalanceDays.find(balanceDay => {
+            return (
+                balanceDay.client === clientId &&
+                getMomentUTC(balanceDay.dateTimeId).isSame(
+                    getMomentUTC().subtract(1, 'day').startOf('day'),
+                    'day'
+                )
             )
-            .find(day => {
-                return day.id === selectedDate.format('DD MM YYYY')
-            })
-        return calculateBalanceDayAllClients(day)
-    }
-
-    function findYesterdayStatisticObject() {
-        const yearStatistics = statistics.find(
-            item => item.year === moment().format('YYYY')
-        )
-        const monthStatistics = yearStatistics.months.find(
-            (item, index) =>
-                index + 1 === Number(moment().subtract(1, 'day').format('M'))
-        )
-        const yesterdayStatistics = monthStatistics.find(
-            item => item.id === moment().subtract(1, 'day').format('DD MM YYYY')
-        )
-        return yesterdayStatistics
-    }
-
-    function findYear(yearFilter = currentYear) {
-        return statistics.find(item => item.year === yearFilter)
-    }
-
-    function findMonth(monthFilter = currentMonth) {
-        return findYear().months.find(
-            (item, index) => index + 1 === Number(monthFilter)
-        )
+        })
     }
 
     function calculateSumByClient(clientId) {
-        const clientObject = findYesterdayStatisticObject()?.clients.find(
-            item => item.id === clientId
-        )
-        return clientObject
-            ? calculateBalanceDaySum(clientObject).toFixed(2)
-            : null
+        const balanceDayForCurrentClientForYesterday =
+            findYesterdayStatisticObjectForClient(clientId)
+        if (!!balanceDayForCurrentClientForYesterday) {
+            return calculateBalanceDaySum(
+                balanceDayForCurrentClientForYesterday.statistics
+            ).toFixed(2)
+        }
+
+        return 0
     }
 
-    function calculateMiddleMonthSum(monthFilter) {
+    function calculateMiddleMonthSum(selectedDate) {
         let sum = []
-
-        findMonth(monthFilter).forEach((day, index) => {
-            if (index === 0 || index + 1 < moment().format('D')) {
-                sum.push(Number(calculateBalanceDayAllClients(day)))
-            }
+        const balanceDaysOfSelectedMonth = translatorBalanceDays.filter(
+            ({ dateTimeId }) =>
+                getMomentUTC(dateTimeId).isSame(selectedDate, 'month')
+        )
+        balanceDaysOfSelectedMonth.forEach(balanceDay => {
+            sum.push(calculateBalanceDaySum(balanceDay.statistics))
         })
-
         return getMiddleValueFromArray(sum)
     }
 
@@ -873,9 +544,7 @@ export const useSingleTranslator = (
     }
 
     function specialColorNeeded(clientId) {
-        const clientObject = findYesterdayStatisticObject()?.clients.find(
-            item => item.id === clientId
-        )
+        const clientObject = findYesterdayStatisticObjectForClient(clientId)
 
         if (clientObject.virtualGiftsSvadba) {
             return 'clients-list__finance-container--pink_text'
@@ -894,11 +563,11 @@ export const useSingleTranslator = (
         setGiftRequestLoader(true)
         sendLastVirtualGiftDateRequest(translatorId)
             .then(res => {
-                setLastVirtualGiftDate(res.data[0]?.date || 'No gifts found')
+                setLastVirtualGiftLabel(res.data ?? 'No gifts found')
                 setGiftRequestLoader(false)
             })
             .catch(err => {
-                console.log(err.message)
+                console.log(err?.message)
                 setGiftRequestLoader(false)
             })
     }
@@ -908,11 +577,11 @@ export const useSingleTranslator = (
         specialColorNeeded,
         getTranslatorsRating,
         calculateMiddleMonthSum,
-        calculateTranslatorYesterdayTotal,
-        calculateTranslatorDayTotal,
         calculatePersonalPenalties,
         getLastVirtualGiftDate,
-        lastVirtualGiftDate,
+        lastVirtualGiftLabel,
         giftRequestLoader,
+        dataIsLoading: balanceDaysAreLoading || penaltiesAreLoading,
+        translatorBalanceDays,
     }
 }

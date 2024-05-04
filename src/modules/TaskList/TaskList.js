@@ -5,13 +5,8 @@ import SingleTask from './SingleTask/SingleTask'
 import Form from './Form/Form'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Loader from '../../sharedComponents/Loader/Loader'
-import LoggedOutPage from '../AuthorizationPage/LoggedOutPage/LoggedOutPage'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTaskList } from './businessLogic'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
-import Typography from '@mui/material/Typography'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 
 function TaskList() {
@@ -26,62 +21,35 @@ function TaskList() {
         newTask,
         toggleTodo,
         loading,
-        notificationsAreAllowed,
-        onTaskNotificationsSettingsChange,
     } = useTaskList(user)
 
-    const page =
-        tasks.length && !loading ? (
-            <TransitionGroup className="todo-list" component={'ul'}>
-                {tasks.map(item => (
-                    <CSSTransition
-                        key={item._id}
-                        timeout={500}
-                        classNames="item"
-                    >
-                        <SingleTask
-                            {...item}
-                            onDelete={deleteTask}
-                            onToggle={toggleTodo}
-                            admin={isAdmin}
-                        />
-                    </CSSTransition>
-                ))}
-            </TransitionGroup>
-        ) : loading ? (
-            <Loader />
-        ) : (
-            <h1>No tasks yet</h1>
-        )
-    return user ? (
+    if (loading) {
+        return <Loader />
+    }
+
+    return (
         <>
-            {isAdmin && (
-                <div className={'taskList-menu'}>
-                    <div className={'taskList-menu__switch-container'}>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={notificationsAreAllowed}
-                                        onChange={
-                                            onTaskNotificationsSettingsChange
-                                        }
-                                    />
-                                }
-                                label={
-                                    <Typography style={{ fontWeight: 'bold' }}>
-                                        Email notifications
-                                    </Typography>
-                                }
-                            />
-                        </FormGroup>
-                    </div>
-                </div>
-            )}
-            <div
-                className={'taskList-container scrolled-container animated-box'}
-            >
-                {page}
+            <div className={'taskList-container scrolled-container'}>
+                {tasks.length > 0 ? (
+                    <TransitionGroup className="todo-list" component={'ul'}>
+                        {tasks.map(item => (
+                            <CSSTransition
+                                key={item._id}
+                                timeout={500}
+                                classNames="item"
+                            >
+                                <SingleTask
+                                    {...item}
+                                    onDelete={deleteTask}
+                                    onToggle={toggleTodo}
+                                    admin={isAdmin}
+                                />
+                            </CSSTransition>
+                        ))}
+                    </TransitionGroup>
+                ) : (
+                    <h1>No tasks yet</h1>
+                )}
             </div>
             <div className="socials button-add-container">
                 <Form addTask={newTask} />
@@ -94,8 +62,6 @@ function TaskList() {
                 status={false}
             />
         </>
-    ) : (
-        <LoggedOutPage />
     )
 }
 
