@@ -345,16 +345,14 @@ export default function ListOfClients() {
                 >
                     Add client
                 </Button>
-                {isAdmin && (
-                    <ClientsForm
-                        editedClient={updatingClient}
-                        onAddNewClient={addNewClient}
-                        onEditClientData={editClientData}
-                        handleClose={handleClose}
-                        clearEditedClient={clearEditedClient}
-                        open={open}
-                    />
-                )}
+                <ClientsForm
+                    editedClient={updatingClient}
+                    onAddNewClient={addNewClient}
+                    onEditClientData={editClientData}
+                    handleClose={handleClose}
+                    clearEditedClient={clearEditedClient}
+                    open={open}
+                />
             </div>
             <AlertMessage
                 mainText={alertInfo.mainTitle}
