@@ -155,7 +155,7 @@ app.put(tasksURL + 'edit/:id', isAuthenticated, editTask)
 // clients api
 app.get(clientsURL + 'get', isAuthenticated, getAllClients)
 app.post(clientsURL + 'add', [...adminRules], addNewClient)
-app.put(clientsURL + ':id', [...adminRules], updateClient)
+app.put(clientsURL + ':id', isAuthenticated, updateClient)
 
 // translators api
 app.get(translatorsURL + 'get', isAuthenticated, getAllTranslators)
