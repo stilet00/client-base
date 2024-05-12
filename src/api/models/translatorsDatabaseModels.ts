@@ -33,6 +33,7 @@ export interface PersonalPenalty {
 }
 
 export interface Translator {
+    _id?: string
     name: string
     surname: string
     clients: mongoose.Types.ObjectId[]

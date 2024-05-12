@@ -15,38 +15,36 @@ export default function AlertMessageConfirmation({
     loadingStatus,
 }) {
     return (
-        <div>
-            <StyledModal open={open} onClose={handleClose}>
-                <div
-                    className={
-                        status
-                            ? 'message-container approve-box'
-                            : 'message-container decline-box'
-                    }
+        <StyledModal open={open} onClose={handleClose}>
+            <div
+                className={
+                    status
+                        ? 'message-container approve-box'
+                        : 'message-container decline-box'
+                }
+            >
+                <h2
+                    className={status ? 'green-text' : 'red-text'}
+                    style={{ paddingBottom: 10 }}
                 >
-                    <h2
-                        className={status ? 'green-text' : 'red-text'}
-                        style={{ paddingBottom: 10 }}
+                    {mainText}
+                </h2>
+                {additionalText ? <p>{additionalText}</p> : null}
+                <div className="confirmation-buttons">
+                    <Button variant={'outlined'} onClick={onCancel}>
+                        CANCEL
+                    </Button>
+                    <LoadingButton
+                        onClick={onConfirm}
+                        endIcon={<SendIcon />}
+                        loading={loadingStatus}
+                        loadingPosition="end"
+                        variant="contained"
                     >
-                        {mainText}
-                    </h2>
-                    {additionalText ? <p>{additionalText}</p> : null}
-                    <div className="confirmation-buttons">
-                        <Button variant={'outlined'} onClick={onCancel}>
-                            CANCEL
-                        </Button>
-                        <LoadingButton
-                            onClick={onConfirm}
-                            endIcon={<SendIcon />}
-                            loading={loadingStatus}
-                            loadingPosition="end"
-                            variant="contained"
-                        >
-                            CONFIRM
-                        </LoadingButton>
-                    </div>
+                        CONFIRM
+                    </LoadingButton>
                 </div>
-            </StyledModal>
-        </div>
+            </div>
+        </StyledModal>
     )
 }

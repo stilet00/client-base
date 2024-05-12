@@ -8,7 +8,8 @@
             "args": ["run", "dev"],
             "group": "test",
             "presentation": {
-                "reveal": "always"
+                "reveal": "always",
+                "group": "devServer"
             }
         },
         {
@@ -18,7 +19,8 @@
             "args": ["run", "serve"],
             "group": "test",
             "presentation": {
-                "reveal": "always"
+                "reveal": "always",
+                "group": "devServer"
             }
         },
         {
@@ -37,7 +39,8 @@
             },
             "group": "test",
             "presentation": {
-                "reveal": "always"
+                "reveal": "always",
+                "group": "compileServer"
             }
         },
         {
@@ -56,7 +59,8 @@
             },
             "group": "test",
             "presentation": {
-                "reveal": "always"
+                "reveal": "always",
+                "group": "compileServer"
             }
         },
         {

@@ -58,7 +58,12 @@ export const DEFAULT_CLIENT = {
 }
 
 export class DEFAULT_PENALTY {
-    constructor(translatorId, dateTimeId) {
+    dateTimeId: string
+    amount: number
+    description: string
+    translator: string
+
+    constructor(translatorId: string, dateTimeId: string) {
         this.dateTimeId = dateTimeId
         this.amount = 0
         this.description = ''
@@ -67,7 +72,12 @@ export class DEFAULT_PENALTY {
 }
 
 export class DEFAULT_MONTH_CHART {
-    constructor(year, month) {
+    year: string
+    month: string
+    days: number[]
+    values: number[]
+
+    constructor(year: string, month: number) {
         this.year = year
         this.month = getStringMonthNumber(month)
         this.days = getTotalDaysOfMonth(year, month)
@@ -75,8 +85,30 @@ export class DEFAULT_MONTH_CHART {
     }
 }
 
+type Statistics = {
+    chats: number
+    letters: number
+    dating: number
+    virtualGiftsSvadba: number
+    virtualGiftsDating: number
+    photoAttachments: number
+    phoneCalls: number
+    voiceMessages: number
+    penalties: number
+    comments: string
+}
+
+type Entity = {
+    _id: string
+}
+
 export class EMPTY_BALANCE_DAY {
-    constructor(translatorId, clientId, dateTimeId) {
+    dateTimeId: string
+    client: Entity
+    translator: Entity
+    statistics: Statistics
+
+    constructor(translatorId: string, clientId: string, dateTimeId: string) {
         this.dateTimeId = dateTimeId
         this.client = { _id: clientId }
         this.translator = { _id: translatorId }
@@ -159,10 +191,16 @@ export const FINANCE_AVATARS = {
 }
 
 export const FINANCE_IMAGES = {
-    salary: <MonetizationOnIcon sx={{ fontSize: 40, color: green[400] }} />,
-    paymentToScout: <CreditScoreIcon sx={{ fontSize: 40, color: blue[500] }} />,
-    paymentToBot: <AdUnitsIcon sx={{ fontSize: 40, color: purple[500] }} />,
-    paymentToTranslator: (
+    salary: () => (
+        <MonetizationOnIcon sx={{ fontSize: 40, color: green[400] }} />
+    ),
+    paymentToScout: () => (
+        <CreditScoreIcon sx={{ fontSize: 40, color: blue[500] }} />
+    ),
+    paymentToBot: () => (
+        <AdUnitsIcon sx={{ fontSize: 40, color: purple[500] }} />
+    ),
+    paymentToTranslator: () => (
         <FaceRetouchingNaturalIcon sx={{ fontSize: 40, color: cyan[500] }} />
     ),
 }
@@ -187,7 +225,13 @@ export const BOT_LIST = [
     { id: 'Sender7210Sunrise', label: 'Sender' },
 ]
 
-export const CHARTS_CATEGORIES = [
+type ChartCategory = {
+    name: string
+    value: string | null
+    icon?: JSX.Element
+}
+
+export const CHARTS_CATEGORIES: ChartCategory[] = [
     {
         name: 'All',
         value: null,

@@ -170,10 +170,11 @@ const sendEmailsToTranslators = async (req: Request, res: Response) => {
         res.status(200).send('No translators found')
         return
     }
-    const arrayOfTranslatorNames = await sendEmailTemplateToTranslators(
-        translators
+    const arrayOfTranslatorNames = [...translators].map(
+        translator => translator.email
     )
-    await sendEmailTemplateToAdministrators(translators)
+    sendEmailTemplateToTranslators(translators)
+    sendEmailTemplateToAdministrators(translators)
     res.status(200).send(arrayOfTranslatorNames)
 }
 
