@@ -8,7 +8,6 @@ import {
     getTranslators,
     removeTranslator,
     updateTranslator,
-    sendNotificationEmailsRequest,
     sendLastVirtualGiftDateRequest,
     assignClientToTranslatorRequest,
     getBalanceDaysForTranslatorRequest,
@@ -272,30 +271,6 @@ export const useTranslators = user => {
         deletedTranslator,
     ])
 
-    const sendNotificationEmails = async () => {
-        setMailoutInProgress(true)
-        try {
-            const res = await sendNotificationEmailsRequest()
-            if (res.status === 200) {
-                closeAlertConfirmationNoReload()
-                const messageAboutEmailsReceived = {
-                    text: `Emails have been sent to: ${res.data.join(', ')}`,
-                    status: true,
-                }
-                openAlert(messageAboutEmailsReceived, 20000)
-            }
-        } catch (error) {
-            closeAlertConfirmationNoReload()
-            const erroMessageForShowAlertMessage = {
-                text: error?.response?.data?.error || 'An error occurred',
-                status: false,
-            }
-            openAlert(erroMessageForShowAlertMessage, 5000)
-        } finally {
-            setMailoutInProgress(false)
-        }
-    }
-
     const translatorsFormSubmit = async newTranslator => {
         const { data, status } = await addTranslator(newTranslator)
         if (status === 200) {
@@ -405,7 +380,6 @@ export const useTranslators = user => {
         memoizedFilteredTranslators,
         translatorFilter,
         updateTranslatorEmail,
-        sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
     }

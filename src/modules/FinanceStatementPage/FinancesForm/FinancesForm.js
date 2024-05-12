@@ -19,7 +19,7 @@ import {
     FINANCE_COMMENTS,
     DEFAULT_STATEMENT,
     BOT_LIST,
-} from '../../../constants/constants.js'
+} from '../../../constants/constants'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StyledModal } from '../../../sharedComponents/StyledMaterial/styledMaterialComponents'
 

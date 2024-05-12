@@ -9,19 +9,17 @@ export default function AlertMessage({
     status,
 }) {
     return (
-        <div>
-            <StyledModal open={open} onClose={handleClose}>
-                <div
-                    className={
-                        status
-                            ? 'message-container approve-box'
-                            : 'message-container decline-box'
-                    }
-                >
-                    <h2>{mainText}</h2>
-                    {additionalText ? <p>{additionalText}</p> : null}
-                </div>
-            </StyledModal>
-        </div>
+        <StyledModal open={open} onClose={handleClose}>
+            <div
+                className={
+                    status
+                        ? 'message-container approve-box'
+                        : 'message-container decline-box'
+                }
+            >
+                <h2>{mainText}</h2>
+                {additionalText ? <p>{additionalText}</p> : null}
+            </div>
+        </StyledModal>
     )
 }

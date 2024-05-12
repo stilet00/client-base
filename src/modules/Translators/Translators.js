@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Button from '@mui/material/Button'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -11,22 +10,13 @@ import '../../styles/modules/Translators.css'
 import Loader from '../../sharedComponents/Loader/Loader'
 import AlertMessage from '../../sharedComponents/AlertMessage/AlertMessage'
 import { useTranslators } from './businessLogic'
-import AlertMessageConfirmation from '../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ClientsList from '../Clients/ClientsList/ClientsList'
 import { Checkbox } from '@mui/material'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import useWindowDimensions from '../../sharedHooks/useWindowDimensions'
 import { useAdminStatus } from '../../sharedHooks/useAdminStatus'
 import TotalButtonWithDialog from './ShowTotal/index'
-import styled from 'styled-components'
-
-const StyledButton = styled(Button)`
-    && {
-        color: black;
-    }
-`
+import SendEmails from './SendEmails'
 
 function Translators() {
     const user = useSelector(state => state.auth.user)
@@ -56,7 +46,6 @@ function Translators() {
         memoizedFilteredTranslators,
         translatorFilter,
         updateTranslatorEmail,
-        sendNotificationEmails,
         mailoutInProgress,
         dollarToUahRate,
         updateBalanceDayIsLoading,
@@ -90,20 +79,7 @@ function Translators() {
                                     <TranslatorsForm
                                         onFormSubmit={translatorsFormSubmit}
                                     />
-                                    <StyledButton
-                                        aria-describedby={`send-emails`}
-                                        onClick={openAlertConfirmation}
-                                        fullWidth={screenIsSmall}
-                                        disabled={!isAdmin}
-                                        className="translators-container__menu-button"
-                                        startIcon={
-                                            <FontAwesomeIcon
-                                                icon={faPaperPlane}
-                                            />
-                                        }
-                                    >
-                                        Send emails
-                                    </StyledButton>
+                                    <SendEmails />
                                 </>
                             )}
                             <TotalButtonWithDialog
@@ -144,18 +120,7 @@ function Translators() {
                             <TranslatorsForm
                                 onFormSubmit={translatorsFormSubmit}
                             />
-                            <StyledButton
-                                aria-describedby={`send-emails`}
-                                onClick={openAlertConfirmation}
-                                fullWidth={screenIsSmall}
-                                disabled={!isAdmin}
-                                className="translators-container__menu-button"
-                                startIcon={
-                                    <FontAwesomeIcon icon={faPaperPlane} />
-                                }
-                            >
-                                Send emails
-                            </StyledButton>
+                            <SendEmails />
                         </>
                     )}
                     <TotalButtonWithDialog
@@ -222,21 +187,6 @@ function Translators() {
                 handleClose={closeAlert}
                 status={message.status}
             />
-            {alertStatusConfirmation && (
-                <AlertMessageConfirmation
-                    mainText={'Please confirm mailout'}
-                    additionalText={
-                        "Continue, if you've finished all work in translator's statistics"
-                    }
-                    open={alertStatusConfirmation}
-                    handleClose={closeAlertConfirmationNoReload}
-                    handleOpen={openAlertConfirmation}
-                    status={false}
-                    onCancel={closeAlertConfirmationNoReload}
-                    onConfirm={sendNotificationEmails}
-                    loadingStatus={mailoutInProgress}
-                />
-            )}
         </div>
     )
 }
