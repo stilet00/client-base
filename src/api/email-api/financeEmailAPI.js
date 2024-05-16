@@ -206,8 +206,11 @@ const sendEmailTemplateToTranslators = async translatorsCollection => {
         index,
         translatorInfoForEmailLetter,
     ] of arrayOfTranslatorsInfoForEmailLetter.entries()) {
-        const emailHtmlTemplateForTranslators =
-            getTranslatorsEmailTemplateHTMLCode(translatorInfoForEmailLetter)
+        const emailHtmlTemplateForTranslators = console.log(
+            translatorInfoForEmailLetter
+        )
+        console.log(translatorInfoForEmailLetter)
+        getTranslatorsEmailTemplateHTMLCode(translatorInfoForEmailLetter)
         const imagesPathArrayForEmail = imageNamesArrayForEmail.map(
             imageName => new imageAttachmentInformation(imageName)
         )

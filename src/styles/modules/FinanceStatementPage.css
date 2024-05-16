@@ -87,6 +87,8 @@
 .payment-form {
   padding: 0;
   border: transparent;
+  max-height: 700px;
+  overflow: scroll;
   background: rgb(193, 210, 214);
 }
 @media (max-width: 690px) {

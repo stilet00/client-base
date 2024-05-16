@@ -58,7 +58,7 @@ export default function SinglePayment({
                         />
                     }
                 >
-                    {FINANCE_IMAGES[financesImage]}
+                    {FINANCE_IMAGES[financesImage]()}
                 </Badge>
             </div>
             <div className="list-item__info">
