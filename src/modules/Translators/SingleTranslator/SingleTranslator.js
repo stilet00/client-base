@@ -52,6 +52,7 @@ function SingleTranslator({
     name,
     surname,
     clients,
+    card,
     _id,
     dragOverHandler,
     onBoardDrop,
@@ -109,6 +110,9 @@ function SingleTranslator({
     )
 
     let progressPage = null
+    const formattedCardNumber = card
+        ? card.replace(/(.{4})/g, '$1 ').trim()
+        : ''
 
     if (!!translatorMonthTotalSum && !!translatorPreviousMonthTotalSum) {
         progressPage =
@@ -286,6 +290,20 @@ function SingleTranslator({
                                         </Typography>
                                         {admin && (
                                             <>
+                                                {card && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        align="left"
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'space-between',
+                                                        }}
+                                                    >
+                                                        {`salary card: `}
+                                                        <b>{`${formattedCardNumber} ₴`}</b>
+                                                    </Typography>
+                                                )}
                                                 <Typography
                                                     variant="body2"
                                                     align="left"
