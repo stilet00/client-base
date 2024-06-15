@@ -1,22 +1,20 @@
-const moment = require('moment')
+const moment = require("moment");
 
-const getNotificationsEmailTemplateHTMLCode = tasks => {
-    const tasksToHTMLCode = tasks.map(
-        task =>
-            `<tr>
-                <td colspan="2" class="task_label"><span>${
-                    task.taskName
-                }</span></td>
+const getNotificationsEmailTemplateHTMLCode = (tasks) => {
+	const tasksToHTMLCode = tasks.map(
+		(task) =>
+			`<tr>
+                <td colspan="2" class="task_label"><span>${task.taskName}</span></td>
             </tr>
             <tr>
                 <td colspan="2" class="task_created-date"><span>Created ${moment(
-                    task.created,
-                    'MMMM Do YYYY, h:mm:ss'
-                ).fromNow()}</span></td>
+									task.created,
+									"MMMM Do YYYY, h:mm:ss",
+								).fromNow()}</span></td>
             </tr>
-            `
-    )
-    const emailTemplate = `<!DOCTYPE html>
+            `,
+	);
+	const emailTemplate = `<!DOCTYPE html>
                                     <html lang="en">
                                         <head>
                                             <meta charset="UTF-8" />
@@ -95,20 +93,22 @@ const getNotificationsEmailTemplateHTMLCode = tasks => {
                                                 <thead>
                                                     <tr class="titlesInfo">
                                                         <td class="title-info" colspan="2">You have <span class="tasks-amount">${
-                                                            tasks.length
-                                                        }</span> uncompleted ${
-        tasks.length === 1 ? 'task' : 'tasks'
-    }</td>
+																													tasks.length
+																												}</span> uncompleted ${
+																													tasks.length === 1
+																														? "task"
+																														: "tasks"
+																												}</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    ${tasksToHTMLCode.join('')}
+                                                    ${tasksToHTMLCode.join("")}
                                                 </tbody>
                                             </table>
                                         </body>
                                     </html>
-                                    `
-    return emailTemplate
-}
+                                    `;
+	return emailTemplate;
+};
 
-module.exports = { getNotificationsEmailTemplateHTMLCode }
+module.exports = { getNotificationsEmailTemplateHTMLCode };

@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const AdminSchema = new mongoose.Schema({
-    registeredEmail: String,
-})
+	registeredEmail: String,
+});
 
-module.exports = { AdminSchema }
+module.exports = { AdminSchema };

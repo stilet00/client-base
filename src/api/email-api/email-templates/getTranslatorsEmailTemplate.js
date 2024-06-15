@@ -1,28 +1,24 @@
-const { getMomentUTC } = require('../../utils/utils')
+const { getMomentUTC } = require("../../utils/utils");
 
-const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
-    const arrayOfDetailedBalanceFields =
-        translatorInfoForEmailLetter.detailedStatistic.map(
-            (statisticsInfoForClient, index) => {
-                const amountsForStatisticCategories =
-                    statisticsInfoForClient.statistics.map(
-                        statisticsCategory => {
-                            return `<td class="container__tbody_amount">${Object.values(
-                                statisticsCategory
-                            ).join('')}</td>`
-                        }
-                    )
-                return `<tr class="${
-                    index % 2 ? 'container__tbody_secondTR' : ''
-                }">
+const getTranslatorsEmailTemplateHTMLCode = (translatorInfoForEmailLetter) => {
+	const arrayOfDetailedBalanceFields =
+		translatorInfoForEmailLetter.detailedStatistic.map(
+			(statisticsInfoForClient, index) => {
+				const amountsForStatisticCategories =
+					statisticsInfoForClient.statistics.map((statisticsCategory) => {
+						return `<td class="container__tbody_amount">${Object.values(
+							statisticsCategory,
+						).join("")}</td>`;
+					});
+				return `<tr class="${index % 2 ? "container__tbody_secondTR" : ""}">
                     <td class="container__tbody_client">
                         ${statisticsInfoForClient.name}
                     </td>
-                    ${amountsForStatisticCategories.join('')}
-                </tr> `
-            }
-        )
-    const emailTemplate = `<!DOCTYPE html>
+                    ${amountsForStatisticCategories.join("")}
+                </tr> `;
+			},
+		);
+	const emailTemplate = `<!DOCTYPE html>
                             <html lang="en">
                                 <head>
                                     <meta charset="UTF-8" />
@@ -129,10 +125,10 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                         <td class="container__tableheader-greetingsinfo"  colspan="10">
                                                                 <h2>
                                                                     Hello ${
-                                                                        translatorInfoForEmailLetter.label.split(
-                                                                            ' '
-                                                                        )[0]
-                                                                    }, here is your balance:
+																																			translatorInfoForEmailLetter.label.split(
+																																				" ",
+																																			)[0]
+																																		}, here is your balance:
                                                                 </h2>
                                                         </td>
                                                     </tr>
@@ -171,40 +167,44 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                                         </td>
                                                     </tr>
                                                     ${arrayOfDetailedBalanceFields.join(
-                                                        ''
-                                                    )}
+																											"",
+																										)}
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <td class="container__tfoot-td" colspan="3">
                                                             Yesterday: ${
-                                                                translatorInfoForEmailLetter.yesterdayTotal
-                                                            } <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
+																															translatorInfoForEmailLetter.yesterdayTotal
+																														} <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="4">
                                                             ${getMomentUTC().format(
-                                                                'MMMM'
-                                                            )}: ${
-        translatorInfoForEmailLetter.currentMonthTotal
-    } <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
-        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
-            ? 'green'
-            : 'red'
-    }">${
-        translatorInfoForEmailLetter.monthProgressPercent.progressIsPositive
-            ? '+'
-            : '-'
-    }${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
+																															"MMMM",
+																														)}: ${
+																															translatorInfoForEmailLetter.currentMonthTotal
+																														} <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
+																															translatorInfoForEmailLetter
+																																.monthProgressPercent
+																																.progressIsPositive
+																																? "green"
+																																: "red"
+																														}">${
+																															translatorInfoForEmailLetter
+																																.monthProgressPercent
+																																.progressIsPositive
+																																? "+"
+																																: "-"
+																														}${translatorInfoForEmailLetter.monthProgressPercent.value}%</span>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="3">
                                                             Penalties: <span>🛑 </span><span style="color:${
-                                                                translatorInfoForEmailLetter.curMonthPenalties >
-                                                                0
-                                                                    ? 'red'
-                                                                    : 'green'
-                                                            }">${
-        translatorInfoForEmailLetter.curMonthPenalties
-    }$</span>
+																															translatorInfoForEmailLetter.curMonthPenalties >
+																															0
+																																? "red"
+																																: "green"
+																														}">${
+																															translatorInfoForEmailLetter.curMonthPenalties
+																														}$</span>
                                                         </td>
                                                     </tr>
                                                 </tfoot>
@@ -217,8 +217,8 @@ const getTranslatorsEmailTemplateHTMLCode = translatorInfoForEmailLetter => {
                                     </table>
                                 </body>
                             </html>
-                            `
-    return emailTemplate
-}
+                            `;
+	return emailTemplate;
+};
 
-module.exports = getTranslatorsEmailTemplateHTMLCode
+module.exports = getTranslatorsEmailTemplateHTMLCode;

@@ -1,29 +1,29 @@
 const getAdministratorsEmailTemplateHTMLCode = ({
-    arrayOfTranslatorsNamesAndMonthSums,
-    yesterdayTotalSum,
+	arrayOfTranslatorsNamesAndMonthSums,
+	yesterdayTotalSum,
 }) => {
-    const lengthOfHalfNamesAndMonthsSumsArray = Math.round(
-        arrayOfTranslatorsNamesAndMonthSums.length / 2
-    )
-    const firstRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
-        0,
-        lengthOfHalfNamesAndMonthsSumsArray
-    )
-    const secondRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
-        lengthOfHalfNamesAndMonthsSumsArray
-    )
-    const translatorsSumToHtmlCode = firstRowOfSumsAndNames.map(
-        (translatorStrings, index) =>
-            `<tr class="translator-info-container">
+	const lengthOfHalfNamesAndMonthsSumsArray = Math.round(
+		arrayOfTranslatorsNamesAndMonthSums.length / 2,
+	);
+	const firstRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
+		0,
+		lengthOfHalfNamesAndMonthsSumsArray,
+	);
+	const secondRowOfSumsAndNames = arrayOfTranslatorsNamesAndMonthSums.slice(
+		lengthOfHalfNamesAndMonthsSumsArray,
+	);
+	const translatorsSumToHtmlCode = firstRowOfSumsAndNames.map(
+		(translatorStrings, index) =>
+			`<tr class="translator-info-container">
                 <td><span>${translatorStrings}</span></td>
                 <td><span>${
-                    secondRowOfSumsAndNames[index]
-                        ? secondRowOfSumsAndNames[index]
-                        : ''
-                }</span></td>
-            </tr>`
-    )
-    const emailTemplate = `<!DOCTYPE html>
+									secondRowOfSumsAndNames[index]
+										? secondRowOfSumsAndNames[index]
+										: ""
+								}</span></td>
+            </tr>`,
+	);
+	const emailTemplate = `<!DOCTYPE html>
                                     <html lang="en">
                                         <head>
                                             <meta charset="UTF-8" />
@@ -126,20 +126,20 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                                 <thead>
                                                     <tr class="titlesInfo">
                                                         <td class="title-info" colspan="2">Total: ${yesterdayTotalSum.toFixed(
-                                                            2
-                                                        )} $</td>
+																													2,
+																												)} $</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     ${translatorsSumToHtmlCode.join(
-                                                        ''
-                                                    )}
+																											"",
+																										)}
                                                 </tbody>
                                             </table>
                                         </body>
                                     </html>
-                                    `
-    return emailTemplate
-}
+                                    `;
+	return emailTemplate;
+};
 
-module.exports = getAdministratorsEmailTemplateHTMLCode
+module.exports = getAdministratorsEmailTemplateHTMLCode;

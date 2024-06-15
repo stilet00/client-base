@@ -100,6 +100,7 @@
 	},
 	"devDependencies": {
 		"@babel/plugin-transform-private-property-in-object": "^7.24.7",
+		"@biomejs/biome": "1.8.1",
 		"@types/react": "^17.0.80",
 		"@types/react-dom": "^18.2.25",
 		"@types/react-router-dom": "^5.3.3",
