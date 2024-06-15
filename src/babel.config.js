@@ -1,5 +1,3 @@
-module.exports = function (api) {
-    return {
-        plugins: ['macros'],
-    }
-}
+module.exports = (api) => ({
+	plugins: ["macros", "@babel/plugin-transform-private-property-in-object"],
+});

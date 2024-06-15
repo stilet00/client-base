@@ -1,20 +1,20 @@
-import axios from 'axios'
-import { rootURL } from '../rootURL'
+import requestWithAuth from "../superAgentConfig";
+import { rootURL } from "../rootURL";
 
-const balanceURL = rootURL + 'balance/'
+const balanceURL = `${rootURL}balance/`;
 
 export function getBalance() {
-    return axios.get(balanceURL + 'get/')
+	return requestWithAuth("get", `${balanceURL}get/`);
 }
 
 export function addMonth(date) {
-    return axios.post(balanceURL + 'add/', date)
+	return requestWithAuth("post", `${balanceURL}add/`).send(date);
 }
 
 export function removeYear(id) {
-    return axios.delete(balanceURL + id)
+	return requestWithAuth("delete", `${balanceURL}${id}`);
 }
 
 export function changeChartValue(chart) {
-    return axios.put(balanceURL + chart._id, chart)
+	return requestWithAuth("put", `${balanceURL}${chart._id}`).send(chart);
 }

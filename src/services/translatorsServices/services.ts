@@ -1,176 +1,139 @@
-import axios from 'axios'
-import { rootURL } from '../rootURL'
-import { getConfigForAxiosAuthenticatedRequest } from '../utils'
-import {
-    BalanceDay,
-    PersonalPenalty,
-    Translator,
-} from '../../api/models/translatorsDatabaseModels'
+import requestWithAuth from "../superAgentConfig";
+import { rootURL } from "../rootURL";
+import type {
+	BalanceDay,
+	PersonalPenalty,
+	Translator,
+} from "../../api/models/translatorsDatabaseModels";
 
-const translatorsURL = rootURL + 'translators/'
-const balanceDayURL = rootURL + 'balance-day/'
-const personalPenaltyURL = rootURL + 'personal-penalty/'
+const translatorsURL = rootURL + "translators/";
+const balanceDayURL = rootURL + "balance-day/";
+const personalPenaltyURL = rootURL + "personal-penalty/";
 
-export function getTranslators({ searchQuery = '', shouldGetClients = false }) {
-    let queryParams = ''
-    if (searchQuery) {
-        queryParams +=
-            (queryParams ? '&' : '?') +
-            `searchQuery=${encodeURIComponent(searchQuery)}`
-    }
-    if (shouldGetClients) {
-        queryParams += (queryParams ? '&' : '?') + 'shouldGetClients=true'
-    }
-    return axios.get(
-        translatorsURL + 'get/' + queryParams,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+export function getTranslators({ searchQuery = "", shouldGetClients = false }) {
+	let queryParams = "";
+	if (searchQuery) {
+		queryParams +=
+			(queryParams ? "&" : "?") +
+			`searchQuery=${encodeURIComponent(searchQuery)}`;
+	}
+	if (shouldGetClients) {
+		queryParams += (queryParams ? "&" : "?") + "shouldGetClients=true";
+	}
+	return requestWithAuth("get", translatorsURL + "get/" + queryParams);
 }
 
 export function addTranslator(translator: Translator) {
-    return axios.post(
-        translatorsURL + 'add/',
-        translator,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("post", translatorsURL + "add/").send(translator);
 }
 
 export function removeTranslator(id: string) {
-    return axios.delete(
-        translatorsURL + id,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("delete", translatorsURL + id);
 }
 
 export function updateTranslator(translator: Translator) {
-    return axios.put(
-        translatorsURL + translator._id,
-        translator,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("put", translatorsURL + translator._id).send(
+		translator,
+	);
 }
 
 export function assignClientToTranslatorRequest({
-    clientId,
-    translatorId,
+	clientId,
+	translatorId,
 }: {
-    clientId: string
-    translatorId: string
+	clientId: string;
+	translatorId: string;
 }) {
-    return axios.put(
-        translatorsURL + 'assign-client',
-        {
-            clientId,
-            translatorId,
-        },
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("put", translatorsURL + "assign-client").send({
+		clientId,
+		translatorId,
+	});
 }
 
 export function sendNotificationEmailsRequest() {
-    return axios.get(
-        translatorsURL + 'send-emails',
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("get", translatorsURL + "send-emails");
 }
 
 export function sendLastVirtualGiftDateRequest(id: string) {
-    return axios.get(
-        translatorsURL + 'last-gift/' + id,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("get", translatorsURL + "last-gift/" + id);
 }
 
 export function getBalanceDay({
-    translatorId,
-    clientId,
-    dateTimeId,
+	translatorId,
+	clientId,
+	dateTimeId,
 }: {
-    translatorId: string
-    clientId: string
-    dateTimeId: string
+	translatorId: string;
+	clientId: string;
+	dateTimeId: string;
 }) {
-    return axios.get(
-        `${balanceDayURL}?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${encodeURIComponent(
-            dateTimeId
-        )}`,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth(
+		"get",
+		`${balanceDayURL}?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${encodeURIComponent(
+			dateTimeId,
+		)}`,
+	);
 }
 
 export function createBalanceDay({
-    newBalanceDay,
+	newBalanceDay,
 }: {
-    newBalanceDay: BalanceDay
+	newBalanceDay: BalanceDay;
 }) {
-    return axios.post(
-        balanceDayURL + `create`,
-        {
-            ...newBalanceDay,
-        },
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("post", balanceDayURL + "create").send({
+		...newBalanceDay,
+	});
 }
 
 export function updateBalanceDay({
-    balanceDayToSubmit,
+	balanceDayToSubmit,
 }: {
-    balanceDayToSubmit: BalanceDay
+	balanceDayToSubmit: BalanceDay;
 }) {
-    return axios.put(
-        balanceDayURL + `update`,
-        {
-            ...balanceDayToSubmit,
-        },
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("put", balanceDayURL + "update").send({
+		...balanceDayToSubmit,
+	});
 }
 
 export function getBalanceDaysForTranslatorRequest({
-    dateTimeFilter = '',
-    translatorId = '',
+	dateTimeFilter = "",
+	translatorId = "",
 }) {
-    return axios.get(
-        `${balanceDayURL}translators?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth(
+		"get",
+		`${balanceDayURL}translators?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+	);
 }
 
 export function getPenaltiesForTranslatorRequest({
-    dateTimeFilter = '',
-    translatorId = '',
+	dateTimeFilter = "",
+	translatorId = "",
 }) {
-    return axios.get(
-        `${personalPenaltyURL}get?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth(
+		"get",
+		`${personalPenaltyURL}get?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
+	);
 }
 
 export async function createPersonalPenalty({
-    personalPenaltyData,
+	personalPenaltyData,
 }: {
-    personalPenaltyData: PersonalPenalty
+	personalPenaltyData: PersonalPenalty;
 }) {
-    return axios.post(
-        `${personalPenaltyURL}create`,
-        personalPenaltyData,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("post", `${personalPenaltyURL}create`).send(
+		personalPenaltyData,
+	);
 }
 
 export async function toggleClientSuspendedRequest({
-    clientId,
-    translatorId,
+	clientId,
+	translatorId,
 }: {
-    clientId: string
-    translatorId: string
+	clientId: string;
+	translatorId: string;
 }) {
-    return axios.put(
-        `${translatorsURL}suspend-client`,
-        {
-            clientId,
-            translatorId,
-        },
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("put", `${translatorsURL}suspend-client`).send({
+		clientId,
+		translatorId,
+	});
 }

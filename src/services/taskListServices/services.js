@@ -1,29 +1,20 @@
-import axios from 'axios'
-import { rootURL } from '../rootURL'
-import { getConfigForAxiosAuthenticatedRequest } from '../utils'
+import requestWithAuth from "../superAgentConfig";
+import { rootURL } from "../rootURL";
 
-const tasksURL = rootURL + 'tasks/'
+const tasksURL = `${rootURL}tasks/`;
 
 export function getTasks() {
-    return axios.get(tasksURL + 'get/', getConfigForAxiosAuthenticatedRequest())
+	return requestWithAuth("get", `${tasksURL}get/`);
 }
 
 export function addTask(task) {
-    return axios.post(
-        tasksURL + 'add/',
-        task,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("post", `${tasksURL}add/`).send(task);
 }
 
 export function removeTask(id) {
-    return axios.delete(tasksURL + id, getConfigForAxiosAuthenticatedRequest())
+	return requestWithAuth("delete", `${tasksURL}${id}`);
 }
 
 export function changeTodoStatus(todo) {
-    return axios.put(
-        tasksURL + `edit/${todo._id}`,
-        todo,
-        getConfigForAxiosAuthenticatedRequest()
-    )
+	return requestWithAuth("put", `${tasksURL}edit/${todo._id}`).send(todo);
 }

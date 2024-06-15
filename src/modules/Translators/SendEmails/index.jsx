@@ -3,29 +3,6 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
 };
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -66,7 +43,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importStar(require("react"));
+var react_1 = require("react");
 var react_redux_1 = require("react-redux");
 var styled_components_1 = __importDefault(require("styled-components"));
 var Button_1 = __importDefault(require("@mui/material/Button"));
@@ -83,23 +60,23 @@ var styledMaterialComponents_1 = require("../../../sharedComponents/StyledMateri
 function SendEmailDialog(_a) {
     var mainText = _a.mainText, additionalText = _a.additionalText, handleClose = _a.handleClose, open = _a.open, status = _a.status, onConfirm = _a.onConfirm, onCancel = _a.onCancel, loadingStatus = _a.loadingStatus, isDisabled = _a.isDisabled;
     return (<styledMaterialComponents_1.StyledModal open={open} onClose={handleClose}>
-            <div className={status
-            ? 'message-container approve-box'
-            : 'message-container decline-box'}>
-                <h2 className={status ? 'green-text' : 'red-text'} style={{ paddingBottom: 10 }}>
-                    {mainText}
-                </h2>
-                {additionalText ? (<p style={{ paddingBottom: 10 }}>{additionalText}</p>) : null}
-                <div className="confirmation-buttons">
-                    <Button_1.default variant={'outlined'} onClick={onCancel}>
-                        CANCEL
-                    </Button_1.default>
-                    <LoadingButton_1.default disabled={isDisabled} onClick={onConfirm} endIcon={<Send_1.default />} loading={loadingStatus} loadingPosition="end" variant="contained">
-                        CONFIRM
-                    </LoadingButton_1.default>
-                </div>
-            </div>
-        </styledMaterialComponents_1.StyledModal>);
+			<div className={status
+            ? "message-container approve-box"
+            : "message-container decline-box"}>
+				<h2 className={status ? "green-text" : "red-text"} style={{ paddingBottom: 10 }}>
+					{mainText}
+				</h2>
+				{additionalText ? (<p style={{ paddingBottom: 10 }}>{additionalText}</p>) : null}
+				<div className="confirmation-buttons">
+					<Button_1.default variant={"outlined"} onClick={onCancel}>
+						CANCEL
+					</Button_1.default>
+					<LoadingButton_1.default disabled={isDisabled} onClick={onConfirm} endIcon={<Send_1.default />} loading={loadingStatus} loadingPosition="end" variant="contained">
+						CONFIRM
+					</LoadingButton_1.default>
+				</div>
+			</div>
+		</styledMaterialComponents_1.StyledModal>);
 }
 var StyledButton = (0, styled_components_1.default)(Button_1.default)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    && {\n        color: black;\n    }\n"], ["\n    && {\n        color: black;\n    }\n"])));
 var defaultMessage = "Continue, if you've finished all work in translator's statistics";
@@ -125,12 +102,12 @@ var SendEmails = function () {
                 case 2:
                     res = _c.sent();
                     if (res.status === 200) {
-                        setDisplayMessage("Emails have been sent to: ".concat(res.data.join(', ')));
+                        setDisplayMessage("Emails have been sent to: ".concat(res.body.join(", ")));
                     }
                     return [3 /*break*/, 5];
                 case 3:
                     error_1 = _c.sent();
-                    setDisplayMessage(((_b = (_a = error_1 === null || error_1 === void 0 ? void 0 : error_1.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.error) || 'An error occurred');
+                    setDisplayMessage(((_b = (_a = error_1 === null || error_1 === void 0 ? void 0 : error_1.response) === null || _a === void 0 ? void 0 : _a.body) === null || _b === void 0 ? void 0 : _b.error) || "An error occurred");
                     return [3 /*break*/, 5];
                 case 4:
                     setMailoutInProgress(false);
@@ -145,11 +122,11 @@ var SendEmails = function () {
         });
     }); };
     return (<>
-            <StyledButton aria-describedby={"send-emails"} onClick={openAlertConfirmation} fullWidth={screenIsSmall} disabled={!isAdmin} className="translators-container__menu-button" startIcon={<react_fontawesome_1.FontAwesomeIcon icon={free_solid_svg_icons_1.faPaperPlane}/>}>
-                Send emails
-            </StyledButton>
-            <SendEmailDialog isDisabled={isDisabled} mainText={'Please confirm mailout'} additionalText={displayMessage} open={alertStatusConfirmation} handleClose={closeAlertConfirmationNoReload} status={false} onCancel={closeAlertConfirmationNoReload} onConfirm={sendNotificationEmails} loadingStatus={mailoutInProgress}/>
-        </>);
+			<StyledButton aria-describedby={"send-emails"} onClick={openAlertConfirmation} fullWidth={screenIsSmall} disabled={!isAdmin} className="translators-container__menu-button" startIcon={<react_fontawesome_1.FontAwesomeIcon icon={free_solid_svg_icons_1.faPaperPlane}/>}>
+				Send emails
+			</StyledButton>
+			<SendEmailDialog isDisabled={isDisabled} mainText={"Please confirm mailout"} additionalText={displayMessage} open={alertStatusConfirmation} handleClose={closeAlertConfirmationNoReload} status={false} onCancel={closeAlertConfirmationNoReload} onConfirm={sendNotificationEmails} loadingStatus={mailoutInProgress}/>
+		</>);
 };
 exports.default = SendEmails;
 var templateObject_1;
