@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
-let express = require("express");
-let bodyParser = require("body-parser");
+const express = require("express");
+const bodyParser = require("body-parser");
 const {
 	isAuthenticated,
 	adminRules,
@@ -58,7 +58,9 @@ const {
 const rateLimit = require("express-rate-limit");
 
 const PORT = process.env.PORT || 80;
-let app = express();
+const x = 1;
+const y = 2;
+const app = express();
 
 const limiter = rateLimit({
 	windowMs: 2000,
@@ -70,7 +72,7 @@ app.use(express.static(__dirname + "/build"));
 app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-app.use(function (request: Request, response: Response, next: NextFunction) {
+app.use((request: Request, response: Response, next: NextFunction) => {
 	response.setHeader("Access-Control-Allow-Origin", "*");
 	response.setHeader(
 		"Access-Control-Allow-Headers",
@@ -84,49 +86,49 @@ app.use(limiter);
 //routes
 app.get(
 	rootURL + "chart/",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "chart?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "overview/?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "clients/true?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "clients/?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "tasks/?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "translators/?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );
 app.get(
 	rootURL + "finances/?",
-	function (request: Request, response: Response, next: NextFunction) {
+	(request: Request, response: Response, next: NextFunction) => {
 		response.sendFile(__dirname + "/build/index.html");
 	},
 );

@@ -76,7 +76,7 @@ const getBalanceDaysForTranslators = async (req, res) => {
 	try {
 		const { translatorId, dateTimeFilter } = req.query;
 		const BalanceDay = await getCollections().collectionBalanceDays;
-		let query = {};
+		const query = {};
 		if (translatorId) {
 			query.translator = translatorId;
 		}
@@ -105,9 +105,10 @@ const getBalanceDaysForTranslators = async (req, res) => {
 
 const getAllBalanceDays = async (req, res) => {
 	try {
-		const { yearFilter } = req.query;
+		const { yearFilter, monthFilter } = req.query;
 		const BalanceDay = await getCollections().collectionBalanceDays;
-		let query = {};
+		const query = {};
+
 		if (yearFilter) {
 			const momentFromYearFilter = moment.utc(yearFilter, "YYYY");
 			const startOfYearFilter = momentFromYearFilter
@@ -118,6 +119,27 @@ const getAllBalanceDays = async (req, res) => {
 				$gte: startOfYearFilter,
 				$lte: endOfYearFilter,
 			};
+		}
+
+		if (monthFilter) {
+			const [startMonth, endMonth] = monthFilter.split("-").map(Number);
+			const year = yearFilter
+				? moment.utc(yearFilter, "YYYY").year()
+				: moment.utc().year();
+			const startOfMonthFilter = moment
+				.utc({ year, month: startMonth - 1 })
+				.startOf("month")
+				.toISOString();
+			const endOfMonthFilter = moment
+				.utc({ year, month: (endMonth || startMonth) - 1 })
+				.endOf("month")
+				.toISOString();
+
+			if (!query.dateTimeId) {
+				query.dateTimeId = {};
+			}
+			query.dateTimeId.$gte = startOfMonthFilter;
+			query.dateTimeId.$lte = endOfMonthFilter;
 		}
 		const balanceDays = await BalanceDay.find(query).exec();
 		res.send(balanceDays);

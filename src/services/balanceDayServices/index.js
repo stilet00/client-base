@@ -11,8 +11,14 @@ export const getBalanceTotalForCurrentMonthRequest = async () => {
 	return requestWithAuth("get", `${balanceDayURL}current-month-total`);
 };
 
-export function getBalanceDaysForChartsRequest({ yearFilter = "" }) {
-	return requestWithAuth("get", `${balanceDayURL}all?yearFilter=${yearFilter}`);
+export function getBalanceDaysForChartsRequest({
+	yearFilter = "",
+	monthFilter = "",
+}) {
+	return requestWithAuth(
+		"get",
+		`${balanceDayURL}all?yearFilter=${yearFilter}&monthFilter=${monthFilter}`,
+	);
 }
 
 export function getBalanceDaysForClientsRequest() {

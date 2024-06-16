@@ -17,6 +17,8 @@ import { useQuery } from "react-query";
 import { getBalanceDaysForChartsRequest } from "services/balanceDayServices/index";
 import {
 	currentYear,
+	currentMonth,
+	previousMonth,
 	DEFAULT_MONTH_CHART,
 	previousDay,
 } from "../../constants/constants";
@@ -43,6 +45,7 @@ export const useChartsContainer = (user) => {
 	const fetchBalanceDays = async () => {
 		const response = await getBalanceDaysForChartsRequest({
 			yearFilter: selectedYear,
+			monthFilter: `${previousMonth}-${currentMonth}`,
 		});
 		if (response.status !== 200) {
 			throw new Error(MESSAGES.somethingWrongWithBalanceDays);
@@ -58,7 +61,6 @@ export const useChartsContainer = (user) => {
 		enabled: !!user,
 		onSuccess: (data) => {
 			const yearChartsArray = [];
-			console.log(data);
 			for (let monthCount = 1; monthCount < 13; monthCount++) {
 				const defaultMonth = new DEFAULT_MONTH_CHART(selectedYear, monthCount);
 
