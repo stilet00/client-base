@@ -58,8 +58,6 @@ const {
 const rateLimit = require("express-rate-limit");
 
 const PORT = process.env.PORT || 80;
-const x = 1;
-const y = 2;
 const app = express();
 
 const limiter = rateLimit({
