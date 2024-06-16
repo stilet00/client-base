@@ -187,7 +187,7 @@ export default function ListOfClients() {
 		() => getClientsRequest({ shouldFillTranslators: true }),
 		{
 			onSuccess: (response) => {
-				setClients(response?.data);
+				setClients(response?.body);
 			},
 			onError: (error) => {
 				setAlertInfo({
@@ -206,7 +206,7 @@ export default function ListOfClients() {
 		getBalanceDaysForClientsRequest,
 		{
 			onSuccess: (response) => {
-				setBalanceDays(response?.data);
+				setBalanceDays(response?.body);
 			},
 			onError: (error) => {
 				setAlertInfo({
@@ -225,7 +225,7 @@ export default function ListOfClients() {
 		getPaymentsRequest,
 		{
 			onSuccess: (response) => {
-				setPaymentsList(response?.data);
+				setPaymentsList(response?.body);
 			},
 			onError: (error) => {
 				const message = error.message;
@@ -254,7 +254,7 @@ export default function ListOfClients() {
 				shouldFillTranslators: true,
 			});
 			if (responseDataWithClients.status === 200) {
-				setClients(responseDataWithClients.data);
+				setClients(responseDataWithClients.body);
 			} else {
 				setAlertInfo({
 					...alertInfo,
@@ -318,7 +318,7 @@ export default function ListOfClients() {
 					}
 				})
 				.catch((err) => {
-					const message = err?.response?.data?.error || "An error occurred";
+					const message = err?.response?.body?.error || "An error occurred";
 					setAlertInfo({
 						...alertInfo,
 						mainTitle: message,
@@ -336,7 +336,7 @@ export default function ListOfClients() {
 			if (responseFromAddedClient.status === 200) {
 				setClients([
 					...clients,
-					{ ...newClient, _id: responseFromAddedClient.data },
+					{ ...newClient, _id: responseFromAddedClient.body },
 				]);
 				setAlertInfo({
 					...alertInfo,

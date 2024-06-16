@@ -140,7 +140,9 @@ var __importDefault =
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAdminStatus = void 0;
 var react_1 = require("react");
-var axios_1 = __importDefault(require("axios"));
+var superAgentConfig_1 = __importDefault(
+	require("../services/superAgentConfig"),
+);
 var rootURL_1 = require("../services/rootURL");
 function checkAdminStatus(user) {
 	return __awaiter(this, void 0, void 0, function () {
@@ -151,13 +153,16 @@ function checkAdminStatus(user) {
 					_a.trys.push([0, 2, , 3]);
 					return [
 						4 /*yield*/,
-						axios_1.default.post(rootURL_1.rootURL + "isAdmin", {
+						(0, superAgentConfig_1.default)(
+							"post",
+							"".concat(rootURL_1.rootURL, "isAdmin"),
+						).send({
 							email: user.email,
 						}),
 					];
 				case 1:
 					response = _a.sent();
-					return [2 /*return*/, response.data];
+					return [2 /*return*/, response.body];
 				case 2:
 					error_1 = _a.sent();
 					console.error("Error checking admin role:", error_1);

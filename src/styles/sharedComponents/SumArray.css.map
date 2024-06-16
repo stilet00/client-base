@@ -1,1 +1,1 @@
-{"version":3,"sources":["SumArray.sass","SumArray.css"],"names":[],"mappings":"AAAA;EACE,kBAAA;EACA,WAAA;EACA,aAAA;EACA,YAAA;EACA,mBAAA;EACA,8BAAA;ACCF;;ADCA;EACE,kBAAA;EACA,aAAA;EACA,WAAA;EACA,UAAA;EACA,iBAAA;EACA,gBAAA;EACA,uBAAA;ACEF;;ADAA;EACE,aAAA;ACGF;;ADDA;EACE,uBAAA;EACA,kBAAA;EACA,yBAAA;EACA,iBAAA;EACA,kBAAA;ACIF","file":"SumArray.css"}
+{"version":3,"sourceRoot":"","sources":["SumArray.sass"],"names":[],"mappings":"AAAA;EACE;EACA;EACA;EACA;EACA;EACA;;;AAEF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEF;EACE;;;AAEF;EACE;EACA;EACA;EACA;EACA","file":"SumArray.css"}

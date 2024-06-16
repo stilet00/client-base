@@ -34,7 +34,7 @@ export default function FinancesForm({ handleNewPayment }) {
 		getClientsRequest({ noImageParams: true }).then((res) => {
 			if (res.status === 200) {
 				setReceivers(
-					res.data.map((client) => {
+					res.body.map((client) => {
 						return {
 							id: client._id,
 							label: `${client.name} ${client.surname}`,
@@ -45,7 +45,7 @@ export default function FinancesForm({ handleNewPayment }) {
 		});
 		getTranslators({}).then((res) => {
 			if (res.status === 200) {
-				const notSuspendedTranslators = res.data.filter(
+				const notSuspendedTranslators = res.body.filter(
 					(translator) => !translator.suspended.status,
 				);
 				setTranslators(

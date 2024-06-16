@@ -37,7 +37,7 @@ export default function FinanceStatementPage() {
 				.then((res) => {
 					if (res.status === 200) {
 						setLoading(false);
-						setPaymentsList(res.data);
+						setPaymentsList(res.body);
 					}
 				})
 				.catch((err) => {
@@ -74,7 +74,7 @@ export default function FinanceStatementPage() {
 		try {
 			const res = await addPaymentRequest(newPayment);
 			if (res.status === 200) {
-				const newPaymentWithId = { ...newPayment, _id: res.data };
+				const newPaymentWithId = { ...newPayment, _id: res.body };
 				setPaymentsList([...paymentsList, newPaymentWithId]);
 				setAlertInfo({
 					...alertInfo,
@@ -85,7 +85,7 @@ export default function FinanceStatementPage() {
 				return true;
 			}
 		} catch (err) {
-			const message = err?.response?.data?.error || "An error occurred";
+			const message = err?.response?.body?.error || "An error occurred";
 			setLoading(false);
 			setAlertInfo({
 				...alertInfo,
@@ -110,7 +110,7 @@ export default function FinanceStatementPage() {
 				}
 			})
 			.catch((err) => {
-				const message = err?.response?.data?.error || "An error occurred";
+				const message = err?.response?.body?.error || "An error occurred";
 				setLoading(false);
 				setAlertInfo({
 					...alertInfo,
@@ -129,9 +129,9 @@ export default function FinanceStatementPage() {
 				}),
 			),
 		];
-		let sortedArrayWithUniqueDates = arrayWithUniqueDates.sort().reverse();
+		const sortedArrayWithUniqueDates = arrayWithUniqueDates.sort().reverse();
 		const arrayWithGroupedDates = sortedArrayWithUniqueDates.map((data) => {
-			let groupedByDatesArray = [];
+			const groupedByDatesArray = [];
 			statements.forEach((statement) => {
 				if (getMomentUTC(statement.date).format("YYYY-MM-DD") === data) {
 					groupedByDatesArray.unshift(statement);
@@ -148,6 +148,7 @@ export default function FinanceStatementPage() {
 
 	const arrayOfStatementsGroupedByDate =
 		getStatementGroupedByDates(paymentsList);
+
 	return (
 		<>
 			{!loading && (

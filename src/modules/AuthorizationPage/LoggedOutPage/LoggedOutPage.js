@@ -16,7 +16,6 @@ const Animate = styled.div`
 
 function LoggedOutPage() {
 	const [time, setTime] = useState(3);
-
 	const navigate = useNavigate();
 
 	function reduceTime() {
@@ -26,7 +25,6 @@ function LoggedOutPage() {
 			navigate("/");
 		}
 	}
-
 	useEffect(() => {
 		const timeCount = setTimeout(reduceTime, 1000);
 		return () => {

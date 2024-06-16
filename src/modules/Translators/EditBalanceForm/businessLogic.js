@@ -46,9 +46,9 @@ export const useBalanceForm = ({ clients, translatorId }) => {
 			}),
 		{
 			onSuccess: (response) => {
-				const balanceDayExists = !!response?.data;
+				const balanceDayExists = !!response?.body;
 				if (balanceDayExists) {
-					setCurrentBalanceDay(response.data);
+					setCurrentBalanceDay(response.body);
 				}
 				if (!balanceDayExists) {
 					const emptyBalanceDay = new EMPTY_BALANCE_DAY(
@@ -78,7 +78,7 @@ export const useBalanceForm = ({ clients, translatorId }) => {
 		},
 		{
 			onSuccess: (response) => {
-				setCurrentBalanceDay(response.data);
+				setCurrentBalanceDay(response.body);
 				queryClient.invalidateQueries(
 					`balanceDaysForTranslator${translatorId}`,
 				);

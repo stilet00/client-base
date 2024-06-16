@@ -54,20 +54,20 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
 		{
 			enabled: !!selectedDate,
 			onSuccess: (res) => {
-				setSumForDay(calculateStatisticsForDay(res.data));
+				setSumForDay(calculateStatisticsForDay(res.body));
 			},
 		},
 	);
 
 	const calculateStatisticsForDay = (data) => {
-		const totalSum = data.reduce((total, item) => {
+		const totalSum = data?.reduce((total, item) => {
 			const sum = Object.values(item.statistics).reduce(
 				(acc, value) => acc + (typeof value === "number" ? value : 0),
 				0,
 			);
 			return total + sum;
 		}, 0);
-		return totalSum.toFixed(2);
+		return totalSum?.toFixed(2);
 	};
 
 	return (
@@ -98,12 +98,12 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
 							</div>
 							<Typography align={"left"}>
 								{`Total by ${selectedDate.format("D MMMM")}: `}{" "}
-								<b>{sumForDay}</b>
+								<b>{`${sumForDay} $`}</b>
 							</Typography>
 							<Typography align={"left"}>
 								{`Total by ${getMomentUTC().format("D MMMM")}: `}{" "}
 								<b>
-									<b>{`${data?.data} $`}</b>
+									<b>{`${data?.text} $`}</b>
 								</b>
 							</Typography>
 						</>

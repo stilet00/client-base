@@ -1,28 +1,20 @@
-import axios from "axios";
+import requestWithAuth from "../superAgentConfig";
 import { rootURL } from "../rootURL";
-import { getConfigForAxiosAuthenticatedRequest } from "../utils";
 
-const financeStatementsURL = rootURL + "statements/";
+const financeStatementsURL = `${rootURL}statements/`;
 
 export function getPaymentsRequest({ yearFilter = "" }) {
-	let requestURL = financeStatementsURL + "get/";
+	let requestURL = `${financeStatementsURL}get/`;
 	if (yearFilter) {
-		requestURL += "?year=" + yearFilter;
+		requestURL += `?year=${yearFilter}`;
 	}
-	return axios.get(requestURL, getConfigForAxiosAuthenticatedRequest());
+	return requestWithAuth("get", requestURL);
 }
 
 export async function addPaymentRequest(payment) {
-	return axios.post(
-		financeStatementsURL + "add/",
-		payment,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("post", `${financeStatementsURL}add/`).send(payment);
 }
 
 export function removePaymentRequest(id) {
-	return axios.delete(
-		financeStatementsURL + id,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("delete", `${financeStatementsURL}${id}`);
 }

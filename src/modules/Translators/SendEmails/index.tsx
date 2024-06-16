@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
@@ -98,10 +99,10 @@ const SendEmails: React.FC = () => {
 		try {
 			const res = await sendNotificationEmailsRequest();
 			if (res.status === 200) {
-				setDisplayMessage(`Emails have been sent to: ${res.data.join(", ")}`);
+				setDisplayMessage(`Emails have been sent to: ${res.body.join(", ")}`);
 			}
 		} catch (error: any) {
-			setDisplayMessage(error?.response?.data?.error || "An error occurred");
+			setDisplayMessage(error?.response?.body?.error || "An error occurred");
 		} finally {
 			setMailoutInProgress(false);
 			setIsDisabled(true);
