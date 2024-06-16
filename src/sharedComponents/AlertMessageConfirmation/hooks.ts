@@ -1,26 +1,26 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react";
 
 interface AlertConfirmation {
-    alertStatusConfirmation: boolean
-    openAlertConfirmation: () => void
-    closeAlertConfirmationNoReload: () => void
+	alertStatusConfirmation: boolean;
+	openAlertConfirmation: () => void;
+	closeAlertConfirmationNoReload: () => void;
 }
 
 export function useAlertConfirmation(): AlertConfirmation {
-    const [alertStatusConfirmation, setAlertStatusConfirmation] =
-        useState<boolean>(false)
+	const [alertStatusConfirmation, setAlertStatusConfirmation] =
+		useState<boolean>(false);
 
-    const openAlertConfirmation = useCallback(() => {
-        setAlertStatusConfirmation(true)
-    }, [])
+	const openAlertConfirmation = useCallback(() => {
+		setAlertStatusConfirmation(true);
+	}, []);
 
-    const closeAlertConfirmationNoReload = useCallback(() => {
-        setAlertStatusConfirmation(false)
-    }, [])
+	const closeAlertConfirmationNoReload = useCallback(() => {
+		setAlertStatusConfirmation(false);
+	}, []);
 
-    return {
-        alertStatusConfirmation,
-        openAlertConfirmation,
-        closeAlertConfirmationNoReload,
-    }
+	return {
+		alertStatusConfirmation,
+		openAlertConfirmation,
+		closeAlertConfirmationNoReload,
+	};
 }

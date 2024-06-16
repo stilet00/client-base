@@ -1,24 +1,24 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react";
 
 export function useAlert() {
-    const [message, setMessage] = useState('')
-    const [alertOpen, setAlertOpen] = useState(false)
+	const [message, setMessage] = useState("");
+	const [alertOpen, setAlertOpen] = useState(false);
 
-    const closeAlert = useCallback(() => {
-        setAlertOpen(false)
-    }, [])
+	const closeAlert = useCallback(() => {
+		setAlertOpen(false);
+	}, []);
 
-    const openAlert = useCallback((alertMessage, duration = 1000) => {
-        setMessage(alertMessage)
-        setAlertOpen(true)
-        setTimeout(closeAlert, duration)
-    }, [])
+	const openAlert = useCallback((alertMessage, duration = 1000) => {
+		setMessage(alertMessage);
+		setAlertOpen(true);
+		setTimeout(closeAlert, duration);
+	}, []);
 
-    return {
-        alertOpen,
-        openAlert,
-        closeAlert,
-        message,
-        setMessage,
-    }
+	return {
+		alertOpen,
+		openAlert,
+		closeAlert,
+		message,
+		setMessage,
+	};
 }
