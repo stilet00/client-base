@@ -1,6 +1,6 @@
 {
 	"name": "Sunrise agency - client base",
-	"version": "5.2.1",
+	"version": "5.3.0",
 	"engines": {
 		"node": "18.17.1",
 		"npm": "10.2.5"
@@ -81,10 +81,17 @@
 		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
-		"extends": ["react-app", "react-app/jest"]
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
 	},
 	"browserslist": {
-		"production": [">0.2%", "not dead", "not op_mini all"],
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
 		"development": [
 			"last 1 chrome version",
 			"last 1 firefox version",
