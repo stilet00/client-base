@@ -43,13 +43,13 @@ function ChartsContainer() {
 	return (
 		<>
 			{/* <div className={'socials button-add-container top-button'}>
-        <AccessTimeIcon />
-        <YearSelect
-            arrayOfYears={arrayOfYears}
-            year={selectedYear}
-            handleChange={handleChange}
-        />
-    </div> */}
+				<AccessTimeIcon />
+				<YearSelect
+					arrayOfYears={arrayOfYears}
+					year={selectedYear}
+						handleChange={handleChange}
+					/>
+				</div> */}
 			<div
 				style={{
 					width: "60%",

@@ -48,8 +48,6 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
 		},
 	);
 
-	console.log(data);
-
 	const { data: balanceDayData } = useQuery(
 		["balanceDay", selectedDate],
 		() => getBalanceDayForSelectedDate(selectedDate.format("YYYY-MM-DD")),

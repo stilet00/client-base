@@ -93,6 +93,7 @@
 		]
 	},
 	"devDependencies": {
+		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
 		"@babel/plugin-transform-private-property-in-object": "^7.24.7",
 		"@biomejs/biome": "1.8.1",
 		"@types/react": "^17.0.80",

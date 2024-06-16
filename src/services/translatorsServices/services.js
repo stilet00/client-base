@@ -1,29 +1,30 @@
+"use strict";
 var __assign =
 	(this && this.__assign) ||
 	function () {
 		__assign =
 			Object.assign ||
-			((t) => {
+			function (t) {
 				for (var s, i = 1, n = arguments.length; i < n; i++) {
 					s = arguments[i];
 					for (var p in s)
 						if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
 				}
 				return t;
-			});
+			};
 		return __assign.apply(this, arguments);
 	};
 var __awaiter =
 	(this && this.__awaiter) ||
-	((thisArg, _arguments, P, generator) => {
+	function (thisArg, _arguments, P, generator) {
 		function adopt(value) {
 			return value instanceof P
 				? value
-				: new P((resolve) => {
+				: new P(function (resolve) {
 						resolve(value);
 					});
 		}
-		return new (P || (P = Promise))((resolve, reject) => {
+		return new (P || (P = Promise))(function (resolve, reject) {
 			function fulfilled(value) {
 				try {
 					step(generator.next(value));
@@ -45,13 +46,13 @@ var __awaiter =
 			}
 			step((generator = generator.apply(thisArg, _arguments || [])).next());
 		});
-	});
+	};
 var __generator =
 	(this && this.__generator) ||
-	((thisArg, body) => {
+	function (thisArg, body) {
 		var _ = {
 				label: 0,
-				sent: () => {
+				sent: function () {
 					if (t[0] & 1) throw t[1];
 					return t[1];
 				},
@@ -71,7 +72,9 @@ var __generator =
 			g
 		);
 		function verb(n) {
-			return (v) => step([n, v]);
+			return function (v) {
+				return step([n, v]);
+			};
 		}
 		function step(op) {
 			if (f) throw new TypeError("Generator is already executing.");
@@ -143,10 +146,12 @@ var __generator =
 			if (op[0] & 5) throw op[1];
 			return { value: op[0] ? op[1] : void 0, done: true };
 		}
-	});
+	};
 var __importDefault =
 	(this && this.__importDefault) ||
-	((mod) => (mod && mod.__esModule ? mod : { default: mod }));
+	function (mod) {
+		return mod && mod.__esModule ? mod : { default: mod };
+	};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleClientSuspendedRequest =
 	exports.createPersonalPenalty =
@@ -285,32 +290,36 @@ function getPenaltiesForTranslatorRequest(_a) {
 }
 exports.getPenaltiesForTranslatorRequest = getPenaltiesForTranslatorRequest;
 function createPersonalPenalty(_a) {
-	return __awaiter(this, arguments, void 0, function (_b) {
-		var personalPenaltyData = _b.personalPenaltyData;
-		return __generator(this, (_c) => [
-			2 /*return*/,
-			(0, superAgentConfig_1.default)(
-				"post",
-				"".concat(personalPenaltyURL, "create"),
-			).send(personalPenaltyData),
-		]);
+	var personalPenaltyData = _a.personalPenaltyData;
+	return __awaiter(this, void 0, void 0, function () {
+		return __generator(this, function (_b) {
+			return [
+				2 /*return*/,
+				(0, superAgentConfig_1.default)(
+					"post",
+					"".concat(personalPenaltyURL, "create"),
+				).send(personalPenaltyData),
+			];
+		});
 	});
 }
 exports.createPersonalPenalty = createPersonalPenalty;
 function toggleClientSuspendedRequest(_a) {
-	return __awaiter(this, arguments, void 0, function (_b) {
-		var clientId = _b.clientId,
-			translatorId = _b.translatorId;
-		return __generator(this, (_c) => [
-			2 /*return*/,
-			(0, superAgentConfig_1.default)(
-				"put",
-				"".concat(translatorsURL, "suspend-client"),
-			).send({
-				clientId: clientId,
-				translatorId: translatorId,
-			}),
-		]);
+	var clientId = _a.clientId,
+		translatorId = _a.translatorId;
+	return __awaiter(this, void 0, void 0, function () {
+		return __generator(this, function (_b) {
+			return [
+				2 /*return*/,
+				(0, superAgentConfig_1.default)(
+					"put",
+					"".concat(translatorsURL, "suspend-client"),
+				).send({
+					clientId: clientId,
+					translatorId: translatorId,
+				}),
+			];
+		});
 	});
 }
 exports.toggleClientSuspendedRequest = toggleClientSuspendedRequest;

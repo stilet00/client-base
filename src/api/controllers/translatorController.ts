@@ -1,7 +1,7 @@
-import { Translator } from "../models/translatorsDatabaseModels";
-import { Request, Response } from "express";
-import { MongoError, DeleteResult, ObjectId } from "mongodb";
-import mongoose, { Query } from "mongoose";
+import type { Request, Response } from "express";
+import { type DeleteResult, type MongoError, ObjectId } from "mongodb";
+import mongoose, { type Query } from "mongoose";
+import type { Translator } from "../models/translatorsDatabaseModels";
 
 const { getCollections } = require("../database/collections");
 

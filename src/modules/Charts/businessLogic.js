@@ -58,6 +58,7 @@ export const useChartsContainer = (user) => {
 		enabled: !!user,
 		onSuccess: (data) => {
 			const yearChartsArray = [];
+			console.log(data);
 			for (let monthCount = 1; monthCount < 13; monthCount++) {
 				const defaultMonth = new DEFAULT_MONTH_CHART(selectedYear, monthCount);
 
