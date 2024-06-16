@@ -1,17 +1,20 @@
-import { localStorageTokenKey } from '../constants/constants'
-export const getUserTokenFromLocalStorage = () =>
-    window.localStorage.getItem(localStorageTokenKey)
-
-export const getConfigForAxiosAuthenticatedRequest = () => {
-    const userToken = getUserTokenFromLocalStorage()
-    const axiosConfig = {
-        headers: {
-            Authorization: `Bearer: ${userToken}`,
-        },
-    }
-    return axiosConfig
-}
-
-export const getURLStringWithoutFirstSlash = URLString => {
-    return URLString.slice(1)
-}
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getConfigForAxiosAuthenticatedRequest =
+	exports.getUserTokenFromLocalStorage = void 0;
+var constants_1 = require("../constants/constants");
+var getUserTokenFromLocalStorage = function () {
+	return window.localStorage.getItem(constants_1.localStorageTokenKey);
+};
+exports.getUserTokenFromLocalStorage = getUserTokenFromLocalStorage;
+var getConfigForAxiosAuthenticatedRequest = function () {
+	var userToken = (0, exports.getUserTokenFromLocalStorage)();
+	var axiosConfig = {
+		headers: {
+			Authorization: "Bearer: ".concat(userToken),
+		},
+	};
+	return axiosConfig;
+};
+exports.getConfigForAxiosAuthenticatedRequest =
+	getConfigForAxiosAuthenticatedRequest;

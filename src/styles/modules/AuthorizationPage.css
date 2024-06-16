@@ -5,6 +5,7 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .authorization-container {
@@ -25,4 +26,6 @@ form {
 .password-container {
   width: 90%;
   max-width: 420.5px;
-}/*# sourceMappingURL=AuthorizationPage.css.map */
+}
+
+/*# sourceMappingURL=AuthorizationPage.css.map */

@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 
 const SignalShapedLoaderOuterContainer = styled.div`
     position: relative;
@@ -47,15 +47,15 @@ const SignalShapedLoaderOuterContainer = styled.div`
             opacity: 0;
         }
     }
-`
+`;
 
 const SignalShapedLoader = () => {
-    return (
-        <SignalShapedLoaderOuterContainer>
-            <div></div>
-            <div></div>``
-        </SignalShapedLoaderOuterContainer>
-    )
-}
+	return (
+		<SignalShapedLoaderOuterContainer>
+			<div></div>
+			<div></div>``
+		</SignalShapedLoaderOuterContainer>
+	);
+};
 
-export default SignalShapedLoader
+export default SignalShapedLoader;

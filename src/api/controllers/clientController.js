@@ -1,181 +1,161 @@
-const { getCollections } = require('../database/collections')
-let ObjectId = require('mongodb').ObjectID
-const sharp = require('sharp')
+const mongoose = require("mongoose");
 
-const clientImageConverter = async image => {
-    try {
-        const format = 'jpeg'
-        const resizedImageBuffer = await sharp(
-            Buffer.from(image.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-        )
-            .resize(300, 300, { fit: 'inside', withoutEnlargement: true })
-            .toFormat('jpeg')
-            .toBuffer()
+const { getCollections } = require("../database/collections");
+const sharp = require("sharp");
 
-        const resizedImageBase64 = `data:image/${format};base64,${resizedImageBuffer.toString(
-            'base64'
-        )}`
-        return resizedImageBase64
-    } catch (err) {
-        return image
-    }
-}
-const getAllClients = (request, response) => {
-    const noImageRequest = !!request.query?.params
-    if (noImageRequest) {
-        getCollections()
-            .collectionClients.aggregate([
-                { $project: { image: 0 } },
-                { $sort: { name: 1 } },
-            ])
-            .toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-    } else {
-        getCollections()
-            .collectionClients.find()
-            .sort({ name: 1 })
-            .toArray((err, docs) => {
-                if (err) {
-                    console.log(err)
-                    return response.sendStatus(500)
-                }
-                response.send(docs)
-            })
-    }
-}
+const clientImageConverter = async (image) => {
+	try {
+		const format = "jpeg";
+		const resizedImageBuffer = await sharp(
+			Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+		)
+			.resize(300, 300, { fit: "inside", withoutEnlargement: true })
+			.toFormat("jpeg")
+			.toBuffer();
+
+		const resizedImageBase64 = `data:image/${format};base64,${resizedImageBuffer.toString(
+			"base64",
+		)}`;
+		return resizedImageBase64;
+	} catch (err) {
+		return image;
+	}
+};
+const getAllClients = async (request, response) => {
+	try {
+		const noImageRequest = !!request.query?.noImageParams;
+		const shouldFillTranslators = !!request.query?.shouldFillTranslators;
+		const searchQuery = request.query?.searchQuery || "";
+		let queryCondition = {};
+		if (searchQuery) {
+			queryCondition = {
+				$or: [
+					{ name: { $regex: searchQuery, $options: "i" } },
+					{ surname: { $regex: searchQuery, $options: "i" } },
+				],
+			};
+		}
+
+		let query = getCollections().collectionClients.find(queryCondition);
+
+		if (noImageRequest) {
+			query = query.select("-image");
+		}
+		if (shouldFillTranslators) {
+			query = query.populate("translators");
+		}
+
+		const clients = await query.exec();
+		response.send(clients);
+	} catch (error) {
+		console.error(error);
+		response.sendStatus(500);
+	}
+};
 
 const addNewClient = async function (request, response, next) {
-    try {
-        if (!request.body) {
-            return response.status(400).send('Ошибка при загрузке клиентки')
-        }
+	try {
+		if (!request.body) {
+			return response.status(400).send("Ошибка при загрузке клиентки");
+		}
 
-        const { image } = request.body
-        const resizedImage = await clientImageConverter(image)
+		let { image } = request.body;
+		if (!!image) {
+			image = await clientImageConverter(image);
+		}
 
-        const newClientDataWithResizedImage = {
-            ...request.body,
-            image: resizedImage,
-        }
+		const newClientDataWithResizedImage = {
+			...request.body,
+			image: image ?? "",
+		};
 
-        const result = await getCollections().collectionClients.insertOne(
-            newClientDataWithResizedImage
-        )
+		const Client = await getCollections().collectionClients;
+		const newClient = new Client(newClientDataWithResizedImage);
+		const validationError = newClient.validateSync();
+		if (validationError) {
+			console.error("Validation failed:", validationError);
+			return response.status(400).send("Validation failed");
+		}
+		const result = await newClient.save();
 
-        response.status(201).send(result?.insertedId)
-    } catch (error) {
-        console.error(error)
-        response.status(500).send('Internal Server Error')
-    }
-}
-
-const editArrayOfClientsInTranslators = async info => {
-    const { _id, name, surname } = info
-    const translatorsWithEditedClient = await getCollections()
-        .collectionTranslators.find({
-            clients: {
-                $elemMatch: {
-                    _id: _id,
-                },
-            },
-        })
-        .toArray()
-    if (translatorsWithEditedClient.length > 0) {
-        for (let translator of translatorsWithEditedClient) {
-            const arrayWithChangedClientsNames = translator.clients.map(
-                client => {
-                    if (client._id === _id) {
-                        const clientWithChangedData = {
-                            ...client,
-                            name: name,
-                            surname: surname,
-                        }
-                        return clientWithChangedData
-                    } else {
-                        return client
-                    }
-                }
-            )
-            changeClientNameInTranslatorsDataBase(
-                translator._id,
-                arrayWithChangedClientsNames
-            )
-        }
-    }
-}
-
-const changeClientNameInTranslatorsDataBase = async (
-    id,
-    arrayWithChangedClientsNames
-) => {
-    await getCollections().collectionTranslators.updateOne(
-        { _id: ObjectId(id) },
-        {
-            $set: {
-                clients: arrayWithChangedClientsNames,
-            },
-        }
-    )
-}
+		response.status(200).send(result._id);
+	} catch (error) {
+		console.error(error);
+		response.status(500).send("Failed to add client");
+	}
+};
 
 const updateClient = async (request, response) => {
-    try {
-        if (!request.body) {
-            return response.sendStatus(400)
-        }
-        const {
-            image,
-            name,
-            surname,
-            bankAccount,
-            instagramLink,
-            suspended,
-            svadba,
-            dating,
-        } = request.body
+	try {
+		if (!request.body) {
+			return response.sendStatus(400);
+		}
+		const {
+			image,
+			name,
+			surname,
+			bankAccount,
+			instagramLink,
+			suspended,
+			svadba,
+			dating,
+		} = request.body;
 
-        const resizedImage = await clientImageConverter(image)
+		const resizedImage = await clientImageConverter(image);
 
-        const result = await getCollections().collectionClients.updateOne(
-            { _id: ObjectId(request.params.id) },
-            {
-                $set: {
-                    name,
-                    surname,
-                    bankAccount,
-                    instagramLink,
-                    suspended,
-                    image: resizedImage,
-                    svadba: {
-                        login: svadba.login,
-                        password: svadba.password,
-                    },
-                    dating: {
-                        login: dating.login,
-                        password: dating.password,
-                    },
-                },
-            }
-        )
-
-        if (result.matchedCount === 0) {
-            return response.sendStatus(404)
-        }
-
-        const message = 'клиентка сохранена'
-        response.send(message)
-
-        editArrayOfClientsInTranslators(request.body)
-    } catch (error) {
-        console.error(error)
-        response.sendStatus(500)
-    }
-}
+		const Client = await getCollections().collectionClients;
+		const newClient = new Client({
+			name,
+			surname,
+			bankAccount,
+			instagramLink,
+			suspended,
+			image: resizedImage,
+			svadba: {
+				login: svadba.login,
+				password: svadba.password,
+			},
+			dating: {
+				login: dating.login,
+				password: dating.password,
+			},
+		});
+		const validationError = newClient.validateSync();
+		if (validationError) {
+			console.error("Validation failed:", validationError);
+			return response.status(400).send("Validation failed");
+		}
+		const result = await Client.updateOne(
+			{ _id: new mongoose.Types.ObjectId(request.params.id) },
+			{
+				$set: {
+					name,
+					surname,
+					bankAccount,
+					instagramLink,
+					suspended,
+					image: resizedImage,
+					svadba: {
+						login: svadba.login,
+						password: svadba.password,
+					},
+					dating: {
+						login: dating.login,
+						password: dating.password,
+					},
+				},
+			},
+		);
+		if (!result.acknowledged) {
+			return response.sendStatus(404);
+		}
+		const message = `Клиента ${name} ${surname} успешно обновлена`;
+		response.send(message);
+	} catch (error) {
+		console.error(error);
+		response.sendStatus(500);
+	}
+};
 
 // const deleteClient = (request, response) => {
 //         collectionClients.deleteOne(
@@ -189,4 +169,4 @@ const updateClient = async (request, response) => {
 //         )
 //     }
 
-module.exports = { getAllClients, addNewClient, updateClient }
+module.exports = { getAllClients, addNewClient, updateClient };
