@@ -22,8 +22,7 @@
   padding: 10px;
   border: 2px solid rgb(255, 255, 255);
   border-radius: 10px;
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   overflow-x: no;
   z-index: 3;
 }
@@ -111,4 +110,6 @@
 .item-exit-active {
   opacity: 0;
   transition: opacity 500ms ease-in;
-}/*# sourceMappingURL=TaskList.css.map */
+}
+
+/*# sourceMappingURL=TaskList.css.map */

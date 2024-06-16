@@ -165,14 +165,11 @@ main
 .App-link
   color: #61dafb
 
-.animated-box
-  animation: appear 0.5s linear
-
 @keyframes appear
   0%
-    transform: scale(0.5)
+    opacity: 0
   100%
-    transform: scale(1)
+    opacity: 1
 
 @keyframes animate-in-view-rotate
   0%
@@ -232,18 +229,14 @@ main
 
 @supports  (animation-timeline: view())
   #on-scroll__slide-animation-list > li
-    view-timeline-name: --slide-animation
-    view-timeline-axis: block
     animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards
     animation-range: entry, exit
     animation-duration: 1ms
-    animation-timeline: --slide-animation
+    animation-timeline: view() !important
 
   @media (max-width: 650px)
     #on-scroll__rotate-animation-list > div
-      view-timeline-name: --rotate-animation
-      view-timeline-axis: block
       animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards
       animation-range: entry, exit
       animation-duration: 1ms
-      animation-timeline: --rotate-animation
+      animation-timeline: view() !important

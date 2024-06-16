@@ -30,8 +30,7 @@ body {
   padding: 10px;
   border: 2px solid rgb(255, 255, 255);
   border-radius: 10px;
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   overflow-x: no;
   z-index: 3;
 }
@@ -180,16 +179,12 @@ main {
   color: #61dafb;
 }
 
-.animated-box {
-  animation: appear 0.5s linear;
-}
-
 @keyframes appear {
   0% {
-    transform: scale(0.5);
+    opacity: 0;
   }
   100% {
-    transform: scale(1);
+    opacity: 1;
   }
 }
 @keyframes animate-in-view-rotate {
@@ -258,21 +253,19 @@ main {
 }
 @supports (animation-timeline: view()) {
   #on-scroll__slide-animation-list > li {
-    view-timeline-name: --slide-animation;
-    view-timeline-axis: block;
     animation: animate-in-view-slide-small linear forwards, animate-out-view-slide-small linear forwards;
     animation-range: entry, exit;
     animation-duration: 1ms;
-    animation-timeline: --slide-animation;
+    animation-timeline: view() !important;
   }
   @media (max-width: 650px) {
     #on-scroll__rotate-animation-list > div {
-      view-timeline-name: --rotate-animation;
-      view-timeline-axis: block;
       animation: animate-in-view-rotate linear forwards, animate-out-view-rotate linear forwards;
       animation-range: entry, exit;
       animation-duration: 1ms;
-      animation-timeline: --rotate-animation;
+      animation-timeline: view() !important;
     }
   }
-}/*# sourceMappingURL=App.css.map */
+}
+
+/*# sourceMappingURL=App.css.map */

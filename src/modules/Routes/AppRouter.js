@@ -1,30 +1,30 @@
-import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
-import PrivateRoute from '../PrivateRoute/PrivateRoute'
-import { privateRoutes, publicRoutes } from './routes' // Import your array of route configurations
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import { privateRoutes, publicRoutes } from "./routes";
 
 const AppRouter = () => {
-    return (
-        <Switch>
-            {privateRoutes.map(route => (
-                <PrivateRoute
-                    key={route.path}
-                    component={route.component}
-                    path={route.path}
-                    exact={route.exact}
-                />
-            ))}
-            {publicRoutes.map(route => (
-                <Route
-                    key={route.path}
-                    component={route.component}
-                    path={route.path}
-                    exact={route.exact}
-                />
-            ))}
-            <Redirect from="/*" to="/" />
-        </Switch>
-    )
-}
+	return (
+		<Routes>
+			{privateRoutes.map((route) => (
+				<Route
+					key={route.path}
+					path={route.path}
+					element={
+						<PrivateRoute component={route.component} path={route.path} />
+					}
+				/>
+			))}
+			{publicRoutes.map((route) => (
+				<Route
+					key={route.path}
+					path={route.path}
+					element={<route.component />}
+				/>
+			))}
+			<Route path="/*" element={<Navigate to="/" />} />
+		</Routes>
+	);
+};
 
-export default AppRouter
+export default AppRouter;

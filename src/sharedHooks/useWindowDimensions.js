@@ -1,26 +1,30 @@
-import { useState, useEffect } from 'react'
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var react_1 = require("react");
 function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window
-    return {
-        width,
-        height,
-    }
+	var width = window.innerWidth,
+		height = window.innerHeight;
+	return {
+		width: width,
+		height: height,
+	};
 }
-
-export default function useWindowDimensions() {
-    const [windowDimensions, setWindowDimensions] = useState(
-        getWindowDimensions()
-    )
-
-    useEffect(() => {
-        function handleResize() {
-            setWindowDimensions(getWindowDimensions())
-        }
-
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    return { windowDimensions, screenIsSmall: windowDimensions.width < 1000 }
+function useWindowDimensions() {
+	var _a = (0, react_1.useState)(getWindowDimensions()),
+		windowDimensions = _a[0],
+		setWindowDimensions = _a[1];
+	(0, react_1.useEffect)(function () {
+		function handleResize() {
+			setWindowDimensions(getWindowDimensions());
+		}
+		window.addEventListener("resize", handleResize);
+		return function () {
+			return window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+	return {
+		windowDimensions: windowDimensions,
+		screenIsSmall: windowDimensions.width < 1000,
+	};
 }
+exports.default = useWindowDimensions;

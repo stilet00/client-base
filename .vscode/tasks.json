@@ -1,33 +1,82 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "npm run dev",
-            "type": "shell",
-            "command": "npm",
-            "args": ["run", "dev"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "npm run serve",
-            "type": "shell",
-            "command": "npm",
-            "args": ["run", "serve"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Run Both WebClient & Server",
-            "dependsOn": ["npm run dev", "npm run serve"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Front End",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "dev"],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"group": "devServer"
+			}
+		},
+		{
+			"label": "Back End",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "serve"],
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"group": "devServer"
+			}
+		},
+		{
+			"label": "Sass Watcher",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "sass:watch"],
+			"isBackground": true,
+			"problemMatcher": {
+				"base": "$tsc-watch",
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "Compiling...",
+					"endsPattern": "Compiled successfully."
+				}
+			},
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"group": "compileServer"
+			}
+		},
+		{
+			"label": "TypeScript Watcher",
+			"type": "shell",
+			"command": "npx",
+			"args": ["tsc", "--watch"],
+			"isBackground": true,
+			"problemMatcher": {
+				"base": "$tsc-watch",
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "Compiling...",
+					"endsPattern": "Compiled successfully."
+				}
+			},
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"group": "compileServer"
+			}
+		},
+		{
+			"label": "Run Both WebClient & Server",
+			"command": "echo",
+			"dependsOrder": "parallel",
+			"dependsOn": [
+				"Front End",
+				"Back End",
+				"Sass Watcher",
+				"TypeScript Watcher"
+			],
+			"group": "test",
+			"presentation": {
+				"reveal": "always"
+			}
+		}
+	]
 }
