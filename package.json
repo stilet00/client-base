@@ -79,7 +79,7 @@
 		"dev": "react-scripts start",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"prepare": "lefthook install"
+		"prepare": "if [ -d .git ]; then lefthook install; fi"
 	},
 	"eslintConfig": {
 		"extends": ["react-app", "react-app/jest"]
