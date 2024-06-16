@@ -67,6 +67,7 @@ function ClientsList({
 	function onSearchChange(e) {
 		setSearch(e.target.value.toLowerCase());
 	}
+
 	return (
 		<>
 			<Button
@@ -95,7 +96,7 @@ function ClientsList({
 							placeholder="Search..."
 							value={search}
 							onChange={onSearchChange}
-						></SearchTextField>
+						/>
 					</h3>
 					{clientsAreLoading && <Loader />}
 					{!clientsAreLoading && (

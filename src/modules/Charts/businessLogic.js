@@ -26,15 +26,11 @@ import MESSAGES from "constants/messages";
 
 export const useChartsContainer = (user) => {
 	const [months, setMonths] = useState([]);
-
 	const [selectedYear, setSelectedYear] = useState(currentYear);
-
 	const [deletedMonth, setDeletedMonth] = useState(null);
-
 	const [arrayOfYears, setArrayOfYears] = useState([]);
-
-	const { alertOpen, closeAlert, openAlert } = useAlert();
 	const [category, setCategory] = useState(null);
+	const { alertOpen, closeAlert, openAlert } = useAlert();
 
 	const {
 		alertStatusConfirmation,
@@ -102,7 +98,6 @@ export const useChartsContainer = (user) => {
 		},
 		onError: () => console.error(MESSAGES.somethingWrongWithBalanceDays),
 	});
-
 	useEffect(() => {
 		refetchBalanceDays();
 	}, [selectedYear]);
@@ -116,7 +111,6 @@ export const useChartsContainer = (user) => {
 		if (a.month === b.month) return 0;
 		if (a.month < b.month) return -1;
 	}
-
 	const deleteGraph = useCallback(
 		(id) => {
 			setDeletedMonth(months.find((item) => item._id === id));
@@ -124,7 +118,6 @@ export const useChartsContainer = (user) => {
 		},
 		[months, openAlertConfirmation],
 	);
-
 	const deleteGraphClicked = useCallback(() => {
 		removeYear(deletedMonth._id).then((res) => {
 			if (res.status === 200) {
@@ -155,7 +148,6 @@ export const useChartsContainer = (user) => {
 		},
 		[months, openAlert],
 	);
-
 	const onValueSubmit = useCallback(
 		(valueOfDay) => {
 			changeChartValue(valueOfDay).then((res) => {

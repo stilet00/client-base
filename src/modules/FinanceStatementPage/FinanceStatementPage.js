@@ -148,6 +148,7 @@ export default function FinanceStatementPage() {
 
 	const arrayOfStatementsGroupedByDate =
 		getStatementGroupedByDates(paymentsList);
+
 	return (
 		<>
 			{!loading && (

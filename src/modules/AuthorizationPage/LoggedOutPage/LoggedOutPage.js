@@ -25,7 +25,6 @@ function LoggedOutPage() {
 			navigate("/");
 		}
 	}
-
 	useEffect(() => {
 		const timeCount = setTimeout(reduceTime, 1000);
 		return () => {
