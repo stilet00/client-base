@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import { privateRoutes, publicRoutes } from "./routes";
+import PreloadPage from "../PreloadPage/PreloadPage";
 
 const AppRouter = () => {
 	return (
@@ -11,7 +12,9 @@ const AppRouter = () => {
 					key={route.path}
 					path={route.path}
 					element={
-						<PrivateRoute component={route.component} path={route.path} />
+						<Suspense fallback={<PreloadPage isLoading />}>
+							<PrivateRoute component={route.component} path={route.path} />
+						</Suspense>
 					}
 				/>
 			))}
@@ -19,7 +22,11 @@ const AppRouter = () => {
 				<Route
 					key={route.path}
 					path={route.path}
-					element={<route.component />}
+					element={
+						<Suspense fallback={<PreloadPage isLoading />}>
+							<route.component />
+						</Suspense>
+					}
 				/>
 			))}
 			<Route path="/*" element={<Navigate to="/" />} />
