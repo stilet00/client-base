@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 import "../../styles/modules/AuthorizationPage.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -7,17 +9,22 @@ import styled, { keyframes } from "styled-components";
 import { bounceIn } from "react-animations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import superagent from "superagent";
-import { rootURL } from "../../services/rootURL";
 import Avatar from "@mui/material/Avatar";
 import LockIcon from "@mui/icons-material/Lock";
 import { blue } from "@mui/material/colors";
-import { useSpring, animated } from "@react-spring/web";
 
 const Bounce = styled.div`
     animation: 1s ${keyframes`${bounceIn}`};
     width: 100%;
     height: 100%;
+`;
+
+const LinkButton = styled(Button)`
+	padding: 0;
+	color: black !important;
+	&:hover {
+		text-decoration: underline !important;
+	}
 `;
 
 const StyledButton = styled(Button)`
@@ -84,155 +91,125 @@ function AuthorizationPage() {
 		email,
 		error,
 		onEmailChange,
-		onSubmit,
+		handleSignIn,
 		openAlert,
 		password,
 		buttonElement,
 		forgotPasswordToogle,
-		setForgotPassword,
 		onToogle,
+		changePasswordRequestHasBeenSent,
+		handleForgotPassword,
 	} = useAuthorizationPage();
-	const moveOut = useSpring({
-		width: forgotPasswordToogle ? "70%" : "100%",
-		height: forgotPasswordToogle ? "70%" : "100%",
-		opacity: forgotPasswordToogle ? 0.0 : 1,
-		position: forgotPasswordToogle ? "relative" : "static",
-		top: forgotPasswordToogle ? "30%" : "0%",
-		right: forgotPasswordToogle ? "20%" : "0%",
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "space-between",
-		config: { duration: 700 },
-	});
-	const moveIn = useSpring({
-		width: "100%",
-		height: "100%",
-		position: "relative",
-		top: forgotPasswordToogle ? "-80%" : "-60%",
-		right: forgotPasswordToogle ? "0%" : "20%",
-		opacity: forgotPasswordToogle ? 1 : 0,
-		display: forgotPasswordToogle ? "flex" : "none",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "space-between",
-		config: { duration: 600 },
-	});
 
-	const passwordChangeRequest = async (e) => {
-		try {
-			const response = await superagent.post(`${rootURL}reset-password`).send({
-				email: email,
-			});
-
-			if (response.status === 200) {
-				setForgotPassword(false);
-			} else {
-				console.log("something went wrong");
-			}
-		} catch (error) {
-			console.error("Error:", error);
-			return error;
-		}
-	};
+	const loginRef = useRef(null);
+	const forgotPasswordRef = useRef(null);
+	const nodeRef = forgotPasswordToogle ? forgotPasswordRef : loginRef;
 	return (
 		<>
 			<div className={`authorization-container`}>
 				<Bounce>
-					<animated.form action="" onSubmit={onSubmit} style={moveOut}>
-						{!forgotPasswordToogle && (
-							<h2 className={"authorization-welcome"}>
-								Please, log in to proceed...
-							</h2>
-						)}
-						<StyledInput
-							error={error.email.status}
-							label="Email"
-							type="email"
-							fullWidth
-							autoComplete="current-password"
-							variant="outlined"
-							name={"email"}
-							value={email}
-							disabled={forgotPasswordToogle}
-							onChange={onEmailChange}
-							required
-						/>
+					<SwitchTransition mode={"out-in"}>
+						<CSSTransition
+							key={forgotPasswordToogle}
+							nodeRef={nodeRef}
+							timeout={500}
+							classNames="fade"
+						>
+							<form ref={nodeRef}>
+								{forgotPasswordToogle ? (
+									<>
+										<Avatar sx={{ bgcolor: blue[500] }}>
+											<LockIcon />
+										</Avatar>
+										{!changePasswordRequestHasBeenSent && (
+											<>
+												<h2 className={"authorization-welcome"}>
+													Enter your email...
+												</h2>
+												<StyledInput
+													error={error.email.status}
+													label="Email"
+													type="email"
+													fullWidth
+													autoComplete="current-password"
+													variant="outlined"
+													name={"email"}
+													value={email}
+													onChange={onEmailChange}
+													required
+												/>
+												<StyledButton
+													variant="contained"
+													fullWidth
+													className={"enter-button"}
+													onClick={handleForgotPassword}
+													ref={buttonElement}
+													startIcon={
+														<FontAwesomeIcon icon={faRightToBracket} />
+													}
+												>
+													Send password
+												</StyledButton>
+											</>
+										)}
+										{changePasswordRequestHasBeenSent && (
+											<h2 className={"authorization-password-sent"}>
+												If user exists, you will receive password-reset link
+											</h2>
+										)}
+										<LinkButton onClick={onToogle}>Back</LinkButton>
+									</>
+								) : (
+									<>
+										<h2 className={"authorization-welcome"}>
+											Please, log in to proceed...
+										</h2>
+										<StyledInput
+											error={error.email.status}
+											label="Email"
+											type="email"
+											fullWidth
+											autoComplete="current-password"
+											variant="outlined"
+											name={"email"}
+											value={email}
+											disabled={forgotPasswordToogle}
+											onChange={onEmailChange}
+											required
+										/>
 
-						<StyledInput
-							disabled={forgotPasswordToogle}
-							error={error.password.status}
-							label="Password"
-							type="password"
-							fullWidth
-							autoComplete="current-password"
-							variant="outlined"
-							name={"password"}
-							value={password}
-							onChange={onPasswordChange}
-							required
-						/>
+										<StyledInput
+											disabled={forgotPasswordToogle}
+											error={error.password.status}
+											label="Password"
+											type="password"
+											fullWidth
+											autoComplete="current-password"
+											variant="outlined"
+											name={"password"}
+											value={password}
+											onChange={onPasswordChange}
+											required
+										/>
 
-						<StyledButton
-							disabled={forgotPasswordToogle}
-							variant="contained"
-							fullWidth
-							className={"enter-button"}
-							type={"submit"}
-							ref={buttonElement}
-							startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-						>
-							Enter
-						</StyledButton>
-						{!forgotPasswordToogle && (
-							<Button
-								style={{
-									padding: 0,
-									color: "black",
-								}}
-								onClick={onToogle}
-							>
-								Forgot Password?
-							</Button>
-						)}
-					</animated.form>
-					<animated.div style={moveIn}>
-						<Avatar sx={{ bgcolor: blue[500] }}>
-							<LockIcon />
-						</Avatar>
-						<h2 className={"authorization-welcome"}>Enter your email...</h2>
-						<StyledInput
-							error={error.email.status}
-							label="Email"
-							type="email"
-							fullWidth
-							autoComplete="current-password"
-							variant="outlined"
-							name={"email"}
-							value={email}
-							onChange={onEmailChange}
-							required
-						/>
-						<StyledButton
-							variant="contained"
-							fullWidth
-							className={"enter-button"}
-							onClick={passwordChangeRequest}
-							ref={buttonElement}
-							startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-						>
-							send password
-						</StyledButton>
-						<Button
-							onClick={onToogle}
-							style={{
-								padding: 0,
-								color: "black",
-							}}
-						>
-							Back
-						</Button>
-					</animated.div>
+										<StyledButton
+											disabled={forgotPasswordToogle}
+											variant="contained"
+											fullWidth
+											className={"enter-button"}
+											type={"button"}
+											onClick={handleSignIn}
+											ref={buttonElement}
+											startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+										>
+											Enter
+										</StyledButton>
+										<LinkButton onClick={onToogle}>Forgot Password?</LinkButton>
+									</>
+								)}
+							</form>
+						</CSSTransition>
+					</SwitchTransition>
 				</Bounce>
 				<AlertMessage
 					mainText={"You've not been authorized :("}

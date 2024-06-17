@@ -1,14 +1,19 @@
 import { useCallback, useRef, useState } from "react";
 import firebase from "firebase";
+import superagent from "superagent";
+import { rootURL } from "../../services/rootURL";
 
 import { DEFAULT_ERROR } from "../../constants/constants";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 
 export const useAuthorizationPage = () => {
 	const [email, setEmail] = useState("");
-	const [forgotPasswordToogle, setForgotPassword] = useState(false);
 	const [password, setPassword] = useState("");
-
+	const [forgotPasswordToogle, setForgotPassword] = useState(false);
+	const [
+		changePasswordRequestHasBeenSent,
+		setChangePasswordRequestHasBeenSent,
+	] = useState(false);
 	const [error, setError] = useState({
 		email: DEFAULT_ERROR,
 		password: DEFAULT_ERROR,
@@ -81,7 +86,7 @@ export const useAuthorizationPage = () => {
 			});
 	}, [email, password, error, openAlert]);
 
-	const onSubmit = useCallback(
+	const handleSignIn = useCallback(
 		async (e) => {
 			e.preventDefault();
 			buttonElement.current.focus();
@@ -89,12 +94,31 @@ export const useAuthorizationPage = () => {
 		},
 		[signInWithEmailPassword],
 	);
+
+	const clearInputFields = () => {
+		setEmail("");
+		setPassword("");
+	};
+
 	const onToogle = () => {
-		setForgotPassword(!forgotPasswordToogle);
+		setForgotPassword((prev) => !prev);
+		setChangePasswordRequestHasBeenSent(false);
+		clearInputFields();
+	};
+
+	const handleForgotPassword = async (e) => {
+		try {
+			await superagent.post(`${rootURL}reset-password`).send({
+				email: email,
+			});
+		} catch (error) {
+			console.error("Error:", error);
+		}
+		setChangePasswordRequestHasBeenSent(true);
 	};
 
 	return {
-		onSubmit,
+		handleSignIn,
 		error,
 		email,
 		onEmailChange,
@@ -107,5 +131,8 @@ export const useAuthorizationPage = () => {
 		forgotPasswordToogle,
 		setForgotPassword,
 		onToogle,
+		setChangePasswordRequestHasBeenSent,
+		changePasswordRequestHasBeenSent,
+		handleForgotPassword,
 	};
 };
