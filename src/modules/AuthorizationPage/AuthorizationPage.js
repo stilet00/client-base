@@ -7,7 +7,7 @@ import styled, { keyframes } from "styled-components";
 import { bounceIn } from "react-animations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import superagent from "superagent";
 import { rootURL } from "../../services/rootURL";
 import Avatar from "@mui/material/Avatar";
 import LockIcon from "@mui/icons-material/Lock";
@@ -121,15 +121,17 @@ function AuthorizationPage() {
 
 	const passwordChangeRequest = async (e) => {
 		try {
-			const response = await axios.post(rootURL + "reset-password", {
+			const response = await superagent.post(`${rootURL}reset-password`).send({
 				email: email,
 			});
+
 			if (response.status === 200) {
 				setForgotPassword(false);
 			} else {
 				console.log("something went wrong");
 			}
 		} catch (error) {
+			console.error("Error:", error);
 			return error;
 		}
 	};

@@ -168,9 +168,8 @@ exports.toggleClientSuspendedRequest =
 	exports.addTranslator =
 	exports.getTranslators =
 		void 0;
-var axios_1 = __importDefault(require("axios"));
+var superAgentConfig_1 = __importDefault(require("../superAgentConfig"));
 var rootURL_1 = require("../rootURL");
-var utils_1 = require("../utils");
 var translatorsURL = rootURL_1.rootURL + "translators/";
 var balanceDayURL = rootURL_1.rootURL + "balance-day/";
 var personalPenaltyURL = rootURL_1.rootURL + "personal-penalty/";
@@ -188,59 +187,49 @@ function getTranslators(_a) {
 	if (shouldGetClients) {
 		queryParams += (queryParams ? "&" : "?") + "shouldGetClients=true";
 	}
-	return axios_1.default.get(
+	return (0, superAgentConfig_1.default)(
+		"get",
 		translatorsURL + "get/" + queryParams,
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.getTranslators = getTranslators;
 function addTranslator(translator) {
-	return axios_1.default.post(
-		translatorsURL + "add/",
+	return (0, superAgentConfig_1.default)("post", translatorsURL + "add/").send(
 		translator,
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.addTranslator = addTranslator;
 function removeTranslator(id) {
-	return axios_1.default.delete(
-		translatorsURL + id,
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-	);
+	return (0, superAgentConfig_1.default)("delete", translatorsURL + id);
 }
 exports.removeTranslator = removeTranslator;
 function updateTranslator(translator) {
-	return axios_1.default.put(
+	return (0, superAgentConfig_1.default)(
+		"put",
 		translatorsURL + translator._id,
-		translator,
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-	);
+	).send(translator);
 }
 exports.updateTranslator = updateTranslator;
 function assignClientToTranslatorRequest(_a) {
 	var clientId = _a.clientId,
 		translatorId = _a.translatorId;
-	return axios_1.default.put(
+	return (0, superAgentConfig_1.default)(
+		"put",
 		translatorsURL + "assign-client",
-		{
-			clientId: clientId,
-			translatorId: translatorId,
-		},
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-	);
+	).send({
+		clientId: clientId,
+		translatorId: translatorId,
+	});
 }
 exports.assignClientToTranslatorRequest = assignClientToTranslatorRequest;
 function sendNotificationEmailsRequest() {
-	return axios_1.default.get(
-		translatorsURL + "send-emails",
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-	);
+	return (0, superAgentConfig_1.default)("get", translatorsURL + "send-emails");
 }
 exports.sendNotificationEmailsRequest = sendNotificationEmailsRequest;
 function sendLastVirtualGiftDateRequest(id) {
-	return axios_1.default.get(
+	return (0, superAgentConfig_1.default)(
+		"get",
 		translatorsURL + "last-gift/" + id,
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.sendLastVirtualGiftDateRequest = sendLastVirtualGiftDateRequest;
@@ -248,31 +237,27 @@ function getBalanceDay(_a) {
 	var translatorId = _a.translatorId,
 		clientId = _a.clientId,
 		dateTimeId = _a.dateTimeId;
-	return axios_1.default.get(
+	return (0, superAgentConfig_1.default)(
+		"get",
 		""
 			.concat(balanceDayURL, "?translatorId=")
 			.concat(translatorId, "&clientId=")
 			.concat(clientId, "&dateTimeId=")
 			.concat(encodeURIComponent(dateTimeId)),
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.getBalanceDay = getBalanceDay;
 function createBalanceDay(_a) {
 	var newBalanceDay = _a.newBalanceDay;
-	return axios_1.default.post(
-		balanceDayURL + "create",
+	return (0, superAgentConfig_1.default)("post", balanceDayURL + "create").send(
 		__assign({}, newBalanceDay),
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.createBalanceDay = createBalanceDay;
 function updateBalanceDay(_a) {
 	var balanceDayToSubmit = _a.balanceDayToSubmit;
-	return axios_1.default.put(
-		balanceDayURL + "update",
+	return (0, superAgentConfig_1.default)("put", balanceDayURL + "update").send(
 		__assign({}, balanceDayToSubmit),
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.updateBalanceDay = updateBalanceDay;
@@ -281,12 +266,12 @@ function getBalanceDaysForTranslatorRequest(_a) {
 		dateTimeFilter = _b === void 0 ? "" : _b,
 		_c = _a.translatorId,
 		translatorId = _c === void 0 ? "" : _c;
-	return axios_1.default.get(
+	return (0, superAgentConfig_1.default)(
+		"get",
 		""
 			.concat(balanceDayURL, "translators?dateTimeFilter=")
 			.concat(dateTimeFilter, "&translatorId=")
 			.concat(translatorId),
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.getBalanceDaysForTranslatorRequest = getBalanceDaysForTranslatorRequest;
@@ -295,12 +280,12 @@ function getPenaltiesForTranslatorRequest(_a) {
 		dateTimeFilter = _b === void 0 ? "" : _b,
 		_c = _a.translatorId,
 		translatorId = _c === void 0 ? "" : _c;
-	return axios_1.default.get(
+	return (0, superAgentConfig_1.default)(
+		"get",
 		""
 			.concat(personalPenaltyURL, "get?dateTimeFilter=")
 			.concat(dateTimeFilter, "&translatorId=")
 			.concat(translatorId),
-		(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
 	);
 }
 exports.getPenaltiesForTranslatorRequest = getPenaltiesForTranslatorRequest;
@@ -310,11 +295,10 @@ function createPersonalPenalty(_a) {
 		return __generator(this, function (_b) {
 			return [
 				2 /*return*/,
-				axios_1.default.post(
+				(0, superAgentConfig_1.default)(
+					"post",
 					"".concat(personalPenaltyURL, "create"),
-					personalPenaltyData,
-					(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-				),
+				).send(personalPenaltyData),
 			];
 		});
 	});
@@ -327,14 +311,13 @@ function toggleClientSuspendedRequest(_a) {
 		return __generator(this, function (_b) {
 			return [
 				2 /*return*/,
-				axios_1.default.put(
+				(0, superAgentConfig_1.default)(
+					"put",
 					"".concat(translatorsURL, "suspend-client"),
-					{
-						clientId: clientId,
-						translatorId: translatorId,
-					},
-					(0, utils_1.getConfigForAxiosAuthenticatedRequest)(),
-				),
+				).send({
+					clientId: clientId,
+					translatorId: translatorId,
+				}),
 			];
 		});
 	});

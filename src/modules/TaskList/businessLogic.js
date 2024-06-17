@@ -22,7 +22,7 @@ export const useTaskList = (user) => {
 		if (response.status !== 200) {
 			throw new Error("Something went wrong with tasks");
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const { isLoading: tasksAreLoading } = useQuery(
@@ -40,7 +40,7 @@ export const useTaskList = (user) => {
 	const newTask = useCallback(
 		(text) => {
 			if (text) {
-				let task = {
+				const task = {
 					taskName: text,
 					completed: false,
 					created: getMomentUTC().format("MMMM Do YYYY, h:mm:ss"),
@@ -50,13 +50,13 @@ export const useTaskList = (user) => {
 					.then((res) => {
 						if (res.status === 200) {
 							setTasks((prevTasks) => {
-								let newTask = { ...task, _id: res.data };
+								const newTask = { ...task, _id: res.body };
 								return [...prevTasks, newTask];
 							});
 						}
 					})
 					.catch((err) => {
-						const message = err?.response?.data?.error || "An error occurred";
+						const message = err?.response?.body?.error || "An error occurred";
 						setAlertInfo({
 							...alertInfo,
 							mainTitle: message,
@@ -79,7 +79,7 @@ export const useTaskList = (user) => {
 				}
 			})
 			.catch((err) => {
-				const message = err?.response?.data?.error || "An error occurred";
+				const message = err?.response?.body?.error || "An error occurred";
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: message,
@@ -99,7 +99,7 @@ export const useTaskList = (user) => {
 				}
 			})
 			.catch((err) => {
-				const message = err?.response?.data?.error || "An error occurred";
+				const message = err?.response?.body?.error || "An error occurred";
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: message,

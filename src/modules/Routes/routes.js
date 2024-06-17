@@ -1,11 +1,19 @@
-import TaskList from "../TaskList/TaskList";
-import FinanceStatementPage from "../FinanceStatementPage/FinanceStatementPage";
-import AuthorizationPage from "../AuthorizationPage/AuthorizationPage";
-import Overview from "../Overview/Overview";
-import Translators from "../Translators/Translators";
-import ListOfClients from "../ListOfClients/ListOfClients";
-import ChartsContainer from "../Charts/ChartsContainer";
-import LoggedOutPage from "../AuthorizationPage/LoggedOutPage/LoggedOutPage";
+import { lazy } from "react";
+
+const TaskList = lazy(() => import("../TaskList/TaskList"));
+const FinanceStatementPage = lazy(
+	() => import("../FinanceStatementPage/FinanceStatementPage"),
+);
+const AuthorizationPage = lazy(
+	() => import("../AuthorizationPage/AuthorizationPage"),
+);
+const Overview = lazy(() => import("../Overview/Overview"));
+const Translators = lazy(() => import("../Translators/Translators"));
+const ListOfClients = lazy(() => import("../ListOfClients/ListOfClients"));
+const ChartsContainer = lazy(() => import("../Charts/ChartsContainer"));
+const LoggedOutPage = lazy(
+	() => import("../AuthorizationPage/LoggedOutPage/LoggedOutPage"),
+);
 
 export const privateRoutes = [
 	{

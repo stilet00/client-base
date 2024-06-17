@@ -1,7 +1,6 @@
-import axios from "axios";
+import requestWithAuth from "../superAgentConfig";
 import { rootURL } from "../rootURL";
-import { getConfigForAxiosAuthenticatedRequest } from "../utils";
-import {
+import type {
 	BalanceDay,
 	PersonalPenalty,
 	Translator,
@@ -21,32 +20,20 @@ export function getTranslators({ searchQuery = "", shouldGetClients = false }) {
 	if (shouldGetClients) {
 		queryParams += (queryParams ? "&" : "?") + "shouldGetClients=true";
 	}
-	return axios.get(
-		translatorsURL + "get/" + queryParams,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("get", translatorsURL + "get/" + queryParams);
 }
 
 export function addTranslator(translator: Translator) {
-	return axios.post(
-		translatorsURL + "add/",
-		translator,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("post", translatorsURL + "add/").send(translator);
 }
 
 export function removeTranslator(id: string) {
-	return axios.delete(
-		translatorsURL + id,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("delete", translatorsURL + id);
 }
 
 export function updateTranslator(translator: Translator) {
-	return axios.put(
-		translatorsURL + translator._id,
+	return requestWithAuth("put", translatorsURL + translator._id).send(
 		translator,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
 
@@ -57,28 +44,18 @@ export function assignClientToTranslatorRequest({
 	clientId: string;
 	translatorId: string;
 }) {
-	return axios.put(
-		translatorsURL + "assign-client",
-		{
-			clientId,
-			translatorId,
-		},
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("put", translatorsURL + "assign-client").send({
+		clientId,
+		translatorId,
+	});
 }
 
 export function sendNotificationEmailsRequest() {
-	return axios.get(
-		translatorsURL + "send-emails",
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("get", translatorsURL + "send-emails");
 }
 
 export function sendLastVirtualGiftDateRequest(id: string) {
-	return axios.get(
-		translatorsURL + "last-gift/" + id,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("get", translatorsURL + "last-gift/" + id);
 }
 
 export function getBalanceDay({
@@ -90,11 +67,11 @@ export function getBalanceDay({
 	clientId: string;
 	dateTimeId: string;
 }) {
-	return axios.get(
+	return requestWithAuth(
+		"get",
 		`${balanceDayURL}?translatorId=${translatorId}&clientId=${clientId}&dateTimeId=${encodeURIComponent(
 			dateTimeId,
 		)}`,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
 
@@ -103,13 +80,9 @@ export function createBalanceDay({
 }: {
 	newBalanceDay: BalanceDay;
 }) {
-	return axios.post(
-		balanceDayURL + `create`,
-		{
-			...newBalanceDay,
-		},
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("post", balanceDayURL + "create").send({
+		...newBalanceDay,
+	});
 }
 
 export function updateBalanceDay({
@@ -117,22 +90,18 @@ export function updateBalanceDay({
 }: {
 	balanceDayToSubmit: BalanceDay;
 }) {
-	return axios.put(
-		balanceDayURL + `update`,
-		{
-			...balanceDayToSubmit,
-		},
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("put", balanceDayURL + "update").send({
+		...balanceDayToSubmit,
+	});
 }
 
 export function getBalanceDaysForTranslatorRequest({
 	dateTimeFilter = "",
 	translatorId = "",
 }) {
-	return axios.get(
+	return requestWithAuth(
+		"get",
 		`${balanceDayURL}translators?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
 
@@ -140,9 +109,9 @@ export function getPenaltiesForTranslatorRequest({
 	dateTimeFilter = "",
 	translatorId = "",
 }) {
-	return axios.get(
+	return requestWithAuth(
+		"get",
 		`${personalPenaltyURL}get?dateTimeFilter=${dateTimeFilter}&translatorId=${translatorId}`,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
 
@@ -151,10 +120,8 @@ export async function createPersonalPenalty({
 }: {
 	personalPenaltyData: PersonalPenalty;
 }) {
-	return axios.post(
-		`${personalPenaltyURL}create`,
+	return requestWithAuth("post", `${personalPenaltyURL}create`).send(
 		personalPenaltyData,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
 
@@ -165,12 +132,8 @@ export async function toggleClientSuspendedRequest({
 	clientId: string;
 	translatorId: string;
 }) {
-	return axios.put(
-		`${translatorsURL}suspend-client`,
-		{
-			clientId,
-			translatorId,
-		},
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("put", `${translatorsURL}suspend-client`).send({
+		clientId,
+		translatorId,
+	});
 }

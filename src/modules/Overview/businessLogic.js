@@ -32,7 +32,7 @@ export const useOverview = (user) => {
 		if (response.status !== 200) {
 			throw new Error("Something went wrong with clients");
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const fetchTranslators = async () => {
@@ -40,7 +40,7 @@ export const useOverview = (user) => {
 		if (response.status !== 200) {
 			throw new Error("Something went wrong with translators");
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const fetchPayments = async () => {
@@ -48,7 +48,7 @@ export const useOverview = (user) => {
 		if (response.status !== 200) {
 			throw new Error("Something went wrong with payments");
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const fetchBalanceDays = async () => {
@@ -58,7 +58,7 @@ export const useOverview = (user) => {
 		if (response.status !== 200) {
 			throw new Error(MESSAGES.somethingWrongWithBalanceDays);
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const { isLoading: clientsAreLoading } = useQuery(

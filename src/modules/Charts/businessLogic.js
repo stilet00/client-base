@@ -17,6 +17,8 @@ import { useQuery } from "react-query";
 import { getBalanceDaysForChartsRequest } from "services/balanceDayServices/index";
 import {
 	currentYear,
+	currentMonth,
+	previousMonth,
 	DEFAULT_MONTH_CHART,
 	previousDay,
 } from "../../constants/constants";
@@ -24,15 +26,11 @@ import MESSAGES from "constants/messages";
 
 export const useChartsContainer = (user) => {
 	const [months, setMonths] = useState([]);
-
 	const [selectedYear, setSelectedYear] = useState(currentYear);
-
 	const [deletedMonth, setDeletedMonth] = useState(null);
-
 	const [arrayOfYears, setArrayOfYears] = useState([]);
-
-	const { alertOpen, closeAlert, openAlert } = useAlert();
 	const [category, setCategory] = useState(null);
+	const { alertOpen, closeAlert, openAlert } = useAlert();
 
 	const {
 		alertStatusConfirmation,
@@ -43,11 +41,12 @@ export const useChartsContainer = (user) => {
 	const fetchBalanceDays = async () => {
 		const response = await getBalanceDaysForChartsRequest({
 			yearFilter: selectedYear,
+			monthFilter: `${previousMonth}-${currentMonth}`,
 		});
 		if (response.status !== 200) {
 			throw new Error(MESSAGES.somethingWrongWithBalanceDays);
 		}
-		return response.data;
+		return response.body;
 	};
 
 	const {
@@ -57,9 +56,9 @@ export const useChartsContainer = (user) => {
 	} = useQuery("balanceDaysForCharts", fetchBalanceDays, {
 		enabled: !!user,
 		onSuccess: (data) => {
-			let yearChartsArray = [];
+			const yearChartsArray = [];
 			for (let monthCount = 1; monthCount < 13; monthCount++) {
-				let defaultMonth = new DEFAULT_MONTH_CHART(selectedYear, monthCount);
+				const defaultMonth = new DEFAULT_MONTH_CHART(selectedYear, monthCount);
 
 				const stringMonth = defaultMonth.month;
 				const daysInMonth = moment(selectedYear + "-" + stringMonth, "YYYY-MM")
@@ -77,7 +76,7 @@ export const useChartsContainer = (user) => {
 					const arrayOfBalanceDayForCurrentDate = data.filter((balanceDay) =>
 						getMomentUTC(balanceDay.dateTimeId).isSame(currentDayDate, "day"),
 					);
-					let daySum = arrayOfBalanceDayForCurrentDate.reduce(
+					const daySum = arrayOfBalanceDayForCurrentDate.reduce(
 						(sum, current) => {
 							return sum + calculateBalanceDaySum(current.statistics);
 						},
@@ -99,7 +98,6 @@ export const useChartsContainer = (user) => {
 		},
 		onError: () => console.error(MESSAGES.somethingWrongWithBalanceDays),
 	});
-
 	useEffect(() => {
 		refetchBalanceDays();
 	}, [selectedYear]);
@@ -113,7 +111,6 @@ export const useChartsContainer = (user) => {
 		if (a.month === b.month) return 0;
 		if (a.month < b.month) return -1;
 	}
-
 	const deleteGraph = useCallback(
 		(id) => {
 			setDeletedMonth(months.find((item) => item._id === id));
@@ -121,7 +118,6 @@ export const useChartsContainer = (user) => {
 		},
 		[months, openAlertConfirmation],
 	);
-
 	const deleteGraphClicked = useCallback(() => {
 		removeYear(deletedMonth._id).then((res) => {
 			if (res.status === 200) {
@@ -143,7 +139,7 @@ export const useChartsContainer = (user) => {
 				if (res.status === 200) {
 					openAlert();
 					setMonths(
-						[...months, { ...date, _id: res.data }]
+						[...months, { ...date, _id: res.body }]
 							.sort(compareNumeric)
 							.reverse(),
 					);
@@ -152,7 +148,6 @@ export const useChartsContainer = (user) => {
 		},
 		[months, openAlert],
 	);
-
 	const onValueSubmit = useCallback(
 		(valueOfDay) => {
 			changeChartValue(valueOfDay).then((res) => {

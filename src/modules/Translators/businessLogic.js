@@ -77,14 +77,14 @@ export const useTranslators = (user) => {
 		const response = await getCurrency();
 		if (response.status !== 200)
 			throw new Error(MESSAGES.somethingWrongWithCurrencies);
-		return response.data[1]?.buy ?? "36.57";
+		return response.body[1]?.buy ?? "36.57";
 	};
 
 	const fetchTranslators = async () => {
 		const response = await getTranslators({ shouldGetClients: true });
 		if (response.status !== 200)
 			throw new Error(MESSAGES.somethingWrongWithGettingTranslators);
-		return response.data;
+		return response.body;
 	};
 
 	const { isLoading: currencyIsLoading } = useQuery(
@@ -172,7 +172,7 @@ export const useTranslators = (user) => {
 				return true;
 			} catch (error) {
 				const erroMessageForShowAlertMessage = {
-					text: error?.response?.data?.error || "An error occurred",
+					text: error?.response?.body?.error || "An error occurred",
 					status: false,
 				};
 				openAlert(erroMessageForShowAlertMessage, 5000);
@@ -184,7 +184,7 @@ export const useTranslators = (user) => {
 	);
 
 	const assignClientToTranslator = async ({ translatorId, clientId }) => {
-		let editedTranslator = translators.find(
+		const editedTranslator = translators.find(
 			(item) => item._id === translatorId,
 		);
 		if (
@@ -265,12 +265,12 @@ export const useTranslators = (user) => {
 	]);
 
 	const translatorsFormSubmit = async (newTranslator) => {
-		const { data, status } = await addTranslator(newTranslator);
+		const { body, status } = await addTranslator(newTranslator);
 		if (status === 200) {
 			openAlert(MESSAGES.addTranslator);
 			setTranslators([
 				...translators,
-				{ ...newTranslator, clients: [], _id: data },
+				{ ...newTranslator, clients: [], _id: body },
 			]);
 		} else {
 			openAlert(MESSAGES.somethingWrong, 5000);
@@ -392,7 +392,7 @@ export const useSingleTranslator = ({ translatorId }) => {
 		if (response.status !== 200) {
 			throw new Error(MESSAGES.somethingWrongWithBalanceDays);
 		}
-		return response.data;
+		return response.body;
 	};
 	const fetchPenalties = async () => {
 		const response = await getPenaltiesForTranslatorRequest({
@@ -402,7 +402,7 @@ export const useSingleTranslator = ({ translatorId }) => {
 		if (response.status !== 200) {
 			throw new Error(MESSAGES.somethingWrongWithBalanceDays);
 		}
-		return response.data;
+		return response.body;
 	};
 	const { isLoading: balanceDaysAreLoading } = useQuery(
 		`balanceDaysForTranslator${translatorId}`,
@@ -474,7 +474,7 @@ export const useSingleTranslator = ({ translatorId }) => {
 	}
 
 	function calculateMiddleMonthSum(selectedDate) {
-		let sum = [];
+		const sum = [];
 		const balanceDaysOfSelectedMonth = translatorBalanceDays.filter(
 			({ dateTimeId }) =>
 				getMomentUTC(dateTimeId).isSame(selectedDate, "month"),
@@ -519,7 +519,7 @@ export const useSingleTranslator = ({ translatorId }) => {
 		setGiftRequestLoader(true);
 		sendLastVirtualGiftDateRequest(translatorId)
 			.then((res) => {
-				setLastVirtualGiftLabel(res.data ?? "No gifts found");
+				setLastVirtualGiftLabel(res.body ?? "No gifts found");
 				setGiftRequestLoader(false);
 			})
 			.catch((err) => {

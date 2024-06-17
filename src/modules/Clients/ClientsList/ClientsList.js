@@ -51,7 +51,7 @@ function ClientsList({
 		});
 		if (response.status !== 200)
 			throw new Error(MESSAGES.somethingWrongWithGettingClients);
-		return response.data;
+		return response.body;
 	};
 
 	const { isLoading: clientsAreLoading } = useQuery(
@@ -67,6 +67,7 @@ function ClientsList({
 	function onSearchChange(e) {
 		setSearch(e.target.value.toLowerCase());
 	}
+
 	return (
 		<>
 			<Button
@@ -95,7 +96,7 @@ function ClientsList({
 							placeholder="Search..."
 							value={search}
 							onChange={onSearchChange}
-						></SearchTextField>
+						/>
 					</h3>
 					{clientsAreLoading && <Loader />}
 					{!clientsAreLoading && (

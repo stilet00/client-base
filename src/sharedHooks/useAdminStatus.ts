@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import requestWithAuth from "../services/superAgentConfig";
 import { rootURL } from "../services/rootURL";
 
 type User = {
@@ -8,10 +8,10 @@ type User = {
 
 async function checkAdminStatus(user: User) {
 	try {
-		const response = await axios.post(rootURL + "isAdmin", {
+		const response = await requestWithAuth("post", `${rootURL}isAdmin`).send({
 			email: user.email,
 		});
-		return response.data;
+		return response.body;
 	} catch (error) {
 		console.error("Error checking admin role:", error);
 		return false;
@@ -21,6 +21,7 @@ async function checkAdminStatus(user: User) {
 export function useAdminStatus(user: User) {
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+
 	useEffect(() => {
 		if (!user) {
 			setIsAdmin(false);

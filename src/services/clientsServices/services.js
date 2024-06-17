@@ -1,8 +1,7 @@
-import axios from "axios";
+import requestWithAuth from "../superAgentConfig";
 import { rootURL } from "../rootURL";
-import { getConfigForAxiosAuthenticatedRequest } from "../utils";
 
-const clientsURL = rootURL + "clients/";
+const clientsURL = `${rootURL}clients/`;
 
 export function getClientsRequest({
 	noImageParams = false,
@@ -14,37 +13,24 @@ export function getClientsRequest({
 		queryParams = `?noImageParams=${noImageParams}`;
 	}
 	if (shouldFillTranslators) {
-		queryParams +=
-			(queryParams ? "&" : "?") +
-			`shouldFillTranslators=${shouldFillTranslators}`;
+		queryParams += `${queryParams ? "&" : "?"}shouldFillTranslators=${shouldFillTranslators}`;
 	}
 	if (searchQuery) {
-		queryParams +=
-			(queryParams ? "&" : "?") +
-			`searchQuery=${encodeURIComponent(searchQuery)}`;
+		queryParams += `${queryParams ? "&" : "?"}searchQuery=${encodeURIComponent(searchQuery)}`;
 	}
-	return axios.get(
-		clientsURL + "get/" + queryParams,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("get", `${clientsURL}get/${queryParams}`);
 }
 
 export function addClient(client) {
-	return axios.post(
-		clientsURL + "add/",
-		client,
-		getConfigForAxiosAuthenticatedRequest(),
-	);
+	return requestWithAuth("post", `${clientsURL}add/`).send(client);
 }
 
 export function removeClient(id) {
-	return axios.delete(clientsURL + id, getConfigForAxiosAuthenticatedRequest());
+	return requestWithAuth("delete", `${clientsURL}${id}`);
 }
 
 export function updateClient(editedClient) {
-	return axios.put(
-		clientsURL + editedClient._id,
+	return requestWithAuth("put", `${clientsURL}${editedClient._id}`).send(
 		editedClient,
-		getConfigForAxiosAuthenticatedRequest(),
 	);
 }
