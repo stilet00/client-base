@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
 form {
   width: 100%;
   height: 100%;
@@ -23,9 +24,37 @@ form {
   color: black;
 }
 
+.authorization-password-sent {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  padding: 20px 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
 .password-container {
   width: 90%;
   max-width: 420.5px;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-enter-active {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-exit-active {
+  transition: opacity 500ms;
 }
 
 /*# sourceMappingURL=AuthorizationPage.css.map */
