@@ -21,9 +21,6 @@ var calculateBalanceDaySum = function (targetObject, onlySvadba, category) {
 	if (onlySvadba === void 0) {
 		onlySvadba = false;
 	}
-	if (category === void 0) {
-		category = null;
-	}
 	if (onlySvadba) {
 		var svadbaObject = __assign(__assign({}, targetObject), {
 			dating: 0,

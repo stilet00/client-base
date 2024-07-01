@@ -1,7 +1,7 @@
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/material/styles";
-import { FINANCE_IMAGES, FINANCE_AVATARS } from "../../../constants/constants";
+import { FINANCE_IMAGES, FINANCE_AVATARS } from "constants/renderConstants";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 import MenuSharpIcon from "@mui/icons-material/MenuSharp";

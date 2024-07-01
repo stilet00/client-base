@@ -7,8 +7,8 @@ const { getMomentUTC } = require("../utils/utils");
 
 const calculateBalanceDaySum = (
 	targetObject: Statistics,
-	onlySvadba = false,
-	category = null,
+	onlySvadba: boolean = false,
+	category?: Exclude<keyof Statistics, "comments">,
 ): number => {
 	if (onlySvadba) {
 		const svadbaObject = {

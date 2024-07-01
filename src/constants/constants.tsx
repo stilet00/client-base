@@ -3,31 +3,6 @@ import {
 	getTotalDaysOfMonth,
 } from "../sharedFunctions/sharedFunctions";
 import moment from "moment";
-import background1 from "../images/tasks_backgrounds/background1.png";
-import background2 from "../images/tasks_backgrounds/background2.png";
-import background3 from "../images/tasks_backgrounds/background3.png";
-import background4 from "../images/tasks_backgrounds/background4.png";
-import background5 from "../images/tasks_backgrounds/background5.png";
-import background6 from "../images/tasks_backgrounds/background6.png";
-import background7 from "../images/tasks_backgrounds/background7.png";
-import background8 from "../images/tasks_backgrounds/background8.png";
-import background9 from "../images/tasks_backgrounds/background9.png";
-import background10 from "../images/tasks_backgrounds/background10.png";
-import Agency_avatar from "../images/logo.png";
-import Anton_avatar from "../images/avatars/anton-avatar.png";
-import Oleksandr_avatar from "../images/avatars/sasha-avatar.png";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import FaceRetouchingNaturalIcon from "@mui/icons-material/FaceRetouchingNatural";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
-import AdUnitsIcon from "@mui/icons-material/AdUnits";
-import { purple, blue, green, cyan } from "@mui/material/colors";
-import ChatIcon from "@mui/icons-material/Chat";
-import EmailIcon from "@mui/icons-material/Email";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import PermPhoneMsgIcon from "@mui/icons-material/PermPhoneMsg";
-import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
-import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 
 export const currentYear = moment().utc().format("YYYY");
 export const previousYear = moment().utc().subtract(1, "year").format("YYYY");
@@ -144,18 +119,6 @@ export const DEFAULT_TRANSLATOR = {
 
 export const SUNRISE_AGENCY_ID = "62470d5dffe20600169edac1";
 
-export const DEFAULT_CATEGORIES = {
-	chats: "chats",
-	dating: "dating",
-	letters: "letters",
-	penalties: "penalties",
-	virtualGiftsSvadba: "virtualGiftsSvadba",
-	virtualGiftsDating: "virtualGiftsDating",
-	photoAttachments: "photoAttachments",
-	phoneCalls: "phoneCalls",
-	voiceMessages: "voiceMessages",
-};
-
 function creatArrayOfYears() {
 	const arrayWithYears = [];
 	const lengthOfArrayWithYears = Number(currentYear) - appStartYear;
@@ -165,40 +128,10 @@ function creatArrayOfYears() {
 	return arrayWithYears;
 }
 
-export const TASKS_BACKGROUNDS = [
-	background1,
-	background2,
-	background3,
-	background4,
-	background5,
-	background6,
-	background7,
-	background8,
-	background9,
-	background10,
-];
-
 export const FINANCE_SENDERS = {
 	anton: "Anton",
 	agency: "Agency",
 	oleksandr: "Oleksandr",
-};
-
-export const FINANCE_AVATARS = {
-	anton: Anton_avatar,
-	oleksandr: Oleksandr_avatar,
-	agency: Agency_avatar,
-};
-
-export const FINANCE_IMAGES = {
-	salary: () => <MonetizationOnIcon sx={{ fontSize: 40, color: green[400] }} />,
-	paymentToScout: () => (
-		<CreditScoreIcon sx={{ fontSize: 40, color: blue[500] }} />
-	),
-	paymentToBot: () => <AdUnitsIcon sx={{ fontSize: 40, color: purple[500] }} />,
-	paymentToTranslator: () => (
-		<FaceRetouchingNaturalIcon sx={{ fontSize: 40, color: cyan[500] }} />
-	),
 };
 
 export const FINANCE_COMMENTS = {
@@ -219,62 +152,6 @@ export const DEFAULT_STATEMENT = {
 export const BOT_LIST = [
 	{ id: "Chat4me7210Sunrise", label: "Chat4me" },
 	{ id: "Sender7210Sunrise", label: "Sender" },
-];
-
-type ChartCategory = {
-	name: string;
-	value: string | null;
-	icon?: JSX.Element;
-};
-
-export const CHARTS_CATEGORIES: ChartCategory[] = [
-	{
-		name: "All",
-		value: null,
-		icon: <SignalCellularAltIcon />,
-	},
-	{
-		name: "Chats",
-		value: "chats",
-		icon: <ChatIcon />,
-	},
-	{
-		name: "Letters",
-		value: "letters",
-		icon: <EmailIcon />,
-	},
-	{
-		name: "Dating",
-		value: "dating",
-		icon: <FavoriteIcon sx={{ color: "red" }} />,
-	},
-	{
-		name: "Phone Calls",
-		value: "phoneCalls",
-		icon: <PermPhoneMsgIcon />,
-	},
-	{
-		name: "Virtual Gifts Svadba",
-		value: "virtualGiftsSvadba",
-		icon: <CardGiftcardIcon />,
-	},
-	{
-		name: "Voice Messages",
-		value: "voiceMessages",
-		icon: <KeyboardVoiceIcon sx={{ color: "red" }} />,
-	},
-	{
-		name: "Attachments",
-		value: "photoAttachments",
-	},
-	{
-		name: "Voice Messages",
-		value: "voiceMessages",
-	},
-	{
-		name: "Penalties",
-		value: "penalties",
-	},
 ];
 
 export const TRANSLATORS_SALARY_PERCENT = 0.45;
