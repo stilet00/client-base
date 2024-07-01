@@ -20,10 +20,8 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-	TRANSLATORS_SALARY_PERCENT,
-	CHARTS_CATEGORIES,
-} from "../../constants/constants";
+import { TRANSLATORS_SALARY_PERCENT } from "../../constants/constants";
+import { CHARTS_CATEGORIES } from "constants/renderConstants";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,10 +1,9 @@
 const nodeMailer = require("nodemailer");
-const moment = require("moment");
 const {
 	calculatePercentDifference,
 	getCurrentMonthPenalties,
 	calculateBalanceDaySum,
-} = require("../translatorsBalanceFunctions/translatorsBalanceFunctions");
+} = require("../../sharedFunctions/sharedFunctions");
 const { getMomentUTC } = require("../utils/utils");
 const getAdministratorsEmailTemplateHTMLCode = require("./email-templates/getAdministratorsEmailTemplateHTMLcode");
 const getTranslatorsEmailTemplateHTMLCode = require("./email-templates/getTranslatorsEmailTemplate");
