@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import { privateRoutes, publicRoutes } from "./routes";
 import PreloadPage from "../PreloadPage/PreloadPage";
+import NotFoundPage from "../NotFoundPage";
 
 const AppRouter = () => {
 	return (
@@ -29,7 +30,7 @@ const AppRouter = () => {
 					}
 				/>
 			))}
-			<Route path="/*" element={<Navigate to="/" />} />
+			<Route path="/*" element={<NotFoundPage />} />
 		</Routes>
 	);
 };
