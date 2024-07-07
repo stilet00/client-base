@@ -8,6 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { useNavigate } from "react-router-dom";
 import "../../styles/sharedComponents/Navigation.css";
@@ -34,6 +35,65 @@ const Animation = styled.div`
     height: 100%;
 `;
 
+const routes = [
+	{
+		path: "/overview",
+		label: "Overview",
+		icon: <PageViewIcon />,
+		adminOnly: false,
+	},
+	{
+		path: "/finances",
+		label: "Finance Statement",
+		icon: <PriceChangeOutlinedIcon />,
+		adminOnly: true,
+	},
+	{
+		path: "/clients",
+		label: "Clients",
+		icon: <GroupIcon />,
+		adminOnly: false,
+	},
+	{
+		path: "/translators",
+		label: "Translators & Balance",
+		icon: <WorkIcon />,
+		adminOnly: false,
+	},
+	{
+		path: "/chart",
+		label: "Charts",
+		icon: <BarChartIcon />,
+		adminOnly: false,
+	},
+	{
+		path: "/tasks",
+		label: "Task List",
+		icon: <FormatListNumberedIcon />,
+		adminOnly: false,
+	},
+	{
+		path: "/business-admins",
+		label: "Business Administrators",
+		icon: <SupervisorAccountIcon />,
+		adminOnly: true,
+	},
+];
+
+const HeaderNavigationItem = ({ label, icon, to, onClick }) => {
+	const navigate = useNavigate();
+	return (
+		<ListItem button onClick={() => (onClick ? onClick() : navigate(to))}>
+			<ListItemIcon>{icon}</ListItemIcon>
+			<ListItemText primary={label} />
+		</ListItem>
+	);
+};
+
+const removeUserIdTokenFromLocalStorage = () => {
+	window.localStorage.removeItem(localStorageTokenKey);
+};
+
 export default function Navigation() {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
@@ -45,19 +105,7 @@ export default function Navigation() {
 		bottom: false,
 		right: false,
 	});
-
-	const [page, setPage] = useState(pathname);
 	const { isAdmin } = useAdminStatus(user);
-
-	useEffect(() => {
-		setPage(pathname);
-	}, [user, pathname]);
-
-	useEffect(() => {
-		return () => {
-			setPage(pathname);
-		};
-	}, []);
 
 	const toggleDrawer = (anchor, open) => (event) => {
 		if (
@@ -90,42 +138,17 @@ export default function Navigation() {
 			onKeyDown={toggleDrawer(anchor, false)}
 		>
 			<List className={"fallDown-menu"}>
-				<ListItem button onClick={() => navigate("/overview")}>
-					<ListItemIcon>
-						<PageViewIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Overview"} />
-				</ListItem>
-				<ListItem button onClick={() => navigate("/finances")}>
-					<ListItemIcon>
-						<PriceChangeOutlinedIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Finance Statement"} />
-				</ListItem>
-				<ListItem button onClick={() => navigate("/clients")}>
-					<ListItemIcon>
-						<GroupIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Clients"} />
-				</ListItem>
-				<ListItem button onClick={() => navigate("/translators")}>
-					<ListItemIcon>
-						<WorkIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Translators & Balance"} />
-				</ListItem>
-				<ListItem button onClick={() => navigate("/chart")}>
-					<ListItemIcon>
-						<BarChartIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Charts"} />
-				</ListItem>
-				<ListItem button onClick={() => navigate("/tasks")}>
-					<ListItemIcon>
-						<FormatListNumberedIcon />
-					</ListItemIcon>
-					<ListItemText primary={"Task List"} />
-				</ListItem>
+				{routes.map(
+					(route, index) =>
+						(!route.adminOnly || isAdmin) && (
+							<HeaderNavigationItem
+								key={index}
+								label={route.label}
+								icon={route.icon}
+								to={route.path}
+							/>
+						),
+				)}
 				{user ? (
 					<ListItem button onClick={onLogOut}>
 						<ListItemIcon>
@@ -138,11 +161,11 @@ export default function Navigation() {
 		</div>
 	);
 
-	const removeUserIdTokenFromLocalStorage = () => {
-		window.localStorage.removeItem(localStorageTokenKey);
-	};
+	if (!user) {
+		return null;
+	}
 
-	return user ? (
+	return (
 		<div className="App-header">
 			<Media
 				query="(min-width: 840px)"
@@ -150,45 +173,23 @@ export default function Navigation() {
 					<Animation>
 						<BottomNavigation
 							showLabels
-							value={page}
+							value={pathname}
 							onChange={(event, newValue) => {
 								navigate(newValue);
-								setPage(newValue);
 							}}
 							className={"header_nav gradient-box"}
 						>
-							<BottomNavigationAction
-								label="Overview"
-								icon={<PageViewIcon />}
-								value={"/overview"}
-							/>
-							{isAdmin && (
-								<BottomNavigationAction
-									label="Finance Statement"
-									icon={<PriceChangeOutlinedIcon />}
-									value={"/finances"}
-								/>
+							{routes.map(
+								(route, index) =>
+									(!route.adminOnly || isAdmin) && (
+										<BottomNavigationAction
+											key={index}
+											label={route.label}
+											icon={route.icon}
+											value={route.path}
+										/>
+									),
 							)}
-							<BottomNavigationAction
-								label="Clients"
-								icon={<GroupIcon />}
-								value={"/clients"}
-							/>
-							<BottomNavigationAction
-								label="Translators & Balance"
-								icon={<WorkIcon />}
-								value={"/translators"}
-							/>
-							<BottomNavigationAction
-								label="Charts"
-								icon={<BarChartIcon />}
-								value={"/chart"}
-							/>
-							<BottomNavigationAction
-								label="Task List"
-								icon={<FormatListNumberedIcon />}
-								value={"/tasks"}
-							/>
 							<ListItem button onClick={onLogOut}>
 								<ListItemIcon>
 									<ExitToAppIcon />
@@ -220,5 +221,5 @@ export default function Navigation() {
 				)}
 			/>
 		</div>
-	) : null;
+	);
 }
