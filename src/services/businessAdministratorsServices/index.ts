@@ -10,5 +10,5 @@ export function getBusinessAdmins({ searchQuery = "" }) {
 			(queryParams ? "&" : "?") +
 			`searchQuery=${encodeURIComponent(searchQuery)}`;
 	}
-	return requestWithAuth("get", businessAdminsURL + "get/" + queryParams);
+	return requestWithAuth("get", businessAdminsURL + queryParams);
 }

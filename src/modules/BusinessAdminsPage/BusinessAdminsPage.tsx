@@ -2,11 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { getBusinessAdmins } from "services/businessAdministratorsServices";
+import Loader from "sharedComponents/Loader/Loader";
 import MESSAGES from "constants/messages";
 
-interface BusinessAdminsPageProps {
-	// Define any props if needed
-}
+interface BusinessAdminsPageProps {}
 
 const BusinessAdminsPage: React.FC<BusinessAdminsPageProps> = (props) => {
 	const user = useSelector((state: any) => state.auth.user);
@@ -30,12 +29,14 @@ const BusinessAdminsPage: React.FC<BusinessAdminsPageProps> = (props) => {
 				console.error(MESSAGES.somethingWentWrongWithBusinessAdmins.text),
 		},
 	);
+	console.log(data);
+	if (isLoading) {
+		return <Loader />;
+	}
 	return (
 		<div className={"main-container scrolled-container"}>
-			<div className={"finances-inner-wrapper"}>HELLO</div>
-			{/* {arrayOfStatementsGroupedByDate.length === 0 && (
-							<h1>No payments yet</h1>
-						)} */}
+			{/* <div className={'finances-inner-wrapper'}>HELLO</div> */}
+			{data?.length === 0 && <h1>No business administrators yet</h1>}
 		</div>
 	);
 };

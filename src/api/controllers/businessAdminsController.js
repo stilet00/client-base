@@ -132,74 +132,37 @@ var __generator =
 			return { value: op[0] ? op[1] : void 0, done: true };
 		}
 	};
-var __importDefault =
-	(this && this.__importDefault) ||
-	function (mod) {
-		return mod && mod.__esModule ? mod : { default: mod };
-	};
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(require("react"));
-var react_redux_1 = require("react-redux");
-var react_query_1 = require("react-query");
-var businessAdministratorsServices_1 = require("services/businessAdministratorsServices");
-var Loader_1 = __importDefault(require("sharedComponents/Loader/Loader"));
-var messages_1 = __importDefault(require("constants/messages"));
-var BusinessAdminsPage = function (props) {
-	var user = (0, react_redux_1.useSelector)(function (state) {
-		return state.auth.user;
-	});
-	var fetchBusinessAdministrators = function () {
-		return __awaiter(void 0, void 0, void 0, function () {
-			var response;
-			return __generator(this, function (_a) {
-				switch (_a.label) {
-					case 0:
-						return [
-							4 /*yield*/,
-							(0, businessAdministratorsServices_1.getBusinessAdmins)({}),
-						];
-					case 1:
-						response = _a.sent();
-						if (response.status !== 200) {
-							throw new Error(
-								messages_1.default.somethingWentWrongWithBusinessAdmins.text,
-							);
-						}
-						return [2 /*return*/, response.body];
-				}
-			});
+exports.getAllBusinessAdmins = void 0;
+var getCollections = require("../database/collections").getCollections;
+var getAllBusinessAdmins = function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var hasSearchQuery, query, businessAdmins, error_1;
+		var _a;
+		return __generator(this, function (_b) {
+			switch (_b.label) {
+				case 0:
+					_b.trys.push([0, 2, , 3]);
+					hasSearchQuery = !!((_a = req.query) === null || _a === void 0
+						? void 0
+						: _a.searchQuery);
+					query = getCollections().collectionBusinessAdmins.find();
+					return [4 /*yield*/, query.exec()];
+				case 1:
+					businessAdmins = _b.sent();
+					res.send(businessAdmins);
+					return [3 /*break*/, 3];
+				case 2:
+					error_1 = _b.sent();
+					if (error_1 instanceof Error) {
+						console.error(error_1.message);
+					}
+					res.sendStatus(500);
+					return [3 /*break*/, 3];
+				case 3:
+					return [2 /*return*/];
+			}
 		});
-	};
-	var _a = (0, react_query_1.useQuery)(
-			"businessAdministratorsQuery",
-			fetchBusinessAdministrators,
-			{
-				enabled: !!user,
-				onSuccess: function (data) {
-					console.log(data);
-					return data;
-				},
-				onError: function () {
-					return console.error(
-						messages_1.default.somethingWentWrongWithBusinessAdmins.text,
-					);
-				},
-			},
-		),
-		data = _a.data,
-		isLoading = _a.isLoading,
-		refetch = _a.refetch;
-	console.log(data);
-	if (isLoading) {
-		return <Loader_1.default />;
-	}
-	return (
-		<div className={"main-container scrolled-container"}>
-			{/* <div className={'finances-inner-wrapper'}>HELLO</div> */}
-			{(data === null || data === void 0 ? void 0 : data.length) === 0 && (
-				<h1>No business administrators yet</h1>
-			)}
-		</div>
-	);
+	});
 };
-exports.default = BusinessAdminsPage;
+exports.getAllBusinessAdmins = getAllBusinessAdmins;

@@ -132,81 +132,44 @@ var __generator =
 			return { value: op[0] ? op[1] : void 0, done: true };
 		}
 	};
-var __spreadArray =
-	(this && this.__spreadArray) ||
-	function (to, from, pack) {
-		if (pack || arguments.length === 2)
-			for (var i = 0, l = from.length, ar; i < l; i++) {
-				if (ar || !(i in from)) {
-					if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-					ar[i] = from[i];
-				}
-			}
-		return to.concat(ar || Array.prototype.slice.call(from));
+var __importDefault =
+	(this && this.__importDefault) ||
+	function (mod) {
+		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var bodyParser = require("body-parser");
-var _a = require("./src/api/firebase/firebaseAdmin"),
-	isAuthenticated = _a.isAuthenticated,
-	adminRules = _a.adminRules;
+var express_1 = __importDefault(require("express"));
+var body_parser_1 = __importDefault(require("body-parser"));
+var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+var authRoutes_1 = __importDefault(require("./src/api/routes/authRoutes"));
+var clientRoutes_1 = __importDefault(require("./src/api/routes/clientRoutes"));
+var translatorRoutes_1 = __importDefault(
+	require("./src/api/routes/translatorRoutes"),
+);
+var taskRoutes_1 = __importDefault(require("./src/api/routes/taskRoutes"));
+var statementRoutes_1 = __importDefault(
+	require("./src/api/routes/statementRoutes"),
+);
+var balanceDayRoutes_1 = __importDefault(
+	require("./src/api/routes/balanceDayRoutes"),
+);
+var staticRoutes_1 = __importDefault(require("./src/api/routes/staticRoutes"));
+var businessAdminsRoutes_1 = __importDefault(
+	require("./src/api/routes/businessAdminsRoutes"),
+);
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
-var _b = require("./src/api/routes/routes"),
-	rootURL = _b.rootURL,
-	clientsURL = _b.clientsURL,
-	translatorsURL = _b.translatorsURL,
-	financeStatementsURL = _b.financeStatementsURL,
-	tasksURL = _b.tasksURL,
-	balanceDayURL = _b.balanceDayURL,
-	personalPenaltiesURL = _b.personalPenaltiesURL;
-var _c = require("./src/api/controllers/translatorController"),
-	getLastVirtualGift = _c.getLastVirtualGift,
-	getAllTranslators = _c.getAllTranslators,
-	addNewTranslator = _c.addNewTranslator,
-	updateTranslator = _c.updateTranslator,
-	deleteTranslator = _c.deleteTranslator,
-	sendEmailsToTranslators = _c.sendEmailsToTranslators,
-	assignClientToTranslator = _c.assignClientToTranslator,
-	addPersonalPenaltyToTranslator = _c.addPersonalPenaltyToTranslator,
-	getPersonalPenalties = _c.getPersonalPenalties,
-	toggleSuspendClientResolver = _c.toggleSuspendClientResolver;
-var _d = require("./src/api/controllers/taskController"),
-	getAllTasks = _d.getAllTasks,
-	deleteTask = _d.deleteTask,
-	editTask = _d.editTask,
-	createTask = _d.createTask;
-var _e = require("./src/api/controllers/statementController"),
-	getAllStatements = _e.getAllStatements,
-	createStatement = _e.createStatement,
-	deleteStatement = _e.deleteStatement;
-var _f = require("./src/api/controllers/clientController"),
-	getAllClients = _f.getAllClients,
-	addNewClient = _f.addNewClient,
-	updateClient = _f.updateClient;
-var changeUserPassword =
-	require("./src/api/firebase/firebaseAdmin").changeUserPassword;
-var getCollections = require("./src/api/database/collections").getCollections;
-var _g = require("./src/api/controllers/balanceDayController"),
-	getBalanceDay = _g.getBalanceDay,
-	createBalanceDay = _g.createBalanceDay,
-	updateBalanceDay = _g.updateBalanceDay,
-	getBalanceDaysForTranslators = _g.getBalanceDaysForTranslators,
-	getAllBalanceDays = _g.getAllBalanceDays,
-	getCurrentMonthTotal = _g.getCurrentMonthTotal,
-	getBalanceDayForSelectedDate = _g.getBalanceDayForSelectedDate;
-var rateLimit = require("express-rate-limit");
 var PORT = process.env.PORT || 80;
-var app = express();
-var limiter = rateLimit({
+var app = (0, express_1.default)();
+var limiter = (0, express_rate_limit_1.default)({
 	windowMs: 2000,
 	max: 100,
 	message: "Too many requests from this IP, please try again later.",
 });
-app.use(express.static(__dirname + "/build"));
+app.use(express_1.default.static(__dirname + "/build"));
 app.set("view engine", "ejs");
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(body_parser_1.default.json({ limit: "50mb" }));
+app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
 app.use(function (request, response, next) {
 	response.setHeader("Access-Control-Allow-Origin", "*");
 	response.setHeader(
@@ -217,144 +180,15 @@ app.use(function (request, response, next) {
 	next();
 });
 app.use(limiter);
-//routes
-app.get(rootURL + "chart/", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "chart?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "overview/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "clients/true?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "clients/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "tasks/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "translators/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "finances/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-// password change
-app.post(rootURL + "reset-password", function (request, response) {
-	changeUserPassword(request, response);
-});
-// permision check
-app.post(rootURL + "isAdmin", function (request, response) {
-	return __awaiter(void 0, void 0, void 0, function () {
-		var userEmail, admin;
-		return __generator(this, function (_a) {
-			switch (_a.label) {
-				case 0:
-					userEmail = request.body.email;
-					return [
-						4 /*yield*/,
-						getCollections().collectionAdmins.findOne({
-							registeredEmail: userEmail,
-						}),
-					];
-				case 1:
-					admin = _a.sent();
-					response.send(!!admin); // Send true if admin exists, false otherwise
-					return [2 /*return*/];
-			}
-		});
-	});
-});
-// task list api
-app.get(tasksURL + "get", isAuthenticated, getAllTasks);
-app.delete(tasksURL + ":id", __spreadArray([], adminRules, true), deleteTask);
-app.post(tasksURL + "add", isAuthenticated, createTask);
-app.put(tasksURL + "edit/:id", isAuthenticated, editTask);
-// clients api
-app.get(clientsURL + "get", isAuthenticated, getAllClients);
-app.post(clientsURL + "add", __spreadArray([], adminRules, true), addNewClient);
-app.put(clientsURL + ":id", isAuthenticated, updateClient);
-// translators api
-app.get(translatorsURL + "get", isAuthenticated, getAllTranslators);
-app.get(translatorsURL + "last-gift/:id", isAuthenticated, getLastVirtualGift);
-app.get(
-	translatorsURL + "send-emails",
-	__spreadArray([], adminRules, true),
-	sendEmailsToTranslators,
-);
-app.post(
-	translatorsURL + "add",
-	__spreadArray([], adminRules, true),
-	addNewTranslator,
-);
-app.put(
-	translatorsURL + "suspend-client",
-	__spreadArray([], adminRules, true),
-	toggleSuspendClientResolver,
-);
-app.put(
-	translatorsURL + "assign-client",
-	isAuthenticated,
-	assignClientToTranslator,
-);
-app.put(
-	translatorsURL + ":id",
-	__spreadArray([], adminRules, true),
-	updateTranslator,
-);
-app.delete(
-	translatorsURL + ":id",
-	__spreadArray([], adminRules, true),
-	deleteTranslator,
-);
-// personal penalties api
-app.post(
-	personalPenaltiesURL + "create",
-	__spreadArray([], adminRules, true),
-	addPersonalPenaltyToTranslator,
-);
-app.get(personalPenaltiesURL + "get", getPersonalPenalties);
-// statements api
-app.get(financeStatementsURL + "get", isAuthenticated, getAllStatements);
-app.post(
-	financeStatementsURL + "add",
-	__spreadArray([], adminRules, true),
-	createStatement,
-);
-app.delete(
-	financeStatementsURL + ":id",
-	__spreadArray([], adminRules, true),
-	deleteStatement,
-);
-// balance day api
-app.post(balanceDayURL + "create", isAuthenticated, createBalanceDay);
-app.put(balanceDayURL + "update", isAuthenticated, updateBalanceDay);
-app.get(
-	balanceDayURL + "translators",
-	isAuthenticated,
-	getBalanceDaysForTranslators,
-);
-app.get(balanceDayURL + "all", isAuthenticated, getAllBalanceDays);
-app.get(balanceDayURL, isAuthenticated, getBalanceDay);
-app.get(
-	balanceDayURL + "current-month-total",
-	isAuthenticated,
-	getCurrentMonthTotal,
-);
-app.get(
-	balanceDayURL + "clients-statistics",
-	isAuthenticated,
-	getAllBalanceDays,
-);
-app.get(
-	balanceDayURL + "selected-date",
-	isAuthenticated,
-	getBalanceDayForSelectedDate,
-);
-// DB connection and server starts
+// Use route files
+app.use(authRoutes_1.default);
+app.use(clientRoutes_1.default);
+app.use(translatorRoutes_1.default);
+app.use(taskRoutes_1.default);
+app.use(statementRoutes_1.default);
+app.use(balanceDayRoutes_1.default);
+app.use(businessAdminsRoutes_1.default);
+app.use(staticRoutes_1.default);
 var startServer = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var err_1;

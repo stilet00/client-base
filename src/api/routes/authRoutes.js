@@ -138,68 +138,32 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(require("react"));
-var react_redux_1 = require("react-redux");
-var react_query_1 = require("react-query");
-var businessAdministratorsServices_1 = require("services/businessAdministratorsServices");
-var Loader_1 = __importDefault(require("sharedComponents/Loader/Loader"));
-var messages_1 = __importDefault(require("constants/messages"));
-var BusinessAdminsPage = function (props) {
-	var user = (0, react_redux_1.useSelector)(function (state) {
-		return state.auth.user;
-	});
-	var fetchBusinessAdministrators = function () {
-		return __awaiter(void 0, void 0, void 0, function () {
-			var response;
-			return __generator(this, function (_a) {
-				switch (_a.label) {
-					case 0:
-						return [
-							4 /*yield*/,
-							(0, businessAdministratorsServices_1.getBusinessAdmins)({}),
-						];
-					case 1:
-						response = _a.sent();
-						if (response.status !== 200) {
-							throw new Error(
-								messages_1.default.somethingWentWrongWithBusinessAdmins.text,
-							);
-						}
-						return [2 /*return*/, response.body];
-				}
-			});
+var express_1 = __importDefault(require("express"));
+var changeUserPassword =
+	require("../firebase/firebaseAdmin").changeUserPassword;
+var getCollections = require("../database/collections").getCollections;
+var rootURL = require("./routes").rootURL;
+var router = express_1.default.Router();
+router.post(rootURL + "reset-password", changeUserPassword);
+router.post(rootURL + "isAdmin", function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var userEmail, admin;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					userEmail = req.body.email;
+					return [
+						4 /*yield*/,
+						getCollections().collectionAdmins.findOne({
+							registeredEmail: userEmail,
+						}),
+					];
+				case 1:
+					admin = _a.sent();
+					res.send(!!admin);
+					return [2 /*return*/];
+			}
 		});
-	};
-	var _a = (0, react_query_1.useQuery)(
-			"businessAdministratorsQuery",
-			fetchBusinessAdministrators,
-			{
-				enabled: !!user,
-				onSuccess: function (data) {
-					console.log(data);
-					return data;
-				},
-				onError: function () {
-					return console.error(
-						messages_1.default.somethingWentWrongWithBusinessAdmins.text,
-					);
-				},
-			},
-		),
-		data = _a.data,
-		isLoading = _a.isLoading,
-		refetch = _a.refetch;
-	console.log(data);
-	if (isLoading) {
-		return <Loader_1.default />;
-	}
-	return (
-		<div className={"main-container scrolled-container"}>
-			{/* <div className={'finances-inner-wrapper'}>HELLO</div> */}
-			{(data === null || data === void 0 ? void 0 : data.length) === 0 && (
-				<h1>No business administrators yet</h1>
-			)}
-		</div>
-	);
-};
-exports.default = BusinessAdminsPage;
+	});
+});
+exports.default = router;

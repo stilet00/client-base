@@ -20,7 +20,7 @@ function getBusinessAdmins(_a) {
 	}
 	return (0, superAgentConfig_1.default)(
 		"get",
-		businessAdminsURL + "get/" + queryParams,
+		businessAdminsURL + queryParams,
 	);
 }
 exports.getBusinessAdmins = getBusinessAdmins;
