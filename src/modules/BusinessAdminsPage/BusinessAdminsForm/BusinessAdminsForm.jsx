@@ -32,9 +32,14 @@ var AlternateEmail_1 = __importDefault(
 	require("@mui/icons-material/AlternateEmail"),
 );
 var InputAdornment_1 = __importDefault(require("@mui/material/InputAdornment"));
-require("../../../styles/modules/BusinessAdminsForm.css");
 var styledMaterialComponents_1 = require("../../../sharedComponents/StyledMaterial/styledMaterialComponents");
 var businessAdministratorsServices_1 = require("services/businessAdministratorsServices");
+var defaultAdmin = {
+	_id: "",
+	email: "",
+	name: "",
+	surname: "",
+};
 var BusinessAdminsForm = function (_a) {
 	var _b, _c, _d;
 	var formOpen = _a.formOpen,
@@ -50,8 +55,7 @@ var BusinessAdminsForm = function (_a) {
 		{
 			onSuccess: function () {
 				queryClient.invalidateQueries("businessAdministratorsQuery");
-				clearClient();
-				handleClose();
+				closeFormAndClearFormData();
 			},
 			onError: function () {
 				setFormErrors({
@@ -101,211 +105,135 @@ var BusinessAdminsForm = function (_a) {
 			value = _a.value;
 		setSelectedAdmin(function (prevState) {
 			var _a, _b;
-			if (prevState) {
-				return __assign(
-					__assign({}, prevState),
-					((_a = {}), (_a[name] = value), _a),
-				);
-			}
-			return (_b = {}), (_b[name] = value), _b;
+			return prevState
+				? __assign(__assign({}, prevState), ((_a = {}), (_a[name] = value), _a))
+				: __assign(
+						__assign({}, defaultAdmin),
+						((_b = {}), (_b[name] = value), _b),
+					);
 		});
 	};
 	var onFormSubmit = function () {
-		var formIsValid = validateForm();
-		console.log("formIsValid: ".concat(formIsValid));
-		if (formIsValid && selectedAdmin) {
+		if (validateForm() && selectedAdmin) {
 			mutation.mutate(selectedAdmin);
 		}
-		console.log("formIsValid: ".concat(formIsValid));
-		// if (arrayOfEditedClientsFields.length > 0) {
-		// 	await onEditClientData(client);
-		// 	clearEditedClient();
-		// } else {
-		// 	await onAddNewClient(client);
-		// }
-		// setSiteFilter("svadba");
 	};
-	var clearClient = function () {
+	var clearFormData = function () {
 		setSelectedAdmin(null);
+		setFormErrors({});
 	};
-	// function clearClient() {
-	// 	setClient(DEFAULT_CLIENT);
-	// }
-	// const handleClickShowPassword = () => {
-	// 	setShowPassword(!showPassword);
-	// };
-	// const handleMouseDownPassword = (event) => {
-	// 	event.preventDefault();
-	// };
-	// const handleCardNumberChange = (event) => {
-	// 	const { name, value } = event.target;
-	// 	function changindValueToCardFormat(value) {
-	// 		let arrayFromText = value.split("");
-	// 		let textWIthoutSpaces = arrayFromText.filter((el) => el !== " ");
-	// 		let fixedArray = textWIthoutSpaces.filter(
-	// 			(el, index) => index % 4 === 0 && index !== 0,
-	// 		);
-	// 		if (fixedArray.length === 1) {
-	// 			textWIthoutSpaces.splice(4, 0, " ");
-	// 		} else if (fixedArray.length === 2) {
-	// 			textWIthoutSpaces.splice(4, 0, " ");
-	// 			textWIthoutSpaces.splice(9, 0, " ");
-	// 		} else if (fixedArray.length === 3) {
-	// 			textWIthoutSpaces.splice(4, 0, " ");
-	// 			textWIthoutSpaces.splice(9, 0, " ");
-	// 			textWIthoutSpaces.splice(14, 0, " ");
-	// 		}
-	// 		return textWIthoutSpaces.join("");
-	// 	}
-	// 	const newState = {
-	// 		...client,
-	// 		[name]: changindValueToCardFormat(value),
-	// 	};
-	// 	setClient(newState);
-	// 	setFormErrors(handleFormValidation(newState, name));
-	// };
-	// const fieldsAreEmpty =
-	// 	client.name === "" ||
-	// 	client.surname === "" ||
-	// 	!client.instagramLink ||
-	// 	!client.bankAccount;
-	// const handleFileInputChange = (e) => {
-	// 	const file = e.target.files[0];
-	// 	const reader = new FileReader();
-	// 	reader.onload = (event) => {
-	// 		setClient({ ...client, image: reader.result });
-	// 	};
-	// 	reader.readAsDataURL(file);
-	// };
-	// useEffect(() => {
-	// 	if (arrayOfEditedClientsFields.length > 0) {
-	// 		setClient(editedClient);
-	// 	}
-	// }, [editedClient, JSON.stringify(arrayOfEditedClientsFields)]);
-	// useEffect(
-	// 	() => () => {
-	// 		clearClient();
-	// 	},
-	// 	[],
-	// );
+	var closeFormAndClearFormData = function () {
+		clearFormData();
+		handleClose();
+	};
 	return (
-		<>
-			<styledMaterialComponents_1.StyledModal
-				disableEnforceFocus
-				aria-labelledby="transition-modal-title"
-				aria-describedby="transition-modal-description"
-				open={formOpen}
-				onClose={function (e) {
-					handleClose();
-					// clearEditedClient()
-					// clearClient()
-					// setSiteFilter('svadba')
-					// setFormErrors({})
-				}}
-				closeAfterTransition
-				BackdropComponent={Backdrop_1.default}
-				BackdropProps={{
-					timeout: 500,
-				}}
-			>
-				<Fade_1.default in={formOpen}>
-					<form className={"form-container business-admins-form"}>
-						<h2 id="transition-modal-title" className="clients-from__header">
-							Enter business admin's data:
-						</h2>
-						<styledMaterialComponents_1.StyledTextField
-							name={"name"}
-							onChange={handleChange}
-							value={
-								(_b =
-									selectedAdmin === null || selectedAdmin === void 0
-										? void 0
-										: selectedAdmin.name) !== null && _b !== void 0
-									? _b
-									: ""
-							}
-							variant="outlined"
-							label={"First name"}
-							required
-							InputProps={{
-								startAdornment: (
-									<InputAdornment_1.default position="start">
-										<AccountCircle_1.default />
-									</InputAdornment_1.default>
-								),
-							}}
-							error={!!formErrors.name}
-							helperText={formErrors.name}
-							fullWidth
-						/>
-						<styledMaterialComponents_1.StyledTextField
-							name={"surname"}
-							onChange={handleChange}
-							value={
-								(_c =
-									selectedAdmin === null || selectedAdmin === void 0
-										? void 0
-										: selectedAdmin.surname) !== null && _c !== void 0
-									? _c
-									: ""
-							}
-							variant="outlined"
-							label={"Last name"}
-							required
-							InputProps={{
-								startAdornment: (
-									<InputAdornment_1.default position="start">
-										<AccountCircle_1.default />
-									</InputAdornment_1.default>
-								),
-							}}
-							error={!!formErrors.surname}
-							helperText={formErrors.surname}
-							fullWidth
-						/>
-						<styledMaterialComponents_1.StyledTextField
-							name={"email"}
-							onChange={handleChange}
-							value={
-								(_d =
-									selectedAdmin === null || selectedAdmin === void 0
-										? void 0
-										: selectedAdmin.email) !== null && _d !== void 0
-									? _d
-									: ""
-							}
-							variant="outlined"
-							label={"Email"}
-							required
-							InputProps={{
-								startAdornment: (
-									<InputAdornment_1.default position="start">
-										<AlternateEmail_1.default />
-									</InputAdornment_1.default>
-								),
-							}}
-							fullWidth
-							error={!!formErrors.email}
-							helperText={formErrors.email}
-						/>
-						{formErrors.submitError && (
-							<p style={{ color: "red", margin: 0 }}>
-								{formErrors.submitError}
-							</p>
-						)}
-						<Button_1.default
-							type={"button"}
-							onClick={onFormSubmit}
-							fullWidth
-							variant={"outlined"}
-							style={{ marginTop: "10px" }}
-						>
-							{"Save Business Admin"}
-						</Button_1.default>
-					</form>
-				</Fade_1.default>
-			</styledMaterialComponents_1.StyledModal>
-		</>
+		<styledMaterialComponents_1.StyledModal
+			disableEnforceFocus
+			aria-labelledby="business-admin-form"
+			aria-describedby="allows-save-edit-business-admins"
+			open={formOpen}
+			onClose={closeFormAndClearFormData}
+			closeAfterTransition
+			BackdropComponent={Backdrop_1.default}
+			BackdropProps={{
+				timeout: 500,
+			}}
+		>
+			<Fade_1.default in={formOpen}>
+				<form className="form-container business-admins-form">
+					<h2 id="transition-modal-title" className="clients-from__header">
+						Enter business admin's data:
+					</h2>
+					<styledMaterialComponents_1.StyledTextField
+						name="name"
+						onChange={handleChange}
+						value={
+							(_b =
+								selectedAdmin === null || selectedAdmin === void 0
+									? void 0
+									: selectedAdmin.name) !== null && _b !== void 0
+								? _b
+								: ""
+						}
+						variant="outlined"
+						label="First name"
+						required
+						InputProps={{
+							startAdornment: (
+								<InputAdornment_1.default position="start">
+									<AccountCircle_1.default />
+								</InputAdornment_1.default>
+							),
+						}}
+						error={!!formErrors.name}
+						helperText={formErrors.name}
+						fullWidth
+					/>
+					<styledMaterialComponents_1.StyledTextField
+						name="surname"
+						onChange={handleChange}
+						value={
+							(_c =
+								selectedAdmin === null || selectedAdmin === void 0
+									? void 0
+									: selectedAdmin.surname) !== null && _c !== void 0
+								? _c
+								: ""
+						}
+						variant="outlined"
+						label="Last name"
+						required
+						InputProps={{
+							startAdornment: (
+								<InputAdornment_1.default position="start">
+									<AccountCircle_1.default />
+								</InputAdornment_1.default>
+							),
+						}}
+						error={!!formErrors.surname}
+						helperText={formErrors.surname}
+						fullWidth
+					/>
+					<styledMaterialComponents_1.StyledTextField
+						name="email"
+						onChange={handleChange}
+						value={
+							(_d =
+								selectedAdmin === null || selectedAdmin === void 0
+									? void 0
+									: selectedAdmin.email) !== null && _d !== void 0
+								? _d
+								: ""
+						}
+						variant="outlined"
+						label="Email"
+						required
+						InputProps={{
+							startAdornment: (
+								<InputAdornment_1.default position="start">
+									<AlternateEmail_1.default />
+								</InputAdornment_1.default>
+							),
+						}}
+						fullWidth
+						error={!!formErrors.email}
+						helperText={formErrors.email}
+					/>
+					{formErrors.submitError && (
+						<p style={{ color: "red", margin: 0 }}>{formErrors.submitError}</p>
+					)}
+					<Button_1.default
+						type="button"
+						onClick={onFormSubmit}
+						fullWidth
+						variant="outlined"
+						style={{ marginTop: "10px" }}
+					>
+						Save Business Admin
+					</Button_1.default>
+				</form>
+			</Fade_1.default>
+		</styledMaterialComponents_1.StyledModal>
 	);
 };
 exports.default = BusinessAdminsForm;
