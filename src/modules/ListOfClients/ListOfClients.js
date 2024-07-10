@@ -15,7 +15,6 @@ import SingleClient from "./SingleClient";
 import Grid from "@mui/material/Grid";
 import "../../styles/modules/ListOfClients.css";
 import ClientsForm from "./ClientsForm/ClientsForm";
-import moment from "moment";
 import useModal from "../../sharedHooks/useModal";
 import Button from "@mui/material/Button";
 import { faVenus } from "@fortawesome/free-solid-svg-icons";

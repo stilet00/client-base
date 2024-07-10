@@ -1,4 +1,48 @@
 "use strict";
+var __createBinding =
+	(this && this.__createBinding) ||
+	(Object.create
+		? function (o, m, k, k2) {
+				if (k2 === undefined) k2 = k;
+				var desc = Object.getOwnPropertyDescriptor(m, k);
+				if (
+					!desc ||
+					("get" in desc ? !m.__esModule : desc.writable || desc.configurable)
+				) {
+					desc = {
+						enumerable: true,
+						get: function () {
+							return m[k];
+						},
+					};
+				}
+				Object.defineProperty(o, k2, desc);
+			}
+		: function (o, m, k, k2) {
+				if (k2 === undefined) k2 = k;
+				o[k2] = m[k];
+			});
+var __setModuleDefault =
+	(this && this.__setModuleDefault) ||
+	(Object.create
+		? function (o, v) {
+				Object.defineProperty(o, "default", { enumerable: true, value: v });
+			}
+		: function (o, v) {
+				o["default"] = v;
+			});
+var __importStar =
+	(this && this.__importStar) ||
+	function (mod) {
+		if (mod && mod.__esModule) return mod;
+		var result = {};
+		if (mod != null)
+			for (var k in mod)
+				if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
+					__createBinding(result, mod, k);
+		__setModuleDefault(result, mod);
+		return result;
+	};
 var __awaiter =
 	(this && this.__awaiter) ||
 	function (thisArg, _arguments, P, generator) {
@@ -138,16 +182,31 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(require("react"));
+var react_1 = __importStar(require("react"));
 var react_redux_1 = require("react-redux");
 var react_query_1 = require("react-query");
+var Button_1 = __importDefault(require("@mui/material/Button"));
+var SupervisorAccount_1 = __importDefault(
+	require("@mui/icons-material/SupervisorAccount"),
+);
 var businessAdministratorsServices_1 = require("services/businessAdministratorsServices");
 var Loader_1 = __importDefault(require("sharedComponents/Loader/Loader"));
 var messages_1 = __importDefault(require("constants/messages"));
+var useAdminStatus_1 = require("sharedHooks/useAdminStatus");
+var BusinessAdminsForm_1 = __importDefault(require("./BusinessAdminsForm"));
+var useModal_1 = __importDefault(require("sharedHooks/useModal"));
 var BusinessAdminsPage = function (props) {
+	var _a = (0, useModal_1.default)(),
+		handleClose = _a.handleClose,
+		handleOpen = _a.handleOpen,
+		open = _a.open;
+	var _b = (0, react_1.useState)(null),
+		selectedAdmin = _b[0],
+		setSelectedAdmin = _b[1];
 	var user = (0, react_redux_1.useSelector)(function (state) {
 		return state.auth.user;
 	});
+	var isAdmin = (0, useAdminStatus_1.useAdminStatus)(user).isAdmin;
 	var fetchBusinessAdministrators = function () {
 		return __awaiter(void 0, void 0, void 0, function () {
 			var response;
@@ -170,7 +229,7 @@ var BusinessAdminsPage = function (props) {
 			});
 		});
 	};
-	var _a = (0, react_query_1.useQuery)(
+	var _c = (0, react_query_1.useQuery)(
 			"businessAdministratorsQuery",
 			fetchBusinessAdministrators,
 			{
@@ -186,20 +245,44 @@ var BusinessAdminsPage = function (props) {
 				},
 			},
 		),
-		data = _a.data,
-		isLoading = _a.isLoading,
-		refetch = _a.refetch;
-	console.log(data);
+		data = _c.data,
+		isLoading = _c.isLoading,
+		refetch = _c.refetch;
 	if (isLoading) {
 		return <Loader_1.default />;
 	}
 	return (
-		<div className={"main-container scrolled-container"}>
-			{/* <div className={'finances-inner-wrapper'}>HELLO</div> */}
-			{(data === null || data === void 0 ? void 0 : data.length) === 0 && (
-				<h1>No business administrators yet</h1>
-			)}
-		</div>
+		<>
+			<div className={"main-container scrolled-container"}>
+				{(data === null || data === void 0 ? void 0 : data.length) === 0 && (
+					<h1>No business administrators yet</h1>
+				)}
+			</div>
+			<div className="socials button-add-container">
+				<Button_1.default
+					type="button"
+					onClick={handleOpen}
+					fullWidth
+					startIcon={<SupervisorAccount_1.default />}
+					disabled={!isAdmin}
+				>
+					Add Business Admin
+				</Button_1.default>
+				<BusinessAdminsForm_1.default
+					handleClose={handleClose}
+					formOpen={open}
+					selectedAdmin={selectedAdmin}
+					setSelectedAdmin={setSelectedAdmin}
+				/>
+			</div>
+			{/* <AlertMessage
+        mainText={alertInfo.mainTitle}
+        open={alertOpen}
+        handleOpen={openAlert}
+        handleClose={closeAlert}
+        status={alertInfo.status}
+    /> */}
+		</>
 	);
 };
 exports.default = BusinessAdminsPage;

@@ -21,7 +21,11 @@ router.get(
 //     getLastVirtualGift
 // )
 // router.get(translatorsURL + 'send-emails', adminRules, sendEmailsToTranslators)
-// router.post(translatorsURL + 'add', adminRules, addNewTranslator)
+router.post(
+	businessAdminsURL,
+	adminRules,
+	businessAdminsController_1.saveBusinessAdmin,
+);
 // router.put(
 //     translatorsURL + 'suspend-client',
 //     adminRules,

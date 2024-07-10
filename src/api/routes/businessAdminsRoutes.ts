@@ -1,5 +1,8 @@
 import express from "express";
-import { getAllBusinessAdmins } from "../controllers/businessAdminsController";
+import {
+	getAllBusinessAdmins,
+	saveBusinessAdmin,
+} from "../controllers/businessAdminsController";
 const { adminRules } = require("../firebase/firebaseAdmin");
 const { businessAdminsURL } = require("./routes");
 
@@ -12,7 +15,7 @@ router.get(businessAdminsURL, adminRules, getAllBusinessAdmins);
 //     getLastVirtualGift
 // )
 // router.get(translatorsURL + 'send-emails', adminRules, sendEmailsToTranslators)
-// router.post(translatorsURL + 'add', adminRules, addNewTranslator)
+router.post(businessAdminsURL, adminRules, saveBusinessAdmin);
 // router.put(
 //     translatorsURL + 'suspend-client',
 //     adminRules,

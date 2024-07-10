@@ -10,19 +10,15 @@ var mongoose_1 = __importDefault(require("mongoose"));
 exports.BusinessAdminSchema = new mongoose_1.default.Schema({
 	name: {
 		type: String,
-		required: [true, "Please tell us your name!"],
+		required: [true, "First name is reqiured!"],
 	},
 	surname: {
 		type: String,
-		required: [true, "Please tell us your name!"],
+		required: [true, "Last name is required!"],
 	},
 	email: {
 		type: String,
 		lowercase: true,
-		required: false,
-	},
-	active: {
-		type: Boolean,
 		required: false,
 	},
 });

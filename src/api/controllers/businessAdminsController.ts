@@ -1,7 +1,6 @@
 import type { Request, Response } from "express";
-import { type DeleteResult, type MongoError, ObjectId } from "mongodb";
-import mongoose, { type Query } from "mongoose";
-import type { BusinessAdmin } from "../models/businessAdminsDatabaseModels";
+import { type Query } from "mongoose";
+import { type BusinessAdmin } from "../models/businessAdminsDatabaseModels";
 
 const { getCollections } = require("../database/collections");
 
@@ -16,6 +15,32 @@ export const getAllBusinessAdmins = async (
 
 		const businessAdmins: BusinessAdmin[] = await query.exec();
 		res.send(businessAdmins);
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+		res.sendStatus(500);
+	}
+};
+
+export const saveBusinessAdmin = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
+	try {
+		const { email, name, surname } = req.body;
+		if (!email || !name || !surname) {
+			res.status(400).send({ error: "Invalid input data" });
+			return;
+		}
+		const BusinessAdminModel = await getCollections().collectionBusinessAdmins;
+		const newBusinessAdmin = new BusinessAdminModel({
+			email,
+			name,
+			surname,
+		});
+		await newBusinessAdmin.save();
+		res.status(201).send(newBusinessAdmin);
 	} catch (error: unknown) {
 		if (error instanceof Error) {
 			console.error(error.message);

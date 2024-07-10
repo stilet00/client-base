@@ -5,7 +5,7 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBusinessAdmins = void 0;
+exports.submitBusinessAdmin = exports.getBusinessAdmins = void 0;
 var superAgentConfig_1 = __importDefault(require("../superAgentConfig"));
 var rootURL_1 = require("../rootURL");
 var businessAdminsURL = rootURL_1.rootURL + "business-admins/";
@@ -24,3 +24,9 @@ function getBusinessAdmins(_a) {
 	);
 }
 exports.getBusinessAdmins = getBusinessAdmins;
+function submitBusinessAdmin(businessAdminData) {
+	return (0, superAgentConfig_1.default)("post", businessAdminsURL).send(
+		businessAdminData,
+	);
+}
+exports.submitBusinessAdmin = submitBusinessAdmin;

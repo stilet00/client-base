@@ -133,7 +133,7 @@ var __generator =
 		}
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBusinessAdmins = void 0;
+exports.saveBusinessAdmin = exports.getAllBusinessAdmins = void 0;
 var getCollections = require("../database/collections").getCollections;
 var getAllBusinessAdmins = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
@@ -166,3 +166,51 @@ var getAllBusinessAdmins = function (req, res) {
 	});
 };
 exports.getAllBusinessAdmins = getAllBusinessAdmins;
+var saveBusinessAdmin = function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var _a,
+			email,
+			name_1,
+			surname,
+			BusinessAdminModel,
+			newBusinessAdmin,
+			error_2;
+		return __generator(this, function (_b) {
+			switch (_b.label) {
+				case 0:
+					_b.trys.push([0, 3, , 4]);
+					(_a = req.body),
+						(email = _a.email),
+						(name_1 = _a.name),
+						(surname = _a.surname);
+					if (!email || !name_1 || !surname) {
+						res.status(400).send({ error: "Invalid input data" });
+						return [2 /*return*/];
+					}
+					return [4 /*yield*/, getCollections().collectionBusinessAdmins];
+				case 1:
+					BusinessAdminModel = _b.sent();
+					newBusinessAdmin = new BusinessAdminModel({
+						email: email,
+						name: name_1,
+						surname: surname,
+					});
+					return [4 /*yield*/, newBusinessAdmin.save()];
+				case 2:
+					_b.sent();
+					res.status(201).send(newBusinessAdmin);
+					return [3 /*break*/, 4];
+				case 3:
+					error_2 = _b.sent();
+					if (error_2 instanceof Error) {
+						console.error(error_2.message);
+					}
+					res.sendStatus(500);
+					return [3 /*break*/, 4];
+				case 4:
+					return [2 /*return*/];
+			}
+		});
+	});
+};
+exports.saveBusinessAdmin = saveBusinessAdmin;

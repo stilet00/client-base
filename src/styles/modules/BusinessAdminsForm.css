@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+.business-admins-form {
+  min-height: 300px !important;
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+}
+.business-admins-form h2 {
+  text-align: center;
+}
+.business-admins-form__header {
+  grid-column: 1/3;
+  text-align: center;
+}
+.business-admins-form__body {
+  display: grid;
+  grid-template-columns: 50%;
+  gap: 20px 10px;
+  width: 100%;
+}
+.business-admins-form__body--label {
+  grid-column: 1/3;
+  text-align: center;
+}
+.business-admins-form__body--big-field {
+  grid-column: 1/3;
+}
+
+.media-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-container {
+  position: relative;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 5px;
+  text-align: center;
+}
+.upload-container:hover {
+  border-color: rgba(0, 0, 0, 0.54);
+}
+.upload-container input {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-image {
+  border-radius: 5px;
+}
+
+/*# sourceMappingURL=BusinessAdminsForm.css.map */
