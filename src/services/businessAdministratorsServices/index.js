@@ -5,7 +5,10 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.submitBusinessAdmin = exports.getBusinessAdmins = void 0;
+exports.deleteBusinessAdmin =
+	exports.submitBusinessAdmin =
+	exports.getBusinessAdmins =
+		void 0;
 var superAgentConfig_1 = __importDefault(require("../superAgentConfig"));
 var rootURL_1 = require("../rootURL");
 var businessAdminsURL = rootURL_1.rootURL + "business-admins/";
@@ -30,3 +33,10 @@ function submitBusinessAdmin(businessAdminData) {
 	);
 }
 exports.submitBusinessAdmin = submitBusinessAdmin;
+function deleteBusinessAdmin(adminId) {
+	return (0, superAgentConfig_1.default)(
+		"delete",
+		"".concat(businessAdminsURL).concat(adminId),
+	);
+}
+exports.deleteBusinessAdmin = deleteBusinessAdmin;

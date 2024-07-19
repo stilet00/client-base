@@ -132,8 +132,17 @@ var __generator =
 			return { value: op[0] ? op[1] : void 0, done: true };
 		}
 	};
+var __importDefault =
+	(this && this.__importDefault) ||
+	function (mod) {
+		return mod && mod.__esModule ? mod : { default: mod };
+	};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveBusinessAdmin = exports.getAllBusinessAdmins = void 0;
+exports.deleteBusinessAdmin =
+	exports.saveBusinessAdmin =
+	exports.getAllBusinessAdmins =
+		void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
 var getCollections = require("../database/collections").getCollections;
 var getAllBusinessAdmins = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
@@ -169,17 +178,20 @@ exports.getAllBusinessAdmins = getAllBusinessAdmins;
 var saveBusinessAdmin = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var _a,
+			_id,
 			email,
 			name_1,
 			surname,
 			BusinessAdminModel,
+			updatedAdmin,
 			newBusinessAdmin,
 			error_2;
 		return __generator(this, function (_b) {
 			switch (_b.label) {
 				case 0:
-					_b.trys.push([0, 3, , 4]);
+					_b.trys.push([0, 5, , 6]);
 					(_a = req.body),
+						(_id = _a._id),
 						(email = _a.email),
 						(name_1 = _a.name),
 						(surname = _a.surname);
@@ -187,30 +199,87 @@ var saveBusinessAdmin = function (req, res) {
 						res.status(400).send({ error: "Invalid input data" });
 						return [2 /*return*/];
 					}
-					return [4 /*yield*/, getCollections().collectionBusinessAdmins];
+					BusinessAdminModel = getCollections().collectionBusinessAdmins;
+					if (!_id) return [3 /*break*/, 2];
+					return [
+						4 /*yield*/,
+						BusinessAdminModel.findByIdAndUpdate(
+							_id,
+							{ email: email, name: name_1, surname: surname },
+							{ new: true, runValidators: true },
+						),
+					];
 				case 1:
-					BusinessAdminModel = _b.sent();
+					updatedAdmin = _b.sent();
+					if (!updatedAdmin) {
+						res.status(404).send({ error: "Business admin not found" });
+						return [2 /*return*/];
+					}
+					res.status(200).send(updatedAdmin);
+					return [3 /*break*/, 4];
+				case 2:
 					newBusinessAdmin = new BusinessAdminModel({
 						email: email,
 						name: name_1,
 						surname: surname,
 					});
 					return [4 /*yield*/, newBusinessAdmin.save()];
-				case 2:
+				case 3:
 					_b.sent();
 					res.status(201).send(newBusinessAdmin);
-					return [3 /*break*/, 4];
-				case 3:
-					error_2 = _b.sent();
-					if (error_2 instanceof Error) {
-						console.error(error_2.message);
-					}
-					res.sendStatus(500);
-					return [3 /*break*/, 4];
+					_b.label = 4;
 				case 4:
+					return [3 /*break*/, 6];
+				case 5:
+					error_2 = _b.sent();
+					if (error_2 instanceof mongoose_1.default.Error.ValidationError) {
+						res.status(400).send({ error: error_2.message });
+					} else if (error_2.code === 11000) {
+						res.status(409).send({ error: "Email already exists" });
+					} else {
+						console.error(error_2);
+						res.status(500).send({ error: "Internal Server Error" });
+					}
+					return [3 /*break*/, 6];
+				case 6:
 					return [2 /*return*/];
 			}
 		});
 	});
 };
 exports.saveBusinessAdmin = saveBusinessAdmin;
+var deleteBusinessAdmin = function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var id, BusinessAdminModel, result, error_3;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					_a.trys.push([0, 2, , 3]);
+					id = req.params.id;
+					console.log(id);
+					BusinessAdminModel = getCollections().collectionBusinessAdmins;
+					return [4 /*yield*/, BusinessAdminModel.findByIdAndDelete(id)];
+				case 1:
+					result = _a.sent();
+					if (!result) {
+						res.status(404).send({ error: "Business admin not found" });
+						return [2 /*return*/];
+					}
+					res
+						.status(200)
+						.send({ message: "Business admin deleted successfully" });
+					return [3 /*break*/, 3];
+				case 2:
+					error_3 = _a.sent();
+					if (error_3 instanceof Error) {
+						console.error(error_3.message);
+					}
+					res.sendStatus(500);
+					return [3 /*break*/, 3];
+				case 3:
+					return [2 /*return*/];
+			}
+		});
+	});
+};
+exports.deleteBusinessAdmin = deleteBusinessAdmin;

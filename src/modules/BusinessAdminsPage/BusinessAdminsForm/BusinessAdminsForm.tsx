@@ -1,6 +1,5 @@
 import { useState, Dispatch, SetStateAction, ChangeEvent } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -12,6 +11,8 @@ import {
 } from "../../../sharedComponents/StyledMaterial/styledMaterialComponents";
 import { BusinessAdmin } from "api/models/businessAdminsDatabaseModels";
 import { submitBusinessAdmin } from "services/businessAdministratorsServices";
+import "../../../styles/modules/Form.css";
+import "../../../styles/modules/BusinessAdminsForm.css";
 
 interface BusinessAdminsFormProps {
 	formOpen: boolean;
@@ -109,83 +110,83 @@ const BusinessAdminsForm: React.FC<BusinessAdminsFormProps> = ({
 			open={formOpen}
 			onClose={closeFormAndClearFormData}
 			closeAfterTransition
-			BackdropComponent={Backdrop}
-			BackdropProps={{
-				timeout: 500,
-			}}
 		>
 			<Fade in={formOpen}>
-				<form className="form-container business-admins-form">
-					<h2 id="transition-modal-title" className="clients-from__header">
-						Enter business admin's data:
-					</h2>
-					<StyledTextField
-						name="name"
-						onChange={handleChange}
-						value={selectedAdmin?.name ?? ""}
-						variant="outlined"
-						label="First name"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<AccountCircleIcon />
-								</InputAdornment>
-							),
-						}}
-						error={!!formErrors.name}
-						helperText={formErrors.name}
-						fullWidth
-					/>
-					<StyledTextField
-						name="surname"
-						onChange={handleChange}
-						value={selectedAdmin?.surname ?? ""}
-						variant="outlined"
-						label="Last name"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<AccountCircleIcon />
-								</InputAdornment>
-							),
-						}}
-						error={!!formErrors.surname}
-						helperText={formErrors.surname}
-						fullWidth
-					/>
-					<StyledTextField
-						name="email"
-						onChange={handleChange}
-						value={selectedAdmin?.email ?? ""}
-						variant="outlined"
-						label="Email"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<AlternateEmailIcon />
-								</InputAdornment>
-							),
-						}}
-						fullWidth
-						error={!!formErrors.email}
-						helperText={formErrors.email}
-					/>
-					{formErrors.submitError && (
-						<p style={{ color: "red", margin: 0 }}>{formErrors.submitError}</p>
-					)}
-					<Button
-						type="button"
-						onClick={onFormSubmit}
-						fullWidth
-						variant="outlined"
-						style={{ marginTop: "10px" }}
-					>
-						Save Business Admin
-					</Button>
-				</form>
+				<div className="form-container">
+					<form className="business-admins-form">
+						<h2 id="transition-modal-title" className="clients-from__header">
+							Enter business admin's data:
+						</h2>
+						<StyledTextField
+							name="name"
+							onChange={handleChange}
+							value={selectedAdmin?.name ?? ""}
+							variant="outlined"
+							label="First name"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment position="start">
+										<AccountCircleIcon />
+									</InputAdornment>
+								),
+							}}
+							error={!!formErrors.name}
+							helperText={formErrors.name}
+							fullWidth
+						/>
+						<StyledTextField
+							name="surname"
+							onChange={handleChange}
+							value={selectedAdmin?.surname ?? ""}
+							variant="outlined"
+							label="Last name"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment position="start">
+										<AccountCircleIcon />
+									</InputAdornment>
+								),
+							}}
+							error={!!formErrors.surname}
+							helperText={formErrors.surname}
+							fullWidth
+						/>
+						<StyledTextField
+							name="email"
+							onChange={handleChange}
+							value={selectedAdmin?.email ?? ""}
+							variant="outlined"
+							label="Email"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment position="start">
+										<AlternateEmailIcon />
+									</InputAdornment>
+								),
+							}}
+							fullWidth
+							error={!!formErrors.email}
+							helperText={formErrors.email}
+						/>
+						{formErrors.submitError && (
+							<p style={{ color: "red", margin: 0 }}>
+								{formErrors.submitError}
+							</p>
+						)}
+						<Button
+							type="button"
+							onClick={onFormSubmit}
+							fullWidth
+							variant="outlined"
+							style={{ marginTop: "10px" }}
+						>
+							Save Business Admin
+						</Button>
+					</form>
+				</div>
 			</Fade>
 		</StyledModal>
 	);

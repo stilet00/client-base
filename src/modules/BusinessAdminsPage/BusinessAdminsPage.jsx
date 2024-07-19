@@ -195,6 +195,7 @@ var messages_1 = __importDefault(require("constants/messages"));
 var useAdminStatus_1 = require("sharedHooks/useAdminStatus");
 var BusinessAdminsForm_1 = __importDefault(require("./BusinessAdminsForm"));
 var useModal_1 = __importDefault(require("sharedHooks/useModal"));
+require("../../styles/modules/BusinessAdminsPage.css");
 var BusinessAdminsPage = function (props) {
 	var _a = (0, useModal_1.default)(),
 		handleClose = _a.handleClose,
@@ -206,7 +207,22 @@ var BusinessAdminsPage = function (props) {
 	var user = (0, react_redux_1.useSelector)(function (state) {
 		return state.auth.user;
 	});
+	var queryClient = (0, react_query_1.useQueryClient)();
 	var isAdmin = (0, useAdminStatus_1.useAdminStatus)(user).isAdmin;
+	var deleteMutation = (0, react_query_1.useMutation)(
+		businessAdministratorsServices_1.deleteBusinessAdmin,
+		{
+			onSuccess: function () {
+				queryClient.invalidateQueries("businessAdministratorsQuery");
+			},
+			onError: function () {
+				console.error("Failed to delete business admin");
+			},
+		},
+	);
+	var handleDelete = function (adminId) {
+		deleteMutation.mutate(adminId);
+	};
 	var fetchBusinessAdministrators = function () {
 		return __awaiter(void 0, void 0, void 0, function () {
 			var response;
@@ -235,7 +251,6 @@ var BusinessAdminsPage = function (props) {
 			{
 				enabled: !!user,
 				onSuccess: function (data) {
-					console.log(data);
 					return data;
 				},
 				onError: function () {
@@ -246,25 +261,74 @@ var BusinessAdminsPage = function (props) {
 			},
 		),
 		data = _c.data,
-		isLoading = _c.isLoading,
-		refetch = _c.refetch;
+		isLoading = _c.isLoading;
 	if (isLoading) {
 		return <Loader_1.default />;
 	}
 	return (
 		<>
-			<div className={"main-container scrolled-container"}>
-				{(data === null || data === void 0 ? void 0 : data.length) === 0 && (
+			<div className="main-container scrolled-container">
+				{(data === null || data === void 0 ? void 0 : data.length) === 0 ? (
 					<h1>No business administrators yet</h1>
+				) : (
+					<ul className="business-admins-list">
+						{data === null || data === void 0
+							? void 0
+							: data.map(function (admin) {
+									return (
+										<li key={admin._id} className="business-admin-item">
+											<div className="admin-icon">
+												<SupervisorAccount_1.default />
+											</div>
+											<div className="admin-info">
+												<p className="admin-name">
+													<strong>Name:</strong> {admin.name}
+												</p>
+												<p className="admin-surname">
+													<strong>Surname:</strong> {admin.surname}
+												</p>
+												<p className="admin-email">
+													<strong>Email:</strong> {admin.email}
+												</p>
+											</div>
+											<Button_1.default
+												type="button"
+												onClick={function () {
+													setSelectedAdmin(admin);
+													handleOpen();
+												}}
+												variant="outlined"
+												className="edit-button"
+											>
+												Edit
+											</Button_1.default>
+											<Button_1.default
+												type="button"
+												onClick={function () {
+													return handleDelete(
+														admin === null || admin === void 0
+															? void 0
+															: admin._id,
+													);
+												}}
+												variant="outlined"
+												className="delete-button"
+											>
+												Delete
+											</Button_1.default>
+										</li>
+									);
+								})}
+					</ul>
 				)}
 			</div>
 			<div className="socials button-add-container">
 				<Button_1.default
 					type="button"
 					onClick={handleOpen}
-					fullWidth
 					startIcon={<SupervisorAccount_1.default />}
 					disabled={!isAdmin}
+					fullWidth
 				>
 					Add Business Admin
 				</Button_1.default>
@@ -275,13 +339,6 @@ var BusinessAdminsPage = function (props) {
 					setSelectedAdmin={setSelectedAdmin}
 				/>
 			</div>
-			{/* <AlertMessage
-        mainText={alertInfo.mainTitle}
-        open={alertOpen}
-        handleOpen={openAlert}
-        handleClose={closeAlert}
-        status={alertInfo.status}
-    /> */}
 		</>
 	);
 };

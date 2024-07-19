@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface BusinessAdmin {
-	_id?: string;
+	_id: string;
 	name: string;
 	surname: string;
 	email: string;
@@ -20,5 +20,6 @@ export const BusinessAdminSchema = new mongoose.Schema<BusinessAdmin>({
 		type: String,
 		lowercase: true,
 		required: false,
+		unique: true,
 	},
 });

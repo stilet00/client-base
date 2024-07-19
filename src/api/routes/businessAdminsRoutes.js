@@ -15,33 +15,14 @@ router.get(
 	adminRules,
 	businessAdminsController_1.getAllBusinessAdmins,
 );
-// router.get(
-//     translatorsURL + 'last-gift/:id',
-//     isAuthenticated,
-//     getLastVirtualGift
-// )
-// router.get(translatorsURL + 'send-emails', adminRules, sendEmailsToTranslators)
 router.post(
 	businessAdminsURL,
 	adminRules,
 	businessAdminsController_1.saveBusinessAdmin,
 );
-// router.put(
-//     translatorsURL + 'suspend-client',
-//     adminRules,
-//     toggleSuspendClientResolver
-// )
-// router.put(
-//     translatorsURL + 'assign-client',
-//     isAuthenticated,
-//     assignClientToTranslator
-// )
-// router.put(translatorsURL + ':id', adminRules, updateTranslator)
-// router.delete(translatorsURL + ':id', adminRules, deleteTranslator)
-// router.post(
-//     personalPenaltiesURL + 'create',
-//     adminRules,
-//     addPersonalPenaltyToTranslator
-// )
-// router.get(personalPenaltiesURL + 'get', getPersonalPenalties)
+router.delete(
+	"".concat(businessAdminsURL, ":id"),
+	adminRules,
+	businessAdminsController_1.deleteBusinessAdmin,
+);
 exports.default = router;

@@ -22,7 +22,6 @@ var __importDefault =
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var react_query_1 = require("react-query");
-var Backdrop_1 = __importDefault(require("@mui/material/Backdrop"));
 var Fade_1 = __importDefault(require("@mui/material/Fade"));
 var Button_1 = __importDefault(require("@mui/material/Button"));
 var AccountCircle_1 = __importDefault(
@@ -34,6 +33,8 @@ var AlternateEmail_1 = __importDefault(
 var InputAdornment_1 = __importDefault(require("@mui/material/InputAdornment"));
 var styledMaterialComponents_1 = require("../../../sharedComponents/StyledMaterial/styledMaterialComponents");
 var businessAdministratorsServices_1 = require("services/businessAdministratorsServices");
+require("../../../styles/modules/Form.css");
+require("../../../styles/modules/BusinessAdminsForm.css");
 var defaultAdmin = {
 	_id: "",
 	email: "",
@@ -134,104 +135,104 @@ var BusinessAdminsForm = function (_a) {
 			open={formOpen}
 			onClose={closeFormAndClearFormData}
 			closeAfterTransition
-			BackdropComponent={Backdrop_1.default}
-			BackdropProps={{
-				timeout: 500,
-			}}
 		>
 			<Fade_1.default in={formOpen}>
-				<form className="form-container business-admins-form">
-					<h2 id="transition-modal-title" className="clients-from__header">
-						Enter business admin's data:
-					</h2>
-					<styledMaterialComponents_1.StyledTextField
-						name="name"
-						onChange={handleChange}
-						value={
-							(_b =
-								selectedAdmin === null || selectedAdmin === void 0
-									? void 0
-									: selectedAdmin.name) !== null && _b !== void 0
-								? _b
-								: ""
-						}
-						variant="outlined"
-						label="First name"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment_1.default position="start">
-									<AccountCircle_1.default />
-								</InputAdornment_1.default>
-							),
-						}}
-						error={!!formErrors.name}
-						helperText={formErrors.name}
-						fullWidth
-					/>
-					<styledMaterialComponents_1.StyledTextField
-						name="surname"
-						onChange={handleChange}
-						value={
-							(_c =
-								selectedAdmin === null || selectedAdmin === void 0
-									? void 0
-									: selectedAdmin.surname) !== null && _c !== void 0
-								? _c
-								: ""
-						}
-						variant="outlined"
-						label="Last name"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment_1.default position="start">
-									<AccountCircle_1.default />
-								</InputAdornment_1.default>
-							),
-						}}
-						error={!!formErrors.surname}
-						helperText={formErrors.surname}
-						fullWidth
-					/>
-					<styledMaterialComponents_1.StyledTextField
-						name="email"
-						onChange={handleChange}
-						value={
-							(_d =
-								selectedAdmin === null || selectedAdmin === void 0
-									? void 0
-									: selectedAdmin.email) !== null && _d !== void 0
-								? _d
-								: ""
-						}
-						variant="outlined"
-						label="Email"
-						required
-						InputProps={{
-							startAdornment: (
-								<InputAdornment_1.default position="start">
-									<AlternateEmail_1.default />
-								</InputAdornment_1.default>
-							),
-						}}
-						fullWidth
-						error={!!formErrors.email}
-						helperText={formErrors.email}
-					/>
-					{formErrors.submitError && (
-						<p style={{ color: "red", margin: 0 }}>{formErrors.submitError}</p>
-					)}
-					<Button_1.default
-						type="button"
-						onClick={onFormSubmit}
-						fullWidth
-						variant="outlined"
-						style={{ marginTop: "10px" }}
-					>
-						Save Business Admin
-					</Button_1.default>
-				</form>
+				<div className="form-container">
+					<form className="business-admins-form">
+						<h2 id="transition-modal-title" className="clients-from__header">
+							Enter business admin's data:
+						</h2>
+						<styledMaterialComponents_1.StyledTextField
+							name="name"
+							onChange={handleChange}
+							value={
+								(_b =
+									selectedAdmin === null || selectedAdmin === void 0
+										? void 0
+										: selectedAdmin.name) !== null && _b !== void 0
+									? _b
+									: ""
+							}
+							variant="outlined"
+							label="First name"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment_1.default position="start">
+										<AccountCircle_1.default />
+									</InputAdornment_1.default>
+								),
+							}}
+							error={!!formErrors.name}
+							helperText={formErrors.name}
+							fullWidth
+						/>
+						<styledMaterialComponents_1.StyledTextField
+							name="surname"
+							onChange={handleChange}
+							value={
+								(_c =
+									selectedAdmin === null || selectedAdmin === void 0
+										? void 0
+										: selectedAdmin.surname) !== null && _c !== void 0
+									? _c
+									: ""
+							}
+							variant="outlined"
+							label="Last name"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment_1.default position="start">
+										<AccountCircle_1.default />
+									</InputAdornment_1.default>
+								),
+							}}
+							error={!!formErrors.surname}
+							helperText={formErrors.surname}
+							fullWidth
+						/>
+						<styledMaterialComponents_1.StyledTextField
+							name="email"
+							onChange={handleChange}
+							value={
+								(_d =
+									selectedAdmin === null || selectedAdmin === void 0
+										? void 0
+										: selectedAdmin.email) !== null && _d !== void 0
+									? _d
+									: ""
+							}
+							variant="outlined"
+							label="Email"
+							required
+							InputProps={{
+								startAdornment: (
+									<InputAdornment_1.default position="start">
+										<AlternateEmail_1.default />
+									</InputAdornment_1.default>
+								),
+							}}
+							fullWidth
+							error={!!formErrors.email}
+							helperText={formErrors.email}
+						/>
+						{formErrors.submitError && (
+							<p style={{ color: "red", margin: 0 }}>
+								{formErrors.submitError}
+							</p>
+						)}
+						<Button_1.default
+							type="button"
+							onClick={onFormSubmit}
+							fullWidth
+							variant="outlined"
+							style={{ marginTop: "10px" }}
+						>
+							Save Business Admin
+						</Button_1.default>
+					</form>
+				</div>
 			</Fade_1.default>
 		</styledMaterialComponents_1.StyledModal>
 	);

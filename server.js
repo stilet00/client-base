@@ -139,6 +139,7 @@ var __importDefault =
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var cors_1 = __importDefault(require("cors"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 var authRoutes_1 = __importDefault(require("./src/api/routes/authRoutes"));
@@ -159,28 +160,51 @@ var businessAdminsRoutes_1 = __importDefault(
 );
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
+var rootURLOptions = {
+	staging: "https://sunrise-agency-staging-fdbbf113d1fd.herokuapp.com",
+	production: "https://sunrise-agency.herokuapp.com",
+	development: "http://localhost:3000",
+};
+var currentEnvironment = process.env.NODE_ENV || "development";
+var frontEndURL = rootURLOptions[currentEnvironment];
 var PORT = process.env.PORT || 80;
 var app = (0, express_1.default)();
+var corsOptions = {
+	origin: frontEndURL,
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	allowedHeaders: [
+		"Origin",
+		"X-Requested-With",
+		"Content-Type",
+		"Accept",
+		"Authorization",
+	],
+	preflightContinue: false,
+	optionsSuccessStatus: 204,
+};
 var limiter = (0, express_rate_limit_1.default)({
 	windowMs: 2000,
 	max: 100,
 	message: "Too many requests from this IP, please try again later.",
 });
+app.use((0, cors_1.default)(corsOptions));
+app.options("*", function (req, res) {
+	res.setHeader("Access-Control-Allow-Origin", frontEndURL);
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET,HEAD,PUT,PATCH,POST,DELETE",
+	);
+	res.setHeader(
+		"Access-Control-Allow-Headers",
+		req.header("Access-Control-Request-Headers") || "",
+	);
+	res.sendStatus(204);
+});
 app.use(express_1.default.static(__dirname + "/build"));
 app.set("view engine", "ejs");
 app.use(body_parser_1.default.json({ limit: "50mb" }));
 app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
-app.use(function (request, response, next) {
-	response.setHeader("Access-Control-Allow-Origin", "*");
-	response.setHeader(
-		"Access-Control-Allow-Headers",
-		"Origin, X-Requested-With, Content-type, Accept, Authorization",
-	);
-	response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-	next();
-});
 app.use(limiter);
-// Use route files
 app.use(authRoutes_1.default);
 app.use(clientRoutes_1.default);
 app.use(translatorRoutes_1.default);

@@ -17,3 +17,7 @@ export function getBusinessAdmins({ searchQuery = "" }) {
 export function submitBusinessAdmin(businessAdminData: BusinessAdmin) {
 	return requestWithAuth("post", businessAdminsURL).send(businessAdminData);
 }
+
+export function deleteBusinessAdmin(adminId: string) {
+	return requestWithAuth("delete", `${businessAdminsURL}${adminId}`);
+}
