@@ -20,11 +20,11 @@ const Bounce = styled.div`
 `;
 
 const LinkButton = styled(Button)`
-	padding: 0;
-	color: black !important;
-	&:hover {
-		text-decoration: underline !important;
-	}
+    padding: 0;
+    color: black !important;
+    &:hover {
+        text-decoration: underline !important;
+    }
 `;
 
 const StyledButton = styled(Button)`

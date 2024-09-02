@@ -74,8 +74,11 @@ const connectToDatabase = async () => {
 		collections.set("collectionStatements", Statement);
 		collections.set("collectionBalanceDays", BalanceDay);
 		collections.set("collectionBusinessAdmins", BusinessAdmin);
+		const appNameMatch = DBConnectionCredentials.match(/appName=([^&]+)/);
+		const appName = appNameMatch ? appNameMatch[1] : "Unknown";
+		console.log(`Connected to MongoDB database with app name: ${appName}`);
 	} catch (error) {
-		console.error(error);
+		console.error("Failed to connect to MongoDB database", error);
 	}
 };
 

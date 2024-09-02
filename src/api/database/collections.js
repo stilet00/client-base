@@ -178,7 +178,9 @@ var connectToDatabase = function () {
 			Admin,
 			Statement,
 			BalanceDay,
-			BusinessAdmin;
+			BusinessAdmin,
+			appNameMatch,
+			appName;
 		return __generator(this, function (_a) {
 			try {
 				clientBaseDB = mongoose_1.default.createConnection(
@@ -223,8 +225,13 @@ var connectToDatabase = function () {
 				collections.set("collectionStatements", Statement);
 				collections.set("collectionBalanceDays", BalanceDay);
 				collections.set("collectionBusinessAdmins", BusinessAdmin);
+				appNameMatch = DBConnectionCredentials.match(/appName=([^&]+)/);
+				appName = appNameMatch ? appNameMatch[1] : "Unknown";
+				console.log(
+					"Connected to MongoDB database with app name: ".concat(appName),
+				);
 			} catch (error) {
-				console.error(error);
+				console.error("Failed to connect to MongoDB database", error);
 			}
 			return [2 /*return*/];
 		});
