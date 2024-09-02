@@ -28,12 +28,14 @@ export const saveBusinessAdmin = async (
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { _id, email, name, surname } = req.body;
+		let { _id, email, name, surname } = req.body;
+		email = email?.trim();
+		name = name?.trim();
+		surname = surname?.trim();
 		if (!email || !name || !surname) {
 			res.status(400).send({ error: "Invalid input data" });
 			return;
 		}
-
 		const BusinessAdminModel = getCollections().collectionBusinessAdmins;
 
 		if (_id) {

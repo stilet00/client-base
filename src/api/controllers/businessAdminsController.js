@@ -195,6 +195,11 @@ var saveBusinessAdmin = function (req, res) {
 						(email = _a.email),
 						(name_1 = _a.name),
 						(surname = _a.surname);
+					email = email === null || email === void 0 ? void 0 : email.trim();
+					name_1 =
+						name_1 === null || name_1 === void 0 ? void 0 : name_1.trim();
+					surname =
+						surname === null || surname === void 0 ? void 0 : surname.trim();
 					if (!email || !name_1 || !surname) {
 						res.status(400).send({ error: "Invalid input data" });
 						return [2 /*return*/];
