@@ -10,10 +10,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import {
-	CHARTS_CATEGORIES,
-	arrayOfYearsForSelectFilter,
-} from "../../constants/constants";
+import { arrayOfYearsForSelectFilter } from "constants/constants";
+import { CHARTS_CATEGORIES } from "constants/renderConstants";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
 function ChartsContainer() {
