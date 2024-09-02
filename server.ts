@@ -222,10 +222,10 @@ const startServer = async () => {
 	try {
 		await connectToDatabase();
 		app.listen(PORT, () => {
-			console.log("API started at port", PORT);
+			console.log("Sunrise Agency API started at port", PORT);
 		});
 	} catch (err) {
-		console.error("Failed to connect to MongoDB database", err);
+		console.error(err);
 		process.exit(1);
 	}
 };

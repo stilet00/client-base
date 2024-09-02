@@ -160,7 +160,15 @@ var AdminSchema = require("../models/adminDatabaseModels").AdminSchema;
 var collections = new Map();
 var connectToDatabase = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var clientBaseDB, Task, Client, Translator, Admin, Statement, BalanceDay;
+		var clientBaseDB,
+			Task,
+			Client,
+			Translator,
+			Admin,
+			Statement,
+			BalanceDay,
+			appNameMatch,
+			appName;
 		return __generator(this, function (_a) {
 			try {
 				clientBaseDB = mongoose_1.default.createConnection(
@@ -199,8 +207,13 @@ var connectToDatabase = function () {
 				collections.set("collectionAdmins", Admin);
 				collections.set("collectionStatements", Statement);
 				collections.set("collectionBalanceDays", BalanceDay);
+				appNameMatch = DBConnectionCredentials.match(/appName=([^&]+)/);
+				appName = appNameMatch ? appNameMatch[1] : "Unknown";
+				console.log(
+					"Connected to MongoDB database with app name: ".concat(appName),
+				);
 			} catch (error) {
-				console.error(error);
+				console.error("Failed to connect to MongoDB database", error);
 			}
 			return [2 /*return*/];
 		});

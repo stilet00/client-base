@@ -366,12 +366,12 @@ var startServer = function () {
 				case 1:
 					_a.sent();
 					app.listen(PORT, function () {
-						console.log("API started at port", PORT);
+						console.log("Sunrise Agency API started at port", PORT);
 					});
 					return [3 /*break*/, 3];
 				case 2:
 					err_1 = _a.sent();
-					console.error("Failed to connect to MongoDB database", err_1);
+					console.error(err_1);
 					process.exit(1);
 					return [3 /*break*/, 3];
 				case 3:
