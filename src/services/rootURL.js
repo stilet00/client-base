@@ -1,4 +1,5 @@
 "use strict";
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rootURL = exports.rootURLOptions = void 0;
 exports.rootURLOptions = {
@@ -6,5 +7,8 @@ exports.rootURLOptions = {
 	production: "https://sunrise-agency.herokuapp.com/",
 	development: "http://localhost:80/",
 };
-console.log("process.env.NODE_ENV at front: ".concat(process.env.NODE_ENV));
-exports.rootURL = exports.rootURLOptions[process.env.NODE_ENV];
+exports.rootURL =
+	(_a = exports.rootURLOptions[process.env.REACT_APP_ENVIRONMENT]) !== null &&
+	_a !== void 0
+		? _a
+		: "development";
