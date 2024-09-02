@@ -167,10 +167,8 @@ var rootURLOptions = {
 };
 var currentEnvironment = process.env.NODE_ENV || "development";
 var frontEndURL = rootURLOptions[currentEnvironment];
-console.log("process.env.NODE_ENV at server: ".concat(process.env.NODE_ENV));
 var PORT = process.env.PORT || 80;
 var app = (0, express_1.default)();
-console.log("frontEndURL: ".concat(frontEndURL));
 var corsOptions = {
 	origin: frontEndURL,
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

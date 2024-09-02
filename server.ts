@@ -19,14 +19,11 @@ const rootURLOptions: Record<Environment, string> = {
 	production: "https://sunrise-agency.herokuapp.com",
 	development: "http://localhost:3000",
 };
-
 const currentEnvironment: Environment =
 	(process.env.NODE_ENV as Environment) || "development";
 const frontEndURL = rootURLOptions[currentEnvironment];
-console.log(`process.env.NODE_ENV at server: ${process.env.NODE_ENV}`);
 const PORT = process.env.PORT || 80;
 const app = express();
-console.log(`frontEndURL: ${frontEndURL}`);
 const corsOptions = {
 	origin: frontEndURL,
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
