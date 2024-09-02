@@ -15,7 +15,7 @@ const { connectToDatabase } = require("./src/api/database/collections");
 type Environment = "staging" | "production" | "development";
 
 const rootURLOptions: Record<Environment, string> = {
-	staging: "https://sunrise-agency-staging-fdbbf113d1fd.herokuapp.com",
+	staging: "https://sunrise-agency-staging-73929348db48.herokuapp.com",
 	production: "https://sunrise-agency.herokuapp.com",
 	development: "http://localhost:3000",
 };

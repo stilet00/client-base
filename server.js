@@ -161,7 +161,7 @@ var businessAdminsRoutes_1 = __importDefault(
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
 var rootURLOptions = {
-	staging: "https://sunrise-agency-staging-fdbbf113d1fd.herokuapp.com",
+	staging: "https://sunrise-agency-staging-73929348db48.herokuapp.com",
 	production: "https://sunrise-agency.herokuapp.com",
 	development: "http://localhost:3000",
 };

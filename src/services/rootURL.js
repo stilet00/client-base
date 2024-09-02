@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rootURL = exports.rootURLOptions = void 0;
 exports.rootURLOptions = {
-	staging: "https://sunrise-agency-staging-fdbbf113d1fd.herokuapp.com/",
+	staging: "https://sunrise-agency-staging-73929348db48.herokuapp.com/",
 	production: "https://sunrise-agency.herokuapp.com/",
 	development: "http://localhost:80/",
 };
