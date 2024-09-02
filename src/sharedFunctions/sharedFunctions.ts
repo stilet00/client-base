@@ -8,7 +8,7 @@ import {
 export function calculateBalanceDaySum(
 	targetObject: Statistics,
 	onlySvadba = false,
-	category = null,
+	category?: Exclude<keyof Statistics, "comments">,
 ) {
 	if (onlySvadba) {
 		const svadbaObject = {
@@ -68,7 +68,7 @@ export const calculateTranslatorMonthTotal = (
 	balanceDays: BalanceDay[],
 	forFullMonth = true,
 	onlySvadba = false,
-	category = null,
+	category?: Exclude<keyof Statistics, "comments">,
 ) => {
 	let total;
 	if (forFullMonth) {

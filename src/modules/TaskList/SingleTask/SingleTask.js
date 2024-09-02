@@ -2,10 +2,10 @@ import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import ColoredButton from "../../../sharedComponents/ColoredButton/ColoredButton";
+import ColoredButton from "sharedComponents/ColoredButton/ColoredButton";
 import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
-import { TASKS_BACKGROUNDS } from "../../../constants/constants";
+import { TASKS_BACKGROUNDS } from "constants/renderConstants";
 import styled from "styled-components";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
