@@ -6,4 +6,5 @@ exports.rootURLOptions = {
 	production: "https://sunrise-agency.herokuapp.com/",
 	development: "http://localhost:80/",
 };
+console.log("process.env.NODE_ENV at front: ".concat(process.env.NODE_ENV));
 exports.rootURL = exports.rootURLOptions[process.env.NODE_ENV];
