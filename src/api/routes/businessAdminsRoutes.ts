@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.get(businessAdminsURL, adminRules, getAllBusinessAdmins);
 router.post(businessAdminsURL, adminRules, saveBusinessAdmin);
-router.delete(`${businessAdminsURL}:id`, adminRules, deleteBusinessAdmin);
+router.delete(`${businessAdminsURL}/:id`, adminRules, deleteBusinessAdmin);
 
 export default router;

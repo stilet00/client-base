@@ -21,7 +21,7 @@ router.post(
 	businessAdminsController_1.saveBusinessAdmin,
 );
 router.delete(
-	"".concat(businessAdminsURL, ":id"),
+	"".concat(businessAdminsURL, "/:id"),
 	adminRules,
 	businessAdminsController_1.deleteBusinessAdmin,
 );

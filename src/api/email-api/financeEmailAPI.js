@@ -84,10 +84,14 @@ const sendEmailTemplateToAdministrators = async (translatorsCollection) => {
 		});
 	const Admin = await getCollections().collectionAdmins.find().exec();
 	const adminEmailList = Admin.map((admin) => admin.registeredEmail);
+	const BusinessAdmin = await getCollections()
+		.CollectionBusinessAdmins.find()
+		.exec();
+	const businessAdminEmailList = BusinessAdmin.map((admin) => admin.email);
 	let transporter = createTransport();
 	let mailOptions = {
 		from: '"Sunrise agency" <sunrise-agency@gmail.com>',
-		to: adminEmailList,
+		to: [...adminEmailList, ...businessAdminEmailList],
 		subject: `Date: ${getMomentUTC()
 			.subtract(1, "day")
 			.format("MMMM DD, YYYY")}`,
