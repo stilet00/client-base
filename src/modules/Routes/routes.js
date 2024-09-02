@@ -14,11 +14,17 @@ const ChartsContainer = lazy(() => import("../Charts/ChartsContainer"));
 const LoggedOutPage = lazy(
 	() => import("../AuthorizationPage/LoggedOutPage/LoggedOutPage"),
 );
+const BusinessAdminsPage = lazy(() => import("../BusinessAdminsPage"));
 
 export const privateRoutes = [
 	{
 		component: FinanceStatementPage,
 		path: "/finances",
+		exact: true,
+	},
+	{
+		component: BusinessAdminsPage,
+		path: "/business-admins",
 		exact: true,
 	},
 ];

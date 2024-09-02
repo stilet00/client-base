@@ -11,5 +11,5 @@ export default function PrivateRoute({ component: Component, ...rest }) {
 		return <Loader />;
 	}
 
-	return !!isAdmin ? <Component {...rest} /> : <Navigate to="/login" replace />;
+	return !!isAdmin ? <Component {...rest} /> : <Navigate to="/" replace />;
 }

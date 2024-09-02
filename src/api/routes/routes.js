@@ -6,6 +6,7 @@ const translatorsURL = rootURL + "translators/";
 const financeStatementsURL = rootURL + "statements/";
 const balanceDayURL = rootURL + "balance-day/";
 const personalPenaltiesURL = rootURL + "personal-penalty/";
+const businessAdminsURL = rootURL + "business-admins";
 
 module.exports = {
 	rootURL,
@@ -16,4 +17,5 @@ module.exports = {
 	financeStatementsURL,
 	balanceDayURL,
 	personalPenaltiesURL,
+	businessAdminsURL,
 };

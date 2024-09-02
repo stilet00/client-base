@@ -127,6 +127,10 @@ const MESSAGES = {
 		text: "Something went wrong while getting personal penalties :(",
 		status: false,
 	},
+	somethingWentWrongWithBusinessAdmins: {
+		text: "Something went wrong while getting information about business administrators :(",
+		status: false,
+	},
 };
 
 export default MESSAGES;
