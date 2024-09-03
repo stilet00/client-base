@@ -158,6 +158,7 @@ var staticRoutes_1 = __importDefault(require("./src/api/routes/staticRoutes"));
 var businessAdminsRoutes_1 = __importDefault(
 	require("./src/api/routes/businessAdminsRoutes"),
 );
+var chartsRoutes_1 = __importDefault(require("./src/api/routes/chartsRoutes"));
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
 var rootURLOptions = {
@@ -213,6 +214,7 @@ app.use(statementRoutes_1.default);
 app.use(balanceDayRoutes_1.default);
 app.use(businessAdminsRoutes_1.default);
 app.use(staticRoutes_1.default);
+app.use(chartsRoutes_1.default);
 var startServer = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var err_1;

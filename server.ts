@@ -10,6 +10,7 @@ import statementRoutes from "./src/api/routes/statementRoutes";
 import balanceDayRoutes from "./src/api/routes/balanceDayRoutes";
 import staticRoutes from "./src/api/routes/staticRoutes";
 import businessAdminRoutes from "./src/api/routes/businessAdminsRoutes";
+import chartsRoutes from "./src/api/routes/chartsRoutes";
 const { connectToDatabase } = require("./src/api/database/collections");
 
 type Environment = "staging" | "production" | "development";
@@ -74,6 +75,7 @@ app.use(statementRoutes);
 app.use(balanceDayRoutes);
 app.use(businessAdminRoutes);
 app.use(staticRoutes);
+app.use(chartsRoutes);
 
 const startServer = async () => {
 	try {
