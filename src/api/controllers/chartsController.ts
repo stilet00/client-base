@@ -2,109 +2,112 @@ import { Request, Response } from "express";
 import moment from "moment";
 const { getCollections } = require("../database/collections");
 const {
-	calculateBalanceDaySum,
 	getNumberWithHundreds,
 } = require("../../sharedFunctions/sharedFunctions");
-import { DEFAULT_MONTH_CHART } from "../../constants/constants";
-import { BalanceDay } from "../models/translatorsDatabaseModels";
 
 const { getMomentUTC } = require("../utils/utils");
 
+interface RawMonthData {
+	year: string;
+	month: string;
+	days: number[];
+	values: (number | null)[];
+}
+
 export const getCharts = async (req: Request, res: Response): Promise<void> => {
 	try {
-		const { yearFilter, monthFilter } = req.query;
-
+		const { yearFilter } = req.query;
 		const BalanceDay = await getCollections().collectionBalanceDays;
-		const query: Record<string, any> = {};
 
+		let momentFromYearFilter = getMomentUTC();
 		if (yearFilter) {
-			const momentFromYearFilter = getMomentUTC(yearFilter as string, "YYYY");
-			const startOfYearFilter = momentFromYearFilter
-				.startOf("year")
-				.toISOString();
-			const endOfYearFilter = momentFromYearFilter.endOf("year").toISOString();
-			query.dateTimeId = {
-				$gte: startOfYearFilter,
-				$lte: endOfYearFilter,
-			};
+			momentFromYearFilter = getMomentUTC(yearFilter as string, "YYYY");
 		}
 
-		if (monthFilter && typeof monthFilter === "string") {
-			const [startMonth, endMonth] = monthFilter.split("-").map(Number);
-			const year = yearFilter
-				? getMomentUTC(yearFilter as string, "YYYY").year()
-				: getMomentUTC().year();
-			const startOfMonthFilter = getMomentUTC({
-				year,
-				month: startMonth - 1,
-			})
-				.startOf("month")
-				.toISOString();
-			const endOfMonthFilter = getMomentUTC({
-				year,
-				month: (endMonth || startMonth) - 1,
-			})
-				.endOf("month")
-				.toISOString();
+		const startOfYearFilter = momentFromYearFilter.startOf("year").toDate();
+		const endOfYearFilter = momentFromYearFilter.endOf("year").toDate();
 
-			if (!query.dateTimeId) {
-				query.dateTimeId = {};
-			}
-			query.dateTimeId.$gte = startOfMonthFilter;
-			query.dateTimeId.$lte = endOfMonthFilter;
-		}
-
-		const balanceDays: BalanceDay[] = await BalanceDay.find(query)
-			.lean()
-			.exec();
-
-		const yearChartsArray: any[] = [];
-		for (let monthCount = 1; monthCount <= 12; monthCount++) {
-			const defaultMonth = new DEFAULT_MONTH_CHART(
-				yearFilter as string,
-				monthCount,
-			);
-
-			const stringMonth = defaultMonth.month;
-			const daysInMonth = moment(yearFilter + "-" + stringMonth, "YYYY-MM")
-				.hours(12)
-				.utc()
-				.daysInMonth();
-
-			for (let dayCount = 1; dayCount <= daysInMonth; dayCount++) {
-				const currentDayDate = moment(
-					`${dayCount}-${monthCount}-${yearFilter}`,
-					"D-M-YYYY",
-				)
-					.hours(12)
-					.utc()
-					.format();
-
-				const arrayOfBalanceDayForCurrentDate = balanceDays.filter(
-					(balanceDay) =>
-						getMomentUTC(balanceDay.dateTimeId).isSame(currentDayDate, "day"),
-				);
-
-				const daySum = arrayOfBalanceDayForCurrentDate.reduce(
-					(sum, current) => {
-						return sum + calculateBalanceDaySum(current.statistics);
+		const rawResults: RawMonthData[] = await BalanceDay.aggregate([
+			{
+				$match: {
+					dateTimeId: {
+						$gte: startOfYearFilter,
+						$lte: endOfYearFilter,
 					},
-					0,
-				);
+				},
+			},
+			{
+				$group: {
+					_id: {
+						year: { $year: "$dateTimeId" },
+						month: { $month: "$dateTimeId" },
+						day: { $dayOfMonth: "$dateTimeId" },
+					},
+					totalSum: {
+						$sum: {
+							$subtract: [
+								{
+									$add: [
+										"$statistics.chats",
+										"$statistics.letters",
+										"$statistics.dating",
+										"$statistics.virtualGiftsSvadba",
+										"$statistics.virtualGiftsDating",
+										"$statistics.photoAttachments",
+										"$statistics.phoneCalls",
+										"$statistics.voiceMessages",
+									],
+								},
+								"$statistics.penalties",
+							],
+						},
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { year: "$_id.year", month: "$_id.month" },
+					days: { $push: "$_id.day" },
+					values: { $push: "$totalSum" },
+				},
+			},
+			{
+				$project: {
+					year: "$_id.year",
+					month: { $toString: "$_id.month" },
+					days: 1,
+					values: 1,
+				},
+			},
+			{ $sort: { year: -1, month: -1 } },
+		]);
 
-				if (daySum) {
-					defaultMonth.values[dayCount - 1] = getNumberWithHundreds(daySum);
-				}
-			}
+		const yearChartsArray: RawMonthData[] = rawResults.map(
+			(monthData: RawMonthData) => {
+				const year = monthData.year.toString();
+				const month = monthData.month;
+				const daysInMonth = moment(`${year}-${month}`, "YYYY-MM").daysInMonth();
 
-			if (
-				defaultMonth.values.reduce((sum, current) => {
-					return sum + Number(current);
-				}, 0)
-			) {
-				yearChartsArray.unshift(defaultMonth);
-			}
-		}
+				const fullDays = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+				const fullValues: (number | null)[] = Array(daysInMonth).fill(null);
+
+				monthData.days.forEach((day: number, index: number) => {
+					const value = monthData.values[index];
+					const dayIndex = fullDays.indexOf(day);
+					if (dayIndex !== -1) {
+						fullValues[dayIndex] = getNumberWithHundreds(value);
+					}
+				});
+
+				return {
+					year,
+					month,
+					days: fullDays,
+					values: fullValues,
+				};
+			},
+		);
+
 		res.send(yearChartsArray);
 	} catch (error) {
 		if (error instanceof Error) {

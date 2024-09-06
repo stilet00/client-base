@@ -2,16 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 import SingleChart from "./SingleChart/SingleChart";
 import Loader from "../../sharedComponents/Loader/Loader";
-import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
-import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirmation/AlertMessageConfirmation";
 import { useChartsContainer } from "./businessLogic";
 import "../../styles/modules/Chart.css";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { arrayOfYearsForSelectFilter } from "constants/constants";
-import { CHARTS_CATEGORIES } from "constants/renderConstants";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
 function ChartsContainer() {
@@ -70,7 +66,7 @@ function ChartsContainer() {
 								{chartsData.map((month, index) => (
 									<SingleChart
 										previousMonth={
-											month.month === getMomentUTC().format("MM")
+											month.month === getMomentUTC().format("M")
 												? chartsData[index + 1]
 												: null
 										}
