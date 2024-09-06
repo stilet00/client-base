@@ -144,28 +144,20 @@ var getCollections = require("../database/collections").getCollections;
 var getNumberWithHundreds =
 	require("../../sharedFunctions/sharedFunctions").getNumberWithHundreds;
 var getMomentUTC = require("../utils/utils").getMomentUTC;
-var getCharts = function (req, res) {
+var fetchRawBalanceDays = function (year) {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var yearFilter,
-			BalanceDay,
+		var BalanceDay,
 			momentFromYearFilter,
 			startOfYearFilter,
 			endOfYearFilter,
-			rawResults,
-			yearChartsArray,
-			error_1;
+			rawResults;
 		return __generator(this, function (_a) {
 			switch (_a.label) {
 				case 0:
-					_a.trys.push([0, 3, , 4]);
-					yearFilter = req.query.yearFilter;
 					return [4 /*yield*/, getCollections().collectionBalanceDays];
 				case 1:
 					BalanceDay = _a.sent();
-					momentFromYearFilter = getMomentUTC();
-					if (yearFilter) {
-						momentFromYearFilter = getMomentUTC(yearFilter, "YYYY");
-					}
+					momentFromYearFilter = getMomentUTC(year, "YYYY");
 					startOfYearFilter = momentFromYearFilter.startOf("year").toDate();
 					endOfYearFilter = momentFromYearFilter.endOf("year").toDate();
 					return [
@@ -227,41 +219,61 @@ var getCharts = function (req, res) {
 					];
 				case 2:
 					rawResults = _a.sent();
-					yearChartsArray = rawResults.map(function (monthData) {
-						var year = monthData.year.toString();
-						var month = monthData.month;
-						var daysInMonth = (0, moment_1.default)(
-							"".concat(year, "-").concat(month),
-							"YYYY-MM",
-						).daysInMonth();
-						var fullDays = Array.from({ length: daysInMonth }, function (_, i) {
-							return i + 1;
-						});
-						var fullValues = Array(daysInMonth).fill(null);
-						monthData.days.forEach(function (day, index) {
-							var value = monthData.values[index];
-							var dayIndex = fullDays.indexOf(day);
-							if (dayIndex !== -1) {
-								fullValues[dayIndex] = getNumberWithHundreds(value);
-							}
-						});
-						return {
-							year: year,
-							month: month,
-							days: fullDays,
-							values: fullValues,
-						};
-					});
+					return [2 /*return*/, rawResults];
+			}
+		});
+	});
+};
+var formatYearChartsArray = function (rawResults) {
+	return rawResults.map(function (monthData) {
+		var year = monthData.year.toString();
+		var month = monthData.month;
+		var daysInMonth = (0, moment_1.default)(
+			"".concat(year, "-").concat(month),
+			"YYYY-MM",
+		).daysInMonth();
+		var fullDays = Array.from({ length: daysInMonth }, function (_, i) {
+			return i + 1;
+		});
+		var fullValues = Array(daysInMonth).fill(null);
+		monthData.days.forEach(function (day, index) {
+			var value = monthData.values[index];
+			var dayIndex = fullDays.indexOf(day);
+			if (dayIndex !== -1) {
+				fullValues[dayIndex] = getNumberWithHundreds(value);
+			}
+		});
+		return {
+			year: year,
+			month: month,
+			days: fullDays,
+			values: fullValues,
+		};
+	});
+};
+var getCharts = function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var yearFilter, currentYear, rawResults, yearChartsArray, error_1;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					_a.trys.push([0, 2, , 3]);
+					yearFilter = req.query.yearFilter;
+					currentYear = yearFilter ? yearFilter : getMomentUTC().format("YYYY");
+					return [4 /*yield*/, fetchRawBalanceDays(currentYear)];
+				case 1:
+					rawResults = _a.sent();
+					yearChartsArray = formatYearChartsArray(rawResults);
 					res.send(yearChartsArray);
-					return [3 /*break*/, 4];
-				case 3:
+					return [3 /*break*/, 3];
+				case 2:
 					error_1 = _a.sent();
 					if (error_1 instanceof Error) {
 						console.error(error_1.message);
 					}
 					res.sendStatus(500);
-					return [3 /*break*/, 4];
-				case 4:
+					return [3 /*break*/, 3];
+				case 3:
 					return [2 /*return*/];
 			}
 		});
