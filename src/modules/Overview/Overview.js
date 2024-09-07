@@ -70,7 +70,7 @@ function Overview() {
 	const getStatementsGroupedByCommentAndYear = (statements) => {
 		const groupedStatement = Object.values(FINANCE_COMMENTS).map((comment) => {
 			let groupedByAmount = [];
-			statements.forEach((statement) => {
+			statements?.forEach((statement) => {
 				if (
 					statement.comment === comment &&
 					statement.date.includes(selectedYear)
@@ -285,7 +285,7 @@ function Overview() {
 									<StyledTableRow>
 										<StyledTableCell>Total clients</StyledTableCell>
 										<StyledTableCell className="td-with-info">
-											{clients.length}
+											{clients?.length}
 										</StyledTableCell>
 									</StyledTableRow>
 									<StyledTableRow>
@@ -294,7 +294,7 @@ function Overview() {
 											{
 												translators.filter(
 													(translator) => !translator.suspended.status,
-												).length
+												)?.length
 											}
 										</StyledTableCell>
 									</StyledTableRow>
