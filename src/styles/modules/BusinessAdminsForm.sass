@@ -1,0 +1,52 @@
+@import "../../variables"
+
+.business-admins-form
+  min-height: 300px!important
+  display: flex
+  flex-flow: column
+  gap: 20px
+  h2
+    text-align: center
+  &__header
+    grid-column: 1 / 3
+    text-align: center
+  &__body
+    display: grid
+    grid-template-columns: 50%
+    gap: 20px 10px
+    width: 100%
+    &--label
+      grid-column: 1 / 3
+      text-align: center
+    &--big-field
+      grid-column: 1 / 3
+
+.media-container
+  display: flex
+  flex-direction: row
+  align-items: center
+  justify-content: space-between
+
+.upload-container
+  position: relative
+  width: 100%
+  border: 1px solid rgba(0, 0, 0, 0.24)
+  border-radius: 5px
+  box-sizing: border-box
+  padding: 5px
+  text-align: center
+
+  &:hover
+    border-color: rgba(0, 0, 0, 0.54)
+
+  input
+    cursor: pointer
+    position: absolute
+    top: 0
+    left: 0
+    opacity: 0
+    width: 100%
+    height: 100%
+
+.preview-image
+  border-radius: 5px

@@ -3,7 +3,7 @@ const { getMomentUTC } = require("../utils/utils");
 const { getCollections } = require("../database/collections");
 const {
 	calculateBalanceDaySum,
-} = require("../translatorsBalanceFunctions/translatorsBalanceFunctions");
+} = require("../../sharedFunctions/sharedFunctions");
 const ObjectId = require("mongodb").ObjectId;
 
 const getBalanceDay = async (req, res) => {

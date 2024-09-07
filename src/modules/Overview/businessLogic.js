@@ -131,7 +131,7 @@ export const useOverview = (user) => {
 	) => {
 		let sum = 0;
 		if (onlySvadba) {
-			translators.forEach((translator) => {
+			translators?.forEach((translator) => {
 				const translatorStatistics = balanceDaysForSelectedYear.filter(
 					(balanceDay) => translator._id === balanceDay.translator,
 				);
@@ -152,7 +152,7 @@ export const useOverview = (user) => {
 					);
 			});
 		} else {
-			translators.forEach((translator) => {
+			translators?.forEach((translator) => {
 				const translatorStatistics = balanceDaysForSelectedYear.filter(
 					(balanceDay) => translator._id === balanceDay.translator,
 				);

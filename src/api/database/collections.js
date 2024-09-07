@@ -139,6 +139,7 @@ var __importDefault =
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
+var businessAdminsDatabaseModels_1 = require("../models/businessAdminsDatabaseModels");
 if (!process.env.DATABASE || !process.env.DATABASE_PASSWORD) {
 	throw new Error(
 		"DATABASE and DATABASE_PASSWORD environment variables are required",
@@ -158,9 +159,28 @@ var _a = require("../models/translatorsDatabaseModels"),
 var PaymentSchema = require("../models/statementsDatabaseModels").PaymentSchema;
 var AdminSchema = require("../models/adminDatabaseModels").AdminSchema;
 var collections = new Map();
+var CollectionNames;
+(function (CollectionNames) {
+	CollectionNames["CollectionTasks"] = "collectionTasks";
+	CollectionNames["CollectionClients"] = "collectionClients";
+	CollectionNames["CollectionTranslators"] = "collectionTranslators";
+	CollectionNames["CollectionStatements"] = "collectionStatements";
+	CollectionNames["CollectionAdmins"] = "collectionAdmins";
+	CollectionNames["CollectionBalanceDays"] = "collectionBalanceDays";
+	CollectionNames["CollectionBusinessAdmins"] = "collectionBusinessAdmins";
+})(CollectionNames || (CollectionNames = {}));
 var connectToDatabase = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var clientBaseDB, Task, Client, Translator, Admin, Statement, BalanceDay;
+		var clientBaseDB,
+			Task,
+			Client,
+			Translator,
+			Admin,
+			Statement,
+			BalanceDay,
+			BusinessAdmin,
+			appNameMatch,
+			appName;
 		return __generator(this, function (_a) {
 			try {
 				clientBaseDB = mongoose_1.default.createConnection(
@@ -192,6 +212,11 @@ var connectToDatabase = function () {
 					BalanceDaySchema,
 					"balanceDayCollection",
 				);
+				BusinessAdmin = clientBaseDB.model(
+					"BusinessAdmin",
+					businessAdminsDatabaseModels_1.BusinessAdminSchema,
+					"businessAdminsCollection",
+				);
 				collections.set("collectionTasks", Task);
 				collections.set("collectionClients", Client);
 				collections.set("collectionClientsOnTranslators", Client);
@@ -199,25 +224,19 @@ var connectToDatabase = function () {
 				collections.set("collectionAdmins", Admin);
 				collections.set("collectionStatements", Statement);
 				collections.set("collectionBalanceDays", BalanceDay);
+				collections.set("collectionBusinessAdmins", BusinessAdmin);
+				appNameMatch = DBConnectionCredentials.match(/appName=([^&]+)/);
+				appName = appNameMatch ? appNameMatch[1] : "Unknown";
+				console.log(
+					"Connected to MongoDB database with app name: ".concat(appName),
+				);
 			} catch (error) {
-				console.error(error);
+				console.error("Failed to connect to MongoDB database", error);
 			}
 			return [2 /*return*/];
 		});
 	});
 };
-var CollectionNames;
-(function (CollectionNames) {
-	CollectionNames["CollectionTasks"] = "collectionTasks";
-	CollectionNames["CollectionBalance"] = "collectionBalance";
-	CollectionNames["CollectionTaskNotifications"] =
-		"collectionTaskNotifications";
-	CollectionNames["CollectionClients"] = "collectionClients";
-	CollectionNames["CollectionTranslators"] = "collectionTranslators";
-	CollectionNames["CollectionStatements"] = "collectionStatements";
-	CollectionNames["CollectionAdmins"] = "collectionAdmins";
-	CollectionNames["CollectionBalanceDays"] = "collectionBalanceDays";
-})(CollectionNames || (CollectionNames = {}));
 var getCollections = function () {
 	return Object.values(CollectionNames).reduce(function (
 		collectionsObject,

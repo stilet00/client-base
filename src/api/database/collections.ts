@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
+import { BusinessAdminSchema } from "../models/businessAdminsDatabaseModels";
+
 if (!process.env.DATABASE || !process.env.DATABASE_PASSWORD) {
 	throw new Error(
 		"DATABASE and DATABASE_PASSWORD environment variables are required",
 	);
 }
+
 const DBConnectionCredentials = process.env.DATABASE.replace(
 	"<PASSWORD>",
 	process.env.DATABASE_PASSWORD,
@@ -19,6 +22,16 @@ const { PaymentSchema } = require("../models/statementsDatabaseModels");
 const { AdminSchema } = require("../models/adminDatabaseModels");
 
 const collections = new Map();
+
+enum CollectionNames {
+	CollectionTasks = "collectionTasks",
+	CollectionClients = "collectionClients",
+	CollectionTranslators = "collectionTranslators",
+	CollectionStatements = "collectionStatements",
+	CollectionAdmins = "collectionAdmins",
+	CollectionBalanceDays = "collectionBalanceDays",
+	CollectionBusinessAdmins = "collectionBusinessAdmins",
+}
 
 const connectToDatabase = async () => {
 	try {
@@ -48,6 +61,11 @@ const connectToDatabase = async () => {
 			BalanceDaySchema,
 			"balanceDayCollection",
 		);
+		const BusinessAdmin = clientBaseDB.model(
+			"BusinessAdmin",
+			BusinessAdminSchema,
+			"businessAdminsCollection",
+		);
 		collections.set("collectionTasks", Task);
 		collections.set("collectionClients", Client);
 		collections.set("collectionClientsOnTranslators", Client);
@@ -55,21 +73,14 @@ const connectToDatabase = async () => {
 		collections.set("collectionAdmins", Admin);
 		collections.set("collectionStatements", Statement);
 		collections.set("collectionBalanceDays", BalanceDay);
+		collections.set("collectionBusinessAdmins", BusinessAdmin);
+		const appNameMatch = DBConnectionCredentials.match(/appName=([^&]+)/);
+		const appName = appNameMatch ? appNameMatch[1] : "Unknown";
+		console.log(`Connected to MongoDB database with app name: ${appName}`);
 	} catch (error) {
-		console.error(error);
+		console.error("Failed to connect to MongoDB database", error);
 	}
 };
-
-enum CollectionNames {
-	CollectionTasks = "collectionTasks",
-	CollectionBalance = "collectionBalance",
-	CollectionTaskNotifications = "collectionTaskNotifications",
-	CollectionClients = "collectionClients",
-	CollectionTranslators = "collectionTranslators",
-	CollectionStatements = "collectionStatements",
-	CollectionAdmins = "collectionAdmins",
-	CollectionBalanceDays = "collectionBalanceDays",
-}
 
 const getCollections = () => {
 	return Object.values(CollectionNames).reduce(
