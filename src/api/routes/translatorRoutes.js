@@ -15,7 +15,7 @@ var _b = require("../controllers/translatorController"),
 	addNewTranslator = _b.addNewTranslator,
 	updateTranslator = _b.updateTranslator,
 	deleteTranslator = _b.deleteTranslator,
-	sendEmailsToTranslators = _b.sendEmailsToTranslators,
+	sendDailyEmails = _b.sendDailyEmails,
 	assignClientToTranslator = _b.assignClientToTranslator,
 	addPersonalPenaltyToTranslator = _b.addPersonalPenaltyToTranslator,
 	getPersonalPenalties = _b.getPersonalPenalties,
@@ -30,7 +30,7 @@ router.get(
 	isAuthenticated,
 	getLastVirtualGift,
 );
-router.get(translatorsURL + "send-emails", adminRules, sendEmailsToTranslators);
+router.get(translatorsURL + "send-emails", adminRules, sendDailyEmails);
 router.post(translatorsURL + "add", adminRules, addNewTranslator);
 router.put(
 	translatorsURL + "suspend-client",
