@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import "../../styles/modules/FinanceStatementPage.css";
 import PaymentsGroup from "./PaymentsGroup/PaymentsGroup";
@@ -14,16 +14,32 @@ import AlertMessageConfirmation from "../../sharedComponents/AlertMessageConfirm
 import AlertMessage from "../../sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "../../sharedComponents/AlertMessage/hooks";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useAdminStatus } from "sharedHooks/useAdminStatus";
 
 export default function FinanceStatementPage() {
-	const user = useSelector((state) => state.auth.user);
-	const [loading, setLoading] = useState(true);
-	const [paymentsList, setPaymentsList] = useState([]);
+	const isAdmin = useAdminStatus();
+	const queryClient = useQueryClient();
+	const { data: paymentsList = [], isLoading } = useQuery(
+		"finance-statements",
+		getPaymentsRequest,
+		{
+			enabled: !!isAdmin,
+			onError: () => {
+				setAlertInfo({
+					mainTitle: "Something went wrong while fetching finance statements",
+					status: false,
+				});
+				openAlert();
+			},
+		},
+	);
 	const [deletedPayment, setDeletedPayment] = useState(null);
 	const [alertInfo, setAlertInfo] = useState({
-		mainTitle: "no message had been put",
+		mainTitle: "No message had been put",
 		status: true,
 	});
+
 	const {
 		alertStatusConfirmation,
 		openAlertConfirmation,
@@ -31,27 +47,40 @@ export default function FinanceStatementPage() {
 	} = useAlertConfirmation();
 	const { alertOpen, closeAlert, openAlert } = useAlert();
 
-	useEffect(() => {
-		if (user) {
-			getPaymentsRequest({})
-				.then((res) => {
-					if (res.status === 200) {
-						setLoading(false);
-						setPaymentsList(res.body);
-					}
-				})
-				.catch((err) => {
-					const message = err.message;
-					setLoading(false);
-					setAlertInfo({
-						...alertInfo,
-						mainTitle: message,
-						status: false,
-					});
-					openAlert(5000);
-				});
-		}
-	}, [user]);
+	const addPaymentMutation = useMutation(addPaymentRequest, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("finance-statements");
+			setAlertInfo({
+				mainTitle: "New payment has been added",
+				status: true,
+			});
+			openAlert();
+		},
+		onError: (err) => {
+			const message = err?.response?.body?.error || "An error occurred";
+			setAlertInfo({
+				mainTitle: message,
+				status: false,
+			});
+			openAlert(5000);
+		},
+	});
+
+	const deletePaymentMutation = useMutation(removePaymentRequest, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("finance-statements");
+			closeAlertConfirmationNoReload();
+			openAlert();
+		},
+		onError: (err) => {
+			const message = err?.response?.body?.error || "An error occurred";
+			setAlertInfo({
+				mainTitle: message,
+				status: false,
+			});
+			openAlert();
+		},
+	});
 
 	function pressDeleteButton(_id) {
 		const payment = paymentsList.find((item) => item._id === _id);
@@ -63,6 +92,7 @@ export default function FinanceStatementPage() {
 			status: true,
 		});
 	}
+
 	async function createNewPayment(payment) {
 		setDeletedPayment(null);
 		const newPayment = {
@@ -71,54 +101,11 @@ export default function FinanceStatementPage() {
 			receiverID: payment.receiver.id,
 			receiver: payment.receiver.label,
 		};
-		try {
-			const res = await addPaymentRequest(newPayment);
-			if (res.status === 200) {
-				const newPaymentWithId = { ...newPayment, _id: res.body };
-				setPaymentsList([...paymentsList, newPaymentWithId]);
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: "new payment has been added",
-					status: true,
-				});
-				openAlert();
-				return true;
-			}
-		} catch (err) {
-			const message = err?.response?.body?.error || "An error occurred";
-			setLoading(false);
-			setAlertInfo({
-				...alertInfo,
-				mainTitle: message,
-				status: false,
-			});
-			openAlert(5000);
-			return false;
-		}
+		await addPaymentMutation.mutateAsync(newPayment);
 	}
 
 	const deletePayment = () => {
-		const _id = deletedPayment._id;
-		removePaymentRequest(_id)
-			.then((res) => {
-				if (res.status === 200) {
-					setPaymentsList((prevStatement) =>
-						prevStatement.filter((item) => item._id !== _id),
-					);
-					closeAlertConfirmationNoReload();
-					openAlert();
-				}
-			})
-			.catch((err) => {
-				const message = err?.response?.body?.error || "An error occurred";
-				setLoading(false);
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: message,
-					status: false,
-				});
-				openAlert();
-			});
+		deletePaymentMutation.mutate(deletedPayment._id);
 	};
 
 	const getStatementGroupedByDates = (statements) => {
@@ -151,7 +138,7 @@ export default function FinanceStatementPage() {
 
 	return (
 		<>
-			{!loading && (
+			{!isLoading && (
 				<>
 					<div className={"main-container scrolled-container"}>
 						{arrayOfStatementsGroupedByDate.length > 0 && (
@@ -191,7 +178,7 @@ export default function FinanceStatementPage() {
 					/>
 				</>
 			)}
-			{loading && <Loader />}
+			{isLoading && <Loader />}
 		</>
 	);
 }

@@ -177,6 +177,7 @@ var getAllTranslators = function (req, res) {
 					if (hasShouldGetClients) {
 						query = query.populate("clients");
 					}
+					query = query.sort({ name: 1 });
 					return [4 /*yield*/, query.exec()];
 				case 1:
 					translators = _c.sent();

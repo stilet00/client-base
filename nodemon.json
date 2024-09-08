@@ -1,0 +1,6 @@
+{
+	"watch": ["server.ts", "src/api", "src/constants", "src/sharedFunctions"],
+	"ext": "ts,js,json",
+	"ignore": ["node_modules"],
+	"exec": "ts-node -r dotenv/config server.ts"
+}

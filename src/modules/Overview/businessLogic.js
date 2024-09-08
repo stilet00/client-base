@@ -43,13 +43,8 @@ export const useOverview = (user) => {
 		return response.body;
 	};
 
-	const fetchPayments = async () => {
-		const response = await getPaymentsRequest({ yearFilter: selectedYear });
-		if (response.status !== 200) {
-			throw new Error("Something went wrong with payments");
-		}
-		return response.body;
-	};
+	const fetchPayments = async () =>
+		getPaymentsRequest({ yearFilter: selectedYear });
 
 	const fetchBalanceDays = async () => {
 		const response = await getBalanceDaysForOverviewRequest({

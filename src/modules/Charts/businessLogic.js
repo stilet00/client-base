@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import useModal from "../../sharedHooks/useModal";
 import { useQuery } from "react-query";
 import { getChartsRequest } from "services/chartServices";
+import { useSelector } from "react-redux";
 import {
 	currentYear,
 	currentMonth,
@@ -10,7 +11,8 @@ import {
 } from "../../constants/constants";
 import MESSAGES from "constants/messages";
 
-export const useChartsContainer = (user) => {
+export const useChartsContainer = () => {
+	const user = useSelector((state) => state.auth.user);
 	const [selectedYear, setSelectedYear] = useState(currentYear);
 
 	const fetchChartData = async () => {

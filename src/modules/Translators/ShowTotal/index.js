@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 import { useQuery } from "react-query";
@@ -13,7 +12,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
 	getBalanceTotalForCurrentMonthRequest,
-	getBalanceDayForSelectedDate,
+	getBalanceDayForSelectedDateRequest,
 } from "services/balanceDayServices/index";
 import Loader from "sharedComponents/Loader/Loader";
 import { useAdminStatus } from "sharedHooks/useAdminStatus";
@@ -25,10 +24,8 @@ const StyledButton = styled(Button)`
 `;
 
 const TotalButtonWithDialog = ({ screenIsSmall }) => {
-	const user = useSelector((state) => state.auth.user);
-	const { isAdmin } = useAdminStatus(user);
+	const isAdmin = useAdminStatus();
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [sumForDay, setSumForDay] = useState(0);
 	const [selectedDate, setSelectedDate] = useState(
 		getMomentUTC().subtract(1, "day"),
 	);
@@ -50,12 +47,11 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
 
 	const { data: balanceDayData } = useQuery(
 		["balanceDay", selectedDate],
-		() => getBalanceDayForSelectedDate(selectedDate.format("YYYY-MM-DD")),
+		() =>
+			getBalanceDayForSelectedDateRequest(selectedDate.format("YYYY-MM-DD")),
 		{
-			enabled: !!selectedDate,
-			onSuccess: (res) => {
-				setSumForDay(calculateStatisticsForDay(res.body));
-			},
+			enabled: !!anchorEl,
+			retry: false,
 		},
 	);
 
@@ -69,6 +65,8 @@ const TotalButtonWithDialog = ({ screenIsSmall }) => {
 		}, 0);
 		return totalSum?.toFixed(2);
 	};
+
+	const sumForDay = calculateStatisticsForDay(balanceDayData) ?? 0;
 
 	return (
 		<>
