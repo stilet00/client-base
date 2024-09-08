@@ -6,7 +6,7 @@ import Loader from "../../sharedComponents/Loader/Loader";
 
 export default function PrivateRoute({ component: Component, ...rest }) {
 	const user = useSelector((state) => state.auth.user);
-	const { isAdmin, isLoading } = useAdminStatus(user);
+	const { isAdmin, isLoading } = useAdminStatus();
 	if (isLoading) {
 		return <Loader />;
 	}

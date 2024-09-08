@@ -179,7 +179,7 @@ export default function ListOfClients() {
 			}
 		});
 	};
-	const { isAdmin } = useAdminStatus(user);
+	const { isAdmin } = useAdminStatus();
 
 	const { isLoading: clientsAreLoading } = useQuery(
 		"clientsData",
@@ -223,8 +223,8 @@ export default function ListOfClients() {
 		"paymentsForClients",
 		getPaymentsRequest,
 		{
-			onSuccess: (response) => {
-				setPaymentsList(response?.body);
+			onSuccess: (data) => {
+				setPaymentsList(data);
 			},
 			onError: (error) => {
 				const message = error.message;

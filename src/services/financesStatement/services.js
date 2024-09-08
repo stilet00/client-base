@@ -3,12 +3,13 @@ import { rootURL } from "../rootURL";
 
 const financeStatementsURL = `${rootURL}statements/`;
 
-export function getPaymentsRequest({ yearFilter = "" }) {
+export async function getPaymentsRequest({ yearFilter = "" }) {
 	let requestURL = `${financeStatementsURL}get/`;
 	if (yearFilter) {
 		requestURL += `?year=${yearFilter}`;
 	}
-	return requestWithAuth("get", requestURL);
+	const response = await requestWithAuth("get", requestURL);
+	return response.body;
 }
 
 export async function addPaymentRequest(payment) {

@@ -160,12 +160,15 @@ const getBalanceDayForSelectedDate = async (req, res) => {
 			if (selectedBalanceDays.length > 0) {
 				res.send(selectedBalanceDays);
 			} else {
+				console.error(
+					`BalanceDay not found for the selected date: ${selectedDateStr}`,
+				);
 				res.status(404).json({
 					error: "BalanceDay not found for the selected date",
 				});
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			res.status(500).json({ error: "Internal server error" });
 		}
 	} else {

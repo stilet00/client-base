@@ -139,7 +139,8 @@ var __importDefault =
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAdminStatus = void 0;
-var react_1 = require("react");
+var react_query_1 = require("react-query");
+var react_redux_1 = require("react-redux");
 var superAgentConfig_1 = __importDefault(
 	require("../services/superAgentConfig"),
 );
@@ -173,40 +174,26 @@ function checkAdminStatus(user) {
 		});
 	});
 }
-function useAdminStatus(user) {
-	var _this = this;
-	var _a = (0, react_1.useState)(false),
-		isAdmin = _a[0],
-		setIsAdmin = _a[1];
-	var _b = (0, react_1.useState)(true),
-		isLoading = _b[0],
-		setIsLoading = _b[1];
-	(0, react_1.useEffect)(
-		function () {
-			if (!user) {
-				setIsAdmin(false);
-				setIsLoading(false);
-			} else {
-				(function () {
-					return __awaiter(_this, void 0, void 0, function () {
-						var isAdmin;
-						return __generator(this, function (_a) {
-							switch (_a.label) {
-								case 0:
-									return [4 /*yield*/, checkAdminStatus(user)];
-								case 1:
-									isAdmin = _a.sent();
-									setIsAdmin(isAdmin);
-									setIsLoading(false);
-									return [2 /*return*/];
-							}
-						});
-					});
-				})();
-			}
-		},
-		[user],
-	);
-	return { isAdmin: isAdmin, isLoading: isLoading };
+function useAdminStatus() {
+	var user = (0, react_redux_1.useSelector)(function (state) {
+		return state.auth.user;
+	});
+	var _a = (0, react_query_1.useQuery)(
+			["adminStatus", user === null || user === void 0 ? void 0 : user.email],
+			function () {
+				return checkAdminStatus(user);
+			},
+			{
+				enabled: !!user,
+				retry: false,
+				staleTime: 1000 * 60 * 5,
+			},
+		),
+		isAdmin = _a.data,
+		isLoading = _a.isLoading;
+	return {
+		isAdmin: isAdmin !== null && isAdmin !== void 0 ? isAdmin : false,
+		isLoading: isLoading,
+	};
 }
 exports.useAdminStatus = useAdminStatus;

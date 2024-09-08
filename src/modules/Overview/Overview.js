@@ -65,7 +65,7 @@ function Overview() {
 		handleChange,
 		isLoading,
 	} = useOverview(user);
-	const { isAdmin } = useAdminStatus(user);
+	const { isAdmin } = useAdminStatus();
 
 	const getStatementsGroupedByCommentAndYear = (statements) => {
 		const groupedStatement = Object.values(FINANCE_COMMENTS).map((comment) => {

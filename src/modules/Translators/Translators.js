@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -19,7 +18,6 @@ import TotalButtonWithDialog from "./ShowTotal/index";
 import SendEmails from "./SendEmails";
 
 function Translators() {
-	const user = useSelector((state) => state.auth.user);
 	const { screenIsSmall } = useWindowDimensions();
 	const {
 		translators,
@@ -49,9 +47,8 @@ function Translators() {
 		mailoutInProgress,
 		dollarToUahRate,
 		updateBalanceDayIsLoading,
-	} = useTranslators(user);
-	const { isAdmin } = useAdminStatus(user);
-
+	} = useTranslators();
+	const { isAdmin } = useAdminStatus();
 	return (
 		<div className={"gallery-container"}>
 			{screenIsSmall ? (

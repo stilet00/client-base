@@ -11,7 +11,7 @@ import { useAdminStatus } from "../../sharedHooks/useAdminStatus";
 
 function TaskList() {
 	const user = useSelector((state) => state.auth.user);
-	const { isAdmin } = useAdminStatus(user);
+	const { isAdmin } = useAdminStatus();
 	const {
 		tasks,
 		alertOpen,

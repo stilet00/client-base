@@ -1,7 +1,9 @@
 import { Bar, Line } from "react-chartjs-2";
 import "../../../styles/modules/SingleChart.css";
 import { Chart, registerables } from "chart.js";
+import { Rating } from "@mui/material";
 import moment from "moment";
+import { useMemo } from "react";
 
 Chart.register(...registerables);
 
@@ -110,26 +112,55 @@ function SingleChart({ graph, index, previousMonth }) {
 		) : (
 			<Line data={data} options={options} />
 		);
+	const validValues = useMemo(() => {
+		return graph.values.filter(
+			(value) => value !== null && value !== undefined,
+		);
+	}, [graph.values]);
+	const totalSum = useMemo(() => {
+		return validValues
+			.reduce((sum, current) => sum + Number(current), 0)
+			.toFixed(2);
+	}, [validValues]);
+	const middleValue = useMemo(() => {
+		return validValues.length
+			? Math.floor(
+					validValues.reduce((sum, current) => sum + Number(current), 0) /
+						validValues.length,
+				)
+			: "0";
+	}, [validValues]);
 
+	function getChartRating() {
+		if (middleValue >= 400) {
+			return 5;
+		}
+		if (middleValue >= 300) {
+			return 4;
+		}
+		if (middleValue >= 200) {
+			return 3;
+		}
+		if (middleValue >= 100) {
+			return 2;
+		}
+		return 1;
+	}
 	return (
 		<div className={"single-chart"}>
 			{chartStyle}
 			<div className="total-sum">
-				<p className={"total-text"}>{`Total: ${graph.values
-					.reduce((sum, current) => {
-						return sum + Number(current);
-					}, 0)
-					.toFixed(2)} $`}</p>
+				<p className={"total-text"}>{`Total: ${totalSum} $`}</p>
 				<span className={"green-line"} />
-				<p className={"total-text"}>{`Middle: ${
-					graph.values.length
-						? Math.floor(
-								graph.values.reduce((sum, current) => {
-									return sum + Number(current);
-								}, 0) / graph.values.length,
-							)
-						: "0"
-				} $`}</p>
+				<p className={"total-text"}>
+					{`Middle: ${middleValue} $`}
+					<Rating
+						name="read-only"
+						value={getChartRating()}
+						readOnly
+						size="small"
+					/>
+				</p>
 			</div>
 		</div>
 	);

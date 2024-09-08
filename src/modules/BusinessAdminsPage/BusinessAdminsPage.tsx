@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Button from "@mui/material/Button";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
@@ -22,9 +21,8 @@ const BusinessAdminsPage: React.FC<BusinessAdminsPageProps> = (props) => {
 	const [selectedAdmin, setSelectedAdmin] = useState<BusinessAdmin | null>(
 		null,
 	);
-	const user = useSelector((state: any) => state.auth.user);
 	const queryClient = useQueryClient();
-	const { isAdmin } = useAdminStatus(user);
+	const { isAdmin } = useAdminStatus();
 
 	const deleteMutation = useMutation(deleteBusinessAdmin, {
 		onSuccess: () => {
@@ -51,7 +49,7 @@ const BusinessAdminsPage: React.FC<BusinessAdminsPageProps> = (props) => {
 		"businessAdministratorsQuery",
 		fetchBusinessAdministrators,
 		{
-			enabled: !!user,
+			enabled: !!isAdmin,
 			onSuccess: (data) => {
 				return data;
 			},

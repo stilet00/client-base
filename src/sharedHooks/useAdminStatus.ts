@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
 import requestWithAuth from "../services/superAgentConfig";
 import { rootURL } from "../services/rootURL";
 
 type User = {
 	email: string;
+	displayName: string | null;
+	emailVerified: boolean;
+	uid: string;
 };
 
-async function checkAdminStatus(user: User) {
+async function checkAdminStatus(user: User): Promise<boolean> {
 	try {
 		const response = await requestWithAuth("post", `${rootURL}isAdmin`).send({
 			email: user.email,
@@ -18,22 +22,20 @@ async function checkAdminStatus(user: User) {
 	}
 }
 
-export function useAdminStatus(user: User) {
-	const [isAdmin, setIsAdmin] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+export function useAdminStatus() {
+	const user = useSelector<{ auth: { user: User | null } }, User | null>(
+		(state) => state.auth.user,
+	);
 
-	useEffect(() => {
-		if (!user) {
-			setIsAdmin(false);
-			setIsLoading(false);
-		} else {
-			(async () => {
-				const isAdmin = await checkAdminStatus(user);
-				setIsAdmin(isAdmin);
-				setIsLoading(false);
-			})();
-		}
-	}, [user]);
+	const { data: isAdmin, isLoading } = useQuery(
+		["adminStatus", user?.email],
+		() => checkAdminStatus(user as User),
+		{
+			enabled: !!user,
+			retry: false,
+			staleTime: 1000 * 60 * 5,
+		},
+	);
 
-	return { isAdmin, isLoading };
+	return { isAdmin: isAdmin ?? false, isLoading };
 }
