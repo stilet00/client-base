@@ -1,7 +1,8 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import rateLimit from "express-rate-limit";
+import path from "path";
 import authRoutes from "./src/api/routes/authRoutes";
 import clientRoutes from "./src/api/routes/clientRoutes";
 import translatorRoutes from "./src/api/routes/translatorRoutes";
@@ -60,12 +61,10 @@ app.options("*", (req, res) => {
 	res.sendStatus(204);
 });
 
-app.use(express.static(__dirname + "/build"));
+app.use(express.static(path.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-
-app.use(limiter);
 
 app.use(authRoutes);
 app.use(clientRoutes);
@@ -76,6 +75,10 @@ app.use(balanceDayRoutes);
 app.use(businessAdminRoutes);
 app.use(staticRoutes);
 app.use(chartsRoutes);
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 const startServer = async () => {
 	try {

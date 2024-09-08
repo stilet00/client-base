@@ -142,6 +142,7 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+var path_1 = __importDefault(require("path"));
 var authRoutes_1 = __importDefault(require("./src/api/routes/authRoutes"));
 var clientRoutes_1 = __importDefault(require("./src/api/routes/clientRoutes"));
 var translatorRoutes_1 = __importDefault(
@@ -201,11 +202,10 @@ app.options("*", function (req, res) {
 	);
 	res.sendStatus(204);
 });
-app.use(express_1.default.static(__dirname + "/build"));
+app.use(express_1.default.static(path_1.default.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(body_parser_1.default.json({ limit: "50mb" }));
 app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
-app.use(limiter);
 app.use(authRoutes_1.default);
 app.use(clientRoutes_1.default);
 app.use(translatorRoutes_1.default);
@@ -215,6 +215,9 @@ app.use(balanceDayRoutes_1.default);
 app.use(businessAdminsRoutes_1.default);
 app.use(staticRoutes_1.default);
 app.use(chartsRoutes_1.default);
+app.get("*", function (req, res) {
+	res.sendFile(path_1.default.join(__dirname, "build", "index.html"));
+});
 var startServer = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var err_1;
