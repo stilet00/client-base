@@ -233,7 +233,7 @@ var SendEmails = function () {
 	var user = (0, react_redux_1.useSelector)(function (state) {
 		return state.auth.user;
 	});
-	var isAdmin = (0, useAdminStatus_1.useAdminStatus)().isAdmin;
+	var isAdmin = (0, useAdminStatus_1.useAdminStatus)();
 	var _d = (0, hooks_1.useAlertConfirmation)(),
 		alertStatusConfirmation = _d.alertStatusConfirmation,
 		openAlertConfirmation = _d.openAlertConfirmation,

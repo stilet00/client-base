@@ -179,7 +179,7 @@ export default function ListOfClients() {
 			}
 		});
 	};
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 
 	const { isLoading: clientsAreLoading } = useQuery(
 		"clientsData",

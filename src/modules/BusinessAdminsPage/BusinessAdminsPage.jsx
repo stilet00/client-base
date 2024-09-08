@@ -204,7 +204,7 @@ var BusinessAdminsPage = function (props) {
 		selectedAdmin = _b[0],
 		setSelectedAdmin = _b[1];
 	var queryClient = (0, react_query_1.useQueryClient)();
-	var isAdmin = (0, useAdminStatus_1.useAdminStatus)().isAdmin;
+	var isAdmin = (0, useAdminStatus_1.useAdminStatus)();
 	var deleteMutation = (0, react_query_1.useMutation)(
 		businessAdministratorsServices_1.deleteBusinessAdmin,
 		{

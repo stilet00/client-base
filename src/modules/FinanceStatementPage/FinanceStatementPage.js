@@ -18,7 +18,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useAdminStatus } from "sharedHooks/useAdminStatus";
 
 export default function FinanceStatementPage() {
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 	const queryClient = useQueryClient();
 	const { data: paymentsList = [], isLoading } = useQuery(
 		"finance-statements",

@@ -22,7 +22,7 @@ const BusinessAdminsPage: React.FC<BusinessAdminsPageProps> = (props) => {
 		null,
 	);
 	const queryClient = useQueryClient();
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 
 	const deleteMutation = useMutation(deleteBusinessAdmin, {
 		onSuccess: () => {

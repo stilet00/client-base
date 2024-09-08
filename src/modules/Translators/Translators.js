@@ -48,7 +48,7 @@ function Translators() {
 		dollarToUahRate,
 		updateBalanceDayIsLoading,
 	} = useTranslators();
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 	return (
 		<div className={"gallery-container"}>
 			{screenIsSmall ? (

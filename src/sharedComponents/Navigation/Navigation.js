@@ -105,7 +105,7 @@ export default function Navigation() {
 		bottom: false,
 		right: false,
 	});
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 	const toggleDrawer = (anchor, open) => (event) => {
 		if (
 			event.type === "keydown" &&

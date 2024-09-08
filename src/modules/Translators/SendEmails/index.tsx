@@ -87,7 +87,7 @@ const SendEmails: React.FC = () => {
 	const [displayMessage, setDisplayMessage] = useState<string>(defaultMessage);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 	const user = useSelector((state: any) => state.auth.user);
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 	const {
 		alertStatusConfirmation,
 		openAlertConfirmation,

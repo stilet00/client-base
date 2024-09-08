@@ -24,7 +24,7 @@ const StyledButton = styled(Button)`
 `;
 
 const TotalButtonWithDialog = ({ screenIsSmall }) => {
-	const { isAdmin } = useAdminStatus();
+	const isAdmin = useAdminStatus();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [selectedDate, setSelectedDate] = useState(
 		getMomentUTC().subtract(1, "day"),
