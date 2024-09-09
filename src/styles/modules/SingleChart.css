@@ -9,7 +9,11 @@ p {
 }
 
 .total-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   font-weight: bold;
+  align-items: center;
   color: white;
 }
 

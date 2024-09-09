@@ -183,7 +183,6 @@ var __importDefault =
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var react_redux_1 = require("react-redux");
 var react_query_1 = require("react-query");
 var Button_1 = __importDefault(require("@mui/material/Button"));
 var SupervisorAccount_1 = __importDefault(
@@ -204,11 +203,8 @@ var BusinessAdminsPage = function (props) {
 	var _b = (0, react_1.useState)(null),
 		selectedAdmin = _b[0],
 		setSelectedAdmin = _b[1];
-	var user = (0, react_redux_1.useSelector)(function (state) {
-		return state.auth.user;
-	});
 	var queryClient = (0, react_query_1.useQueryClient)();
-	var isAdmin = (0, useAdminStatus_1.useAdminStatus)(user).isAdmin;
+	var isAdmin = (0, useAdminStatus_1.useAdminStatus)();
 	var deleteMutation = (0, react_query_1.useMutation)(
 		businessAdministratorsServices_1.deleteBusinessAdmin,
 		{
@@ -249,7 +245,7 @@ var BusinessAdminsPage = function (props) {
 			"businessAdministratorsQuery",
 			fetchBusinessAdministrators,
 			{
-				enabled: !!user,
+				enabled: !!isAdmin,
 				onSuccess: function (data) {
 					return data;
 				},

@@ -74,7 +74,7 @@
 	"scripts": {
 		"start": "node -r dotenv/config server.js",
 		"build": "react-scripts build && tsc",
-		"serve": "nodemon -r dotenv/config server.ts",
+		"serve": "nodemon",
 		"sass:watch": "npx sass --watch src:src",
 		"format": "npx biome format --write .",
 		"dev": "react-scripts start",

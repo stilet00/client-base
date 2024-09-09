@@ -26,6 +26,7 @@ const getAllTranslators = async (
 		if (hasShouldGetClients) {
 			query = query.populate("clients");
 		}
+		query = query.sort({ name: 1 });
 		const translators: Translator[] = await query.exec();
 		res.send(translators);
 	} catch (error: unknown) {

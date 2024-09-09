@@ -24,7 +24,8 @@ import {
 	getMomentUTC,
 } from "sharedFunctions/sharedFunctions";
 
-export const useTranslators = (user) => {
+export const useTranslators = () => {
+	const user = useSelector((state) => state.auth.user);
 	const [translators, setTranslators] = useState([]);
 	const [currentClient, setCurrentClient] = useState(null);
 	const [dollarToUahRate, setDollarToUahRate] = useState(null);
@@ -474,27 +475,36 @@ export const useSingleTranslator = ({ translatorId }) => {
 	}
 
 	function calculateMiddleMonthSum(selectedDate) {
-		const sum = [];
+		const sumByDate = {};
 		const balanceDaysOfSelectedMonth = translatorBalanceDays.filter(
 			({ dateTimeId }) =>
 				getMomentUTC(dateTimeId).isSame(selectedDate, "month"),
 		);
 		balanceDaysOfSelectedMonth.forEach((balanceDay) => {
-			sum.push(calculateBalanceDaySum(balanceDay.statistics));
+			const date = getMomentUTC(balanceDay.dateTimeId).format("YYYY-MM-DD");
+
+			if (!sumByDate[date]) {
+				sumByDate[date] = 0;
+			}
+
+			sumByDate[date] += calculateBalanceDaySum(balanceDay.statistics);
 		});
-		return getMiddleValueFromArray(sum);
+
+		const dailySums = Object.values(sumByDate);
+
+		return getMiddleValueFromArray(dailySums);
 	}
 
 	function getTranslatorsRating() {
 		const middle = calculateMiddleMonthSum();
 
-		return middle >= 100
+		return middle >= 50
 			? 5
-			: middle >= 75
+			: middle >= 30
 				? 4
-				: middle >= 50
+				: middle >= 20
 					? 3
-					: middle >= 30
+					: middle >= 10
 						? 2
 						: 1;
 	}

@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import SingleChart from "./SingleChart/SingleChart";
 import Loader from "../../sharedComponents/Loader/Loader";
 import { useChartsContainer } from "./businessLogic";
@@ -11,9 +10,8 @@ import { arrayOfYearsForSelectFilter } from "constants/constants";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
 function ChartsContainer() {
-	const user = useSelector((state) => state.auth.user);
 	const { selectedYear, handleChange, chartsData, isLoading } =
-		useChartsContainer(user);
+		useChartsContainer();
 
 	return (
 		<>
@@ -52,7 +50,9 @@ function ChartsContainer() {
 						onChange={handleChange}
 					>
 						{arrayOfYearsForSelectFilter.map((year) => (
-							<MenuItem value={year}>{year}</MenuItem>
+							<MenuItem key={year} value={year}>
+								{year}
+							</MenuItem>
 						))}
 					</Select>
 				</FormControl>
