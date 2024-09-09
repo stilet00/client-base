@@ -1,7 +1,8 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import rateLimit from "express-rate-limit";
+import path from "path";
 import authRoutes from "./src/api/routes/authRoutes";
 import clientRoutes from "./src/api/routes/clientRoutes";
 import translatorRoutes from "./src/api/routes/translatorRoutes";
@@ -11,6 +12,7 @@ import balanceDayRoutes from "./src/api/routes/balanceDayRoutes";
 import staticRoutes from "./src/api/routes/staticRoutes";
 import businessAdminRoutes from "./src/api/routes/businessAdminsRoutes";
 import chartsRoutes from "./src/api/routes/chartsRoutes";
+const { rootURL } = require("./src/api/routes/routes");
 const { connectToDatabase } = require("./src/api/database/collections");
 
 type Environment = "staging" | "production" | "development";
@@ -60,12 +62,38 @@ app.options("*", (req, res) => {
 	res.sendStatus(204);
 });
 
-app.use(express.static(__dirname + "/build"));
+app.use(express.static(path.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.use(limiter);
+app.get(rootURL + "chart/", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "chart?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "overview/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/true?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "tasks/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "translators/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "finances/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "business-admins/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
 
 app.use(authRoutes);
 app.use(clientRoutes);
