@@ -1,6 +1,6 @@
 {
 	"name": "sunrise-agency-client-base",
-	"version": "5.5.1",
+	"version": "5.6.0",
 	"engines": {
 		"node": "20.14.0",
 		"npm": "10.7.0"
@@ -83,10 +83,17 @@
 		"prepare": "if [ -d .git ]; then lefthook install; fi"
 	},
 	"eslintConfig": {
-		"extends": ["react-app", "react-app/jest"]
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
 	},
 	"browserslist": {
-		"production": [">0.2%", "not dead", "not op_mini all"],
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
 		"development": [
 			"last 1 chrome version",
 			"last 1 firefox version",
