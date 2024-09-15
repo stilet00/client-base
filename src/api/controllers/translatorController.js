@@ -177,6 +177,7 @@ var getAllTranslators = function (req, res) {
 					if (hasShouldGetClients) {
 						query = query.populate("clients");
 					}
+					query = query.sort({ name: 1 });
 					return [4 /*yield*/, query.exec()];
 				case 1:
 					translators = _c.sent();
@@ -344,7 +345,7 @@ var deleteTranslator = function (req, res) {
 		},
 	);
 };
-var sendEmailsToTranslators = function (req, res) {
+var sendDailyEmails = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var Translator,
 			startOfPreviousMonth,
@@ -352,10 +353,12 @@ var sendEmailsToTranslators = function (req, res) {
 			queryForBalanceDays,
 			queryForClients,
 			translators,
-			arrayOfTranslatorNames;
+			arrayOfTranslatorNames,
+			error_5;
 		return __generator(this, function (_a) {
 			switch (_a.label) {
 				case 0:
+					_a.trys.push([0, 3, , 4]);
 					return [4 /*yield*/, getCollections().collectionTranslators];
 				case 1:
 					Translator = _a.sent();
@@ -410,6 +413,13 @@ var sendEmailsToTranslators = function (req, res) {
 					sendEmailTemplateToTranslators(translators);
 					sendEmailTemplateToAdministrators(translators);
 					res.status(200).send(arrayOfTranslatorNames);
+					return [3 /*break*/, 4];
+				case 3:
+					error_5 = _a.sent();
+					console.error("An error occurred:", error_5);
+					res.status(500).send("An error occurred");
+					return [3 /*break*/, 4];
+				case 4:
 					return [2 /*return*/];
 			}
 		});
@@ -425,7 +435,7 @@ var assignClientToTranslator = function (req, res) {
 			Clients,
 			translatorResult,
 			clientResult,
-			error_5;
+			error_6;
 		return __generator(this, function (_b) {
 			switch (_b.label) {
 				case 0:
@@ -472,8 +482,8 @@ var assignClientToTranslator = function (req, res) {
 					}
 					return [3 /*break*/, 5];
 				case 4:
-					error_5 = _b.sent();
-					console.error("An error occurred:", error_5);
+					error_6 = _b.sent();
+					console.error("An error occurred:", error_6);
 					res.status(500).send("An error occurred");
 					return [3 /*break*/, 5];
 				case 5:
@@ -497,7 +507,7 @@ var addPersonalPenaltyToTranslator = function (req, res) {
 			description,
 			translator,
 			penalty,
-			error_6;
+			error_7;
 		return __generator(this, function (_b) {
 			switch (_b.label) {
 				case 0:
@@ -532,8 +542,8 @@ var addPersonalPenaltyToTranslator = function (req, res) {
 						.send("Personal penalty successfully added to translator");
 					return [3 /*break*/, 5];
 				case 4:
-					error_6 = _b.sent();
-					console.error("An error occurred:", error_6);
+					error_7 = _b.sent();
+					console.error("An error occurred:", error_7);
 					res.status(500).send("An error occurred");
 					return [3 /*break*/, 5];
 				case 5:
@@ -553,7 +563,7 @@ var getPersonalPenalties = function (req, res) {
 			startOfMonth,
 			endOfMonth,
 			selectedTranslator,
-			error_7;
+			error_8;
 		var _b;
 		return __generator(this, function (_c) {
 			switch (_c.label) {
@@ -594,10 +604,10 @@ var getPersonalPenalties = function (req, res) {
 					);
 					return [3 /*break*/, 4];
 				case 3:
-					error_7 = _c.sent();
+					error_8 = _c.sent();
 					console.error(
 						"An error occurred while getting personal penalties:",
-						error_7,
+						error_8,
 					);
 					res.status(500).send("An error occurred");
 					return [3 /*break*/, 4];
@@ -609,7 +619,7 @@ var getPersonalPenalties = function (req, res) {
 };
 var toggleSuspendClientResolver = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var _a, translatorId, clientId, Client, client, error_8, errorMessage;
+		var _a, translatorId, clientId, Client, client, error_9, errorMessage;
 		return __generator(this, function (_b) {
 			switch (_b.label) {
 				case 0:
@@ -657,9 +667,9 @@ var toggleSuspendClientResolver = function (req, res) {
 				case 6:
 					return [3 /*break*/, 8];
 				case 7:
-					error_8 = _b.sent();
+					error_9 = _b.sent();
 					errorMessage = "An error occurred while toggling client suspension";
-					console.error(errorMessage, error_8);
+					console.error(errorMessage, error_9);
 					res.status(500).send(errorMessage);
 					return [3 /*break*/, 8];
 				case 8:
@@ -674,7 +684,7 @@ module.exports = {
 	addNewTranslator: addNewTranslator,
 	updateTranslator: updateTranslator,
 	deleteTranslator: deleteTranslator,
-	sendEmailsToTranslators: sendEmailsToTranslators,
+	sendDailyEmails: sendDailyEmails,
 	assignClientToTranslator: assignClientToTranslator,
 	addPersonalPenaltyToTranslator: addPersonalPenaltyToTranslator,
 	getPersonalPenalties: getPersonalPenalties,

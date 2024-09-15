@@ -166,6 +166,7 @@ function AuthorizationPage() {
 										</h2>
 										<StyledInput
 											error={error.email.status}
+											helperText={error.email.text}
 											label="Email"
 											type="email"
 											fullWidth
@@ -181,6 +182,7 @@ function AuthorizationPage() {
 										<StyledInput
 											disabled={forgotPasswordToogle}
 											error={error.password.status}
+											helperText={error.password.text}
 											label="Password"
 											type="password"
 											fullWidth

@@ -44,6 +44,7 @@ export interface Translator {
 	email: string;
 	password: string;
 	wantsToReceiveEmails: boolean;
+	createdAt?: string;
 }
 
 const BalanceDaySchema = new mongoose.Schema<BalanceDay>({
@@ -76,32 +77,35 @@ const PersonalPenaltiesSchema = new mongoose.Schema({
 	description: String,
 });
 
-const TranslatorSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: [true, "Please tell us your name!"],
+const TranslatorSchema = new mongoose.Schema(
+	{
+		name: {
+			type: String,
+			required: [true, "Please tell us your name!"],
+		},
+		surname: {
+			type: String,
+			required: [true, "Please tell us your name!"],
+		},
+		clients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Client" }],
+		statistics: [{ type: mongoose.Schema.Types.ObjectId, ref: "BalanceDay" }],
+		edited: Boolean,
+		suspended: SuspendedStatusSchema,
+		personalPenalties: [PersonalPenaltiesSchema],
+		email: {
+			type: String,
+			lowercase: true,
+			required: false,
+		},
+		password: {
+			type: String,
+			lowercase: true,
+			required: false,
+		},
+		wantsToReceiveEmails: Boolean,
 	},
-	surname: {
-		type: String,
-		required: [true, "Please tell us your name!"],
-	},
-	clients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Client" }],
-	statistics: [{ type: mongoose.Schema.Types.ObjectId, ref: "BalanceDay" }],
-	edited: Boolean,
-	suspended: SuspendedStatusSchema,
-	personalPenalties: [PersonalPenaltiesSchema],
-	email: {
-		type: String,
-		lowercase: true,
-		required: false,
-	},
-	password: {
-		type: String,
-		lowercase: true,
-		required: false,
-	},
-	wantsToReceiveEmails: Boolean,
-});
+	{ timestamps: true },
+);
 
 module.exports = {
 	TranslatorSchema,

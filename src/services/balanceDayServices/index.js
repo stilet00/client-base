@@ -25,11 +25,12 @@ export function getBalanceDaysForClientsRequest() {
 	return requestWithAuth("get", `${balanceDayURL}clients-statistics`);
 }
 
-export function getBalanceDayForSelectedDate(date) {
+export async function getBalanceDayForSelectedDateRequest(date) {
 	if (date) {
-		return requestWithAuth(
+		const response = await requestWithAuth(
 			"get",
 			`${balanceDayURL}selected-date?selected-date=${date}`,
 		);
+		return response.body;
 	}
 }

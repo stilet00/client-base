@@ -18,7 +18,6 @@ export const useAuthorizationPage = () => {
 		email: DEFAULT_ERROR,
 		password: DEFAULT_ERROR,
 	});
-
 	const buttonElement = useRef(null);
 
 	const { alertOpen, closeAlert, openAlert } = useAlert();
@@ -55,14 +54,42 @@ export const useAuthorizationPage = () => {
 				return firebase
 					.auth()
 					.signInWithEmailAndPassword(email, password)
-					.catch((error) => {
-						console.log(error);
+					.catch((errorFromServer) => {
+						const message = errorFromServer.message;
+						const code = errorFromServer.code;
+						if (code === "auth/user-not-found") {
+							setError({
+								...error,
+								email: {
+									...error.email,
+									text: message,
+									status: true,
+								},
+								password: { status: true, text: "" },
+							});
+						} else if (code === "auth/wrong-password") {
+							setError({
+								...error,
+								password: { status: true, text: message },
+							});
+						} else if (code === "auth/too-many-requests") {
+							setError({
+								...error,
+								email: {
+									...error.email,
+									text: message,
+									status: true,
+								},
+								password: { status: true, text: "" },
+							});
+						}
+
+						openAlert(5000);
 					});
 			})
 			.catch((errorFromServer) => {
 				const message = errorFromServer.message;
 				const code = errorFromServer.code;
-				console.log(errorFromServer);
 				if (code === "auth/user-not-found") {
 					setError({
 						...error,

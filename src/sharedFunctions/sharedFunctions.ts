@@ -2,6 +2,7 @@ import moment from "moment";
 import { localStorageTokenKey } from "../constants/constants";
 import {
 	BalanceDay,
+	PersonalPenalty,
 	Statistics,
 } from "../api/models/translatorsDatabaseModels";
 
@@ -163,3 +164,21 @@ export function getStartOfPreviousDayInUTC() {
 export function convertDateToIsoString(selectedDate: string) {
 	return moment(selectedDate).utc().startOf("day").format();
 }
+
+export const getCurrentMonthPenalties = (
+	penalties: PersonalPenalty[],
+): string => {
+	if (!penalties) return "0";
+	const currentDate = getMomentUTC();
+	const onlyCurMonthPenalties = penalties.filter(({ dateTimeId }) =>
+		getMomentUTC(dateTimeId).isSame(currentDate, "month"),
+	);
+	const totalPenaltiesForCurMonth = onlyCurMonthPenalties.reduce(
+		(acc, currentPenalty) => {
+			const amount = currentPenalty?.amount || 0;
+			return acc + amount;
+		},
+		0,
+	);
+	return totalPenaltiesForCurMonth.toString();
+};

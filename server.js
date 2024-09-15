@@ -142,6 +142,7 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+var path_1 = __importDefault(require("path"));
 var authRoutes_1 = __importDefault(require("./src/api/routes/authRoutes"));
 var clientRoutes_1 = __importDefault(require("./src/api/routes/clientRoutes"));
 var translatorRoutes_1 = __importDefault(
@@ -159,6 +160,7 @@ var businessAdminsRoutes_1 = __importDefault(
 	require("./src/api/routes/businessAdminsRoutes"),
 );
 var chartsRoutes_1 = __importDefault(require("./src/api/routes/chartsRoutes"));
+var rootURL = require("./src/api/routes/routes").rootURL;
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
 var rootURLOptions = {
@@ -201,11 +203,37 @@ app.options("*", function (req, res) {
 	);
 	res.sendStatus(204);
 });
-app.use(express_1.default.static(__dirname + "/build"));
+app.use(express_1.default.static(path_1.default.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(body_parser_1.default.json({ limit: "50mb" }));
 app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
-app.use(limiter);
+app.get(rootURL + "chart/", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "chart?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "overview/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/true?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "clients/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "tasks/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "translators/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "finances/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
+app.get(rootURL + "business-admins/?", function (request, response, next) {
+	response.sendFile(__dirname + "/build/index.html");
+});
 app.use(authRoutes_1.default);
 app.use(clientRoutes_1.default);
 app.use(translatorRoutes_1.default);

@@ -26,6 +26,7 @@ const getAllTranslators = async (
 		if (hasShouldGetClients) {
 			query = query.populate("clients");
 		}
+		query = query.sort({ name: 1 });
 		const translators: Translator[] = await query.exec();
 		res.send(translators);
 	} catch (error: unknown) {
@@ -129,53 +130,58 @@ const deleteTranslator = (req: Request, res: Response) => {
 	);
 };
 
-const sendEmailsToTranslators = async (req: Request, res: Response) => {
-	const Translator = await getCollections().collectionTranslators;
-	const startOfPreviousMonth = getMomentUTC()
-		.subtract(1, "month")
-		.startOf("month")
-		.format();
-	const endOfYesterday = getMomentUTC()
-		.subtract(1, "days")
-		.endOf("day")
-		.format();
+const sendDailyEmails = async (req: Request, res: Response) => {
+	try {
+		const Translator = await getCollections().collectionTranslators;
+		const startOfPreviousMonth = getMomentUTC()
+			.subtract(1, "month")
+			.startOf("month")
+			.format();
+		const endOfYesterday = getMomentUTC()
+			.subtract(1, "days")
+			.endOf("day")
+			.format();
 
-	const queryForBalanceDays = {
-		dateTimeId: {
-			$gte: startOfPreviousMonth,
-			$lte: endOfYesterday,
-		},
-	};
-	const queryForClients = {
-		suspended: false,
-	};
-	const translators = await Translator.find({
-		"suspended.status": false,
-		wantsToReceiveEmails: true,
-		email: { $exists: true, $ne: "" },
-	})
-		.populate({
-			path: "statistics",
-			match: queryForBalanceDays,
-			populate: {
-				path: "client",
+		const queryForBalanceDays = {
+			dateTimeId: {
+				$gte: startOfPreviousMonth,
+				$lte: endOfYesterday,
 			},
+		};
+		const queryForClients = {
+			suspended: false,
+		};
+		const translators = await Translator.find({
+			"suspended.status": false,
+			wantsToReceiveEmails: true,
+			email: { $exists: true, $ne: "" },
 		})
-		.populate({
-			path: "clients",
-			match: queryForClients,
-		})
-		.exec();
-	if (translators.length === 0) {
-		res.status(200).send("No translators found");
-		return;
+			.populate({
+				path: "statistics",
+				match: queryForBalanceDays,
+				populate: {
+					path: "client",
+				},
+			})
+			.populate({
+				path: "clients",
+				match: queryForClients,
+			})
+			.exec();
+		if (translators.length === 0) {
+			res.status(200).send("No translators found");
+			return;
+		}
+		const arrayOfTranslatorNames = [...translators].map(
+			(translator) => translator.email,
+		);
+		sendEmailTemplateToTranslators(translators);
+		sendEmailTemplateToAdministrators(translators);
+		res.status(200).send(arrayOfTranslatorNames);
+	} catch (error) {
+		console.error("An error occurred:", error);
+		res.status(500).send("An error occurred");
 	}
-	const arrayOfTranslatorNames = [...translators].map(
-		(translator) => translator.email,
-	);
-	sendEmailTemplateToTranslators(translators);
-	sendEmailTemplateToAdministrators(translators);
-	res.status(200).send(arrayOfTranslatorNames);
 };
 
 const assignClientToTranslator = async (req: Request, res: Response) => {
@@ -299,7 +305,7 @@ module.exports = {
 	addNewTranslator,
 	updateTranslator,
 	deleteTranslator,
-	sendEmailsToTranslators,
+	sendDailyEmails,
 	assignClientToTranslator,
 	addPersonalPenaltyToTranslator,
 	getPersonalPenalties,

@@ -20,7 +20,8 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertDateToIsoString =
+exports.getCurrentMonthPenalties =
+	exports.convertDateToIsoString =
 	exports.getStartOfPreviousDayInUTC =
 	exports.getMomentUTC =
 	exports.saveUserIdTokenToLocalStorage =
@@ -212,3 +213,23 @@ function convertDateToIsoString(selectedDate) {
 	return (0, moment_1.default)(selectedDate).utc().startOf("day").format();
 }
 exports.convertDateToIsoString = convertDateToIsoString;
+var getCurrentMonthPenalties = function (penalties) {
+	if (!penalties) return "0";
+	var currentDate = (0, exports.getMomentUTC)();
+	var onlyCurMonthPenalties = penalties.filter(function (_a) {
+		var dateTimeId = _a.dateTimeId;
+		return (0, exports.getMomentUTC)(dateTimeId).isSame(currentDate, "month");
+	});
+	var totalPenaltiesForCurMonth = onlyCurMonthPenalties.reduce(function (
+		acc,
+		currentPenalty,
+	) {
+		var amount =
+			(currentPenalty === null || currentPenalty === void 0
+				? void 0
+				: currentPenalty.amount) || 0;
+		return acc + amount;
+	}, 0);
+	return totalPenaltiesForCurMonth.toString();
+};
+exports.getCurrentMonthPenalties = getCurrentMonthPenalties;

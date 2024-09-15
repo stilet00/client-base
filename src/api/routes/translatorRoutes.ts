@@ -6,7 +6,7 @@ const {
 	addNewTranslator,
 	updateTranslator,
 	deleteTranslator,
-	sendEmailsToTranslators,
+	sendDailyEmails,
 	assignClientToTranslator,
 	addPersonalPenaltyToTranslator,
 	getPersonalPenalties,
@@ -22,7 +22,7 @@ router.get(
 	isAuthenticated,
 	getLastVirtualGift,
 );
-router.get(translatorsURL + "send-emails", adminRules, sendEmailsToTranslators);
+router.get(translatorsURL + "send-emails", adminRules, sendDailyEmails);
 router.post(translatorsURL + "add", adminRules, addNewTranslator);
 router.put(
 	translatorsURL + "suspend-client",
