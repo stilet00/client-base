@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import moment from "moment";
 const { getCollections } = require("../database/collections");
 const {
@@ -68,7 +68,7 @@ const fetchRawBalanceDays = async (year: string): Promise<RawMonthData[]> => {
 		{
 			$project: {
 				year: "$_id.year",
-				month: { $toString: "$_id.month" },
+				month: { $toInt: "$_id.month" },
 				days: 1,
 				values: 1,
 			},
