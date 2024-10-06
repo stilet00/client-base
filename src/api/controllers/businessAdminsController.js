@@ -261,7 +261,6 @@ var deleteBusinessAdmin = function (req, res) {
 				case 0:
 					_a.trys.push([0, 2, , 3]);
 					id = req.params.id;
-					console.log(id);
 					BusinessAdminModel = getCollections().collectionBusinessAdmins;
 					return [4 /*yield*/, BusinessAdminModel.findByIdAndDelete(id)];
 				case 1:

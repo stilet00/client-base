@@ -10,6 +10,23 @@ const getTranslatorsEmailTemplateHTMLCode = require("./email-templates/getTransl
 const { getCollections } = require("../database/collections");
 const { DEFAULT_FINANCE_DAY } = require("../constants");
 var path = require("path");
+
+const calculatePercentAndProgressData = (
+	currentMonthTotal,
+	previousMonthTotal,
+) => {
+	const value = previousMonthTotal
+		? ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) * 100
+		: 100;
+
+	const progressIsPositive = currentMonthTotal >= previousMonthTotal;
+
+	return {
+		value: Math.abs(value.toFixed(2)),
+		progressIsPositive,
+	};
+};
+
 class imageAttachmentInformation {
 	constructor(imageName) {
 		this.filename = imageName;
@@ -17,6 +34,7 @@ class imageAttachmentInformation {
 		this.cid = imageName.replace(".png", "");
 	}
 }
+
 const credentialsForNodeMailer = JSON.parse(
 	process.env.CREDENTIALS_FOR_NODEMAILER,
 );
@@ -36,8 +54,7 @@ const imageNamesArrayForEmail = [
 ];
 
 const createTransport = () => {
-	let transporter;
-	transporter = nodeMailer.createTransport({
+	return nodeMailer.createTransport({
 		host: "smtp.gmail.com",
 		port: 465,
 		secure: true,
@@ -46,20 +63,19 @@ const createTransport = () => {
 			pass: credentialsForNodeMailer.pass,
 		},
 	});
-
-	return transporter;
 };
-let transporter = createTransport();
+
+const transporter = createTransport();
 
 const sendEmailTemplateToAdministrators = async (translatorsCollection) => {
 	let yesterdayTotalSum = 0;
 	const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
 		.map(({ name, surname, statistics }) => {
 			const translatorStatisticsForYesterday = statistics.filter((balanceDay) =>
-				getMomentUTC(balanceDay.dateTimeId).isSame(
-					getMomentUTC().subtract(1, "day"),
-					"day",
-				),
+				getMomentUTC(balanceDay.dateTimeId)
+					.clone()
+					.subtract(1, "day")
+					.isSame(getMomentUTC(), "day"),
 			);
 			const translatorSum = translatorStatisticsForYesterday.reduce(
 				(sum, current) => {
@@ -81,22 +97,23 @@ const sendEmailTemplateToAdministrators = async (translatorsCollection) => {
 			arrayOfTranslatorsNamesAndMonthSums,
 			yesterdayTotalSum,
 		});
+
 	const Admin = await getCollections().collectionAdmins.find().exec();
 	const adminEmailList = Admin.map((admin) => admin.registeredEmail);
+
 	const BusinessAdmin = await getCollections()
 		.collectionBusinessAdmins.find()
 		.exec();
 	const businessAdminEmailList = BusinessAdmin.map((admin) => admin.email);
-	let transporter = createTransport();
-	let mailOptions = {
+
+	const mailOptions = {
 		from: '"Sunrise agency" <sunrise-agency@gmail.com>',
 		to: [...adminEmailList, ...businessAdminEmailList],
-		subject: `Date: ${getMomentUTC()
-			.subtract(1, "day")
-			.format("MMMM DD, YYYY")}`,
-		text: `Balance: ${yesterdayTotalSum}$`,
+		subject: `Date: ${getMomentUTC().clone().subtract(1, "day").format("MMMM DD, YYYY")}`,
+		text: `Balance: ${yesterdayTotalSum?.toFixed(2)}$`,
 		html: emailHtmlTemplateForAdministrators,
 	};
+
 	transporter.sendMail(mailOptions, (error, info) => {
 		if (error) {
 			throw new Error(error);
@@ -119,43 +136,54 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 		}),
 	);
 
+	const previousMonth = getMomentUTC().clone().subtract(1, "month");
+	const currentMonth = getMomentUTC().clone();
+
 	arrayOfTranslatorsInfoForEmailLetter =
 		arrayOfTranslatorsInfoForEmailLetter.map((translator) => {
 			const translatorsStatistics = translator.statistics;
+
 			const balanceDaysForYesterday = translatorsStatistics.filter(
 				(balanceDay) => {
-					return getMomentUTC(balanceDay.dateTimeId).isSame(
-						getMomentUTC().subtract(1, "day"),
-						"day",
-					);
+					return getMomentUTC(balanceDay.dateTimeId)
+						.clone()
+						.isSame(currentMonth.clone().subtract(1, "day"), "day");
 				},
 			);
+
 			const balanceDaysForCurrentMonth = translatorsStatistics.filter(
 				(balanceDay) =>
-					getMomentUTC(balanceDay.dateTimeId).isSame(getMomentUTC(), "month"),
+					getMomentUTC(balanceDay.dateTimeId)
+						.clone()
+						.isSame(currentMonth, "month"),
 			);
+
 			const balanceDaysForPreviousMonth = translatorsStatistics.filter(
 				(balanceDay) =>
 					getMomentUTC(balanceDay.dateTimeId)
-						.subtract(1, "month")
-						.isSame(getMomentUTC(), "month"),
+						.clone()
+						.isSame(previousMonth, "month"),
 			);
+
 			const yesterdayTotal = balanceDaysForYesterday.reduce((sum, current) => {
 				return sum + calculateBalanceDaySum(current.statistics);
 			}, 0);
+
 			const currentMonthTotal = balanceDaysForCurrentMonth.reduce(
 				(sum, current) => {
 					return sum + calculateBalanceDaySum(current.statistics);
 				},
 				0,
 			);
+
 			const previousMonthTotal = balanceDaysForPreviousMonth.reduce(
 				(sum, current) => {
 					return sum + calculateBalanceDaySum(current.statistics);
 				},
 				0,
 			);
-			const monthProgressPercent = calculatePercentDifference(
+
+			const percentAndProgressData = calculatePercentAndProgressData(
 				currentMonthTotal,
 				previousMonthTotal,
 			);
@@ -179,6 +207,7 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 					statistics: statisticByClient,
 				};
 			});
+
 			const curMonthPenalties = getCurrentMonthPenalties(
 				translator.personalPenalties,
 			);
@@ -186,14 +215,13 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 				...translator,
 				yesterdayTotal,
 				currentMonthTotal,
-				monthProgressPercent,
+				percentAndProgressData,
 				detailedStatistic,
 				curMonthPenalties,
 			};
 		});
 
 	const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
 	const arrayOfTranslatorsWhoReceivedLetter = [];
 
 	for (const [
@@ -206,16 +234,16 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 		const imagesPathArrayForEmail = imageNamesArrayForEmail.map(
 			(imageName) => new imageAttachmentInformation(imageName),
 		);
-		let mailOptions = {
+
+		const mailOptions = {
 			from: '"Sunrise agency" <sunrise-agency@gmail.com>',
 			to: translatorInfoForEmailLetter.email,
-			subject: `Date: ${getMomentUTC()
-				.subtract(1, "day")
-				.format("MMMM DD, YYYY")}`,
+			subject: `Date: ${getMomentUTC().clone().subtract(1, "day").format("MMMM DD, YYYY")}`,
 			text: `Balance: ${translatorInfoForEmailLetter.yesterdayTotal}$`,
 			html: emailHtmlTemplateForTranslators,
 			attachments: imagesPathArrayForEmail,
 		};
+
 		await delay(index * 5000);
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
@@ -223,6 +251,7 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 			}
 			console.log(`Message sent to: ${info.accepted.join(", ")}`);
 		});
+
 		arrayOfTranslatorsWhoReceivedLetter.push(
 			translatorInfoForEmailLetter.label,
 		);
@@ -230,6 +259,7 @@ const sendEmailTemplateToTranslators = async (translatorsCollection) => {
 
 	return arrayOfTranslatorsWhoReceivedLetter;
 };
+
 module.exports = {
 	sendEmailTemplateToAdministrators,
 	sendEmailTemplateToTranslators,

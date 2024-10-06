@@ -209,7 +209,7 @@ var fetchRawBalanceDays = function (year) {
 							{
 								$project: {
 									year: "$_id.year",
-									month: { $toString: "$_id.month" },
+									month: { $toInt: "$_id.month" },
 									days: 1,
 									values: 1,
 								},

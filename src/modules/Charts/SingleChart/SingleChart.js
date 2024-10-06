@@ -8,7 +8,7 @@ import { useMemo } from "react";
 Chart.register(...registerables);
 
 function SingleChart({ graph, index, previousMonth }) {
-	let dataSets = [
+	const dataSets = [
 		{
 			label: "Current month",
 			fill: true,
@@ -71,17 +71,13 @@ function SingleChart({ graph, index, previousMonth }) {
 				ticks: {
 					color: "white",
 					beginAtZero: true,
-					callback: function (value) {
-						return value + " $.";
-					},
+					callback: (value) => value + " $.",
 				},
 			},
 			x: {
 				ticks: {
 					color: "white",
-					callback: function (value) {
-						return value + 1 + "." + graph.month;
-					},
+					callback: (value) => value + 1 + "." + graph.month,
 				},
 			},
 		},

@@ -12,7 +12,6 @@ import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 function ChartsContainer() {
 	const { selectedYear, handleChange, chartsData, isLoading } =
 		useChartsContainer();
-
 	return (
 		<>
 			<div
@@ -63,18 +62,24 @@ function ChartsContainer() {
 					<>
 						{chartsData?.length > 0 && (
 							<ul className={"chart-list"}>
-								{chartsData.map((month, index) => (
-									<SingleChart
-										previousMonth={
-											month.month === getMomentUTC().format("M")
-												? chartsData[index + 1]
-												: null
-										}
-										graph={month}
-										index={index}
-										key={index}
-									/>
-								))}
+								{chartsData.map((mothData, index) => {
+									const currentMonthNumber = Number.parseInt(
+										getMomentUTC().format("M"),
+										10,
+									);
+									return (
+										<SingleChart
+											previousMonth={
+												mothData.month === currentMonthNumber
+													? chartsData[index + 1]
+													: null
+											}
+											graph={mothData}
+											index={index}
+											key={mothData.month}
+										/>
+									);
+								})}
 							</ul>
 						)}
 						{chartsData?.length === 0 && <h1> No data available. </h1>}
