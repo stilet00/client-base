@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import mongoose, { type Query } from "mongoose";
-import { type BusinessAdmin } from "../models/businessAdminsDatabaseModels";
+import type { BusinessAdmin } from "../models/businessAdminsDatabaseModels";
 
 const { getCollections } = require("../database/collections");
 
@@ -79,7 +79,6 @@ export const deleteBusinessAdmin = async (
 ): Promise<void> => {
 	try {
 		const { id } = req.params;
-		console.log(id);
 		const BusinessAdminModel = getCollections().collectionBusinessAdmins;
 
 		const result = await BusinessAdminModel.findByIdAndDelete(id);
