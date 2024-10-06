@@ -8,7 +8,6 @@ import { useMemo } from "react";
 Chart.register(...registerables);
 
 function SingleChart({ graph, index, previousMonth }) {
-	console.log(previousMonth);
 	const dataSets = [
 		{
 			label: "Current month",
