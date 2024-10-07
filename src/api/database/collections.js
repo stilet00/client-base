@@ -138,6 +138,7 @@ var __importDefault =
 		return mod && mod.__esModule ? mod : { default: mod };
 	};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCollections = exports.connectToDatabase = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
 var businessAdminsDatabaseModels_1 = require("../models/businessAdminsDatabaseModels");
 if (!process.env.DATABASE || !process.env.DATABASE_PASSWORD) {
@@ -237,6 +238,7 @@ var connectToDatabase = function () {
 		});
 	});
 };
+exports.connectToDatabase = connectToDatabase;
 var getCollections = function () {
 	return Object.values(CollectionNames).reduce(function (
 		collectionsObject,
@@ -246,7 +248,4 @@ var getCollections = function () {
 		return collectionsObject;
 	}, {});
 };
-module.exports = {
-	connectToDatabase: connectToDatabase,
-	getCollections: getCollections,
-};
+exports.getCollections = getCollections;

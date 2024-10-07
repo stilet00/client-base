@@ -160,6 +160,9 @@ var businessAdminsRoutes_1 = __importDefault(
 	require("./src/api/routes/businessAdminsRoutes"),
 );
 var chartsRoutes_1 = __importDefault(require("./src/api/routes/chartsRoutes"));
+var overviewRoutes_1 = __importDefault(
+	require("./src/api/routes/overviewRoutes"),
+);
 var rootURL = require("./src/api/routes/routes").rootURL;
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
@@ -243,6 +246,7 @@ app.use(balanceDayRoutes_1.default);
 app.use(businessAdminsRoutes_1.default);
 app.use(staticRoutes_1.default);
 app.use(chartsRoutes_1.default);
+app.use(overviewRoutes_1.default);
 var startServer = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var err_1;
