@@ -68,32 +68,32 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.get(rootURL + "chart/", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}chart/`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "chart?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}chart?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "overview/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}overview/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "clients/true?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}clients/true?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "clients/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}clients/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "tasks/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}tasks/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "translators/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}translators/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "finances/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}finances/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "business-admins/?", (request, response, next) => {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}business-admins/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
 
 app.use(authRoutes);

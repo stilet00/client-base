@@ -19,6 +19,7 @@ import {
 	faArrowAltCircleUp,
 	faArrowAltCircleDown,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAdminStatus } from "sharedHooks/useAdminStatus";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -67,6 +68,7 @@ function Overview() {
 			};
 		}) => state.auth.user,
 	);
+	const isAdmin = useAdminStatus();
 
 	const fetchOverviewData = async () => {
 		const response = await getOverviewDataRequest({
@@ -116,7 +118,7 @@ function Overview() {
 						<StyledTableRow>
 							<StyledTableCell>Statistic's type</StyledTableCell>
 							<StyledTableCell>Data</StyledTableCell>
-							<StyledTableCell>Percentage Difference</StyledTableCell>
+							<StyledTableCell />
 						</StyledTableRow>
 					</TableHead>
 					<TableBody>
@@ -172,69 +174,77 @@ function Overview() {
 							<StyledTableCell>{activeTranslators}</StyledTableCell>
 							<StyledTableCell />
 						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Year's balance</StyledTableCell>
-							<StyledTableCell>{`$${yearTotal}`}</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Salary paid</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<CountUp duration={0.75} end={totalPayments} prefix="$" />
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Clients Salary</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<CountUp duration={0.75} end={clientsSalary} prefix="$" />
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to scout</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<CountUp duration={0.75} end={paymentToScout} prefix="$" />
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to bot</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<CountUp duration={0.75} end={paymentToBot} prefix="$" />
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to translator</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<CountUp
-										duration={0.75}
-										end={paymentToTranslator}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Total profit</StyledTableCell>
-							<StyledTableCell>
-								<span className="green-text styled-text-numbers">
-									<CountUp duration={0.75} end={totalProfit} prefix="$" />
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
+						{isAdmin && (
+							<>
+								<StyledTableRow>
+									<StyledTableCell>Year's balance</StyledTableCell>
+									<StyledTableCell>{`$${yearTotal}`}</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Salary paid</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<CountUp duration={0.75} end={totalPayments} prefix="$" />
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Clients Salary</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<CountUp duration={0.75} end={clientsSalary} prefix="$" />
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to scout</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<CountUp
+												duration={0.75}
+												end={paymentToScout}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to bot</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<CountUp duration={0.75} end={paymentToBot} prefix="$" />
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to translator</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<CountUp
+												duration={0.75}
+												end={paymentToTranslator}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Total profit</StyledTableCell>
+									<StyledTableCell>
+										<span className="green-text styled-text-numbers">
+											<CountUp duration={0.75} end={totalProfit} prefix="$" />
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+							</>
+						)}
 					</TableBody>
 				</Table>
 			</TableContainer>

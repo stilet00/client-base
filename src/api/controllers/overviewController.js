@@ -152,74 +152,18 @@ exports.getOverviewData = void 0;
 var sharedFunctions_1 = require("../../sharedFunctions/sharedFunctions");
 var collections_1 = require("../database/collections");
 var getMomentUTC = require("../utils/utils").getMomentUTC;
-var getOverviewData = function (req, res) {
+var getBalanceDaysForYear = function (yearFilter) {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var selectedYear,
-			BalanceDay,
-			Translator,
-			Client,
-			Payment,
-			yearFilter,
-			startOfYear,
-			endOfYear,
-			balanceDays,
-			yearTotal,
-			startOfMonth,
-			endOfCurrentDay,
-			currentMonthBalanceDays,
-			currentMonthTotal,
-			svadbaMonthTotal,
-			startOfPreviousMonth,
-			endOfPreviousMonth,
-			previousMonthBalanceDays,
-			previousMonthTotal,
-			svadbaPreviousMonthTotal,
-			calculatePercentageDifference,
-			monthPercentageDifference,
-			svadbaPercentageDifference,
-			datingMonthTotal,
-			datingPreviousMonthTotal,
-			datingPercentageDifference,
-			translators,
-			activeTranslators,
-			clientsCount,
-			payments,
-			paymentSums,
-			totalPayments,
-			totalProfit,
-			categorySums,
-			overviewData,
-			error_1;
+		var BalanceDay, startOfYear, endOfYear;
 		return __generator(this, function (_a) {
 			switch (_a.label) {
 				case 0:
-					_a.trys.push([0, 12, , 13]);
-					selectedYear = req.query.selectedYear;
 					return [
 						4 /*yield*/,
 						(0, collections_1.getCollections)().collectionBalanceDays,
 					];
 				case 1:
 					BalanceDay = _a.sent();
-					return [
-						4 /*yield*/,
-						(0, collections_1.getCollections)().collectionTranslators,
-					];
-				case 2:
-					Translator = _a.sent();
-					return [
-						4 /*yield*/,
-						(0, collections_1.getCollections)().collectionClients,
-					];
-				case 3:
-					Client = _a.sent();
-					return [
-						4 /*yield*/,
-						(0, collections_1.getCollections)().collectionStatements,
-					];
-				case 4:
-					Payment = _a.sent();
-					yearFilter = selectedYear || getMomentUTC().format("YYYY");
 					startOfYear = getMomentUTC(yearFilter, "YYYY")
 						.startOf("year")
 						.toISOString();
@@ -229,149 +173,38 @@ var getOverviewData = function (req, res) {
 					return [
 						4 /*yield*/,
 						BalanceDay.find({
-							dateTimeId: {
-								$gte: startOfYear,
-								$lte: endOfYear,
-							},
+							dateTimeId: { $gte: startOfYear, $lte: endOfYear },
 						}).exec(),
 					];
-				case 5:
-					balanceDays = _a.sent();
-					yearTotal = balanceDays.reduce(function (sum, day) {
-						return (
-							sum +
-							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
-						);
-					}, 0);
-					startOfMonth = getMomentUTC().startOf("month").toISOString();
-					endOfCurrentDay = getMomentUTC().endOf("day").toISOString();
+				case 2:
+					return [2 /*return*/, _a.sent()];
+			}
+		});
+	});
+};
+var calculatePercentageDifference = function (current, previous) {
+	return previous === 0 ? 0 : ((current - previous) / previous) * 100;
+};
+var getPaymentSums = function (year) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var Payment, paymentSums, totalPayments, categorySums;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
 					return [
 						4 /*yield*/,
-						BalanceDay.find({
-							dateTimeId: {
-								$gte: startOfMonth,
-								$lte: endOfCurrentDay,
-							},
-						}).exec(),
+						(0, collections_1.getCollections)().collectionStatements,
 					];
-				case 6:
-					currentMonthBalanceDays = _a.sent();
-					currentMonthTotal = currentMonthBalanceDays.reduce(function (
-						sum,
-						day,
-					) {
-						return (
-							sum +
-							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
-						);
-					}, 0);
-					svadbaMonthTotal = currentMonthBalanceDays.reduce(function (
-						sum,
-						day,
-					) {
-						return (
-							sum +
-							(0, sharedFunctions_1.calculateBalanceDaySum)(
-								day.statistics,
-								true,
-							)
-						);
-					}, 0);
-					startOfPreviousMonth = getMomentUTC()
-						.subtract(1, "month")
-						.startOf("month")
-						.toISOString();
-					endOfPreviousMonth = getMomentUTC()
-						.subtract(1, "month")
-						.endOf("month")
-						.toISOString();
-					return [
-						4 /*yield*/,
-						BalanceDay.find({
-							dateTimeId: {
-								$gte: startOfPreviousMonth,
-								$lte: endOfPreviousMonth,
-							},
-						}).exec(),
-					];
-				case 7:
-					previousMonthBalanceDays = _a.sent();
-					previousMonthTotal = previousMonthBalanceDays.reduce(function (
-						sum,
-						day,
-					) {
-						return (
-							sum +
-							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
-						);
-					}, 0);
-					svadbaPreviousMonthTotal = previousMonthBalanceDays.reduce(function (
-						sum,
-						day,
-					) {
-						return (
-							sum +
-							(0, sharedFunctions_1.calculateBalanceDaySum)(
-								day.statistics,
-								true,
-							)
-						);
-					}, 0);
-					calculatePercentageDifference = function (current, previous) {
-						return previous === 0 ? 0 : ((current - previous) / previous) * 100;
-					};
-					monthPercentageDifference = calculatePercentageDifference(
-						currentMonthTotal,
-						previousMonthTotal,
-					);
-					svadbaPercentageDifference = calculatePercentageDifference(
-						svadbaMonthTotal,
-						svadbaPreviousMonthTotal,
-					);
-					datingMonthTotal = currentMonthTotal - svadbaMonthTotal;
-					datingPreviousMonthTotal =
-						previousMonthTotal - svadbaPreviousMonthTotal;
-					datingPercentageDifference = calculatePercentageDifference(
-						datingMonthTotal,
-						datingPreviousMonthTotal,
-					);
-					return [
-						4 /*yield*/,
-						Translator.find({
-							"suspended.status": false,
-						}).exec(),
-					];
-				case 8:
-					translators = _a.sent();
-					activeTranslators = translators.filter(function (translator) {
-						return !translator.suspended.status;
-					}).length;
-					return [4 /*yield*/, Client.countDocuments().exec()];
-				case 9:
-					clientsCount = _a.sent();
-					return [
-						4 /*yield*/,
-						Payment.find({
-							date: {
-								$gte: startOfYear,
-								$lte: endOfYear,
-							},
-						}).exec(),
-					];
-				case 10:
-					payments = _a.sent();
+				case 1:
+					Payment = _a.sent();
 					return [
 						4 /*yield*/,
 						Payment.aggregate([
 							{
 								$match: {
 									date: {
-										$gte: new Date(
-											"".concat(selectedYear, "-01-01T00:00:00.000Z"),
-										),
-										$lte: new Date(
-											"".concat(selectedYear, "-12-31T23:59:59.999Z"),
-										),
+										$gte: new Date("".concat(year, "-01-01T00:00:00.000Z")),
+										$lte: new Date("".concat(year, "-12-31T23:59:59.999Z")),
 									},
 								},
 							},
@@ -383,13 +216,11 @@ var getOverviewData = function (req, res) {
 							},
 						]).exec(),
 					];
-				case 11:
+				case 2:
 					paymentSums = _a.sent();
-					totalPayments = payments.reduce(function (sum, payment) {
-						return sum + payment.amount;
+					totalPayments = paymentSums.reduce(function (sum, payment) {
+						return sum + payment.totalAmount;
 					}, 0);
-					totalProfit =
-						yearTotal - Math.floor(yearTotal * 0.45) - totalPayments;
 					categorySums = paymentSums.reduce(
 						function (acc, payment) {
 							switch (payment._id) {
@@ -415,6 +246,167 @@ var getOverviewData = function (req, res) {
 							paymentToTranslator: "0",
 						},
 					);
+					return [
+						2 /*return*/,
+						{ totalPayments: totalPayments, categorySums: categorySums },
+					];
+			}
+		});
+	});
+};
+var calculateMonthTotal = function (monthOffset) {
+	if (monthOffset === void 0) {
+		monthOffset = 0;
+	}
+	return __awaiter(void 0, void 0, void 0, function () {
+		var BalanceDay,
+			startOfMonth,
+			endOfMonth,
+			balanceDays,
+			monthTotal,
+			svadbaMonthTotal;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					return [
+						4 /*yield*/,
+						(0, collections_1.getCollections)().collectionBalanceDays,
+					];
+				case 1:
+					BalanceDay = _a.sent();
+					startOfMonth = getMomentUTC()
+						.subtract(monthOffset, "month")
+						.startOf("month")
+						.toISOString();
+					endOfMonth = getMomentUTC()
+						.subtract(monthOffset, "month")
+						.endOf("month")
+						.toISOString();
+					return [
+						4 /*yield*/,
+						BalanceDay.find({
+							dateTimeId: { $gte: startOfMonth, $lte: endOfMonth },
+						}).exec(),
+					];
+				case 2:
+					balanceDays = _a.sent();
+					monthTotal = balanceDays.reduce(function (sum, day) {
+						return (
+							sum +
+							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
+						);
+					}, 0);
+					svadbaMonthTotal = balanceDays.reduce(function (sum, day) {
+						return (
+							sum +
+							(0, sharedFunctions_1.calculateBalanceDaySum)(
+								day.statistics,
+								true,
+							)
+						);
+					}, 0);
+					return [
+						2 /*return*/,
+						{ monthTotal: monthTotal, svadbaMonthTotal: svadbaMonthTotal },
+					];
+			}
+		});
+	});
+};
+var getOverviewData = function (req, res) {
+	return __awaiter(void 0, void 0, void 0, function () {
+		var selectedYear,
+			yearFilter,
+			balanceDays,
+			yearTotal,
+			_a,
+			currentMonthTotal,
+			svadbaMonthTotal,
+			_b,
+			previousMonthTotal,
+			svadbaPreviousMonthTotal,
+			monthPercentageDifference,
+			svadbaPercentageDifference,
+			datingPercentageDifference,
+			Translator,
+			Client,
+			translators,
+			clientsCount,
+			activeTranslators,
+			_c,
+			totalPayments,
+			categorySums,
+			totalProfit,
+			overviewData,
+			error_1;
+		return __generator(this, function (_d) {
+			switch (_d.label) {
+				case 0:
+					_d.trys.push([0, 9, , 10]);
+					selectedYear = req.query.selectedYear;
+					yearFilter = selectedYear || getMomentUTC().format("YYYY");
+					return [4 /*yield*/, getBalanceDaysForYear(yearFilter)];
+				case 1:
+					balanceDays = _d.sent();
+					yearTotal = balanceDays.reduce(function (sum, day) {
+						return (
+							sum +
+							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
+						);
+					}, 0);
+					return [4 /*yield*/, calculateMonthTotal()];
+				case 2:
+					(_a = _d.sent()),
+						(currentMonthTotal = _a.monthTotal),
+						(svadbaMonthTotal = _a.svadbaMonthTotal);
+					return [4 /*yield*/, calculateMonthTotal(1)];
+				case 3:
+					(_b = _d.sent()),
+						(previousMonthTotal = _b.monthTotal),
+						(svadbaPreviousMonthTotal = _b.svadbaMonthTotal);
+					monthPercentageDifference = calculatePercentageDifference(
+						currentMonthTotal,
+						previousMonthTotal,
+					);
+					svadbaPercentageDifference = calculatePercentageDifference(
+						svadbaMonthTotal,
+						svadbaPreviousMonthTotal,
+					);
+					datingPercentageDifference = calculatePercentageDifference(
+						currentMonthTotal - svadbaMonthTotal,
+						previousMonthTotal - svadbaPreviousMonthTotal,
+					);
+					return [
+						4 /*yield*/,
+						(0, collections_1.getCollections)().collectionTranslators,
+					];
+				case 4:
+					Translator = _d.sent();
+					return [
+						4 /*yield*/,
+						(0, collections_1.getCollections)().collectionClients,
+					];
+				case 5:
+					Client = _d.sent();
+					return [
+						4 /*yield*/,
+						Translator.find({
+							"suspended.status": false,
+						}).exec(),
+					];
+				case 6:
+					translators = _d.sent();
+					return [4 /*yield*/, Client.countDocuments().exec()];
+				case 7:
+					clientsCount = _d.sent();
+					activeTranslators = translators.length;
+					return [4 /*yield*/, getPaymentSums(yearFilter)];
+				case 8:
+					(_c = _d.sent()),
+						(totalPayments = _c.totalPayments),
+						(categorySums = _c.categorySums);
+					totalProfit =
+						yearTotal - Math.floor(yearTotal * 0.45) - totalPayments;
 					overviewData = __assign(
 						{
 							clients: clientsCount,
@@ -424,7 +416,7 @@ var getOverviewData = function (req, res) {
 							previousMonthTotal: previousMonthTotal.toFixed(0),
 							svadbaPreviousMonthTotal: svadbaPreviousMonthTotal.toFixed(0),
 							yearTotal: yearTotal.toFixed(0),
-							totalPayments: totalPayments,
+							totalPayments: totalPayments.toFixed(0),
 							totalProfit: totalProfit.toFixed(0),
 							monthPercentageDifference: Math.round(monthPercentageDifference),
 							svadbaPercentageDifference: Math.round(
@@ -437,13 +429,13 @@ var getOverviewData = function (req, res) {
 						categorySums,
 					);
 					res.status(200).json(overviewData);
-					return [3 /*break*/, 13];
-				case 12:
-					error_1 = _a.sent();
+					return [3 /*break*/, 10];
+				case 9:
+					error_1 = _d.sent();
 					console.error(error_1);
 					res.status(500).json({ error: "Internal Server Error" });
-					return [3 /*break*/, 13];
-				case 13:
+					return [3 /*break*/, 10];
+				case 10:
 					return [2 /*return*/];
 			}
 		});

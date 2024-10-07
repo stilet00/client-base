@@ -200,6 +200,7 @@ var Loader_1 = __importDefault(require("sharedComponents/Loader/Loader"));
 var constants_1 = require("constants/constants");
 var react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 var free_solid_svg_icons_1 = require("@fortawesome/free-solid-svg-icons");
+var useAdminStatus_1 = require("sharedHooks/useAdminStatus");
 var StyledTableCell = (0, styles_1.styled)(TableCell_1.default)(function (_a) {
 	var _b;
 	var theme = _a.theme;
@@ -246,6 +247,7 @@ function Overview() {
 	var user = (0, react_redux_1.useSelector)(function (state) {
 		return state.auth.user;
 	});
+	var isAdmin = (0, useAdminStatus_1.useAdminStatus)();
 	var fetchOverviewData = function () {
 		return __awaiter(_this, void 0, void 0, function () {
 			var response;
@@ -301,7 +303,7 @@ function Overview() {
 						<StyledTableRow>
 							<StyledTableCell>Statistic's type</StyledTableCell>
 							<StyledTableCell>Data</StyledTableCell>
-							<StyledTableCell>Percentage Difference</StyledTableCell>
+							<StyledTableCell />
 						</StyledTableRow>
 					</TableHead_1.default>
 					<TableBody_1.default>
@@ -367,89 +369,93 @@ function Overview() {
 							<StyledTableCell>{activeTranslators}</StyledTableCell>
 							<StyledTableCell />
 						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Year's balance</StyledTableCell>
-							<StyledTableCell>{"$".concat(yearTotal)}</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Salary paid</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={totalPayments}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Clients Salary</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={clientsSalary}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to scout</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={paymentToScout}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to bot</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={paymentToBot}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Payment to translator</StyledTableCell>
-							<StyledTableCell>
-								<span className="blue-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={paymentToTranslator}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
-						<StyledTableRow>
-							<StyledTableCell>Total profit</StyledTableCell>
-							<StyledTableCell>
-								<span className="green-text styled-text-numbers">
-									<react_countup_1.default
-										duration={0.75}
-										end={totalProfit}
-										prefix="$"
-									/>
-								</span>
-							</StyledTableCell>
-							<StyledTableCell />
-						</StyledTableRow>
+						{isAdmin && (
+							<>
+								<StyledTableRow>
+									<StyledTableCell>Year's balance</StyledTableCell>
+									<StyledTableCell>{"$".concat(yearTotal)}</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Salary paid</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={totalPayments}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Clients Salary</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={clientsSalary}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to scout</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={paymentToScout}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to bot</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={paymentToBot}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Payment to translator</StyledTableCell>
+									<StyledTableCell>
+										<span className="blue-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={paymentToTranslator}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+								<StyledTableRow>
+									<StyledTableCell>Total profit</StyledTableCell>
+									<StyledTableCell>
+										<span className="green-text styled-text-numbers">
+											<react_countup_1.default
+												duration={0.75}
+												end={totalProfit}
+												prefix="$"
+											/>
+										</span>
+									</StyledTableCell>
+									<StyledTableCell />
+								</StyledTableRow>
+							</>
+						)}
 					</TableBody_1.default>
 				</Table_1.default>
 			</TableContainer_1.default>
