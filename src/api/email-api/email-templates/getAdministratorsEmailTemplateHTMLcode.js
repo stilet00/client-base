@@ -56,7 +56,6 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                                     border-top-left-radius: 8px;
                                                     border-top-right-radius: 8px;
                                                 }
-
                                                 .titlesInfo > td:first-child {
                                                     border-top-left-radius: 8px;
                                                     padding: 1rem;
@@ -64,7 +63,6 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                                 .titlesInfo > td:nth-child(2) {
                                                     border-top-right-radius: 8px;
                                                 }
-
                                                 .titlesInfo :nth-child(2) {
                                                     text-align: right;
                                                 }
@@ -125,20 +123,15 @@ const getAdministratorsEmailTemplateHTMLCode = ({
                                             <table>
                                                 <thead>
                                                     <tr class="titlesInfo">
-                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum.toFixed(
-																													2,
-																												)} $</td>
+                                                        <td class="title-info" colspan="2">Total: ${yesterdayTotalSum.toFixed(2)} $</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    ${translatorsSumToHtmlCode.join(
-																											"",
-																										)}
+                                                    ${translatorsSumToHtmlCode.join("")}
                                                 </tbody>
                                             </table>
                                         </body>
-                                    </html>
-                                    `;
+                                    </html>`;
 	return emailTemplate;
 };
 

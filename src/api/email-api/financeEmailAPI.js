@@ -71,11 +71,12 @@ const sendEmailTemplateToAdministrators = async (translatorsCollection) => {
 	let yesterdayTotalSum = 0;
 	const arrayOfTranslatorsNamesAndMonthSums = translatorsCollection
 		.map(({ name, surname, statistics }) => {
-			const translatorStatisticsForYesterday = statistics.filter((balanceDay) =>
-				getMomentUTC(balanceDay.dateTimeId)
-					.clone()
-					.subtract(1, "day")
-					.isSame(getMomentUTC(), "day"),
+			const yesterday = getMomentUTC().clone().subtract(1, "day");
+			const translatorStatisticsForYesterday = statistics.filter(
+				(balanceDay) => {
+					const balanceDayDate = getMomentUTC(balanceDay.dateTimeId).clone();
+					return balanceDayDate.isSame(yesterday, "day");
+				},
 			);
 			const translatorSum = translatorStatisticsForYesterday.reduce(
 				(sum, current) => {
@@ -97,7 +98,6 @@ const sendEmailTemplateToAdministrators = async (translatorsCollection) => {
 			arrayOfTranslatorsNamesAndMonthSums,
 			yesterdayTotalSum,
 		});
-
 	const Admin = await getCollections().collectionAdmins.find().exec();
 	const adminEmailList = Admin.map((admin) => admin.registeredEmail);
 

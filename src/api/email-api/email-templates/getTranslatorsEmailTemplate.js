@@ -56,7 +56,6 @@ const getTranslatorsEmailTemplateHTMLCode = (translatorInfoForEmailLetter) => {
                                             }
                                             .container__tableheader {
                                                 background: #005BBB;
-                                               
                                                 padding: 10px 0 0 0;
                                                 border-radius: 4px 4px 0 0;
                                             }
@@ -173,16 +172,16 @@ const getTranslatorsEmailTemplateHTMLCode = (translatorInfoForEmailLetter) => {
                                                 <tfoot>
                                                     <tr>
                                                         <td class="container__tfoot-td" colspan="3">
-                                                            Yesterday: ${translatorInfoForEmailLetter.yesterdayTotal?.toFixed(
-																															2,
-																														)} <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
+                                                            Yesterday: ${
+																															translatorInfoForEmailLetter.yesterdayTotal
+																														} <img src="cid:dollar-sign" width="16" height="16" alt="dollar" style="vertical-align: sub"></img>
                                                         </td>
                                                         <td class="container__tfoot-td" colspan="4">
                                                             ${getMomentUTC().format(
 																															"MMMM",
-																														)}: ${translatorInfoForEmailLetter.currentMonthTotal?.toFixed(
-																															2,
-																														)} <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
+																														)}: ${
+																															translatorInfoForEmailLetter.currentMonthTotal
+																														} <img src="cid:dollar-sign" width="16" height="16"  alt="dollar" style="vertical-align: sub"></img> <span style="color:${
 																															translatorInfoForEmailLetter
 																																.percentAndProgressData
 																																.progressIsPositive
