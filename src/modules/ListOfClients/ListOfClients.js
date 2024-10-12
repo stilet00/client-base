@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import {
 	getClientsRequest,
 	addClient,
@@ -25,6 +25,7 @@ import {
 	getMomentUTC,
 	calculateBalanceDaySum,
 	getSumFromArray,
+	getNumberWithHundreds,
 	calculatePercentDifference,
 } from "sharedFunctions/sharedFunctions";
 import { useAdminStatus } from "../../sharedHooks/useAdminStatus";
@@ -34,9 +35,12 @@ import useDebounce from "sharedHooks/useDebounce";
 
 export default function ListOfClients() {
 	const user = useSelector((state) => state.auth.user);
-	const queryClient = useQueryClient();
+	const [paymentsList, setPaymentsList] = useState([]);
 	const [showGraph, setShowGraph] = useState(false);
+	const [clients, setClients] = useState([]);
+	const [balanceDays, setBalanceDays] = useState([]);
 	const [graphData, setGraphData] = useState(null);
+	const [loading, setLoading] = useState(true);
 	const [updatingClient, setUpdatingClient] = useState({});
 	const { handleClose, handleOpen, open } = useModal();
 	const { queryString, changeSearchParams } = useSearch();
@@ -44,18 +48,47 @@ export default function ListOfClients() {
 		mainTitle: "no message had been put",
 		status: true,
 	});
-	const isAdmin = useAdminStatus();
 	const { alertOpen, closeAlert, openAlert } = useAlert();
-	const debouncedSearchQuery = useDebounce(queryString, 500);
-	const fetchClients = async () => {
-		const response = await getClientsRequest({
-			shouldFillTranslators: true,
-			searchQuery: "",
-		});
-		if (response.status !== 200) {
-			throw new Error("Something went wrong with clients data");
-		}
-		return response.body;
+
+	const getTotalProfitPerClient = (clientId) => {
+		const balanceDaysForCurrentClient = balanceDays.filter(
+			(balanceDay) => balanceDay.client === clientId,
+		);
+		const currentYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
+			({ dateTimeId }) =>
+				getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
+		);
+		const previousYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
+			({ dateTimeId }) =>
+				getMomentUTC(dateTimeId).isSame(
+					getMomentUTC().subtract(1, "year"),
+					"year",
+				),
+		);
+		const currentYearProfit = currentYearBalanceDaysForClient.reduce(
+			(sum, current) => {
+				return sum + calculateBalanceDaySum(current.statistics);
+			},
+			0,
+		);
+		const previousYearProfit = previousYearBalanceDaysForClient.reduce(
+			(sum, current) => {
+				return sum + calculateBalanceDaySum(current.statistics);
+			},
+			0,
+		);
+		const allYearsProfit = balanceDaysForCurrentClient.reduce(
+			(sum, current) => {
+				return sum + calculateBalanceDaySum(current.statistics);
+			},
+			0,
+		);
+		const clientsProfit = {
+			currentYearProfit,
+			allYearsProfit,
+			previousYearProfit,
+		};
+		return clientsProfit;
 	};
 
 	function clientMonthSum(clientId, monthOffset = 0) {
@@ -154,11 +187,14 @@ export default function ListOfClients() {
 	};
 	const isAdmin = useAdminStatus();
 
-	const { isLoading: clientsAreLoading, data: clients } = useQuery(
+	const { isLoading: clientsAreLoading } = useQuery(
 		"clientsData",
-		fetchClients,
+		() => getClientsRequest({ shouldFillTranslators: true }),
 		{
-			onError: () => {
+			onSuccess: (response) => {
+				setClients(response?.body);
+			},
+			onError: (error) => {
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: MESSAGE.somethingWrongWithGettingClients,
@@ -170,10 +206,13 @@ export default function ListOfClients() {
 		},
 	);
 
-	const { isLoading: balanceDaysAreLoading, data: balanceDays } = useQuery(
+	const { isLoading: balanceDaysAreLoading } = useQuery(
 		"balanceDaysForClients",
-		fetchBalanceDays,
+		getBalanceDaysForClientsRequest,
 		{
+			onSuccess: (response) => {
+				setBalanceDays(response?.body);
+			},
 			onError: (error) => {
 				setAlertInfo({
 					...alertInfo,
@@ -186,10 +225,13 @@ export default function ListOfClients() {
 		},
 	);
 
-	const { isLoading: paymentsAreLoading, data: paymentsList } = useQuery(
+	const { isLoading: paymentsAreLoading } = useQuery(
 		"paymentsForClients",
-		fetchPayments,
+		getPaymentsRequest,
 		{
+			onSuccess: (data) => {
+				setPaymentsList(data);
+			},
 			onError: (error) => {
 				const message = error.message;
 				setAlertInfo({
@@ -203,153 +245,61 @@ export default function ListOfClients() {
 		},
 	);
 
-	const getTotalProfitPerClient = useCallback(
-		(clientId) => {
-			const balanceDaysForCurrentClient = balanceDays.filter(
-				(balanceDay) => balanceDay.client === clientId,
-			);
-			const currentYearBalanceDaysForClient =
-				balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
-				);
-			const previousYearBalanceDaysForClient =
-				balanceDaysForCurrentClient.filter(({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(
-						getMomentUTC().subtract(1, "year"),
-						"year",
-					),
-				);
-			const currentYearProfit = currentYearBalanceDaysForClient.reduce(
-				(sum, current) => sum + calculateBalanceDaySum(current.statistics),
-				0,
-			);
-			const previousYearProfit = previousYearBalanceDaysForClient.reduce(
-				(sum, current) => sum + calculateBalanceDaySum(current.statistics),
-				0,
-			);
-			const allYearsProfit = balanceDaysForCurrentClient.reduce(
-				(sum, current) => sum + calculateBalanceDaySum(current.statistics),
-				0,
-			);
-			return {
-				currentYearProfit,
-				allYearsProfit,
-				previousYearProfit,
-			};
+	useEffect(() => {
+		if (!balanceDaysAreLoading && !paymentsAreLoading && !clientsAreLoading) {
+			setLoading(false);
+		}
+	}, [balanceDaysAreLoading, paymentsAreLoading, clientsAreLoading]);
+
+	useDebounce(
+		async () => {
+			setLoading(true);
+			const responseDataWithClients = await getClientsRequest({
+				searchQuery: queryString,
+				shouldFillTranslators: true,
+			});
+			if (responseDataWithClients.status === 200) {
+				setClients(responseDataWithClients.body);
+			} else {
+				setAlertInfo({
+					...alertInfo,
+					mainTitle: MESSAGE.somethingWrongWithGettingClients,
+					status: false,
+				});
+				openAlert(5000);
+			}
+			setLoading(false);
 		},
-		[balanceDays],
+		1000,
+		[queryString],
 	);
 
-	const clientMonthSum = useCallback(
-		(clientId) => {
-			const balanceDaysForCurrentClient = balanceDays.filter(
-				(balanceDay) => balanceDay.client === clientId,
-			);
-			const balanceDaysForCurrentMonth = balanceDaysForCurrentClient.filter(
-				({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(getMomentUTC(), "month"),
-			);
-			const currentMonthSum = balanceDaysForCurrentMonth.reduce(
-				(sum, current) => sum + calculateBalanceDaySum(current.statistics),
-				0,
-			);
-			return currentMonthSum.toFixed(2);
-		},
-		[balanceDays],
-	);
-
-	const calculateMiddleMonthSum = useCallback(
-		(clientId, date = getMomentUTC()) => {
-			const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
-			const currentDayOfMinusOne = getMomentUTC().format("D");
-			return Math.round(
-				totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne),
-			);
-		},
-		[clientMonthSum],
-	);
-
-	const sortBySum = useCallback(
-		(clientOne, clientTwo) => {
-			const clientOneSum = clientMonthSum(clientOne._id);
-			const clientTwoSum = clientMonthSum(clientTwo._id);
-			return clientOneSum > clientTwoSum
-				? -1
-				: clientOneSum < clientTwoSum
-					? 1
-					: 0;
-		},
-		[clientMonthSum],
-	);
-
-	const getArrayOfBalancePerDay = useCallback((clientId, category = null) => {
-		let currentMonthSum = [];
-		let previousMonthSum = [];
-		currentMonthSum = currentMonthSum.map((day) =>
-			Math.round(getSumFromArray(day)),
-		);
-		previousMonthSum = previousMonthSum.map((day) =>
-			Math.round(getSumFromArray(day)),
-		);
-		return {
-			currentMonth: currentMonthSum,
-			previousMonth: previousMonthSum,
+	const getUpdatingClient = (_id) => {
+		const clientWithID = clients.find((client) => client._id === _id);
+		const clientWithFieldsForForm = {
+			_id: clientWithID._id,
+			name: clientWithID.name,
+			surname: clientWithID.surname,
+			bankAccount: clientWithID.bankAccount || "PayPal",
+			svadba: {
+				login: clientWithID.svadba?.login || "",
+				password: clientWithID.svadba?.password || "",
+			},
+			dating: {
+				login: clientWithID.dating?.login || "",
+				password: clientWithID.dating?.password || "",
+			},
+			instagramLink: clientWithID.instagramLink || "",
+			image: clientWithID.image || "",
+			suspended: !!clientWithID.suspended,
 		};
-	}, []);
+		setUpdatingClient(clientWithFieldsForForm);
+		handleOpen();
+	};
 
-	// useDebounce(
-	// 	async () => {
-	// 		const responseDataWithClients = await getClientsRequest({
-	// 			searchQuery: queryString,
-	// 			shouldFillTranslators: true,
-	// 		});
-	// 		if (responseDataWithClients.status === 200) {
-	// 			setClients(responseDataWithClients.body);
-	// 		} else {
-	// 			setAlertInfo({
-	// 				...alertInfo,
-	// 				mainTitle: MESSAGE.somethingWrongWithGettingClients,
-	// 				status: false,
-	// 			});
-	// 			openAlert(5000);
-	// 		}
-	// 	},
-	// 	500,
-	// 	[queryString],
-	// );
-
-	const getUpdatingClient = useCallback(
-		(_id) => {
-			const clientWithID = clients.find((client) => client._id === _id);
-			const clientWithFieldsForForm = {
-				_id: clientWithID._id,
-				name: clientWithID.name,
-				surname: clientWithID.surname,
-				bankAccount: clientWithID.bankAccount || "PayPal",
-				svadba: {
-					login: clientWithID.svadba?.login || "",
-					password: clientWithID.svadba?.password || "",
-				},
-				dating: {
-					login: clientWithID.dating?.login || "",
-					password: clientWithID.dating?.password || "",
-				},
-				instagramLink: clientWithID.instagramLink || "",
-				image: clientWithID.image || "",
-				suspended: !!clientWithID.suspended,
-			};
-			setUpdatingClient(clientWithFieldsForForm);
-			handleOpen();
-		},
-		[clients, handleOpen],
-	);
-
-	const clearEditedClient = useCallback(() => {
+	const clearEditedClient = () => {
 		setUpdatingClient({});
-	}, []);
-	const sortedClients = useMemo(() => {
-		return clients?.sort(sortBySum);
-	}, [clients, sortBySum]);
+	};
 
 	const editClientData = useCallback(
 		(editedClient) => {
@@ -362,10 +312,12 @@ export default function ListOfClients() {
 							mainTitle: message,
 							status: true,
 						});
+						setClients(
+							clients.map((item) => {
+								return item._id === editedClient._id ? editedClient : item;
+							}),
+						);
 						openAlert(2000);
-
-						// Invalidate the clients query to trigger a re-fetch
-						queryClient.invalidateQueries("clientsData");
 					} else {
 						throw new Error(`Error: ${res?.status}`);
 					}
@@ -380,31 +332,24 @@ export default function ListOfClients() {
 					openAlert();
 				});
 		},
-		[alertInfo, openAlert, queryClient],
+		[clients, alertInfo, openAlert],
 	);
 
-	const addNewClient = useCallback(
-		async (newClient) => {
-			try {
-				const responseFromAddedClient = await addClient(newClient);
-				if (responseFromAddedClient.status === 200) {
-					setAlertInfo({
-						...alertInfo,
-						mainTitle: "Client has been added",
-						status: true,
-					});
-					openAlert(2000);
-
-					queryClient.invalidateQueries("clientsData");
-				} else {
-					setAlertInfo({
-						...alertInfo,
-						mainTitle: MESSAGE.somethingWrongWithAddingClient.text,
-						status: false,
-					});
-					openAlert(5000);
-				}
-			} catch (error) {
+	const addNewClient = async (newClient) => {
+		try {
+			const responseFromAddedClient = await addClient(newClient);
+			if (responseFromAddedClient.status === 200) {
+				setClients([
+					...clients,
+					{ ...newClient, _id: responseFromAddedClient.body },
+				]);
+				setAlertInfo({
+					...alertInfo,
+					mainTitle: "client had been added",
+					status: true,
+				});
+				openAlert(2000);
+			} else {
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: MESSAGE.somethingWrongWithAddingClient.text,
@@ -412,28 +357,26 @@ export default function ListOfClients() {
 				});
 				openAlert(5000);
 			}
-		},
-		[alertInfo, openAlert, queryClient],
-	);
-
-	const closeGraph = useCallback(() => {
+		} catch (error) {
+			setAlertInfo({
+				...alertInfo,
+				mainTitle: MESSAGE.somethingWrongWithAddingClient.text,
+				status: false,
+			});
+			openAlert(5000);
+		}
+	};
+	const closeGraph = () => {
 		setShowGraph(false);
-	}, []);
+	};
 
-	const switchToGraph = useCallback(
-		({ id, category }) => {
-			const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id, category);
-			setGraphData(pickedClientSumsPerMonth);
-			setShowGraph(true);
-		},
-		[getArrayOfBalancePerDay],
-	);
+	const switchToGraph = (argsFromHandleSwitchToGraph) => {
+		const { id, category } = argsFromHandleSwitchToGraph;
+		const pickedClientSumsPerMonth = getArrayOfBalancePerDay(id, category);
+		setGraphData(pickedClientSumsPerMonth);
+		setShowGraph(true);
+	};
 
-	const loading =
-		clientsAreLoading || balanceDaysAreLoading || paymentsAreLoading;
-	if (loading) {
-		return <Loader />;
-	}
 	return (
 		<>
 			<div>
@@ -445,7 +388,7 @@ export default function ListOfClients() {
 					onChange={(e) => {
 						changeSearchParams(e.target.value);
 					}}
-				/>
+				></input>
 			</div>
 			<div className={"main-container scrolled-container"}>
 				{loading && <Loader />}
