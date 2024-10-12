@@ -210,10 +210,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(body_parser_1.default.json({ limit: "50mb" }));
 app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
-app.get("".concat(rootURL, "chart/"), function (request, response, next) {
-	response.sendFile("".concat(__dirname, "/build/index.html"));
-});
-app.get("".concat(rootURL, "chart?"), function (request, response, next) {
+app.get("".concat(rootURL, "chart/?"), function (request, response, next) {
 	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
 app.get("".concat(rootURL, "overview/?"), function (request, response, next) {

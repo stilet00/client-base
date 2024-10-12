@@ -57,12 +57,15 @@ const calculatePercentageDifference = (current: number, previous: number) => {
 const getPaymentSums = async (year: string) => {
 	const Payment = await getCollections().collectionStatements;
 
+	const startOfYear = getMomentUTC(year, "YYYY").startOf("year").toISOString();
+	const endOfYear = getMomentUTC(year, "YYYY").endOf("year").toISOString();
+
 	const paymentSums: CategorySum[] = await Payment.aggregate([
 		{
 			$match: {
 				date: {
-					$gte: new Date(`${year}-01-01T00:00:00.000Z`),
-					$lte: new Date(`${year}-12-31T23:59:59.999Z`),
+					$gte: new Date(startOfYear),
+					$lte: new Date(endOfYear),
 				},
 			},
 		},

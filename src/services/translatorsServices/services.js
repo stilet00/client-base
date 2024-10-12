@@ -290,9 +290,9 @@ function getPenaltiesForTranslatorRequest(_a) {
 }
 exports.getPenaltiesForTranslatorRequest = getPenaltiesForTranslatorRequest;
 function createPersonalPenalty(_a) {
-	return __awaiter(this, arguments, void 0, function (_b) {
-		var personalPenaltyData = _b.personalPenaltyData;
-		return __generator(this, function (_c) {
+	var personalPenaltyData = _a.personalPenaltyData;
+	return __awaiter(this, void 0, void 0, function () {
+		return __generator(this, function (_b) {
 			return [
 				2 /*return*/,
 				(0, superAgentConfig_1.default)(
@@ -305,10 +305,10 @@ function createPersonalPenalty(_a) {
 }
 exports.createPersonalPenalty = createPersonalPenalty;
 function toggleClientSuspendedRequest(_a) {
-	return __awaiter(this, arguments, void 0, function (_b) {
-		var clientId = _b.clientId,
-			translatorId = _b.translatorId;
-		return __generator(this, function (_c) {
+	var clientId = _a.clientId,
+		translatorId = _a.translatorId;
+	return __awaiter(this, void 0, void 0, function () {
+		return __generator(this, function (_b) {
 			return [
 				2 /*return*/,
 				(0, superAgentConfig_1.default)(

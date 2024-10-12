@@ -7,7 +7,7 @@ export interface PaymentStatement extends Document {
 	date: Date;
 }
 
-export const PaymentSchema: Schema = new mongoose.Schema({
+export const PaymentSchema: Schema = new mongoose.Schema<PaymentStatement>({
 	receiver: { type: String, required: true },
 	amount: { type: Number, required: true },
 	sender: { type: String, required: true },

@@ -147,18 +147,6 @@ var __generator =
 			return { value: op[0] ? op[1] : void 0, done: true };
 		}
 	};
-var __spreadArray =
-	(this && this.__spreadArray) ||
-	function (to, from, pack) {
-		if (pack || arguments.length === 2)
-			for (var i = 0, l = from.length, ar; i < l; i++) {
-				if (ar || !(i in from)) {
-					if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-					ar[i] = from[i];
-				}
-			}
-		return to.concat(ar || Array.prototype.slice.call(from));
-	};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOverviewData = void 0;
 var sharedFunctions_1 = require("../../sharedFunctions/sharedFunctions");
@@ -199,7 +187,12 @@ var calculatePercentageDifference = function (current, previous) {
 };
 var getPaymentSums = function (year) {
 	return __awaiter(void 0, void 0, void 0, function () {
-		var Payment, paymentSums, totalPayments, categorySums;
+		var Payment,
+			startOfYear,
+			endOfYear,
+			paymentSums,
+			totalPayments,
+			categorySums;
 		return __generator(this, function (_a) {
 			switch (_a.label) {
 				case 0:
@@ -209,14 +202,18 @@ var getPaymentSums = function (year) {
 					];
 				case 1:
 					Payment = _a.sent();
+					startOfYear = getMomentUTC(year, "YYYY")
+						.startOf("year")
+						.toISOString();
+					endOfYear = getMomentUTC(year, "YYYY").endOf("year").toISOString();
 					return [
 						4 /*yield*/,
 						Payment.aggregate([
 							{
 								$match: {
 									date: {
-										$gte: new Date("".concat(year, "-01-01T00:00:00.000Z")),
-										$lte: new Date("".concat(year, "-12-31T23:59:59.999Z")),
+										$gte: new Date(startOfYear),
+										$lte: new Date(endOfYear),
 									},
 								},
 							},
@@ -266,73 +263,64 @@ var getPaymentSums = function (year) {
 		});
 	});
 };
-var calculateMonthTotal = function () {
-	var args_1 = [];
-	for (var _i = 0; _i < arguments.length; _i++) {
-		args_1[_i] = arguments[_i];
+var calculateMonthTotal = function (monthOffset) {
+	if (monthOffset === void 0) {
+		monthOffset = 0;
 	}
-	return __awaiter(
-		void 0,
-		__spreadArray([], args_1, true),
-		void 0,
-		function (monthOffset) {
-			var BalanceDay,
-				startOfMonth,
-				endOfMonth,
-				balanceDays,
-				monthTotal,
-				svadbaMonthTotal;
-			if (monthOffset === void 0) {
-				monthOffset = 0;
+	return __awaiter(void 0, void 0, void 0, function () {
+		var BalanceDay,
+			startOfMonth,
+			endOfMonth,
+			balanceDays,
+			monthTotal,
+			svadbaMonthTotal;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					return [
+						4 /*yield*/,
+						(0, collections_1.getCollections)().collectionBalanceDays,
+					];
+				case 1:
+					BalanceDay = _a.sent();
+					startOfMonth = getMomentUTC()
+						.subtract(monthOffset, "month")
+						.startOf("month")
+						.toISOString();
+					endOfMonth = getMomentUTC()
+						.subtract(monthOffset, "month")
+						.endOf("month")
+						.toISOString();
+					return [
+						4 /*yield*/,
+						BalanceDay.find({
+							dateTimeId: { $gte: startOfMonth, $lte: endOfMonth },
+						}).exec(),
+					];
+				case 2:
+					balanceDays = _a.sent();
+					monthTotal = balanceDays.reduce(function (sum, day) {
+						return (
+							sum +
+							(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
+						);
+					}, 0);
+					svadbaMonthTotal = balanceDays.reduce(function (sum, day) {
+						return (
+							sum +
+							(0, sharedFunctions_1.calculateBalanceDaySum)(
+								day.statistics,
+								true,
+							)
+						);
+					}, 0);
+					return [
+						2 /*return*/,
+						{ monthTotal: monthTotal, svadbaMonthTotal: svadbaMonthTotal },
+					];
 			}
-			return __generator(this, function (_a) {
-				switch (_a.label) {
-					case 0:
-						return [
-							4 /*yield*/,
-							(0, collections_1.getCollections)().collectionBalanceDays,
-						];
-					case 1:
-						BalanceDay = _a.sent();
-						startOfMonth = getMomentUTC()
-							.subtract(monthOffset, "month")
-							.startOf("month")
-							.toISOString();
-						endOfMonth = getMomentUTC()
-							.subtract(monthOffset, "month")
-							.endOf("month")
-							.toISOString();
-						return [
-							4 /*yield*/,
-							BalanceDay.find({
-								dateTimeId: { $gte: startOfMonth, $lte: endOfMonth },
-							}).exec(),
-						];
-					case 2:
-						balanceDays = _a.sent();
-						monthTotal = balanceDays.reduce(function (sum, day) {
-							return (
-								sum +
-								(0, sharedFunctions_1.calculateBalanceDaySum)(day.statistics)
-							);
-						}, 0);
-						svadbaMonthTotal = balanceDays.reduce(function (sum, day) {
-							return (
-								sum +
-								(0, sharedFunctions_1.calculateBalanceDaySum)(
-									day.statistics,
-									true,
-								)
-							);
-						}, 0);
-						return [
-							2 /*return*/,
-							{ monthTotal: monthTotal, svadbaMonthTotal: svadbaMonthTotal },
-						];
-				}
-			});
-		},
-	);
+		});
+	});
 };
 var getOverviewData = function (req, res) {
 	return __awaiter(void 0, void 0, void 0, function () {
