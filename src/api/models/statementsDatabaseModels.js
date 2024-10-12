@@ -7,7 +7,6 @@ var __importDefault =
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentSchema = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-// Define the schema for Payment
 exports.PaymentSchema = new mongoose_1.default.Schema({
 	receiver: { type: String, required: true },
 	amount: { type: Number, required: true },

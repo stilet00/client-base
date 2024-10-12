@@ -227,7 +227,6 @@ var StyledTableRow = (0, styles_1.styled)(TableRow_1.default)(function (_a) {
 		},
 	};
 });
-// Reusable component for percentage difference
 var PercentageDifference = function (_a) {
 	var value = _a.value;
 	var isPositive = value > 0;

@@ -40,7 +40,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 	},
 }));
 
-// Reusable component for percentage difference
 const PercentageDifference = ({ value }: { value: number }) => {
 	const isPositive = value > 0;
 	const icon = isPositive ? faArrowAltCircleUp : faArrowAltCircleDown;
