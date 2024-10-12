@@ -91,21 +91,27 @@ export default function ListOfClients() {
 		return clientsProfit;
 	};
 
-	function clientMonthSum(clientId) {
+	function clientMonthSum(clientId, monthOffset = 0) {
 		const balanceDaysForCurrentClient = balanceDays.filter(
 			(balanceDay) => balanceDay.client === clientId,
 		);
-		const balanceDaysForCurrentMonth = balanceDaysForCurrentClient.filter(
+
+		const balanceDaysForSpecifiedMonth = balanceDaysForCurrentClient.filter(
 			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(getMomentUTC(), "month"),
+				getMomentUTC(dateTimeId).isSame(
+					getMomentUTC().subtract(monthOffset, "month"),
+					"month",
+				),
 		);
-		const currentMonthSum = balanceDaysForCurrentMonth.reduce(
+
+		const specifiedMonthSum = balanceDaysForSpecifiedMonth.reduce(
 			(sum, current) => {
 				return sum + calculateBalanceDaySum(current.statistics);
 			},
 			0,
 		);
-		return currentMonthSum.toFixed(2);
+
+		return specifiedMonthSum.toFixed(2);
 	}
 
 	function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
@@ -408,7 +414,7 @@ export default function ListOfClients() {
 									const memorizedMonthSum = clientMonthSum(client._id);
 									const memorizedPreviousMonthSum = clientMonthSum(
 										client._id,
-										getMomentUTC().subtract(1, "month"),
+										1,
 									);
 									const arrayOfPaymentsMadeToClient = paymentsList.filter(
 										(payment) =>
@@ -450,6 +456,7 @@ export default function ListOfClients() {
 										currentYearProfit: clientProfit.currentYearProfit,
 										absoluteProfit: clientProfit.allYearsProfit,
 										previousMonthTotalAmount: memorizedPreviousMonthSum,
+										twoMonthBeforeAmount: clientMonthSum(client._id, 2),
 										middleMonthSum: memorizedMiddleMonthSum,
 										prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
 										monthProgressPercent: calculatePercentDifference(
