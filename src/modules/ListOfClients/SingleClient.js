@@ -44,6 +44,7 @@ export default function SingleClient({
 	bankAccount,
 	instagramLink,
 	handleUpdatingClientsId,
+	twoMonthBeforeAmount,
 	svadba,
 	dating,
 	handleSwitchToGraph,
@@ -81,6 +82,10 @@ export default function SingleClient({
 		getMomentUTC().subtract(1, "month").format("MMMM").length > "5"
 			? getMomentUTC().subtract(1, "month").format("MMM")
 			: getMomentUTC().subtract(1, "month").format("MMMM");
+	const twoMonthBefore =
+		getMomentUTC().subtract(1, "month").format("MMMM").length > "5"
+			? getMomentUTC().subtract(2, "month").format("MMM")
+			: getMomentUTC().subtract(2, "month").format("MMMM");
 	const progressPage = (
 		<div className="grid-template-container__info">
 			{!suspended && (
@@ -308,6 +313,16 @@ export default function SingleClient({
 						Total for {previousMonth}:
 					</span>
 					<b className="styled-text-numbers grid-template-container__info">{`${previousMonthTotalAmount} $`}</b>
+				</Typography>
+				<Typography
+					variant="body2"
+					align={"left"}
+					className="grid-template-container"
+				>
+					<span className="grid-template-container__title">
+						Total for {twoMonthBefore}:
+					</span>
+					<b className="styled-text-numbers grid-template-container__info">{`${twoMonthBeforeAmount} $`}</b>
 				</Typography>
 				<Typography
 					variant="body2"
