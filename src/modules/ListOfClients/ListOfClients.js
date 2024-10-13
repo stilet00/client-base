@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import {
 	getClientsRequest,
 	addClient,
@@ -34,13 +34,10 @@ import useSearch from "sharedHooks/useSearchString";
 import useDebounce from "sharedHooks/useDebounce";
 
 export default function ListOfClients() {
+	const queryClient = useQueryClient();
 	const user = useSelector((state) => state.auth.user);
-	const [paymentsList, setPaymentsList] = useState([]);
 	const [showGraph, setShowGraph] = useState(false);
-	const [clients, setClients] = useState([]);
-	const [balanceDays, setBalanceDays] = useState([]);
 	const [graphData, setGraphData] = useState(null);
-	const [loading, setLoading] = useState(true);
 	const [updatingClient, setUpdatingClient] = useState({});
 	const { handleClose, handleOpen, open } = useModal();
 	const { queryString, changeSearchParams } = useSearch();
@@ -50,34 +47,99 @@ export default function ListOfClients() {
 	});
 	const { alertOpen, closeAlert, openAlert } = useAlert();
 
+	const fetchClients = useCallback(async () => {
+		const response = await getClientsRequest({ shouldFillTranslators: true });
+		if (response.status !== 200) {
+			throw new Error("Something went wrong with clients data");
+		}
+		return response.body;
+	}, []);
+
+	const fetchBalanceDays = useCallback(async () => {
+		const response = await getBalanceDaysForClientsRequest();
+		if (response.status !== 200) {
+			throw new Error("Something went wrong with balance days data");
+		}
+		return response?.body;
+	}, []);
+
+	const { isLoading: clientsAreLoading, data: clients } = useQuery(
+		"clientsData",
+		fetchClients,
+		{
+			onError: (error) => {
+				setAlertInfo({
+					...alertInfo,
+					mainTitle: MESSAGE.somethingWrongWithGettingClients,
+					status: false,
+				});
+				openAlert(5000);
+			},
+			enabled: !!user,
+		},
+	);
+
+	const { isLoading: balanceDaysAreLoading, data: balanceDays } = useQuery(
+		"balanceDaysForClients",
+		fetchBalanceDays,
+		{
+			onError: (error) => {
+				setAlertInfo({
+					...alertInfo,
+					mainTitle: MESSAGE.somethingWrongWithBalanceDays,
+					status: false,
+				});
+				openAlert(5000);
+			},
+			enabled: !!user,
+		},
+	);
+
+	const { isLoading: paymentsAreLoading, data: paymentsList } = useQuery(
+		"paymentsForClients",
+		getPaymentsRequest,
+		{
+			onError: (error) => {
+				const message = error.message;
+				setAlertInfo({
+					...alertInfo,
+					mainTitle: message,
+					status: false,
+				});
+				openAlert(5000);
+			},
+			enabled: !!user,
+		},
+	);
+
 	const getTotalProfitPerClient = (clientId) => {
-		const balanceDaysForCurrentClient = balanceDays.filter(
+		const balanceDaysForCurrentClient = balanceDays?.filter(
 			(balanceDay) => balanceDay.client === clientId,
 		);
-		const currentYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
+		const currentYearBalanceDaysForClient = balanceDaysForCurrentClient?.filter(
 			({ dateTimeId }) =>
 				getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
 		);
-		const previousYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
-			({ dateTimeId }) =>
+		const previousYearBalanceDaysForClient =
+			balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
 				getMomentUTC(dateTimeId).isSame(
 					getMomentUTC().subtract(1, "year"),
 					"year",
 				),
-		);
-		const currentYearProfit = currentYearBalanceDaysForClient.reduce(
+			);
+		const currentYearProfit = currentYearBalanceDaysForClient?.reduce(
 			(sum, current) => {
 				return sum + calculateBalanceDaySum(current.statistics);
 			},
 			0,
 		);
-		const previousYearProfit = previousYearBalanceDaysForClient.reduce(
+		const previousYearProfit = previousYearBalanceDaysForClient?.reduce(
 			(sum, current) => {
 				return sum + calculateBalanceDaySum(current.statistics);
 			},
 			0,
 		);
-		const allYearsProfit = balanceDaysForCurrentClient.reduce(
+		const allYearsProfit = balanceDaysForCurrentClient?.reduce(
 			(sum, current) => {
 				return sum + calculateBalanceDaySum(current.statistics);
 			},
@@ -91,28 +153,31 @@ export default function ListOfClients() {
 		return clientsProfit;
 	};
 
-	function clientMonthSum(clientId, monthOffset = 0) {
-		const balanceDaysForCurrentClient = balanceDays.filter(
-			(balanceDay) => balanceDay.client === clientId,
-		);
+	const clientMonthSum = useCallback(
+		(clientId, monthOffset = 0) => {
+			const balanceDaysForCurrentClient = balanceDays?.filter(
+				(balanceDay) => balanceDay.client === clientId,
+			);
 
-		const balanceDaysForSpecifiedMonth = balanceDaysForCurrentClient.filter(
-			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(
-					getMomentUTC().subtract(monthOffset, "month"),
-					"month",
-				),
-		);
+			const balanceDaysForSpecifiedMonth = balanceDaysForCurrentClient?.filter(
+				({ dateTimeId }) =>
+					getMomentUTC(dateTimeId).isSame(
+						getMomentUTC().subtract(monthOffset, "month"),
+						"month",
+					),
+			);
 
-		const specifiedMonthSum = balanceDaysForSpecifiedMonth.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
+			const specifiedMonthSum = balanceDaysForSpecifiedMonth?.reduce(
+				(sum, current) => {
+					return sum + calculateBalanceDaySum(current.statistics);
+				},
+				0,
+			);
 
-		return specifiedMonthSum.toFixed(2);
-	}
+			return specifiedMonthSum?.toFixed(2);
+		},
+		[balanceDays],
+	);
 
 	function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
 		const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
@@ -122,16 +187,19 @@ export default function ListOfClients() {
 		);
 	}
 
-	function sortBySum(clientOne, clientTwo) {
-		const clientOneSum = clientMonthSum(clientOne._id);
-		const clientTwoSum = clientMonthSum(clientTwo._id);
-		if (clientOneSum > clientTwoSum) {
-			return -1;
-		} else if (clientOneSum < clientTwoSum) {
-			return 1;
-		}
-		return 0;
-	}
+	const sortBySum = useCallback(
+		(clientOne, clientTwo) => {
+			const clientOneSum = clientMonthSum(clientOne._id);
+			const clientTwoSum = clientMonthSum(clientTwo._id);
+			if (clientOneSum > clientTwoSum) {
+				return -1;
+			} else if (clientOneSum < clientTwoSum) {
+				return 1;
+			}
+			return 0;
+		},
+		[clientMonthSum],
+	);
 
 	function getArrayOfBalancePerDay(clientId, category = null) {
 		let currentMonthSum = [];
@@ -140,18 +208,18 @@ export default function ListOfClients() {
 			currentMonth: [],
 			previousMonth: [],
 		};
-		currentMonthSum = currentMonthSum.map((day) =>
+		currentMonthSum = currentMonthSum?.map((day) =>
 			Math.round(getSumFromArray(day)),
 		);
-		previousMonthSum = previousMonthSum.map((day) =>
+		previousMonthSum = previousMonthSum?.map((day) =>
 			Math.round(getSumFromArray(day)),
 		);
-
-		return (monthsSum = {
+		monthsSum = {
 			...monthsSum,
 			currentMonth: currentMonthSum,
 			previousMonth: previousMonthSum,
-		});
+		};
+		return monthsSum;
 	}
 
 	const getArrayWithAmountsPerDayForPickedMonth = (
@@ -187,92 +255,31 @@ export default function ListOfClients() {
 	};
 	const isAdmin = useAdminStatus();
 
-	const { isLoading: clientsAreLoading } = useQuery(
-		"clientsData",
-		() => getClientsRequest({ shouldFillTranslators: true }),
-		{
-			onSuccess: (response) => {
-				setClients(response?.body);
-			},
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithGettingClients,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
+	const loading =
+		balanceDaysAreLoading || paymentsAreLoading || clientsAreLoading;
 
-	const { isLoading: balanceDaysAreLoading } = useQuery(
-		"balanceDaysForClients",
-		getBalanceDaysForClientsRequest,
-		{
-			onSuccess: (response) => {
-				setBalanceDays(response?.body);
-			},
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithBalanceDays,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	const { isLoading: paymentsAreLoading } = useQuery(
-		"paymentsForClients",
-		getPaymentsRequest,
-		{
-			onSuccess: (data) => {
-				setPaymentsList(data);
-			},
-			onError: (error) => {
-				const message = error.message;
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: message,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	useEffect(() => {
-		if (!balanceDaysAreLoading && !paymentsAreLoading && !clientsAreLoading) {
-			setLoading(false);
-		}
-	}, [balanceDaysAreLoading, paymentsAreLoading, clientsAreLoading]);
-
-	useDebounce(
-		async () => {
-			setLoading(true);
-			const responseDataWithClients = await getClientsRequest({
-				searchQuery: queryString,
-				shouldFillTranslators: true,
-			});
-			if (responseDataWithClients.status === 200) {
-				setClients(responseDataWithClients.body);
-			} else {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithGettingClients,
-					status: false,
-				});
-				openAlert(5000);
-			}
-			setLoading(false);
-		},
-		1000,
-		[queryString],
-	);
+	// useDebounce(
+	// 	async () => {
+	// 		setLoading(true);
+	// 		const responseDataWithClients = await getClientsRequest({
+	// 			searchQuery: queryString,
+	// 			shouldFillTranslators: true,
+	// 		});
+	// 		if (responseDataWithClients.status === 200) {
+	// 			setClients(responseDataWithClients.body);
+	// 		} else {
+	// 			setAlertInfo({
+	// 				...alertInfo,
+	// 				mainTitle: MESSAGE.somethingWrongWithGettingClients,
+	// 				status: false,
+	// 			});
+	// 			openAlert(5000);
+	// 		}
+	// 		setLoading(false);
+	// 	},
+	// 	1000,
+	// 	[queryString],
+	// );
 
 	const getUpdatingClient = (_id) => {
 		const clientWithID = clients.find((client) => client._id === _id);
@@ -312,11 +319,7 @@ export default function ListOfClients() {
 							mainTitle: message,
 							status: true,
 						});
-						setClients(
-							clients.map((item) => {
-								return item._id === editedClient._id ? editedClient : item;
-							}),
-						);
+						queryClient.invalidateQueries("clientsData");
 						openAlert(2000);
 					} else {
 						throw new Error(`Error: ${res?.status}`);
@@ -339,10 +342,7 @@ export default function ListOfClients() {
 		try {
 			const responseFromAddedClient = await addClient(newClient);
 			if (responseFromAddedClient.status === 200) {
-				setClients([
-					...clients,
-					{ ...newClient, _id: responseFromAddedClient.body },
-				]);
+				queryClient.invalidateQueries("clientsData");
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: "client had been added",
@@ -377,6 +377,10 @@ export default function ListOfClients() {
 		setShowGraph(true);
 	};
 
+	const sortedClients = useMemo(() => {
+		return clients?.sort(sortBySum);
+	}, [clients, sortBySum]);
+
 	return (
 		<>
 			<div>
@@ -388,7 +392,7 @@ export default function ListOfClients() {
 					onChange={(e) => {
 						changeSearchParams(e.target.value);
 					}}
-				></input>
+				/>
 			</div>
 			<div className={"main-container scrolled-container"}>
 				{loading && <Loader />}
@@ -400,9 +404,9 @@ export default function ListOfClients() {
                             open={showGraph}
                             handleClose={closeGraph}
                         /> */}
-						{clients?.length > 0 && (
+						{sortedClients?.length > 0 && (
 							<Grid container spacing={2} id="on-scroll__rotate-animation-list">
-								{clients.sort(sortBySum).map((client) => {
+								{sortedClients.sort(sortBySum)?.map((client) => {
 									const memorizedMiddleMonthSum = calculateMiddleMonthSum(
 										client._id,
 									);
@@ -416,14 +420,14 @@ export default function ListOfClients() {
 										client._id,
 										1,
 									);
-									const arrayOfPaymentsMadeToClient = paymentsList.filter(
+									const arrayOfPaymentsMadeToClient = paymentsList?.filter(
 										(payment) =>
 											payment.receiverID === client._id &&
 											payment.date.substring(6, 10) ===
 												getMomentUTC().format("YYYY"),
 									);
 									const getArrayOfPaymentsMadeToClientWithAmounts =
-										arrayOfPaymentsMadeToClient.map(
+										arrayOfPaymentsMadeToClient?.map(
 											(payment) => payment.amount,
 										);
 									const spendsOnClient = getSumFromArray(
@@ -483,7 +487,7 @@ export default function ListOfClients() {
 								})}
 							</Grid>
 						)}
-						{!clients?.length && (
+						{!sortedClients?.length && (
 							<Typography
 								variant="h5"
 								component="div"
