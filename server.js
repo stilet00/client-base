@@ -160,6 +160,9 @@ var businessAdminsRoutes_1 = __importDefault(
 	require("./src/api/routes/businessAdminsRoutes"),
 );
 var chartsRoutes_1 = __importDefault(require("./src/api/routes/chartsRoutes"));
+var overviewRoutes_1 = __importDefault(
+	require("./src/api/routes/overviewRoutes"),
+);
 var rootURL = require("./src/api/routes/routes").rootURL;
 var connectToDatabase =
 	require("./src/api/database/collections").connectToDatabase;
@@ -207,33 +210,39 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "build")));
 app.set("view engine", "ejs");
 app.use(body_parser_1.default.json({ limit: "50mb" }));
 app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true }));
-app.get(rootURL + "chart/", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get("".concat(rootURL, "chart/?"), function (request, response, next) {
+	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
-app.get(rootURL + "chart?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get("".concat(rootURL, "overview/?"), function (request, response, next) {
+	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
-app.get(rootURL + "overview/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(
+	"".concat(rootURL, "clients/true?"),
+	function (request, response, next) {
+		response.sendFile("".concat(__dirname, "/build/index.html"));
+	},
+);
+app.get("".concat(rootURL, "clients/?"), function (request, response, next) {
+	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
-app.get(rootURL + "clients/true?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get("".concat(rootURL, "tasks/?"), function (request, response, next) {
+	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
-app.get(rootURL + "clients/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(
+	"".concat(rootURL, "translators/?"),
+	function (request, response, next) {
+		response.sendFile("".concat(__dirname, "/build/index.html"));
+	},
+);
+app.get("".concat(rootURL, "finances/?"), function (request, response, next) {
+	response.sendFile("".concat(__dirname, "/build/index.html"));
 });
-app.get(rootURL + "tasks/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "translators/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "finances/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "business-admins/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
+app.get(
+	"".concat(rootURL, "business-admins/?"),
+	function (request, response, next) {
+		response.sendFile("".concat(__dirname, "/build/index.html"));
+	},
+);
 app.use(authRoutes_1.default);
 app.use(clientRoutes_1.default);
 app.use(translatorRoutes_1.default);
@@ -243,6 +252,7 @@ app.use(balanceDayRoutes_1.default);
 app.use(businessAdminsRoutes_1.default);
 app.use(staticRoutes_1.default);
 app.use(chartsRoutes_1.default);
+app.use(overviewRoutes_1.default);
 var startServer = function () {
 	return __awaiter(void 0, void 0, void 0, function () {
 		var err_1;
