@@ -12,6 +12,7 @@ import balanceDayRoutes from "./src/api/routes/balanceDayRoutes";
 import staticRoutes from "./src/api/routes/staticRoutes";
 import businessAdminRoutes from "./src/api/routes/businessAdminsRoutes";
 import chartsRoutes from "./src/api/routes/chartsRoutes";
+import overviewRoutes from "./src/api/routes/overviewRoutes";
 const { rootURL } = require("./src/api/routes/routes");
 const { connectToDatabase } = require("./src/api/database/collections");
 
@@ -67,32 +68,29 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-app.get(rootURL + "chart/", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}chart/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "chart?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}overview/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "overview/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}clients/true?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "clients/true?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}clients/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "clients/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}tasks/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "tasks/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}translators/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "translators/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}finances/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
-app.get(rootURL + "finances/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
-});
-app.get(rootURL + "business-admins/?", function (request, response, next) {
-	response.sendFile(__dirname + "/build/index.html");
+app.get(`${rootURL}business-admins/?`, (request, response, next) => {
+	response.sendFile(`${__dirname}/build/index.html`);
 });
 
 app.use(authRoutes);
@@ -104,6 +102,7 @@ app.use(balanceDayRoutes);
 app.use(businessAdminRoutes);
 app.use(staticRoutes);
 app.use(chartsRoutes);
+app.use(overviewRoutes);
 
 const startServer = async () => {
 	try {

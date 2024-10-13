@@ -33,7 +33,7 @@ enum CollectionNames {
 	CollectionBusinessAdmins = "collectionBusinessAdmins",
 }
 
-const connectToDatabase = async () => {
+export const connectToDatabase = async () => {
 	try {
 		const clientBaseDB = mongoose.createConnection(
 			changeDatabaseInConnectionString(DBConnectionCredentials, "clientBase"),
@@ -82,7 +82,7 @@ const connectToDatabase = async () => {
 	}
 };
 
-const getCollections = () => {
+export const getCollections = () => {
 	return Object.values(CollectionNames).reduce(
 		(collectionsObject: { [key: string]: any }, collectionName) => {
 			collectionsObject[collectionName] = collections.get(collectionName);
@@ -90,9 +90,4 @@ const getCollections = () => {
 		},
 		{},
 	);
-};
-
-module.exports = {
-	connectToDatabase,
-	getCollections,
 };
