@@ -28,7 +28,7 @@ import {
 	getNumberWithHundreds,
 	calculatePercentDifference,
 } from "sharedFunctions/sharedFunctions";
-import { useAdminStatus } from "../../sharedHooks/useAdminStatus";
+import { useAdminStatus } from "sharedHooks/useAdminStatus";
 import MESSAGE from "constants/messages";
 import useSearch from "sharedHooks/useSearchString";
 import useDebounce from "sharedHooks/useDebounce";
@@ -57,9 +57,11 @@ export default function ListOfClients() {
 
 	const fetchBalanceDays = useCallback(async () => {
 		const response = await getBalanceDaysForClientsRequest();
+		console.log(response);
 		if (response.status !== 200) {
 			throw new Error("Something went wrong with balance days data");
 		}
+
 		return response?.body;
 	}, []);
 
@@ -112,46 +114,49 @@ export default function ListOfClients() {
 		},
 	);
 
-	const getTotalProfitPerClient = (clientId) => {
-		const balanceDaysForCurrentClient = balanceDays?.filter(
-			(balanceDay) => balanceDay.client === clientId,
-		);
-		const currentYearBalanceDaysForClient = balanceDaysForCurrentClient?.filter(
-			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
-		);
-		const previousYearBalanceDaysForClient =
-			balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(
-					getMomentUTC().subtract(1, "year"),
-					"year",
-				),
+	const getTotalProfitPerClient = useCallback(
+		(clientId) => {
+			const balanceDaysForCurrentClient = balanceDays?.filter(
+				(balanceDay) => balanceDay.client === clientId,
 			);
-		const currentYearProfit = currentYearBalanceDaysForClient?.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const previousYearProfit = previousYearBalanceDaysForClient?.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const allYearsProfit = balanceDaysForCurrentClient?.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const clientsProfit = {
-			currentYearProfit,
-			allYearsProfit,
-			previousYearProfit,
-		};
-		return clientsProfit;
-	};
+			const currentYearBalanceDaysForClient =
+				balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
+					getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
+				);
+			const previousYearBalanceDaysForClient =
+				balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
+					getMomentUTC(dateTimeId).isSame(
+						getMomentUTC().subtract(1, "year"),
+						"year",
+					),
+				);
+			const currentYearProfit = currentYearBalanceDaysForClient?.reduce(
+				(sum, current) => {
+					return sum + calculateBalanceDaySum(current.statistics);
+				},
+				0,
+			);
+			const previousYearProfit = previousYearBalanceDaysForClient?.reduce(
+				(sum, current) => {
+					return sum + calculateBalanceDaySum(current.statistics);
+				},
+				0,
+			);
+			const allYearsProfit = balanceDaysForCurrentClient?.reduce(
+				(sum, current) => {
+					return sum + calculateBalanceDaySum(current.statistics);
+				},
+				0,
+			);
+			const clientsProfit = {
+				currentYearProfit,
+				allYearsProfit,
+				previousYearProfit,
+			};
+			return clientsProfit;
+		},
+		[balanceDays],
+	);
 
 	const clientMonthSum = useCallback(
 		(clientId, monthOffset = 0) => {
@@ -179,13 +184,16 @@ export default function ListOfClients() {
 		[balanceDays],
 	);
 
-	function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
-		const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
-		const currentDayOfMinusOne = getMomentUTC().format("D");
-		return Math.round(
-			totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne),
-		);
-	}
+	const calculateMiddleMonthSum = useCallback(
+		(clientId, date = getMomentUTC()) => {
+			const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
+			const currentDayOfMinusOne = getMomentUTC().format("D");
+			return Math.round(
+				totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne),
+			);
+		},
+		[clientMonthSum],
+	);
 
 	const sortBySum = useCallback(
 		(clientOne, clientTwo) => {
@@ -254,9 +262,6 @@ export default function ListOfClients() {
 		});
 	};
 	const isAdmin = useAdminStatus();
-
-	const loading =
-		balanceDaysAreLoading || paymentsAreLoading || clientsAreLoading;
 
 	// useDebounce(
 	// 	async () => {
@@ -378,8 +383,88 @@ export default function ListOfClients() {
 	};
 
 	const sortedClients = useMemo(() => {
-		return clients?.sort(sortBySum);
+		if (!clients) {
+			return [];
+		}
+		return clients.sort(sortBySum);
 	}, [clients, sortBySum]);
+
+	const clientProfits = useMemo(() => {
+		return sortedClients?.reduce((acc, client) => {
+			acc[client._id] = {
+				middleMonthSum: calculateMiddleMonthSum(client._id),
+				previousMiddleMonthSum: calculateMiddleMonthSum(
+					client._id,
+					getMomentUTC().subtract(1, "month"),
+				),
+				monthSum: clientMonthSum(client._id),
+				previousMonthSum: clientMonthSum(client._id, 1),
+				profit: getTotalProfitPerClient(client._id),
+				twoMonthBeforeAmount: clientMonthSum(client._id, 2),
+			};
+			return acc;
+		}, {});
+	}, [
+		sortedClients,
+		calculateMiddleMonthSum,
+		getTotalProfitPerClient,
+		clientMonthSum,
+	]);
+
+	const paymentsByClient = useMemo(() => {
+		return paymentsList?.reduce((acc, payment) => {
+			if (!acc[payment.receiverID]) {
+				acc[payment.receiverID] = [];
+			}
+			acc[payment.receiverID].push(payment);
+			return acc;
+		}, {});
+	}, [paymentsList]);
+
+	const clientsWithFinanceData = useMemo(() => {
+		return sortedClients.map((client) => {
+			const profits = clientProfits[client._id];
+			const arrayOfPaymentsMadeToClient = paymentsByClient[client._id] || [];
+			const spendsOnClient = getSumFromArray(
+				arrayOfPaymentsMadeToClient.map((payment) => payment.amount),
+			);
+
+			return {
+				_id: client._id,
+				name: client.name,
+				surname: client.surname,
+				currentMonthTotalAmount: profits.monthSum,
+				translators: client.translators,
+				rating: getClientsRating(profits.middleMonthSum),
+				bankAccount: client.bankAccount || "PayPal",
+				svadba: client.svadba || {},
+				dating: client.dating || {},
+				instagramLink: `https://www.instagram.com/${client.instagramLink || ""}`,
+				loss: spendsOnClient,
+				image: client.image ?? null,
+				suspended: false,
+				currentYearProfit: profits.profit.currentYearProfit,
+				absoluteProfit: profits.profit.allYearsProfit,
+				previousMonthTotalAmount: profits.previousMonthSum,
+				twoMonthBeforeAmount: profits.twoMonthBeforeAmount,
+				middleMonthSum: profits.middleMonthSum,
+				prevousMiddleMonthSum: profits.previousMiddleMonthSum,
+				monthProgressPercent: calculatePercentDifference(
+					profits.middleMonthSum,
+					profits.previousMiddleMonthSum,
+				),
+			};
+		});
+	}, [sortedClients, clientProfits, paymentsByClient]);
+	console.log(`clientsWithFinanceData`, clientsWithFinanceData);
+
+	const loading =
+		balanceDaysAreLoading || paymentsAreLoading || clientsAreLoading;
+
+	if (loading) {
+		console.log(`loading: ${loading}`);
+		return <Loader />;
+	}
 
 	return (
 		<>
@@ -395,106 +480,25 @@ export default function ListOfClients() {
 				/>
 			</div>
 			<div className={"main-container scrolled-container"}>
-				{loading && <Loader />}
-				{!loading && (
-					<>
-						{/* <ClientsChartsContainer
-                            user={user}
-                            values={graphData}
-                            open={showGraph}
-                            handleClose={closeGraph}
-                        /> */}
-						{sortedClients?.length > 0 && (
-							<Grid container spacing={2} id="on-scroll__rotate-animation-list">
-								{sortedClients.sort(sortBySum)?.map((client) => {
-									const memorizedMiddleMonthSum = calculateMiddleMonthSum(
-										client._id,
-									);
-									const memorizedPreviousMiddleMonthSum =
-										calculateMiddleMonthSum(
-											client._id,
-											getMomentUTC().subtract(1, "month"),
-										);
-									const memorizedMonthSum = clientMonthSum(client._id);
-									const memorizedPreviousMonthSum = clientMonthSum(
-										client._id,
-										1,
-									);
-									const arrayOfPaymentsMadeToClient = paymentsList?.filter(
-										(payment) =>
-											payment.receiverID === client._id &&
-											payment.date.substring(6, 10) ===
-												getMomentUTC().format("YYYY"),
-									);
-									const getArrayOfPaymentsMadeToClientWithAmounts =
-										arrayOfPaymentsMadeToClient?.map(
-											(payment) => payment.amount,
-										);
-									const spendsOnClient = getSumFromArray(
-										getArrayOfPaymentsMadeToClientWithAmounts,
-									);
-
-									const clientProfit = getTotalProfitPerClient(client._id);
-									const clientWithPersonalAndFinancialData = {
-										_id: client._id,
-										name: client.name,
-										surname: client.surname,
-										currentMonthTotalAmount: memorizedMonthSum,
-										translators: client.translators,
-										rating: getClientsRating(memorizedMiddleMonthSum),
-										bankAccount: client.bankAccount || "PayPal",
-										svadba: {
-											login: client.svadba?.login || "",
-											password: client.svadba?.password || "",
-										},
-										dating: {
-											login: client.dating?.login || "",
-											password: client.dating?.password || "",
-										},
-										instagramLink:
-											"https://www.instagram.com/" + client.instagramLink ||
-											"https://www.instagram.com/",
-										loss: spendsOnClient,
-										image: client.image ?? null,
-										suspended: false,
-										currentYearProfit: clientProfit.currentYearProfit,
-										absoluteProfit: clientProfit.allYearsProfit,
-										previousMonthTotalAmount: memorizedPreviousMonthSum,
-										twoMonthBeforeAmount: clientMonthSum(client._id, 2),
-										middleMonthSum: memorizedMiddleMonthSum,
-										prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
-										monthProgressPercent: calculatePercentDifference(
-											memorizedMiddleMonthSum,
-											memorizedPreviousMiddleMonthSum,
-										),
-									};
-									return (
-										<Grid
-											key={clientWithPersonalAndFinancialData._id}
-											item
-											xs={12}
-											md={4}
-											sm={6}
-										>
-											<SingleClient
-												{...clientWithPersonalAndFinancialData}
-												admin={isAdmin}
-												handleUpdatingClientsId={getUpdatingClient}
-												handleSwitchToGraph={switchToGraph}
-											/>
-										</Grid>
-									);
-								})}
-							</Grid>
-						)}
-						{!sortedClients?.length && (
-							<Typography
-								variant="h5"
-								component="div"
-								style={{ margin: "auto" }}
-							>{`No clients found`}</Typography>
-						)}
-					</>
+				{clientsWithFinanceData?.length > 0 && (
+					<Grid container spacing={2} id="on-scroll__rotate-animation-list">
+						{clientsWithFinanceData?.map((client) => {
+							return (
+								<Grid key={client._id} item xs={12} md={4} sm={6}>
+									<SingleClient
+										{...client}
+										handleUpdatingClientsId={getUpdatingClient}
+										handleSwitchToGraph={switchToGraph}
+									/>
+								</Grid>
+							);
+						})}
+					</Grid>
+				)}
+				{!clientsWithFinanceData?.length && (
+					<Typography variant="h5" component="div" style={{ margin: "auto" }}>
+						{"No clients found"}
+					</Typography>
 				)}
 			</div>
 			<div className="socials button-add-container">

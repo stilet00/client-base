@@ -25,13 +25,14 @@ import { CHARTS_CATEGORIES } from "constants/renderConstants";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAdminStatus } from "sharedHooks/useAdminStatus";
 import {
 	faArrowAltCircleUp,
 	faArrowAltCircleDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
-export default function SingleClient({
+function SingleClient({
 	_id,
 	name,
 	surname,
@@ -53,8 +54,8 @@ export default function SingleClient({
 	image,
 	rating,
 	suspended,
-	admin,
 }) {
+	const admin = useAdminStatus();
 	const [expanded, setExpanded] = useState(false);
 	const [displayMenu, setDisplayMenu] = useState(false);
 	const [displayProfit, setDisplayProfit] = useState(false);
@@ -524,3 +525,5 @@ export default function SingleClient({
 		</Card>
 	);
 }
+
+export default SingleClient;
