@@ -5,6 +5,7 @@ import {
 	getClientsRequest,
 	addClient,
 	updateClient,
+	getClientsOverviewRequest,
 } from "services/clientsServices/services";
 import { getPaymentsRequest } from "services/financesStatement/services";
 import { getBalanceDaysForClientsRequest } from "services/balanceDayServices/index";
@@ -47,59 +48,9 @@ export default function ListOfClients() {
 	});
 	const { alertOpen, closeAlert, openAlert } = useAlert();
 
-	const fetchClients = useCallback(async () => {
-		const response = await getClientsRequest({ shouldFillTranslators: true });
-		if (response.status !== 200) {
-			throw new Error("Something went wrong with clients data");
-		}
-		return response.body;
-	}, []);
-
-	const fetchBalanceDays = useCallback(async () => {
-		const response = await getBalanceDaysForClientsRequest();
-		console.log(response);
-		if (response.status !== 200) {
-			throw new Error("Something went wrong with balance days data");
-		}
-
-		return response?.body;
-	}, []);
-
-	const { isLoading: clientsAreLoading, data: clients } = useQuery(
-		"clientsData",
-		fetchClients,
-		{
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithGettingClients,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	const { isLoading: balanceDaysAreLoading, data: balanceDays } = useQuery(
-		"balanceDaysForClients",
-		fetchBalanceDays,
-		{
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithBalanceDays,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	const { isLoading: paymentsAreLoading, data: paymentsList } = useQuery(
-		"paymentsForClients",
-		getPaymentsRequest,
+	const { isLoading: clientsDataIsLoading, data: clientsData } = useQuery(
+		"clientsOverview",
+		getClientsOverviewRequest,
 		{
 			onError: (error) => {
 				const message = error.message;
@@ -111,102 +62,8 @@ export default function ListOfClients() {
 				openAlert(5000);
 			},
 			enabled: !!user,
+			refetchOnWindowFocus: false,
 		},
-	);
-
-	const getTotalProfitPerClient = useCallback(
-		(clientId) => {
-			const balanceDaysForCurrentClient = balanceDays?.filter(
-				(balanceDay) => balanceDay.client === clientId,
-			);
-			const currentYearBalanceDaysForClient =
-				balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
-				);
-			const previousYearBalanceDaysForClient =
-				balanceDaysForCurrentClient?.filter(({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(
-						getMomentUTC().subtract(1, "year"),
-						"year",
-					),
-				);
-			const currentYearProfit = currentYearBalanceDaysForClient?.reduce(
-				(sum, current) => {
-					return sum + calculateBalanceDaySum(current.statistics);
-				},
-				0,
-			);
-			const previousYearProfit = previousYearBalanceDaysForClient?.reduce(
-				(sum, current) => {
-					return sum + calculateBalanceDaySum(current.statistics);
-				},
-				0,
-			);
-			const allYearsProfit = balanceDaysForCurrentClient?.reduce(
-				(sum, current) => {
-					return sum + calculateBalanceDaySum(current.statistics);
-				},
-				0,
-			);
-			const clientsProfit = {
-				currentYearProfit,
-				allYearsProfit,
-				previousYearProfit,
-			};
-			return clientsProfit;
-		},
-		[balanceDays],
-	);
-
-	const clientMonthSum = useCallback(
-		(clientId, monthOffset = 0) => {
-			const balanceDaysForCurrentClient = balanceDays?.filter(
-				(balanceDay) => balanceDay.client === clientId,
-			);
-
-			const balanceDaysForSpecifiedMonth = balanceDaysForCurrentClient?.filter(
-				({ dateTimeId }) =>
-					getMomentUTC(dateTimeId).isSame(
-						getMomentUTC().subtract(monthOffset, "month"),
-						"month",
-					),
-			);
-
-			const specifiedMonthSum = balanceDaysForSpecifiedMonth?.reduce(
-				(sum, current) => {
-					return sum + calculateBalanceDaySum(current.statistics);
-				},
-				0,
-			);
-
-			return specifiedMonthSum?.toFixed(2);
-		},
-		[balanceDays],
-	);
-
-	const calculateMiddleMonthSum = useCallback(
-		(clientId, date = getMomentUTC()) => {
-			const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
-			const currentDayOfMinusOne = getMomentUTC().format("D");
-			return Math.round(
-				totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne),
-			);
-		},
-		[clientMonthSum],
-	);
-
-	const sortBySum = useCallback(
-		(clientOne, clientTwo) => {
-			const clientOneSum = clientMonthSum(clientOne._id);
-			const clientTwoSum = clientMonthSum(clientTwo._id);
-			if (clientOneSum > clientTwoSum) {
-				return -1;
-			} else if (clientOneSum < clientTwoSum) {
-				return 1;
-			}
-			return 0;
-		},
-		[clientMonthSum],
 	);
 
 	function getArrayOfBalancePerDay(clientId, category = null) {
@@ -230,37 +87,6 @@ export default function ListOfClients() {
 		return monthsSum;
 	}
 
-	const getArrayWithAmountsPerDayForPickedMonth = (
-		clientId,
-		month,
-		sumHolder,
-		category,
-		countUntilThisDateInMonth = getMomentUTC().subtract(1, "day").format("D"),
-	) => {
-		month.forEach((day, index) => {
-			if (index === 0 || index < countUntilThisDateInMonth) {
-				const clientBalanceDay = day.clients.find(
-					(client) => client.id === clientId,
-				);
-				if (clientBalanceDay) {
-					if (typeof sumHolder[index] === "undefined") {
-						sumHolder[index] = [
-							getNumberWithHundreds(
-								calculateBalanceDaySum(clientBalanceDay, false, category),
-							),
-						];
-					} else {
-						sumHolder[index] = [
-							...sumHolder[index],
-							getNumberWithHundreds(
-								calculateBalanceDaySum(clientBalanceDay, false, category),
-							),
-						];
-					}
-				}
-			}
-		});
-	};
 	const isAdmin = useAdminStatus();
 
 	// useDebounce(
@@ -286,28 +112,8 @@ export default function ListOfClients() {
 	// 	[queryString],
 	// );
 
-	const getUpdatingClient = (_id) => {
-		const clientWithID = clients.find((client) => client._id === _id);
-		const clientWithFieldsForForm = {
-			_id: clientWithID._id,
-			name: clientWithID.name,
-			surname: clientWithID.surname,
-			bankAccount: clientWithID.bankAccount || "PayPal",
-			svadba: {
-				login: clientWithID.svadba?.login || "",
-				password: clientWithID.svadba?.password || "",
-			},
-			dating: {
-				login: clientWithID.dating?.login || "",
-				password: clientWithID.dating?.password || "",
-			},
-			instagramLink: clientWithID.instagramLink || "",
-			image: clientWithID.image || "",
-			suspended: !!clientWithID.suspended,
-		};
-		setUpdatingClient(clientWithFieldsForForm);
-		handleOpen();
-	};
+	const getUpdatingClient = (_id) =>
+		clientsData.find((client) => client._id === _id);
 
 	const clearEditedClient = () => {
 		setUpdatingClient({});
@@ -340,7 +146,7 @@ export default function ListOfClients() {
 					openAlert();
 				});
 		},
-		[clients, alertInfo, openAlert],
+		[alertInfo, openAlert, queryClient],
 	);
 
 	const addNewClient = async (newClient) => {
@@ -382,87 +188,7 @@ export default function ListOfClients() {
 		setShowGraph(true);
 	};
 
-	const sortedClients = useMemo(() => {
-		if (!clients) {
-			return [];
-		}
-		return clients.sort(sortBySum);
-	}, [clients, sortBySum]);
-
-	const clientProfits = useMemo(() => {
-		return sortedClients?.reduce((acc, client) => {
-			acc[client._id] = {
-				middleMonthSum: calculateMiddleMonthSum(client._id),
-				previousMiddleMonthSum: calculateMiddleMonthSum(
-					client._id,
-					getMomentUTC().subtract(1, "month"),
-				),
-				monthSum: clientMonthSum(client._id),
-				previousMonthSum: clientMonthSum(client._id, 1),
-				profit: getTotalProfitPerClient(client._id),
-				twoMonthBeforeAmount: clientMonthSum(client._id, 2),
-			};
-			return acc;
-		}, {});
-	}, [
-		sortedClients,
-		calculateMiddleMonthSum,
-		getTotalProfitPerClient,
-		clientMonthSum,
-	]);
-
-	const paymentsByClient = useMemo(() => {
-		return paymentsList?.reduce((acc, payment) => {
-			if (!acc[payment.receiverID]) {
-				acc[payment.receiverID] = [];
-			}
-			acc[payment.receiverID].push(payment);
-			return acc;
-		}, {});
-	}, [paymentsList]);
-
-	const clientsWithFinanceData = useMemo(() => {
-		return sortedClients.map((client) => {
-			const profits = clientProfits[client._id];
-			const arrayOfPaymentsMadeToClient = paymentsByClient[client._id] || [];
-			const spendsOnClient = getSumFromArray(
-				arrayOfPaymentsMadeToClient.map((payment) => payment.amount),
-			);
-
-			return {
-				_id: client._id,
-				name: client.name,
-				surname: client.surname,
-				currentMonthTotalAmount: profits.monthSum,
-				translators: client.translators,
-				rating: getClientsRating(profits.middleMonthSum),
-				bankAccount: client.bankAccount || "PayPal",
-				svadba: client.svadba || {},
-				dating: client.dating || {},
-				instagramLink: `https://www.instagram.com/${client.instagramLink || ""}`,
-				loss: spendsOnClient,
-				image: client.image ?? null,
-				suspended: false,
-				currentYearProfit: profits.profit.currentYearProfit,
-				absoluteProfit: profits.profit.allYearsProfit,
-				previousMonthTotalAmount: profits.previousMonthSum,
-				twoMonthBeforeAmount: profits.twoMonthBeforeAmount,
-				middleMonthSum: profits.middleMonthSum,
-				prevousMiddleMonthSum: profits.previousMiddleMonthSum,
-				monthProgressPercent: calculatePercentDifference(
-					profits.middleMonthSum,
-					profits.previousMiddleMonthSum,
-				),
-			};
-		});
-	}, [sortedClients, clientProfits, paymentsByClient]);
-	console.log(`clientsWithFinanceData`, clientsWithFinanceData);
-
-	const loading =
-		balanceDaysAreLoading || paymentsAreLoading || clientsAreLoading;
-
-	if (loading) {
-		console.log(`loading: ${loading}`);
+	if (clientsDataIsLoading) {
 		return <Loader />;
 	}
 
@@ -480,9 +206,9 @@ export default function ListOfClients() {
 				/>
 			</div>
 			<div className={"main-container scrolled-container"}>
-				{clientsWithFinanceData?.length > 0 && (
+				{clientsData?.length > 0 && (
 					<Grid container spacing={2} id="on-scroll__rotate-animation-list">
-						{clientsWithFinanceData?.map((client) => {
+						{clientsData?.map((client) => {
 							return (
 								<Grid key={client._id} item xs={12} md={4} sm={6}>
 									<SingleClient
@@ -495,7 +221,7 @@ export default function ListOfClients() {
 						})}
 					</Grid>
 				)}
-				{!clientsWithFinanceData?.length && (
+				{!clientsData?.length && (
 					<Typography variant="h5" component="div" style={{ margin: "auto" }}>
 						{"No clients found"}
 					</Typography>

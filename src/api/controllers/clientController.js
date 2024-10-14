@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
-
+const { ObjectId } = require("mongoose");
 const { getCollections } = require("../database/collections");
+const {
+	calculateBalanceDaySum,
+	getClientsRating,
+	calculatePercentDifference,
+} = require("../../sharedFunctions/sharedFunctions");
+const { getMomentUTC } = require("../utils/utils");
 const sharp = require("sharp");
 
 const clientImageConverter = async (image) => {
@@ -53,7 +59,7 @@ const getAllClients = async (request, response) => {
 	}
 };
 
-const addNewClient = async function (request, response, next) {
+const addNewClient = async (request, response, next) => {
 	try {
 		if (!request.body) {
 			return response.status(400).send("Ошибка при загрузке клиентки");
@@ -157,16 +163,188 @@ const updateClient = async (request, response) => {
 	}
 };
 
-// const deleteClient = (request, response) => {
-//         collectionClients.deleteOne(
-//             { _id: ObjectId(request.params.id) },
-//             (err, docs) => {
-//                 if (err) {
-//                     return response.sendStatus(500)
-//                 }
-//                 response.sendStatus(200)
-//             }
-//         )
-//     }
+const fetchClientsData = async () => {
+	const Client = await getCollections().collectionClients;
+	return await Client.find().populate("translators").exec();
+};
 
-module.exports = { getAllClients, addNewClient, updateClient };
+const fetchBalanceDaysForClients = async () => {
+	const BalanceDay = await getCollections().collectionBalanceDays;
+	return await BalanceDay.find().exec();
+};
+
+const fetchPayments = async () => {
+	const Payment = await getCollections().collectionStatements;
+	return await Payment.find().exec();
+};
+
+const getClientsOverviewData = async (req, res) => {
+	try {
+		const clients = await fetchClientsData();
+		const balanceDays = await fetchBalanceDaysForClients();
+		const payments = await fetchPayments();
+		const clientProfits = clients.map((client) => {
+			const clientBalanceDays = balanceDays.filter((bd) => {
+				return `${bd.client}` === `${client._id}`;
+			});
+
+			const currentMonthBalanceDays = clientBalanceDays.filter((bd) =>
+				getMomentUTC(bd.dateTimeId).isSame(getMomentUTC(), "month"),
+			);
+			const previousMonthBalanceDays = clientBalanceDays.filter((bd) =>
+				getMomentUTC(bd.dateTimeId).isSame(
+					getMomentUTC().subtract(1, "month"),
+					"month",
+				),
+			);
+			const twoMonthBeforeBalanceDays = clientBalanceDays.filter((bd) =>
+				getMomentUTC(bd.dateTimeId).isSame(
+					getMomentUTC().subtract(2, "month"),
+					"month",
+				),
+			);
+
+			const currentMonthTotalAmount = currentMonthBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+			const previousMonthTotalAmount = previousMonthBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+			const twoMonthBeforeAmount = twoMonthBeforeBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+
+			const daysInCurrentMonth = getMomentUTC().daysInMonth();
+			const daysInPreviousMonth = getMomentUTC()
+				.subtract(1, "month")
+				.daysInMonth();
+
+			const middleMonthSum = Number.parseFloat(
+				(currentMonthTotalAmount / daysInCurrentMonth).toFixed(2),
+			);
+			const previousMiddleMonthSum = Number.parseFloat(
+				(previousMonthTotalAmount / daysInPreviousMonth).toFixed(2),
+			);
+
+			const currentYearBalanceDays = clientBalanceDays.filter((bd) =>
+				getMomentUTC(bd.dateTimeId).isSame(getMomentUTC(), "year"),
+			);
+			const previousYearBalanceDays = clientBalanceDays.filter((bd) =>
+				getMomentUTC(bd.dateTimeId).isSame(
+					getMomentUTC().subtract(1, "year"),
+					"year",
+				),
+			);
+			const currentYearProfit = currentYearBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+			const previousYearProfit = previousYearBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+			const allYearsProfit = clientBalanceDays.reduce(
+				(sum, bd) =>
+					Number.parseFloat(
+						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+					),
+				0,
+			);
+			return {
+				clientId: client._id,
+				currentYearProfit,
+				previousYearProfit,
+				allYearsProfit,
+				currentMonthTotalAmount,
+				previousMonthTotalAmount,
+				twoMonthBeforeAmount,
+				middleMonthSum,
+				previousMiddleMonthSum,
+			};
+		});
+
+		const clientPayments = clients.map((client) => {
+			const paymentsForClient = payments.filter(
+				(payment) => payment.receiverID === client._id,
+			);
+			const totalPayments = paymentsForClient.reduce(
+				(sum, payment) => sum + payment.amount,
+				0,
+			);
+
+			return {
+				clientId: client._id,
+				totalPayments,
+			};
+		});
+
+		const responseData = clients
+			.map((client) => {
+				const clientProfit = clientProfits.find(
+					(cp) => cp.clientId === client._id,
+				);
+				const clientPayment = clientPayments.find(
+					(cp) => cp.clientId === client._id,
+				);
+
+				return {
+					_id: client._id,
+					name: client.name,
+					surname: client.surname,
+					bankAccount: client.bankAccount || "PayPal",
+					svadba: client.svadba || { login: "", password: "" },
+					dating: client.dating || { login: "", password: "" },
+					instagramLink: client.instagramLink
+						? `https://www.instagram.com/${client.instagramLink}`
+						: "",
+					image: client.image || null,
+					suspended: client.suspended || false,
+					currentYearProfit: clientProfit?.currentYearProfit || 0,
+					previousYearProfit: clientProfit?.previousYearProfit || 0,
+					allYearsProfit: clientProfit?.allYearsProfit || 0,
+					totalPayments: clientPayment?.totalPayments || 0,
+					currentMonthTotalAmount: clientProfit?.currentMonthTotalAmount || 0,
+					previousMonthTotalAmount: clientProfit?.previousMonthTotalAmount || 0,
+					twoMonthBeforeAmount: clientProfit?.twoMonthBeforeAmount || 0,
+					translators: client.translators || [],
+					rating: getClientsRating(clientProfit?.middleMonthSum || 0),
+					middleMonthSum: clientProfit?.middleMonthSum || 0,
+					previousMiddleMonthSum: clientProfit?.previousMiddleMonthSum || 0,
+					monthProgressPercent: calculatePercentDifference(
+						clientProfit?.middleMonthSum || 0,
+						clientProfit?.previousMiddleMonthSum || 0,
+					),
+				};
+			})
+			.sort((a, b) => b.currentMonthTotalAmount - a.currentMonthTotalAmount);
+		res.status(200).json(responseData);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};
+
+module.exports = {
+	getAllClients,
+	addNewClient,
+	updateClient,
+	getClientsOverviewData,
+};

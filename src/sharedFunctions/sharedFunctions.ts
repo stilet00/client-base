@@ -1,6 +1,6 @@
 import moment from "moment";
 import { localStorageTokenKey } from "../constants/constants";
-import {
+import type {
 	BalanceDay,
 	PersonalPenalty,
 	Statistics,
@@ -24,8 +24,9 @@ export function calculateBalanceDaySum(
 			},
 			0,
 		);
-
-		return svadbaSum - svadbaObject.penalties * 2;
+		return Number.parseFloat(
+			(svadbaSum - svadbaObject.penalties * 2).toFixed(2),
+		);
 	} else if (category) {
 		const categorizedObject = {
 			[category]: targetObject[category],
@@ -36,16 +37,16 @@ export function calculateBalanceDaySum(
 			},
 			0,
 		);
-
-		return categorySum;
+		return Number.parseFloat(categorySum.toFixed(2));
 	} else {
 		const arrayToSum = Object.values(targetObject);
 
 		const sumResult = arrayToSum.reduce((sum, current) => {
 			return typeof current === "number" ? sum + current : sum;
 		}, 0);
-
-		return sumResult - targetObject.penalties * 2;
+		return Number.parseFloat(
+			(sumResult - targetObject.penalties * 2).toFixed(2),
+		);
 	}
 }
 
@@ -54,7 +55,7 @@ export function getTotalDaysOfMonth(
 	monthNumber: number,
 ): number[] {
 	const stringMonth = monthNumber < 9 ? "0" + monthNumber : monthNumber;
-	let totalDays = [];
+	const totalDays = [];
 	for (
 		let i = 1;
 		i <= getMomentUTC(year + "-" + stringMonth, "YYYY-MM").daysInMonth();
@@ -139,7 +140,7 @@ export function calculatePercentDifference(
 		return 0;
 	}
 
-	const result = parseFloat(difference.toFixed(1));
+	const result = Number.parseFloat(difference.toFixed(1));
 
 	return result % 1 === 0 ? Math.round(result) : result;
 }
