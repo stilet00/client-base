@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useQuery, useQueryClient } from "react-query";
 import {
@@ -15,8 +15,8 @@ import "../../styles/modules/ListOfClients.css";
 import ClientsForm from "./ClientsForm/ClientsForm";
 import useModal from "../../sharedHooks/useModal";
 import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
-import { faVenus } from "@fortawesome/free-solid-svg-icons";
+import { Box, IconButton } from "@mui/material";
+import { faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "sharedComponents/Loader/Loader";
 import { getSumFromArray } from "sharedFunctions/sharedFunctions";
@@ -28,6 +28,7 @@ export default function ListOfClients() {
 	const user = useSelector((state) => state.auth.user);
 	const [showGraph, setShowGraph] = useState(false);
 	const [graphData, setGraphData] = useState(null);
+	const [query, setQuery] = useState("");
 	const [updatingClient, setUpdatingClient] = useState({});
 	const inputRef = useRef(null);
 	const { handleClose, handleOpen, open } = useModal();
@@ -54,6 +55,18 @@ export default function ListOfClients() {
 			refetchOnWindowFocus: false,
 		},
 	);
+
+	const filteredClients = useMemo(() => {
+		if (!query) {
+			return clientsData;
+		}
+		return clientsData.filter((client) => {
+			return (
+				client.name.toLowerCase().includes(query.toLowerCase()) ||
+				client.surname.toLowerCase().includes(query.toLowerCase())
+			);
+		});
+	}, [query, clientsData]);
 
 	function getArrayOfBalancePerDay(clientId, category = null) {
 		let currentMonthSum = [];
@@ -159,11 +172,10 @@ export default function ListOfClients() {
 		setShowGraph(true);
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault(); // Prevent form from reloading the page
-		const searchQuery = inputRef.current.value; // Access the input value from the ref
-		console.log("Searching for:", searchQuery);
-		// Perform your search or other logic here
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		const searchQuery = inputRef.current.value;
+		setQuery(searchQuery);
 	};
 
 	if (clientsDataIsLoading) {
@@ -172,7 +184,7 @@ export default function ListOfClients() {
 
 	return (
 		<>
-			<Box component="form" onSubmit={handleSubmit}>
+			<Box component="form" onSubmit={handleSearchSubmit}>
 				<input
 					ref={inputRef}
 					className="search-input"
@@ -187,11 +199,22 @@ export default function ListOfClients() {
 				>
 					Search
 				</Button>
+				{query && (
+					<IconButton
+						type="button"
+						onClick={() => {
+							setQuery("");
+							inputRef.current.value = "";
+						}}
+					>
+						<FontAwesomeIcon icon={faTimes} />
+					</IconButton>
+				)}
 			</Box>
 			<div className={"main-container scrolled-container"}>
-				{clientsData?.length > 0 && (
+				{filteredClients?.length > 0 && (
 					<Grid container spacing={2} id="on-scroll__rotate-animation-list">
-						{clientsData?.map((client) => {
+						{filteredClients?.map((client) => {
 							return (
 								<Grid key={client._id} item xs={12} md={4} sm={6}>
 									<SingleClient
@@ -204,7 +227,7 @@ export default function ListOfClients() {
 						})}
 					</Grid>
 				)}
-				{!clientsData?.length && (
+				{!filteredClients?.length && (
 					<Typography variant="h5" component="div" style={{ margin: "auto" }}>
 						{"No clients found"}
 					</Typography>
