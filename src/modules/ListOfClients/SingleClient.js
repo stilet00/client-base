@@ -28,7 +28,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
-function SingleClient(props) {
+function SingleClient({ getUpdatingClient, switchToGraph, ...client }) {
 	const {
 		_id,
 		name,
@@ -39,8 +39,6 @@ function SingleClient(props) {
 		instagramLink,
 		image,
 		suspended,
-		currentYearProfit,
-		previousYearProfit,
 		allYearsProfit,
 		previousMiddleMonthSum,
 		totalPayments,
@@ -52,7 +50,7 @@ function SingleClient(props) {
 		middleMonthSum,
 		monthProgressPercent,
 		handleUpdatingClientsId,
-	} = props;
+	} = client;
 	const [expanded, setExpanded] = useState(false);
 	const [displayMenu, setDisplayMenu] = useState(false);
 	const [displayProfit, setDisplayProfit] = useState(false);
@@ -81,19 +79,13 @@ function SingleClient(props) {
 	}, []);
 
 	const payedToTranslators = useMemo(
-		() => Math.round(currentYearProfit * 0.45),
-		[currentYearProfit],
+		() => Math.round(allYearsProfit * 0.45),
+		[allYearsProfit],
 	);
 	const clientProfit = useMemo(
-		() => Math.round(currentYearProfit - payedToTranslators - totalPayments),
-		[currentYearProfit, payedToTranslators, totalPayments],
+		() => Math.round(allYearsProfit - payedToTranslators - totalPayments),
+		[allYearsProfit, payedToTranslators, totalPayments],
 	);
-	const progressClass = useMemo(() => {
-		return middleMonthSum >= previousMiddleMonthSum
-			? "green-text styled-text-numbers percents-margin"
-			: "red-text styled-text-numbers percents-margin";
-	}, [middleMonthSum, previousMiddleMonthSum]);
-
 	const handleCopy = useCallback(() => {
 		const isMobileDevice = /Mobi/i.test(navigator.userAgent);
 		if (!isMobileDevice) {
@@ -121,7 +113,8 @@ function SingleClient(props) {
 						top: "50%",
 						left: "50%",
 						transform: "translate(-50%, -50%) skew(1deg, -30deg)",
-						background: `linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)`,
+						background:
+							"linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)",
 						borderRadius: "4px",
 						padding: "10px",
 						color: "black",
@@ -247,11 +240,23 @@ function SingleClient(props) {
 						Middle for {currentMonth}:
 					</span>
 					<div className="grid-template-container__info">
-						<span className={progressClass}>
+						<span
+							className="styled-text-numbers percents-margin"
+							style={{
+								color:
+									middleMonthSum >= previousMiddleMonthSum ? "green" : "red",
+							}}
+						>
 							{middleMonthSum >= previousMiddleMonthSum ? (
-								<FontAwesomeIcon icon={faArrowAltCircleUp} />
+								<FontAwesomeIcon
+									style={{ color: "green" }}
+									icon={faArrowAltCircleUp}
+								/>
 							) : (
-								<FontAwesomeIcon icon={faArrowAltCircleDown} />
+								<FontAwesomeIcon
+									style={{ color: "red" }}
+									icon={faArrowAltCircleDown}
+								/>
 							)}{" "}
 							{`${monthProgressPercent}%`}
 						</span>
@@ -317,7 +322,7 @@ function SingleClient(props) {
 									)}
 									<span className="balance-menu_item">
 										Total profit:
-										<b>{`${currentYearProfit} $`}</b>
+										<b>{`${allYearsProfit} $`}</b>
 									</span>
 									<span className="balance-menu_item">
 										Payed to translators:

@@ -226,7 +226,7 @@ const getClientsOverviewData = async (req, res) => {
 				0,
 			);
 
-			const daysInCurrentMonth = getMomentUTC().daysInMonth();
+			const daysInCurrentMonth = getMomentUTC().date();
 			const daysInPreviousMonth = getMomentUTC()
 				.subtract(1, "month")
 				.daysInMonth();

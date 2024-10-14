@@ -1,14 +1,11 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useQuery, useQueryClient } from "react-query";
 import {
-	getClientsRequest,
 	addClient,
 	updateClient,
 	getClientsOverviewRequest,
 } from "services/clientsServices/services";
-import { getPaymentsRequest } from "services/financesStatement/services";
-import { getBalanceDaysForClientsRequest } from "services/balanceDayServices/index";
 import Typography from "@mui/material/Typography";
 import AlertMessage from "sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "sharedComponents/AlertMessage/hooks";
@@ -18,21 +15,13 @@ import "../../styles/modules/ListOfClients.css";
 import ClientsForm from "./ClientsForm/ClientsForm";
 import useModal from "../../sharedHooks/useModal";
 import Button from "@mui/material/Button";
+import { Box } from "@mui/material";
 import { faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "sharedComponents/Loader/Loader";
-import {
-	getClientsRating,
-	getMomentUTC,
-	calculateBalanceDaySum,
-	getSumFromArray,
-	getNumberWithHundreds,
-	calculatePercentDifference,
-} from "sharedFunctions/sharedFunctions";
+import { getSumFromArray } from "sharedFunctions/sharedFunctions";
 import { useAdminStatus } from "sharedHooks/useAdminStatus";
 import MESSAGE from "constants/messages";
-import useSearch from "sharedHooks/useSearchString";
-import useDebounce from "sharedHooks/useDebounce";
 
 export default function ListOfClients() {
 	const queryClient = useQueryClient();
@@ -40,8 +29,8 @@ export default function ListOfClients() {
 	const [showGraph, setShowGraph] = useState(false);
 	const [graphData, setGraphData] = useState(null);
 	const [updatingClient, setUpdatingClient] = useState({});
+	const inputRef = useRef(null);
 	const { handleClose, handleOpen, open } = useModal();
-	const { queryString, changeSearchParams } = useSearch();
 	const [alertInfo, setAlertInfo] = useState({
 		mainTitle: "no message had been put",
 		status: true,
@@ -88,29 +77,6 @@ export default function ListOfClients() {
 	}
 
 	const isAdmin = useAdminStatus();
-
-	// useDebounce(
-	// 	async () => {
-	// 		setLoading(true);
-	// 		const responseDataWithClients = await getClientsRequest({
-	// 			searchQuery: queryString,
-	// 			shouldFillTranslators: true,
-	// 		});
-	// 		if (responseDataWithClients.status === 200) {
-	// 			setClients(responseDataWithClients.body);
-	// 		} else {
-	// 			setAlertInfo({
-	// 				...alertInfo,
-	// 				mainTitle: MESSAGE.somethingWrongWithGettingClients,
-	// 				status: false,
-	// 			});
-	// 			openAlert(5000);
-	// 		}
-	// 		setLoading(false);
-	// 	},
-	// 	1000,
-	// 	[queryString],
-	// );
 
 	const getUpdatingClient = (_id) =>
 		clientsData.find((client) => client._id === _id);
@@ -188,23 +154,35 @@ export default function ListOfClients() {
 		setShowGraph(true);
 	};
 
+	const handleSubmit = (e) => {
+		e.preventDefault(); // Prevent form from reloading the page
+		const searchQuery = inputRef.current.value; // Access the input value from the ref
+		console.log("Searching for:", searchQuery);
+		// Perform your search or other logic here
+	};
+
 	if (clientsDataIsLoading) {
 		return <Loader />;
 	}
 
 	return (
 		<>
-			<div>
+			<Box component="form" onSubmit={handleSubmit}>
 				<input
+					ref={inputRef}
 					className="search-input"
 					type="text"
-					placeholder="Search for..."
-					value={queryString}
-					onChange={(e) => {
-						changeSearchParams(e.target.value);
-					}}
+					placeholder="First or last name..."
 				/>
-			</div>
+				<Button
+					variant="contained"
+					color="primary"
+					sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+					type="submit"
+				>
+					Search
+				</Button>
+			</Box>
 			<div className={"main-container scrolled-container"}>
 				{clientsData?.length > 0 && (
 					<Grid container spacing={2} id="on-scroll__rotate-animation-list">
