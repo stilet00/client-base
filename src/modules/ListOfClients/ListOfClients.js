@@ -78,8 +78,13 @@ export default function ListOfClients() {
 
 	const isAdmin = useAdminStatus();
 
-	const getUpdatingClient = (_id) =>
-		clientsData.find((client) => client._id === _id);
+	const getUpdatingClient = (_id) => {
+		const clientWithFieldsForForm = clientsData.find(
+			(client) => client._id === _id,
+		);
+		setUpdatingClient(clientWithFieldsForForm);
+		handleOpen();
+	};
 
 	const clearEditedClient = () => {
 		setUpdatingClient({});
@@ -96,7 +101,7 @@ export default function ListOfClients() {
 							mainTitle: message,
 							status: true,
 						});
-						queryClient.invalidateQueries("clientsData");
+						queryClient.invalidateQueries("clientsOverview");
 						openAlert(2000);
 					} else {
 						throw new Error(`Error: ${res?.status}`);
@@ -119,7 +124,7 @@ export default function ListOfClients() {
 		try {
 			const responseFromAddedClient = await addClient(newClient);
 			if (responseFromAddedClient.status === 200) {
-				queryClient.invalidateQueries("clientsData");
+				queryClient.invalidateQueries("clientsOverview");
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: "client had been added",

@@ -43,6 +43,7 @@ export default function ClientsForm({
 }) {
 	const [client, setClient] = useState(DEFAULT_CLIENT);
 	const [siteFilter, setSiteFilter] = useState("svadba");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [formErrors, setFormErrors] = useState({});
 	const arrayWithErrors = Object.keys(formErrors);
@@ -147,6 +148,7 @@ export default function ClientsForm({
 	};
 
 	async function onFormSubmit(client) {
+		setIsSubmitting(true);
 		if (arrayOfEditedClientsFields.length > 0) {
 			await onEditClientData(client);
 			clearEditedClient();
@@ -154,6 +156,7 @@ export default function ClientsForm({
 			await onAddNewClient(client);
 		}
 		setSiteFilter("svadba");
+		setIsSubmitting(false);
 	}
 
 	function clearClient() {
@@ -171,9 +174,9 @@ export default function ClientsForm({
 	const handleCardNumberChange = (event) => {
 		const { name, value } = event.target;
 		function changindValueToCardFormat(value) {
-			let arrayFromText = value.split("");
-			let textWIthoutSpaces = arrayFromText.filter((el) => el !== " ");
-			let fixedArray = textWIthoutSpaces.filter(
+			const arrayFromText = value.split("");
+			const textWIthoutSpaces = arrayFromText.filter((el) => el !== " ");
+			const fixedArray = textWIthoutSpaces.filter(
 				(el, index) => index % 4 === 0 && index !== 0,
 			);
 			if (fixedArray.length === 1) {
@@ -535,7 +538,9 @@ export default function ClientsForm({
 									handleClose();
 								}}
 								fullWidth
-								disabled={fieldsAreEmpty || arrayWithErrors.length !== 0}
+								disabled={
+									fieldsAreEmpty || arrayWithErrors.length !== 0 || isSubmitting
+								}
 								variant={"outlined"}
 								style={{ marginTop: "10px" }}
 							>
