@@ -178,6 +178,16 @@ const fetchPayments = async () => {
 	return await Payment.find().exec();
 };
 
+const calculateTotalAmount = (balanceDays) => {
+	return balanceDays.reduce(
+		(sum, bd) =>
+			Number.parseFloat(
+				(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
+			),
+		0,
+	);
+};
+
 const getClientsOverviewData = async (req, res) => {
 	try {
 		const clients = await fetchClientsData();
@@ -204,26 +214,14 @@ const getClientsOverviewData = async (req, res) => {
 				),
 			);
 
-			const currentMonthTotalAmount = currentMonthBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
+			const currentMonthTotalAmount = calculateTotalAmount(
+				currentMonthBalanceDays,
 			);
-			const previousMonthTotalAmount = previousMonthBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
+			const previousMonthTotalAmount = calculateTotalAmount(
+				previousMonthBalanceDays,
 			);
-			const twoMonthBeforeAmount = twoMonthBeforeBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
+			const twoMonthBeforeAmount = calculateTotalAmount(
+				twoMonthBeforeBalanceDays,
 			);
 
 			const daysInCurrentMonth = getMomentUTC().date();
@@ -247,27 +245,9 @@ const getClientsOverviewData = async (req, res) => {
 					"year",
 				),
 			);
-			const currentYearProfit = currentYearBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
-			);
-			const previousYearProfit = previousYearBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
-			);
-			const allYearsProfit = clientBalanceDays.reduce(
-				(sum, bd) =>
-					Number.parseFloat(
-						(sum + calculateBalanceDaySum(bd.statistics)).toFixed(2),
-					),
-				0,
-			);
+			const currentYearProfit = calculateTotalAmount(currentYearBalanceDays);
+			const previousYearProfit = calculateTotalAmount(previousYearBalanceDays);
+			const allYearsProfit = calculateTotalAmount(clientBalanceDays);
 			return {
 				clientId: client._id,
 				currentYearProfit,
