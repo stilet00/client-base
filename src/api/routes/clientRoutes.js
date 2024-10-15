@@ -12,10 +12,16 @@ var _a = require("../firebase/firebaseAdmin"),
 var _b = require("../controllers/clientController"),
 	getAllClients = _b.getAllClients,
 	addNewClient = _b.addNewClient,
-	updateClient = _b.updateClient;
+	updateClient = _b.updateClient,
+	getClientsOverviewData = _b.getClientsOverviewData;
 var clientsURL = require("./routes").clientsURL;
 var router = express_1.default.Router();
-router.get(clientsURL + "get", isAuthenticated, getAllClients);
-router.post(clientsURL + "add", adminRules, addNewClient);
-router.put(clientsURL + ":id", isAuthenticated, updateClient);
+router.get("".concat(clientsURL, "get"), isAuthenticated, getAllClients);
+router.post("".concat(clientsURL, "add"), adminRules, addNewClient);
+router.put("".concat(clientsURL, ":id"), isAuthenticated, updateClient);
+router.get(
+	"".concat(clientsURL, "overview"),
+	isAuthenticated,
+	getClientsOverviewData,
+);
 exports.default = router;

@@ -1,13 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import {
-	getClientsRequest,
 	addClient,
 	updateClient,
+	getClientsOverviewRequest,
 } from "services/clientsServices/services";
-import { getPaymentsRequest } from "services/financesStatement/services";
-import { getBalanceDaysForClientsRequest } from "services/balanceDayServices/index";
 import Typography from "@mui/material/Typography";
 import AlertMessage from "sharedComponents/AlertMessage/AlertMessage";
 import { useAlert } from "sharedComponents/AlertMessage/hooks";
@@ -17,221 +15,33 @@ import "../../styles/modules/ListOfClients.css";
 import ClientsForm from "./ClientsForm/ClientsForm";
 import useModal from "../../sharedHooks/useModal";
 import Button from "@mui/material/Button";
-import { faVenus } from "@fortawesome/free-solid-svg-icons";
+import { Box, IconButton } from "@mui/material";
+import { faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "sharedComponents/Loader/Loader";
-import {
-	getClientsRating,
-	getMomentUTC,
-	calculateBalanceDaySum,
-	getSumFromArray,
-	getNumberWithHundreds,
-	calculatePercentDifference,
-} from "sharedFunctions/sharedFunctions";
-import { useAdminStatus } from "../../sharedHooks/useAdminStatus";
+import { getSumFromArray } from "sharedFunctions/sharedFunctions";
+import { useAdminStatus } from "sharedHooks/useAdminStatus";
 import MESSAGE from "constants/messages";
-import useSearch from "sharedHooks/useSearchString";
-import useDebounce from "sharedHooks/useDebounce";
 
 export default function ListOfClients() {
+	const queryClient = useQueryClient();
 	const user = useSelector((state) => state.auth.user);
-	const [paymentsList, setPaymentsList] = useState([]);
 	const [showGraph, setShowGraph] = useState(false);
-	const [clients, setClients] = useState([]);
-	const [balanceDays, setBalanceDays] = useState([]);
 	const [graphData, setGraphData] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const [query, setQuery] = useState("");
 	const [updatingClient, setUpdatingClient] = useState({});
+	const inputRef = useRef(null);
 	const { handleClose, handleOpen, open } = useModal();
-	const { queryString, changeSearchParams } = useSearch();
 	const [alertInfo, setAlertInfo] = useState({
 		mainTitle: "no message had been put",
 		status: true,
 	});
 	const { alertOpen, closeAlert, openAlert } = useAlert();
 
-	const getTotalProfitPerClient = (clientId) => {
-		const balanceDaysForCurrentClient = balanceDays.filter(
-			(balanceDay) => balanceDay.client === clientId,
-		);
-		const currentYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
-			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(getMomentUTC(), "year"),
-		);
-		const previousYearBalanceDaysForClient = balanceDaysForCurrentClient.filter(
-			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(
-					getMomentUTC().subtract(1, "year"),
-					"year",
-				),
-		);
-		const currentYearProfit = currentYearBalanceDaysForClient.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const previousYearProfit = previousYearBalanceDaysForClient.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const allYearsProfit = balanceDaysForCurrentClient.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-		const clientsProfit = {
-			currentYearProfit,
-			allYearsProfit,
-			previousYearProfit,
-		};
-		return clientsProfit;
-	};
-
-	function clientMonthSum(clientId, monthOffset = 0) {
-		const balanceDaysForCurrentClient = balanceDays.filter(
-			(balanceDay) => balanceDay.client === clientId,
-		);
-
-		const balanceDaysForSpecifiedMonth = balanceDaysForCurrentClient.filter(
-			({ dateTimeId }) =>
-				getMomentUTC(dateTimeId).isSame(
-					getMomentUTC().subtract(monthOffset, "month"),
-					"month",
-				),
-		);
-
-		const specifiedMonthSum = balanceDaysForSpecifiedMonth.reduce(
-			(sum, current) => {
-				return sum + calculateBalanceDaySum(current.statistics);
-			},
-			0,
-		);
-
-		return specifiedMonthSum.toFixed(2);
-	}
-
-	function calculateMiddleMonthSum(clientId, date = getMomentUTC()) {
-		const totalClientBalanceForCurrentMonth = clientMonthSum(clientId);
-		const currentDayOfMinusOne = getMomentUTC().format("D");
-		return Math.round(
-			totalClientBalanceForCurrentMonth / Number(currentDayOfMinusOne),
-		);
-	}
-
-	function sortBySum(clientOne, clientTwo) {
-		const clientOneSum = clientMonthSum(clientOne._id);
-		const clientTwoSum = clientMonthSum(clientTwo._id);
-		if (clientOneSum > clientTwoSum) {
-			return -1;
-		} else if (clientOneSum < clientTwoSum) {
-			return 1;
-		}
-		return 0;
-	}
-
-	function getArrayOfBalancePerDay(clientId, category = null) {
-		let currentMonthSum = [];
-		let previousMonthSum = [];
-		let monthsSum = {
-			currentMonth: [],
-			previousMonth: [],
-		};
-		currentMonthSum = currentMonthSum.map((day) =>
-			Math.round(getSumFromArray(day)),
-		);
-		previousMonthSum = previousMonthSum.map((day) =>
-			Math.round(getSumFromArray(day)),
-		);
-
-		return (monthsSum = {
-			...monthsSum,
-			currentMonth: currentMonthSum,
-			previousMonth: previousMonthSum,
-		});
-	}
-
-	const getArrayWithAmountsPerDayForPickedMonth = (
-		clientId,
-		month,
-		sumHolder,
-		category,
-		countUntilThisDateInMonth = getMomentUTC().subtract(1, "day").format("D"),
-	) => {
-		month.forEach((day, index) => {
-			if (index === 0 || index < countUntilThisDateInMonth) {
-				const clientBalanceDay = day.clients.find(
-					(client) => client.id === clientId,
-				);
-				if (clientBalanceDay) {
-					if (typeof sumHolder[index] === "undefined") {
-						sumHolder[index] = [
-							getNumberWithHundreds(
-								calculateBalanceDaySum(clientBalanceDay, false, category),
-							),
-						];
-					} else {
-						sumHolder[index] = [
-							...sumHolder[index],
-							getNumberWithHundreds(
-								calculateBalanceDaySum(clientBalanceDay, false, category),
-							),
-						];
-					}
-				}
-			}
-		});
-	};
-	const isAdmin = useAdminStatus();
-
-	const { isLoading: clientsAreLoading } = useQuery(
-		"clientsData",
-		() => getClientsRequest({ shouldFillTranslators: true }),
+	const { isLoading: clientsDataIsLoading, data: clientsData } = useQuery(
+		"clientsOverview",
+		getClientsOverviewRequest,
 		{
-			onSuccess: (response) => {
-				setClients(response?.body);
-			},
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithGettingClients,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	const { isLoading: balanceDaysAreLoading } = useQuery(
-		"balanceDaysForClients",
-		getBalanceDaysForClientsRequest,
-		{
-			onSuccess: (response) => {
-				setBalanceDays(response?.body);
-			},
-			onError: (error) => {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithBalanceDays,
-					status: false,
-				});
-				openAlert(5000);
-			},
-			enabled: !!user,
-		},
-	);
-
-	const { isLoading: paymentsAreLoading } = useQuery(
-		"paymentsForClients",
-		getPaymentsRequest,
-		{
-			onSuccess: (data) => {
-				setPaymentsList(data);
-			},
 			onError: (error) => {
 				const message = error.message;
 				setAlertInfo({
@@ -242,57 +52,49 @@ export default function ListOfClients() {
 				openAlert(5000);
 			},
 			enabled: !!user,
+			refetchOnWindowFocus: false,
 		},
 	);
 
-	useEffect(() => {
-		if (!balanceDaysAreLoading && !paymentsAreLoading && !clientsAreLoading) {
-			setLoading(false);
+	const filteredClients = useMemo(() => {
+		if (!query) {
+			return clientsData;
 		}
-	}, [balanceDaysAreLoading, paymentsAreLoading, clientsAreLoading]);
+		return clientsData.filter((client) => {
+			return (
+				client.name.toLowerCase().includes(query.toLowerCase()) ||
+				client.surname.toLowerCase().includes(query.toLowerCase())
+			);
+		});
+	}, [query, clientsData]);
 
-	useDebounce(
-		async () => {
-			setLoading(true);
-			const responseDataWithClients = await getClientsRequest({
-				searchQuery: queryString,
-				shouldFillTranslators: true,
-			});
-			if (responseDataWithClients.status === 200) {
-				setClients(responseDataWithClients.body);
-			} else {
-				setAlertInfo({
-					...alertInfo,
-					mainTitle: MESSAGE.somethingWrongWithGettingClients,
-					status: false,
-				});
-				openAlert(5000);
-			}
-			setLoading(false);
-		},
-		1000,
-		[queryString],
-	);
+	function getArrayOfBalancePerDay(clientId, category = null) {
+		let currentMonthSum = [];
+		let previousMonthSum = [];
+		let monthsSum = {
+			currentMonth: [],
+			previousMonth: [],
+		};
+		currentMonthSum = currentMonthSum?.map((day) =>
+			Math.round(getSumFromArray(day)),
+		);
+		previousMonthSum = previousMonthSum?.map((day) =>
+			Math.round(getSumFromArray(day)),
+		);
+		monthsSum = {
+			...monthsSum,
+			currentMonth: currentMonthSum,
+			previousMonth: previousMonthSum,
+		};
+		return monthsSum;
+	}
+
+	const isAdmin = useAdminStatus();
 
 	const getUpdatingClient = (_id) => {
-		const clientWithID = clients.find((client) => client._id === _id);
-		const clientWithFieldsForForm = {
-			_id: clientWithID._id,
-			name: clientWithID.name,
-			surname: clientWithID.surname,
-			bankAccount: clientWithID.bankAccount || "PayPal",
-			svadba: {
-				login: clientWithID.svadba?.login || "",
-				password: clientWithID.svadba?.password || "",
-			},
-			dating: {
-				login: clientWithID.dating?.login || "",
-				password: clientWithID.dating?.password || "",
-			},
-			instagramLink: clientWithID.instagramLink || "",
-			image: clientWithID.image || "",
-			suspended: !!clientWithID.suspended,
-		};
+		const clientWithFieldsForForm = clientsData.find(
+			(client) => client._id === _id,
+		);
 		setUpdatingClient(clientWithFieldsForForm);
 		handleOpen();
 	};
@@ -312,11 +114,7 @@ export default function ListOfClients() {
 							mainTitle: message,
 							status: true,
 						});
-						setClients(
-							clients.map((item) => {
-								return item._id === editedClient._id ? editedClient : item;
-							}),
-						);
+						queryClient.invalidateQueries("clientsOverview");
 						openAlert(2000);
 					} else {
 						throw new Error(`Error: ${res?.status}`);
@@ -332,17 +130,14 @@ export default function ListOfClients() {
 					openAlert();
 				});
 		},
-		[clients, alertInfo, openAlert],
+		[alertInfo, openAlert, queryClient],
 	);
 
 	const addNewClient = async (newClient) => {
 		try {
 			const responseFromAddedClient = await addClient(newClient);
 			if (responseFromAddedClient.status === 200) {
-				setClients([
-					...clients,
-					{ ...newClient, _id: responseFromAddedClient.body },
-				]);
+				queryClient.invalidateQueries("clientsOverview");
 				setAlertInfo({
 					...alertInfo,
 					mainTitle: "client had been added",
@@ -377,120 +172,65 @@ export default function ListOfClients() {
 		setShowGraph(true);
 	};
 
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		const searchQuery = inputRef.current.value;
+		setQuery(searchQuery);
+	};
+
+	if (clientsDataIsLoading) {
+		return <Loader />;
+	}
+
 	return (
 		<>
-			<div>
+			<Box component="form" onSubmit={handleSearchSubmit}>
 				<input
+					ref={inputRef}
 					className="search-input"
 					type="text"
-					placeholder="Search for..."
-					value={queryString}
-					onChange={(e) => {
-						changeSearchParams(e.target.value);
-					}}
-				></input>
-			</div>
+					placeholder="First or last name..."
+				/>
+				<Button
+					variant="contained"
+					color="primary"
+					sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+					type="submit"
+				>
+					Search
+				</Button>
+				{query && (
+					<IconButton
+						type="button"
+						onClick={() => {
+							setQuery("");
+							inputRef.current.value = "";
+						}}
+					>
+						<FontAwesomeIcon icon={faTimes} />
+					</IconButton>
+				)}
+			</Box>
 			<div className={"main-container scrolled-container"}>
-				{loading && <Loader />}
-				{!loading && (
-					<>
-						{/* <ClientsChartsContainer
-                            user={user}
-                            values={graphData}
-                            open={showGraph}
-                            handleClose={closeGraph}
-                        /> */}
-						{clients?.length > 0 && (
-							<Grid container spacing={2} id="on-scroll__rotate-animation-list">
-								{clients.sort(sortBySum).map((client) => {
-									const memorizedMiddleMonthSum = calculateMiddleMonthSum(
-										client._id,
-									);
-									const memorizedPreviousMiddleMonthSum =
-										calculateMiddleMonthSum(
-											client._id,
-											getMomentUTC().subtract(1, "month"),
-										);
-									const memorizedMonthSum = clientMonthSum(client._id);
-									const memorizedPreviousMonthSum = clientMonthSum(
-										client._id,
-										1,
-									);
-									const arrayOfPaymentsMadeToClient = paymentsList.filter(
-										(payment) =>
-											payment.receiverID === client._id &&
-											payment.date.substring(6, 10) ===
-												getMomentUTC().format("YYYY"),
-									);
-									const getArrayOfPaymentsMadeToClientWithAmounts =
-										arrayOfPaymentsMadeToClient.map(
-											(payment) => payment.amount,
-										);
-									const spendsOnClient = getSumFromArray(
-										getArrayOfPaymentsMadeToClientWithAmounts,
-									);
-
-									const clientProfit = getTotalProfitPerClient(client._id);
-									const clientWithPersonalAndFinancialData = {
-										_id: client._id,
-										name: client.name,
-										surname: client.surname,
-										currentMonthTotalAmount: memorizedMonthSum,
-										translators: client.translators,
-										rating: getClientsRating(memorizedMiddleMonthSum),
-										bankAccount: client.bankAccount || "PayPal",
-										svadba: {
-											login: client.svadba?.login || "",
-											password: client.svadba?.password || "",
-										},
-										dating: {
-											login: client.dating?.login || "",
-											password: client.dating?.password || "",
-										},
-										instagramLink:
-											"https://www.instagram.com/" + client.instagramLink ||
-											"https://www.instagram.com/",
-										loss: spendsOnClient,
-										image: client.image ?? null,
-										suspended: false,
-										currentYearProfit: clientProfit.currentYearProfit,
-										absoluteProfit: clientProfit.allYearsProfit,
-										previousMonthTotalAmount: memorizedPreviousMonthSum,
-										twoMonthBeforeAmount: clientMonthSum(client._id, 2),
-										middleMonthSum: memorizedMiddleMonthSum,
-										prevousMiddleMonthSum: memorizedPreviousMiddleMonthSum,
-										monthProgressPercent: calculatePercentDifference(
-											memorizedMiddleMonthSum,
-											memorizedPreviousMiddleMonthSum,
-										),
-									};
-									return (
-										<Grid
-											key={clientWithPersonalAndFinancialData._id}
-											item
-											xs={12}
-											md={4}
-											sm={6}
-										>
-											<SingleClient
-												{...clientWithPersonalAndFinancialData}
-												admin={isAdmin}
-												handleUpdatingClientsId={getUpdatingClient}
-												handleSwitchToGraph={switchToGraph}
-											/>
-										</Grid>
-									);
-								})}
-							</Grid>
-						)}
-						{!clients?.length && (
-							<Typography
-								variant="h5"
-								component="div"
-								style={{ margin: "auto" }}
-							>{`No clients found`}</Typography>
-						)}
-					</>
+				{filteredClients?.length > 0 && (
+					<Grid container spacing={2} id="on-scroll__rotate-animation-list">
+						{filteredClients?.map((client) => {
+							return (
+								<Grid key={client._id} item xs={12} md={4} sm={6}>
+									<SingleClient
+										{...client}
+										handleUpdatingClientsId={getUpdatingClient}
+										handleSwitchToGraph={switchToGraph}
+									/>
+								</Grid>
+							);
+						})}
+					</Grid>
+				)}
+				{!filteredClients?.length && (
+					<Typography variant="h5" component="div" style={{ margin: "auto" }}>
+						{"No clients found"}
+					</Typography>
 				)}
 			</div>
 			<div className="socials button-add-container">
