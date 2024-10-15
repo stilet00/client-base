@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
@@ -15,15 +15,12 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
 import MenuSharpIcon from "@mui/icons-material/MenuSharp";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
-import { TRANSLATORS_SALARY_PERCENT } from "../../constants/constants";
-import { CHARTS_CATEGORIES } from "constants/renderConstants";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowAltCircleUp,
@@ -31,165 +28,80 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getMomentUTC } from "sharedFunctions/sharedFunctions";
 
-export default function SingleClient({
-	_id,
-	name,
-	surname,
-	currentMonthTotalAmount,
-	previousMonthTotalAmount,
-	middleMonthSum,
-	prevousMiddleMonthSum,
-	monthProgressPercent,
-	translators,
-	bankAccount,
-	instagramLink,
-	handleUpdatingClientsId,
-	twoMonthBeforeAmount,
-	svadba,
-	dating,
-	handleSwitchToGraph,
-	loss,
-	currentYearProfit,
-	image,
-	rating,
-	suspended,
-	admin,
-}) {
+function SingleClient({ getUpdatingClient, switchToGraph, ...client }) {
+	const {
+		_id,
+		name,
+		surname,
+		bankAccount,
+		svadba,
+		dating,
+		instagramLink,
+		image,
+		suspended,
+		allYearsProfit,
+		previousMiddleMonthSum,
+		totalPayments,
+		currentMonthTotalAmount,
+		previousMonthTotalAmount,
+		twoMonthBeforeAmount,
+		translators,
+		rating,
+		middleMonthSum,
+		monthProgressPercent,
+		handleUpdatingClientsId,
+	} = client;
 	const [expanded, setExpanded] = useState(false);
 	const [displayMenu, setDisplayMenu] = useState(false);
 	const [displayProfit, setDisplayProfit] = useState(false);
 	const [copied, setCopied] = useState(false);
-	const [openCategorySelect, setOpenCategorySelect] = useState(false);
-	const handleChange = (e) => {
-		setExpanded(!expanded);
-	};
 
-	const catergoriesWithIcons = CHARTS_CATEGORIES.filter(
-		(category) => category.icon,
-	);
+	const handleChange = useCallback(() => {
+		setExpanded((prev) => !prev);
+	}, []);
 
-	const payedToTranslators = Math.round(
-		currentYearProfit * TRANSLATORS_SALARY_PERCENT,
-	);
-	const clientProfit = Math.round(
-		currentYearProfit - payedToTranslators - loss,
-	);
-	const currentMonth =
-		getMomentUTC().format("MMMM").length > "5"
+	const currentMonth = useMemo(() => {
+		return getMomentUTC().format("MMMM").length > 5
 			? getMomentUTC().format("MMM")
 			: getMomentUTC().format("MMMM");
-	const previousMonth =
-		getMomentUTC().subtract(1, "month").format("MMMM").length > "5"
+	}, []);
+
+	const previousMonth = useMemo(() => {
+		return getMomentUTC().subtract(1, "month").format("MMMM").length > 5
 			? getMomentUTC().subtract(1, "month").format("MMM")
 			: getMomentUTC().subtract(1, "month").format("MMMM");
-	const twoMonthBefore =
-		getMomentUTC().subtract(1, "month").format("MMMM").length > "5"
+	}, []);
+
+	const twoMonthBefore = useMemo(() => {
+		return getMomentUTC().subtract(2, "month").format("MMMM").length > 5
 			? getMomentUTC().subtract(2, "month").format("MMM")
 			: getMomentUTC().subtract(2, "month").format("MMMM");
-	const progressPage = (
-		<div className="grid-template-container__info">
-			{!suspended && (
-				<>
-					{/* <IconButton
-                        color="primary"
-                        variant="contained"
-                        size="small"
-                        sx={{
-                            padding: 0,
-                        }}
-                        onClick={() =>
-                            setOpenCategorySelect(!openCategorySelect)
-                        }
-                    >
-                        {openCategorySelect ? (
-                            <ClickAwayListener
-                                onClickAway={() => setOpenCategorySelect(false)}
-                            >
-                                <Box sx={{ position: 'relative' }}>
-                                    {catergoriesWithIcons.map(
-                                        (category, index) => (
-                                            <React.Fragment
-                                                key={category + index}
-                                            >
-                                                <label
-                                                    htmlFor={category.name}
-                                                    className={
-                                                        category.value === null
-                                                            ? 'category-all'
-                                                            : `category-${category.value}`
-                                                    }
-                                                >
-                                                    {category.icon}
-                                                </label>
-                                                <input
-                                                    type="radio"
-                                                    id={category.name}
-                                                    className={
-                                                        category.value === null
-                                                            ? 'category-all category-select'
-                                                            : `category-${category.value} category-select`
-                                                    }
-                                                    value={category.value}
-                                                    onChange={e => {
-                                                        const argsForHandleSwitchToGraph =
-                                                            {
-                                                                id: _id,
-                                                                category:
-                                                                    e.target
-                                                                        .value,
-                                                            }
-                                                        handleSwitchToGraph(
-                                                            argsForHandleSwitchToGraph
-                                                        )
-                                                    }}
-                                                ></input>
-                                            </React.Fragment>
-                                        )
-                                    )}
-                                </Box>
-                            </ClickAwayListener>
-                        ) : (
-                            <QueryStatsIcon fontSize="small" />
-                        )}
-                    </IconButton> */}
-					<span
-						className={
-							middleMonthSum >= prevousMiddleMonthSum
-								? " green-text styled-text-numbers percents-margin"
-								: " red-text styled-text-numbers percents-margin"
-						}
-					>
-						{middleMonthSum >= prevousMiddleMonthSum ? (
-							<FontAwesomeIcon icon={faArrowAltCircleUp} />
-						) : (
-							<FontAwesomeIcon icon={faArrowAltCircleDown} />
-						)}
-						{` ${monthProgressPercent}%`}
-					</span>
-				</>
-			)}
-			<b className="styled-text-numbers grid-template-container__info">
-				{middleMonthSum} $
-			</b>
-		</div>
+	}, []);
+
+	const payedToTranslators = useMemo(
+		() => Math.round(allYearsProfit * 0.45),
+		[allYearsProfit],
 	);
+	const clientProfit = useMemo(
+		() => Math.round(allYearsProfit - payedToTranslators - totalPayments),
+		[allYearsProfit, payedToTranslators, totalPayments],
+	);
+	const handleCopy = useCallback(() => {
+		const isMobileDevice = /Mobi/i.test(navigator.userAgent);
+		if (!isMobileDevice) {
+			setCopied(true);
+			navigator.clipboard.writeText(bankAccount);
+		}
+	}, [bankAccount]);
 
 	const avatarImage = image ? image : "/";
 
-	return (
-		<Card
-			className="translator-item gradient-box"
-			style={{
-				position: "relative",
-				minHeight: admin ? 350 : "auto",
-				...(suspended && {
-					backgroundImage:
-						"linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2))",
-					overflow: "visible",
-				}),
-			}}
-		>
-			{suspended && (
+	if (suspended) {
+		return (
+			<Card
+				className="translator-item gradient-box"
+				style={{ position: "relative" }}
+			>
 				<div
 					style={{
 						position: "absolute",
@@ -201,43 +113,41 @@ export default function SingleClient({
 						top: "50%",
 						left: "50%",
 						transform: "translate(-50%, -50%) skew(1deg, -30deg)",
-						background: `linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)`,
+						background:
+							"linear-gradient(to bottom, rgb(255, 216, 7) 50%, rgb(255, 193, 0) 60%)",
 						borderRadius: "4px",
 						padding: "10px",
 						color: "black",
 						fontSize: "24px",
 						fontWeight: "bold",
-						overflow: "hidden",
 					}}
 				>
 					<span
 						style={{
 							border: "3px solid black",
-							display: "inline-block",
 							transform: "skew(30deg, 0deg)",
-							fontFamily: "inherit",
-							borderImage: `linear-gradient(to bottom, gray 50%, black 50%)`,
-							borderImageSlice: "1",
-							padding: "5px",
 							color: "transparent",
 							background: "linear-gradient(to bottom, gray 50%, black 50%)",
 							WebkitBackgroundClip: "text",
-							WebkitTextFillColor: "transparent", // For Safari compatibility
+							WebkitTextFillColor: "transparent",
 							mask: "linear-gradient(to bottom, transparent 50%, black 50%)",
 						}}
 					>
 						DISABLED
 					</span>
 				</div>
-			)}
+			</Card>
+		);
+	}
+
+	return (
+		<Card className="translator-item gradient-box">
 			<CardHeader
 				sx={{
 					position: "relative",
 					justifyContent: "space-between",
 					height: "50px",
-					"& .MuiCardHeader-avatar": {
-						margin: 0,
-					},
+					"& .MuiCardHeader-avatar": { margin: 0 },
 					"& .MuiCardHeader-content": {
 						position: "absolute",
 						left: "50%",
@@ -251,9 +161,6 @@ export default function SingleClient({
 							width: 56,
 							height: 56,
 							transition: "all 0.2s ease-in-out",
-							"& .MuiAvatar-img": {
-								objectPosition: "top",
-							},
 							"&:hover": image && {
 								position: "absolute",
 								top: "0",
@@ -332,7 +239,32 @@ export default function SingleClient({
 					<span className="grid-template-container__title">
 						Middle for {currentMonth}:
 					</span>
-					{progressPage}
+					<div className="grid-template-container__info">
+						<span
+							className="styled-text-numbers percents-margin"
+							style={{
+								color:
+									middleMonthSum >= previousMiddleMonthSum ? "green" : "red",
+							}}
+						>
+							{middleMonthSum >= previousMiddleMonthSum ? (
+								<FontAwesomeIcon
+									style={{ color: "green" }}
+									icon={faArrowAltCircleUp}
+								/>
+							) : (
+								<FontAwesomeIcon
+									style={{ color: "red" }}
+									icon={faArrowAltCircleDown}
+								/>
+							)}{" "}
+							{`${monthProgressPercent}%`}
+						</span>
+						<b className="styled-text-numbers grid-template-container__info">
+							{" "}
+							{middleMonthSum} $
+						</b>
+					</div>
 				</Typography>
 
 				<Typography
@@ -360,9 +292,7 @@ export default function SingleClient({
 								}}
 								startIcon={
 									<AccountBalanceIcon
-										sx={{
-											color: clientProfit < 0 ? "red" : "green",
-										}}
+										sx={{ color: clientProfit < 0 ? "red" : "green" }}
 									/>
 								}
 								onClick={() => setDisplayProfit(!displayProfit)}
@@ -384,15 +314,15 @@ export default function SingleClient({
 										bgcolor: "background.paper",
 									}}
 								>
-									{loss > 0 && (
+									{totalPayments > 0 && (
 										<span className="balance-menu_item">
 											Client's spends:
-											<b>{`-${loss} $`}</b>
+											<b>{`-${totalPayments} $`}</b>
 										</span>
 									)}
 									<span className="balance-menu_item">
 										Total profit:
-										<b>{`${currentYearProfit} $`}</b>
+										<b>{`${allYearsProfit} $`}</b>
 									</span>
 									<span className="balance-menu_item">
 										Payed to translators:
@@ -403,6 +333,7 @@ export default function SingleClient({
 						</Box>
 					</ClickAwayListener>
 				</Typography>
+
 				<Typography
 					variant="body2"
 					align={"left"}
@@ -411,18 +342,10 @@ export default function SingleClient({
 					<span className="grid-template-container__title">Bank account:</span>
 					<span className="grid-template-container__card">
 						<IconButton
-							sx={{
-								color: copied ? "green" : "gray",
-							}}
+							sx={{ color: copied ? "green" : "gray" }}
 							variant="contained"
 							size="small"
-							onClick={(e) => {
-								const isMobileDevice = /Mobi/i.test(navigator.userAgent);
-								if (!isMobileDevice) {
-									setCopied(true);
-									navigator.clipboard.writeText(bankAccount);
-								}
-							}}
+							onClick={handleCopy}
 						>
 							<ContentCopyIcon fontSize="small" />
 						</IconButton>
@@ -453,22 +376,16 @@ export default function SingleClient({
 					</span>
 				</Typography>
 			</CardContent>
+
 			<CardActions
-				style={{
-					display: "grid",
-					gridTemplateColumns: "40px auto",
-				}}
+				style={{ display: "grid", gridTemplateColumns: "40px auto" }}
 			>
-				<Typography
-					align={"left"}
-					style={{
-						alignSelf: "end",
-					}}
-				>
+				<Typography align={"left"} style={{ alignSelf: "end" }}>
 					<Link variant="button" href={instagramLink} underline="none">
 						<InstagramIcon fontSize="large" sx={{ color: red[400] }} />
 					</Link>
 				</Typography>
+
 				{!suspended && (
 					<Accordion
 						expanded={expanded}
@@ -524,3 +441,5 @@ export default function SingleClient({
 		</Card>
 	);
 }
+
+export default SingleClient;

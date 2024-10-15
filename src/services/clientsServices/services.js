@@ -34,3 +34,11 @@ export function updateClient(editedClient) {
 		editedClient,
 	);
 }
+
+export async function getClientsOverviewRequest() {
+	const response = await requestWithAuth("get", `${clientsURL}overview`);
+	if (response.status === 200) {
+		return response.body;
+	}
+	throw new Error("Something went wrong with clients data");
+}

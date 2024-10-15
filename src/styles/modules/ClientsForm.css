@@ -6,6 +6,10 @@
 }
 
 .clients-form {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  z-index: 1;
   min-height: 300px !important;
 }
 .clients-form h2 {

@@ -50,7 +50,9 @@ function calculateBalanceDaySum(targetObject, onlySvadba, category) {
 		var svadbaSum = Object.values(svadbaObject).reduce(function (sum, current) {
 			return typeof current === "number" ? sum + current : sum;
 		}, 0);
-		return svadbaSum - svadbaObject.penalties * 2;
+		return Number.parseFloat(
+			(svadbaSum - svadbaObject.penalties * 2).toFixed(2),
+		);
 	} else if (category) {
 		var categorizedObject =
 			((_a = {}), (_a[category] = targetObject[category]), _a);
@@ -60,13 +62,15 @@ function calculateBalanceDaySum(targetObject, onlySvadba, category) {
 		) {
 			return typeof current === "number" ? sum + current : sum;
 		}, 0);
-		return categorySum;
+		return Number.parseFloat(categorySum.toFixed(2));
 	} else {
 		var arrayToSum = Object.values(targetObject);
 		var sumResult = arrayToSum.reduce(function (sum, current) {
 			return typeof current === "number" ? sum + current : sum;
 		}, 0);
-		return sumResult - targetObject.penalties * 2;
+		return Number.parseFloat(
+			(sumResult - targetObject.penalties * 2).toFixed(2),
+		);
 	}
 }
 exports.calculateBalanceDaySum = calculateBalanceDaySum;
@@ -181,7 +185,7 @@ function calculatePercentDifference(currentSum, previousSum) {
 	if (isNaN(difference)) {
 		return 0;
 	}
-	var result = parseFloat(difference.toFixed(1));
+	var result = Number.parseFloat(difference.toFixed(1));
 	return result % 1 === 0 ? Math.round(result) : result;
 }
 exports.calculatePercentDifference = calculatePercentDifference;
