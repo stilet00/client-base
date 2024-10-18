@@ -182,7 +182,6 @@ export default function ListOfClients() {
 	if (clientsDataIsLoading) {
 		return <Loader />;
 	}
-	console.log(query);
 	return (
 		<>
 			<Box component="form" onSubmit={handleSearchSubmit}>
