@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useMemo } from "react";
+import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { useQuery, useQueryClient } from "react-query";
 import {
@@ -16,7 +17,7 @@ import ClientsForm from "./ClientsForm/ClientsForm";
 import useModal from "../../sharedHooks/useModal";
 import Button from "@mui/material/Button";
 import { Box, IconButton } from "@mui/material";
-import { faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTimes, faVenus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "sharedComponents/Loader/Loader";
 import { getSumFromArray } from "sharedFunctions/sharedFunctions";
@@ -181,27 +182,75 @@ export default function ListOfClients() {
 	if (clientsDataIsLoading) {
 		return <Loader />;
 	}
-
+	console.log(query);
 	return (
 		<>
 			<Box component="form" onSubmit={handleSearchSubmit}>
-				<input
-					ref={inputRef}
-					className="search-input"
+				<TextField
+					sx={{
+						zIndex: 100,
+						"& .MuiInputBase-input": {
+							color: "white",
+						},
+						"& .MuiOutlinedInput-root": {
+							"& fieldset": {
+								borderColor: "white",
+								borderBottom: 0,
+								borderBottomLeftRadius: 0,
+								borderBottomRightRadius: 0,
+							},
+							"&:hover fieldset": {
+								borderColor: "white",
+								borderBottomLeftRadius: 0,
+								borderBottomRightRadius: 0,
+								borderBottom: 0,
+							},
+							"&.Mui-focused fieldset": {
+								borderColor: "white",
+							},
+						},
+						"& .MuiInputBase-input::placeholder": {
+							color: "white",
+							opacity: 1,
+						},
+					}}
+					inputRef={inputRef}
 					type="text"
 					placeholder="First or last name..."
+					variant="outlined"
+					size="small"
 				/>
-				<Button
+				<IconButton
+					type="submit"
+					sx={{
+						background:
+							"linear-gradient(0deg, rgba(2, 0, 36, 0.2) 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%)",
+						color: "white",
+						zIndex: 100,
+						marginLeft: 1,
+						transition: "background 0.3s, color 0.3s",
+						"&:hover": {
+							background: "white",
+							color: "primary.main",
+						},
+						boxShadow: 3,
+						padding: 1,
+					}}
 					variant="contained"
 					color="primary"
-					sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-					type="submit"
 				>
-					Search
-				</Button>
+					<FontAwesomeIcon icon={faSearch} />
+				</IconButton>
 				{query && (
 					<IconButton
 						type="button"
+						sx={{
+							color: "white",
+							zIndex: 100,
+							marginLeft: 1,
+							boxShadow: 3,
+							padding: 1,
+						}}
 						onClick={() => {
 							setQuery("");
 							inputRef.current.value = "";

@@ -30,31 +30,6 @@
   right: 5px;
 }
 
-.search-input {
-  position: relative;
-  min-width: 100px;
-  max-width: 50%;
-  height: 100%;
-  padding: 0;
-  background: transparent;
-  border: 2px solid white;
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  font-family: inherit;
-  font-size: inherit;
-  margin-left: 1rem;
-  overflow-x: auto;
-  outline: none;
-  color: white;
-  padding: 3px;
-  box-sizing: border-box;
-  z-index: 2;
-}
-.search-input::placeholder {
-  color: white;
-  opacity: 1;
-}
-
 @keyframes opacity-change {
   0% {
     opacity: 0;
